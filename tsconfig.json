@@ -1,7 +1,40 @@
 {
     "files": [
         "src/main.ts",
-        "src/greet.ts"
+
+        "src/DataTypes/Collection.ts",
+        "src/DataTypes/Map.ts",
+        "src/DataTypes/Queue.ts",
+        "src/DataTypes/Stack.ts",
+        "src/DataTypes/Vec2.ts",
+        "src/DataTypes/Vec4.ts",
+
+        "src/Events/EventQueue.ts",
+        "src/Events/GameEvent.ts",
+        "src/Events/Receiver.ts",
+
+        "src/GameState/GameState.ts",
+        "src/GameState/Scene.ts",
+
+        "src/Input/InputHandler.ts",
+        "src/Input/InputReceiver.ts",
+        
+        "src/Loop/GameLoop.ts",
+
+        "src/Nodes/ColoredCircle.ts",
+        "src/Nodes/GameNode.ts",
+        "src/Nodes/Player.ts",
+        "src/Nodes/UIElement.ts",
+
+        "src/Playback/Recorder.ts",
+
+        "src/SceneGraph/SceneGraph.ts",
+        "src/SceneGraph/SceneGraphArray.ts",
+        "src/SceneGraph/Viewport.ts",
+        
+        "src/Utils/Color.ts",
+        "src/Utils/MathUtils.ts",
+        "src/Utils/RandUtils.ts"
     ],
     "compilerOptions": {
         "noImplicitAny": true,
