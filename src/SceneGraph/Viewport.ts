@@ -40,11 +40,13 @@ export default class Viewport{
 		}
     }
     
-    includes(node: CanvasNode): boolean {
+    includes(node: CanvasNode, parallax: Vec2): boolean {
         let nodePos = node.getPosition();
         let nodeSize = node.getSize();
-        if(nodePos.x + nodeSize.x > this.position.x && nodePos.x < this.position.x + this.size.x){
-            if(nodePos.y + nodeSize.y > this.position.y && nodePos.y < this.position.y + this.size.y){
+        let originX = this.position.x*parallax.x;
+        let originY = this.position.y*parallax.y;
+        if(nodePos.x + nodeSize.x > originX && nodePos.x < originX + this.size.x){
+            if(nodePos.y + nodeSize.y > originY && nodePos.y < originY + this.size.y){
                 return true;
             }
         }

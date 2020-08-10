@@ -21,6 +21,14 @@ export default abstract class GameNode{
 		return this.position;
 	}
 
+	setPosition(vecOrX: Vec2 | number, y: number = null): void {
+		if(vecOrX instanceof Vec2){
+			this.position.set(vecOrX.x, vecOrX.y);
+		} else {
+			this.position.set(vecOrX, y);
+		}
+	}
+
 	subscribe(eventType: string){
 		this.eventQueue.subscribe(this.receiver, eventType);
 	}
@@ -31,6 +39,4 @@ export default abstract class GameNode{
 	}
 
 	abstract update(deltaT: number): void;
-
-	abstract render(ctx: CanvasRenderingContext2D, viewportOrigin: Vec2, viewportSize: Vec2): void;
 }

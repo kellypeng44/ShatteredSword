@@ -51,22 +51,6 @@ export default class UIElement extends CanvasNode{
 		this.isEntered = false;
 	}
 
-	setPosition(vecOrX: Vec2 | number, y: number = null): void {
-		if(vecOrX instanceof Vec2){
-			this.position.set(vecOrX.x, vecOrX.y);
-		} else {
-			this.position.set(vecOrX, y);
-		}
-	}
-
-	setSize(vecOrX: Vec2 | number, y: number = null): void {
-		if(vecOrX instanceof Vec2){
-			this.size.set(vecOrX.x, vecOrX.y);
-		} else {
-			this.size.set(vecOrX, y);
-		}
-	}
-
 	setText(text: string): void {
 		this.text = text;
 	}
@@ -163,14 +147,14 @@ export default class UIElement extends CanvasNode{
 		return this.textColor.toStringRGBA();
 	}
 
-	render(ctx: CanvasRenderingContext2D, viewportOrigin: Vec2, viewportSize: Vec2): void {
+	render(ctx: CanvasRenderingContext2D, origin: Vec2): void {
 		ctx.font = this.fontSize + "px " + this.font;
 		let offset = this.calculateOffset(ctx);
 
 		ctx.fillStyle = this.calculateBackgroundColor();
-		ctx.fillRect(this.position.x - viewportOrigin.x, this.position.y - viewportOrigin.y, this.size.x, this.size.y);
+		ctx.fillRect(this.position.x - origin.x, this.position.y - origin.y, this.size.x, this.size.y);
 		
 		ctx.fillStyle = this.calculateTextColor();
-		ctx.fillText(this.text, this.position.x + offset.x - viewportOrigin.x, this.position.y + offset.y - viewportOrigin.y);
+		ctx.fillText(this.text, this.position.x + offset.x - origin.x, this.position.y + offset.y - origin.y);
 	}
 }

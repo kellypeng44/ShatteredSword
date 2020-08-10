@@ -25,8 +25,8 @@ export default class Player extends CanvasNode{
 		this.position = this.position.add(this.velocity.scale(deltaT));
 	}
 
-	render(ctx: CanvasRenderingContext2D, viewportOrigin: Vec2, viewportSize: Vec2){
+	render(ctx: CanvasRenderingContext2D, origin: Vec2){
 		ctx.fillStyle = "#FF0000";
-		ctx.fillRect(this.position.x - viewportOrigin.x, this.position.y - viewportOrigin.y, this.size.x, this.size.y);
+		ctx.fillRect(this.position.x - origin.x, this.position.y - origin.y, this.size.x, this.size.y);
 	}
 }

@@ -14,12 +14,20 @@ export default class ColoredCircle extends CanvasNode{
         this.size = new Vec2(50, 50);
     }
 
+    setColor(color: Color): void {
+        this.color = color;
+    }
+
+    getColor(): Color {
+        return this.color;
+    }
+
     update(deltaT: number): void {}
 
-    render(ctx: CanvasRenderingContext2D, viewportOrigin: Vec2, viewportSize: Vec2){
-        ctx.fillStyle = this.color.toStringRGB();
+    render(ctx: CanvasRenderingContext2D, origin: Vec2){
+        ctx.fillStyle = this.color.toStringRGBA();
         ctx.beginPath();
-        ctx.arc(this.position.x + this.size.x/2 - viewportOrigin.x, this.position.y + this.size.y/2 - viewportOrigin.y, this.size.x/2, 0, Math.PI*2, false);
+        ctx.arc(this.position.x + this.size.x/2 - origin.x, this.position.y + this.size.y/2 - origin.y, this.size.x/2, 0, Math.PI*2, false);
         ctx.fill();
         ctx.closePath();
     }

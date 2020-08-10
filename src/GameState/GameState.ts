@@ -1,15 +1,28 @@
 import Stack from "../DataTypes/Stack";
 import Scene from "./Scene";
+import Viewport from "../SceneGraph/Viewport";
+import Vec2 from "../DataTypes/Vec2";
 
 export default class GameState{
-	private sceneStack: Stack<Scene>;
+    private sceneStack: Stack<Scene>;
+    private worldSize: Vec2;
+    private viewport: Viewport;
 
     constructor(){
         this.sceneStack = new Stack(10);
+        this.worldSize = new Vec2(1600, 1000);
+        this.viewport = new Viewport();
+        this.viewport.setSize(800, 500);
+        this.viewport.setBounds(0, 0, 1600, 1000);
     }
 
-    addScene(scene: Scene, pauseScenesBelow: boolean = true): void {
-        this.sceneStack.forEach((scene: Scene) => scene.setPaused(pauseScenesBelow));
+    createScene(): Scene{
+        let scene = new Scene(this.viewport, this);
+        this.addScene(scene);
+        return scene;
+    }
+
+    addScene(scene: Scene): void {
         this.sceneStack.push(scene);
     }
 
