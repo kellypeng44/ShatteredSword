@@ -4,6 +4,7 @@ import Player from "./Nodes/Player";
 import UIElement from "./Nodes/UIElement";
 import ColoredCircle from "./Nodes/ColoredCircle";
 import Color from "./Utils/Color";
+import Button from "./Nodes/UIElements/Button";
 
 function main(){
     // Create the game object
@@ -15,31 +16,27 @@ function main(){
     // Initialize GameObjects
     let player = new Player();
 
-    let recordButton = new UIElement();
+    let recordButton = new Button();
     recordButton.setSize(100, 50);
     recordButton.setText("Record");
-    recordButton.setBackgroundColor(new Color(200, 100, 0, 0.3));
     recordButton.setPosition(400, 30);
     recordButton.onClickEventId = "record_button_press";
 
-    let stopButton = new UIElement();
+    let stopButton = new Button();
     stopButton.setSize(100, 50);
     stopButton.setText("Stop");
-    stopButton.setBackgroundColor(new Color(200, 0, 0, 0.3));
     stopButton.setPosition(550, 30);
     stopButton.onClickEventId = "stop_button_press";
 
-    let playButton = new UIElement();
+    let playButton = new Button();
     playButton.setSize(100, 50);
     playButton.setText("Play");
-    playButton.setBackgroundColor(new Color(0, 200, 0, 0.3));
     playButton.setPosition(700, 30);
     playButton.onClickEventId = "play_button_press";
 
-    let cycleFramerateButton = new UIElement();
+    let cycleFramerateButton = new Button();
     cycleFramerateButton.setSize(150, 50);
     cycleFramerateButton.setText("Cycle FPS");
-    cycleFramerateButton.setBackgroundColor(new Color(200, 0, 200, 0.3));
     cycleFramerateButton.setPosition(5, 400);
     let i = 0;
     let fps = [15, 30, 60];
@@ -48,10 +45,9 @@ function main(){
         i = (i + 1) % 3;
     }
 
-    let pauseButton = new UIElement();
+    let pauseButton = new Button();
     pauseButton.setSize(100, 50);
     pauseButton.setText("Pause");
-    pauseButton.setBackgroundColor(new Color(200, 0, 200, 1));
     pauseButton.setPosition(700, 400);
     pauseButton.onClick = () => {
         game.getGameState().addScene(pauseMenu);
@@ -62,10 +58,9 @@ function main(){
     modalBackground.setBackgroundColor(new Color(0, 0, 0, 0.4));
     modalBackground.setPosition(200, 100);
 
-    let resumeButton = new UIElement();
+    let resumeButton = new Button();
     resumeButton.setSize(100, 50);
     resumeButton.setText("Resume");
-    resumeButton.setBackgroundColor(new Color(200, 0, 200, 1));
     resumeButton.setPosition(400, 200);
     resumeButton.onClick = () => {
         game.getGameState().removeScene();

@@ -12,19 +12,27 @@ export default class Color{
         this.b = b;
         this.a = a;
 	}
+
+	lighten(): Color {
+		return new Color(MathUtils.clamp(this.r + 40, 0, 255), MathUtils.clamp(this.g + 40, 0, 255), MathUtils.clamp(this.b + 40, 0, 255), this.a);
+	}
+
+	darken(): Color {
+		return new Color(MathUtils.clamp(this.r - 40, 0, 255), MathUtils.clamp(this.g - 40, 0, 255), MathUtils.clamp(this.b - 40, 0, 255), this.a);
+	}
 	
-	toString(): string{
+	toString(): string {
 		return "#" + MathUtils.toHex(this.r, 2) + MathUtils.toHex(this.g, 2) + MathUtils.toHex(this.b, 2);
 	}
 
-	toStringRGB(){
+	toStringRGB(): string {
 		return "rgb(" + this.r.toString() + ", " + this.g.toString() + ", " + this.b.toString() + ")";
 	}
 
-	toStringRGBA(){
+	toStringRGBA(): string {
 		if(this.a === null){
-			throw "No alpha value assigned to color";
+			return this.toStringRGB();
 		}
-		return "rgb(" + this.r.toString() + ", " + this.g.toString() + ", " + this.b.toString() + ", " + this.a.toString() +")"
+		return "rgba(" + this.r.toString() + ", " + this.g.toString() + ", " + this.b.toString() + ", " + this.a.toString() +")"
 	}
 }

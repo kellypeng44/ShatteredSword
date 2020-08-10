@@ -21,7 +21,8 @@ export default class InputReceiver{
 		this.receiver = new Receiver();
 		this.keyJustPressed = new Map<boolean>();
 		this.keyPressed = new Map<boolean>();
-		this.mousePressPosition = null;
+		this.mousePosition = new Vec2(0, 0);
+		this.mousePressPosition = new Vec2(0, 0);
 
 		this.eventQueue = EventQueue.getInstance();
 		this.eventQueue.subscribe(this.receiver, ["mouse_down", "mouse_up", "mouse_move", "key_down", "key_up", "canvas_blur"]);
