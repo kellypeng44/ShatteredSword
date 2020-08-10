@@ -10,6 +10,7 @@ export default class InputReceiver{
 	private mouseJustPressed: boolean;
 	private keyJustPressed: Map<boolean>;
 	private keyPressed: Map<boolean>;
+	private mousePosition: Vec2;
 	private mousePressPosition: Vec2;
 	private eventQueue: EventQueue;
 	private receiver: Receiver;
@@ -23,7 +24,7 @@ export default class InputReceiver{
 		this.mousePressPosition = null;
 
 		this.eventQueue = EventQueue.getInstance();
-		this.eventQueue.subscribe(this.receiver, ["mouse_down", "mouse_up", "key_down", "key_up"]);
+		this.eventQueue.subscribe(this.receiver, ["mouse_down", "mouse_up", "mouse_move", "key_down", "key_up", "canvas_blur"]);
 	}
 
 	static getInstance(): InputReceiver{
@@ -38,7 +39,7 @@ export default class InputReceiver{
 		this.mouseJustPressed = false;
 		this.keyJustPressed.forEach((key: string) => this.keyJustPressed.set(key, false));
 
-		while(this.receiver.hasNextEvent()){
+		while(this.receiver.hasNextEvent()){			
 			let event = this.receiver.getNextEvent();
 			if(event.type === "mouse_down"){
 				this.mouseJustPressed = true;
@@ -48,6 +49,10 @@ export default class InputReceiver{
 
 			if(event.type === "mouse_up"){
 				this.mousePressed = false;
+			}
+
+			if(event.type === "mouse_move"){
+				this.mousePosition = event.data.get("position");
 			}
 
 			if(event.type === "key_down"){
@@ -60,7 +65,16 @@ export default class InputReceiver{
 				let key = event.data.get("key")
 				this.keyPressed.set(key, false);
 			}
+
+			if(event.type === "canvas_blur"){
+				this.clearKeyPresses()
+			}
 		}
+	}
+
+	clearKeyPresses(): void {
+		this.keyJustPressed.forEach((key: string) => this.keyJustPressed.set(key, false));
+		this.keyPressed.forEach((key: string) => this.keyPressed.set(key, false));
 	}
 
 	isJustPressed(key: string): boolean {
@@ -85,6 +99,10 @@ export default class InputReceiver{
 
 	isMousePressed(): boolean {
 		return this.mousePressed;
+	}
+
+	getMousePosition(): Vec2 {
+		return this.mousePosition;
 	}
 
 	getMousePressPosition(): Vec2 {

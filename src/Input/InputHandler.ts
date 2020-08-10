@@ -10,8 +10,12 @@ export default class InputHandler{
 		
         canvas.onmousedown = (event) => this.handleMouseDown(event, canvas);
         canvas.onmouseup = (event) => this.handleMouseUp(event, canvas);
+        canvas.oncontextmenu = this.handleContextMenu;
+        canvas.onmousemove = (event) => this.handleMouseMove(event, canvas);
         document.onkeydown = this.handleKeyDown;
         document.onkeyup = this.handleKeyUp;
+        document.onblur = this.handleBlur;
+        document.oncontextmenu = this.handleBlur;
     }
 
     private handleMouseDown = (event: MouseEvent, canvas: HTMLCanvasElement): void => {
@@ -26,6 +30,12 @@ export default class InputHandler{
         this.eventQueue.addEvent(gameEvent);
     }
 
+    private handleMouseMove = (event: MouseEvent, canvas: HTMLCanvasElement): void => {
+        let pos = this.getMousePosition(event, canvas);
+        let gameEvent = new GameEvent("mouse_move", {position: pos});
+        this.eventQueue.addEvent(gameEvent);
+    }
+
     private handleKeyDown = (event: KeyboardEvent): void => {
         let key = this.getKey(event);
         let gameEvent = new GameEvent("key_down", {key: key});
@@ -36,6 +46,16 @@ export default class InputHandler{
         let key = this.getKey(event);
         let gameEvent = new GameEvent("key_up", {key: key});
         this.eventQueue.addEvent(gameEvent);
+    }
+
+    private handleBlur = (event: Event): void => {
+        let gameEvent = new GameEvent("canvas_blur", {});
+        this.eventQueue.addEvent(gameEvent);
+    }
+
+    private handleContextMenu = (event: Event): void => {
+        event.preventDefault();
+        event.stopPropagation();
     }
 
     private getKey(keyEvent: KeyboardEvent){
