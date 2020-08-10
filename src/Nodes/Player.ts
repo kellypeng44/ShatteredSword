@@ -1,7 +1,7 @@
-import GameNode from "./GameNode";
+import CanvasNode from "./CanvasNode";
 import Vec2 from "../DataTypes/Vec2";
 
-export default class Player extends GameNode{
+export default class Player extends CanvasNode{
 	velocity: Vec2;
 	speed: number;
 

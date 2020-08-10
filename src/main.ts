@@ -20,21 +20,21 @@ function main(){
     recordButton.setText("Record");
     recordButton.setBackgroundColor(new Color(200, 100, 0, 0.3));
     recordButton.setPosition(400, 30);
-    recordButton.onPressSignal = "record_button_press";
+    recordButton.onClickEventId = "record_button_press";
 
     let stopButton = new UIElement();
     stopButton.setSize(100, 50);
     stopButton.setText("Stop");
     stopButton.setBackgroundColor(new Color(200, 0, 0, 0.3));
     stopButton.setPosition(550, 30);
-    stopButton.onPressSignal = "stop_button_press";
+    stopButton.onClickEventId = "stop_button_press";
 
     let playButton = new UIElement();
     playButton.setSize(100, 50);
     playButton.setText("Play");
     playButton.setBackgroundColor(new Color(0, 200, 0, 0.3));
     playButton.setPosition(700, 30);
-    playButton.onPressSignal = "play_button_press";
+    playButton.onClickEventId = "play_button_press";
 
     let cycleFramerateButton = new UIElement();
     cycleFramerateButton.setSize(150, 50);
@@ -43,7 +43,7 @@ function main(){
     cycleFramerateButton.setPosition(5, 400);
     let i = 0;
     let fps = [15, 30, 60];
-    cycleFramerateButton.onPress = () => {
+    cycleFramerateButton.onClick = () => {
         game.setMaxFPS(fps[i]);
         i = (i + 1) % 3;
     }
@@ -53,7 +53,7 @@ function main(){
     pauseButton.setText("Pause");
     pauseButton.setBackgroundColor(new Color(200, 0, 200, 1));
     pauseButton.setPosition(700, 400);
-    pauseButton.onPress = () => {
+    pauseButton.onClick = () => {
         game.getGameState().addScene(pauseMenu);
     }
 
@@ -67,7 +67,7 @@ function main(){
     resumeButton.setText("Resume");
     resumeButton.setBackgroundColor(new Color(200, 0, 200, 1));
     resumeButton.setPosition(400, 200);
-    resumeButton.onPress = () => {
+    resumeButton.onClick = () => {
         game.getGameState().removeScene();
     }
 

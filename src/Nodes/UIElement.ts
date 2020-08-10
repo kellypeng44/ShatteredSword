@@ -1,31 +1,34 @@
-import GameNode from "./GameNode";
+import CanvasNode from "./CanvasNode";
 import Color from "../Utils/Color";
 import Vec2 from "../DataTypes/Vec2";
-import GameEvent from "../Events/GameEvent";
 
-export default class UIElement extends GameNode{
-	parent: GameNode;
-	children: Array<GameNode>;
-	text: string;
-	backgroundColor: Color;
+export default class UIElement extends CanvasNode{
+	// Style attributes
 	textColor: Color;
-	onPress: Function;
-	onPressSignal: string;
+	backgroundColor: Color;
+	borderColor: Color;
+	text: string;
+	font: string;
+
+	// EventAttributes
+	onClick: Function;
+	onClickEventId: string;
 	onHover: Function;
+	onHoverEventId: string;
 
 	constructor(){
 		super();
-		
-		this.parent = null;
-		this.children = [];
-		this.text = "";
-		this.backgroundColor = new Color(0, 0, 0, 0);
 		this.textColor = new Color(0, 0, 0, 1);
+		this.backgroundColor = new Color(0, 0, 0, 0);
+		this.borderColor = new Color(0, 0, 0, 0);
+		this.text = "";
+		this.font = "30px Arial";
 
-		this.onPress = null;
-		this.onPressSignal = null;
+		this.onClick = null;
+		this.onClickEventId = null;
 
 		this.onHover = null;
+		this.onHoverEventId = null;
 	}
 
 	setPosition(vecOrX: Vec2 | number, y: number = null): void {
@@ -58,7 +61,7 @@ export default class UIElement extends GameNode{
 
 	update(deltaT: number): void {
 		if(this.input.isMouseJustPressed()){
-			let mousePos =  this.input.getMousePressPosition();
+			let mousePos = this.input.getMousePressPosition();
 			if(mousePos.x >= this.position.x && mousePos.x <= this.position.x + this.size.x){
 				// Inside x bounds
 				if(mousePos.y >= this.position.y && mousePos.y <= this.position.y + this.size.y){
@@ -67,12 +70,12 @@ export default class UIElement extends GameNode{
 						this.onHover();
 					}
 
-					if(this.onPress !== null){
-						this.onPress();
+					if(this.onClick !== null){
+						this.onClick();
 					}
-					if(this.onPressSignal !== null){
-						let event = new GameEvent(this.onPressSignal, {});
-						this.eventQueue.addEvent(event);
+					if(this.onClickEventId !== null){
+						let data = {};
+						this.emit(this.onClickEventId, data);
 					}
 				}
 			}
@@ -83,7 +86,7 @@ export default class UIElement extends GameNode{
 		ctx.fillStyle = this.backgroundColor.toStringRGBA();
 		ctx.fillRect(this.position.x - viewportOrigin.x, this.position.y - viewportOrigin.y, this.size.x, this.size.y);
 		ctx.fillStyle = this.textColor.toStringRGBA();
-		ctx.font = "30px Arial"
+		ctx.font = this.font;
 		ctx.fillText(this.text, this.position.x - viewportOrigin.x, this.position.y - viewportOrigin.y + 30);
 	}
 }

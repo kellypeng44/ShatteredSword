@@ -1,10 +1,10 @@
-import GameNode from "./GameNode";
+import CanvasNode from "./CanvasNode";
 import Color from "../Utils/Color";
 import Vec2 from "../DataTypes/Vec2";
 import RandUtils from "../Utils/RandUtils";
 
-export default class ColoredCircle extends GameNode{
-	private color: Color;
+export default class ColoredCircle extends CanvasNode{
+    private color: Color;
 
     constructor(){
         super();

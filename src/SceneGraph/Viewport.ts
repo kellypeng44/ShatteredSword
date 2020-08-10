@@ -1,6 +1,7 @@
 import Vec2 from "../DataTypes/Vec2";
 import Vec4 from "../DataTypes/Vec4";
 import GameNode from "../Nodes/GameNode";
+import CanvasNode from "../Nodes/CanvasNode";
 import MathUtils from "../Utils/MathUtils";
 
 export default class Viewport{
@@ -39,7 +40,7 @@ export default class Viewport{
 		}
     }
     
-    includes(node: GameNode): boolean {
+    includes(node: CanvasNode): boolean {
         let nodePos = node.getPosition();
         let nodeSize = node.getSize();
         if(nodePos.x + nodeSize.x > this.position.x && nodePos.x < this.position.x + this.size.x){

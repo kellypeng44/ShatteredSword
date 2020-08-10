@@ -1,15 +1,15 @@
 import SceneGraph from "./SceneGraph";
-import GameNode from "../Nodes/GameNode";
+import CanvasNode from "../Nodes/CanvasNode";
 import Viewport from "./Viewport";
 
 export default class SceneGraphArray extends SceneGraph{
-	private nodeList: Array<GameNode>;
+	private nodeList: Array<CanvasNode>;
 	private turnOffViewportCulling_demoTool: boolean;
 
     constructor(viewport: Viewport){
         super(viewport);
 
-        this.nodeList = new Array<GameNode>();
+        this.nodeList = new Array<CanvasNode>();
         this.turnOffViewportCulling_demoTool = false;
     }
 
@@ -17,18 +17,18 @@ export default class SceneGraphArray extends SceneGraph{
         this.turnOffViewportCulling_demoTool = bool;
     }
 
-    addNodeSpecific(node: GameNode, id: string): void {
+    addNodeSpecific(node: CanvasNode, id: string): void {
         this.nodeList.push(node);
     }
 
-    removeNodeSpecific(node: GameNode, id: string): void {
+    removeNodeSpecific(node: CanvasNode, id: string): void {
         let index = this.nodeList.indexOf(node);
         if(index > -1){
             this.nodeList.splice(index, 1);
         }
     }
 
-    getNodeAtCoords(x: number, y: number): GameNode {
+    getNodeAtCoords(x: number, y: number): CanvasNode {
         // TODO: This only returns the first node found. There is no notion of z coordinates
         for(let node of this.nodeList){
             if(node.contains(x, y)){
@@ -44,17 +44,17 @@ export default class SceneGraphArray extends SceneGraph{
         }
     }
 
-    getVisibleSet(): Array<GameNode> {
+    getVisibleSet(): Array<CanvasNode> {
         // If viewport culling is turned off for demonstration
         if(this.turnOffViewportCulling_demoTool){
-            let visibleSet = new Array<GameNode>();
+            let visibleSet = new Array<CanvasNode>();
             for(let node of this.nodeList){
                 visibleSet.push(node);
             }
             return visibleSet;
         }
 
-        let visibleSet = new Array<GameNode>();
+        let visibleSet = new Array<CanvasNode>();
 
         for(let node of this.nodeList){
             if(this.viewport.includes(node)){
