@@ -3,6 +3,7 @@ import InputReceiver from "../Input/InputReceiver";
 import InputHandler from "../Input/InputHandler";
 import Recorder from "../Playback/Recorder";
 import GameState from "../GameState/GameState";
+import Debug from "../Debug/Debug";
 
 export default class GameLoop{
 	// The amount of time to spend on a physics step
@@ -33,7 +34,8 @@ export default class GameLoop{
 	private inputHandler: InputHandler;
 	private inputReceiver: InputReceiver;
 	private recorder: Recorder;
-	private gameState: GameState;
+    private gameState: GameState;
+    private debug: Debug;
 
     constructor(){
         this.maxFPS = 60;
@@ -59,6 +61,7 @@ export default class GameLoop{
         this.inputReceiver = InputReceiver.getInstance();
         this.recorder = new Recorder();
         this.gameState = new GameState();
+        this.debug = Debug.getInstance();
     }
 
     private initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
@@ -76,12 +79,6 @@ export default class GameLoop{
         return this.gameState;
     }
 
-    private renderFPS(ctx: CanvasRenderingContext2D): void {
-        ctx.fillStyle = "black";
-		ctx.font = "30px Arial"
-		ctx.fillText(this.fps.toFixed(1), 5, 5 + 30);
-    }
-
     private updateFrameCount(timestep: number): void {
         this.frame += 1;
         this.numFramesInSum += 1;
@@ -91,6 +88,8 @@ export default class GameLoop{
             this.numFramesInSum = 0;
             this.runningFrameSum = 0;
         }
+
+        this.debug.log("fps", "FPS: " + this.fps.toFixed(1));
     }
 
     start(): void {
@@ -148,6 +147,6 @@ export default class GameLoop{
     render(): void {
         this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         this.gameState.render(this.ctx);
-        this.renderFPS(this.ctx);
+        this.debug.render(this.ctx);
     }
 }

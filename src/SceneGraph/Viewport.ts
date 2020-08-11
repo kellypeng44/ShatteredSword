@@ -69,8 +69,8 @@ export default class Viewport{
             this.position.x = this.following.getPosition().x - this.size.x/2;
             this.position.y = this.following.getPosition().y - this.size.y/2;
             let [min, max] = this.bounds.split();
-            this.position.x = MathUtils.clamp(this.position.x, min.x, max.x - this.size.x/2);
-            this.position.y = MathUtils.clamp(this.position.y, min.y, max.y - this.size.y/2);
+            this.position.x = MathUtils.clamp(this.position.x, min.x, max.x - this.size.x);
+            this.position.y = MathUtils.clamp(this.position.y, min.y, max.y - this.size.y);
         }
     }
 }

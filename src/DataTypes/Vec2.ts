@@ -1,22 +1,22 @@
-export default class Vec2{
+export default class Vec2 {
 
-	public x : number;
-	public y : number;
+	public x: number;
+	public y: number;
 
-	constructor(x : number = 0, y : number = 0){
+	constructor(x: number = 0, y: number = 0) {
 		this.x = x;
 		this.y = y;
 	}
 
-	magSq() : number{
+	magSq(): number {
 		return this.x*this.x + this.y*this.y;
 	}
 
-	mag() : number {
+	mag(): number {
 		return Math.sqrt(this.magSq());
 	}
 
-	normalize() : Vec2{
+	normalize(): Vec2 {
 		if(this.x === 0 && this.y === 0) return this;
 		let mag = this.mag();
 		this.x /= mag;
@@ -24,17 +24,17 @@ export default class Vec2{
 		return this;
 	}
 
-	setToAngle(angle : number) : Vec2{
+	setToAngle(angle: number): Vec2 {
 		this.x = Math.cos(angle);
 		this.y = Math.sin(angle);
 		return this;
 	}
 
-	scaleTo(magnitude : number) : Vec2{
+	scaleTo(magnitude: number): Vec2 {
 		return this.normalize().scale(magnitude);
 	}
 
-	scale(factor : number, yFactor : number = null) : Vec2{
+	scale(factor: number, yFactor: number = null): Vec2 {
 		if(yFactor !== null){
 			this.x *= factor;
 			this.y *= yFactor;
@@ -45,7 +45,7 @@ export default class Vec2{
 		return this;
 	}
 
-	rotate(angle : number) : Vec2{
+	rotate(angle: number): Vec2 {
 		let cs = Math.cos(angle);
 		let sn = Math.sin(angle);
 		let tempX = this.x*cs - this.y*sn;
@@ -55,25 +55,29 @@ export default class Vec2{
 		return this;
 	}
 
-	set(x : number, y : number) : Vec2{
+	set(x: number, y: number): Vec2 {
 		this.x = x;
 		this.y = y;
 		return this;
 	}
 
-	add(other : Vec2) : Vec2{
+	add(other: Vec2): Vec2 {
 		this.x += other.x;
 		this.y += other.y;
 		return this;
 	}
 
-	sub(other : Vec2) : Vec2{
+	sub(other: Vec2): Vec2 {
 		this.x -= other.x;
 		this.y -= other.y;
 		return this;
 	}
 
-	toString() : string{
+	toString(): string {
 		return "(" + this.x + ", " + this.y + ")";
+	}
+
+	toFixed(): string {
+		return "(" + this.x.toFixed(1) + ", " + this.y.toFixed(1) + ")";
 	}
 }
