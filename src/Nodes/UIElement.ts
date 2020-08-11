@@ -12,6 +12,8 @@ export default class UIElement extends CanvasNode{
 	fontSize: number;
 	hAlign: string;
 	vAlign: string;
+	borderRadius: number;
+	borderWidth: number;
 
 	// EventAttributes
 	onClick: Function;
@@ -36,6 +38,8 @@ export default class UIElement extends CanvasNode{
 		this.fontSize = 30;
 		this.hAlign = "center";
 		this.vAlign = "center";
+		this.borderRadius = 5;
+		this.borderWidth = 1;
 
 		this.onClick = null;
 		this.onClickEventId = null;
@@ -143,6 +147,10 @@ export default class UIElement extends CanvasNode{
 		return this.backgroundColor.toStringRGBA();
 	}
 
+	protected calculateBorderColor(): string {
+		return this.borderColor.toStringRGBA();
+	}
+
 	protected calculateTextColor(): string {
 		return this.textColor.toStringRGBA();
 	}
@@ -152,8 +160,12 @@ export default class UIElement extends CanvasNode{
 		let offset = this.calculateOffset(ctx);
 
 		ctx.fillStyle = this.calculateBackgroundColor();
-		ctx.fillRect(this.position.x - origin.x, this.position.y - origin.y, this.size.x, this.size.y);
+		ctx.fillRoundedRect(this.position.x - origin.x, this.position.y - origin.y, this.size.x, this.size.y, this.borderRadius);
 		
+		ctx.strokeStyle = this.calculateBorderColor();
+		ctx.lineWidth = this.borderWidth;
+		ctx.strokeRoundedRect(this.position.x - origin.x, this.position.y - origin.y, this.size.x, this.size.y, this.borderRadius);
+
 		ctx.fillStyle = this.calculateTextColor();
 		ctx.fillText(this.text, this.position.x + offset.x - origin.x, this.position.y + offset.y - origin.y);
 	}
