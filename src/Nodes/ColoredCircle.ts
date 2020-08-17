@@ -10,7 +10,6 @@ export default class ColoredCircle extends CanvasNode{
         super();
         this.position = new Vec2(RandUtils.randInt(0, 1000), RandUtils.randInt(0, 1000));
         this.color = RandUtils.randColor();
-        console.log(this.color.toStringRGB());
         this.size = new Vec2(50, 50);
     }
 

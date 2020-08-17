@@ -3,30 +3,36 @@ import Viewport from "../SceneGraph/Viewport";
 import SceneGraph from "../SceneGraph/SceneGraph";
 import SceneGraphArray from "../SceneGraph/SceneGraphArray";
 import CanvasNode from "../Nodes/CanvasNode";
-import CavnasNodeFactory from "./Factories/CanvasNodeFactory";
 import CanvasNodeFactory from "./Factories/CanvasNodeFactory";
 import GameState from "./GameState";
+import Tilemap from "../Nodes/Tilemap";
+import TilemapFactory from "./Factories/TilemapFactory";
 
 export default class Scene {
     private gameState: GameState;
     private viewport: Viewport
     private parallax: Vec2;
-	sceneGraph: SceneGraph;
+    sceneGraph: SceneGraph;
+    private tilemaps: Array<Tilemap>;
     private paused: boolean;
     private hidden: boolean;
     
     // Factories
-    public canvas: CavnasNodeFactory;
+    public canvasNode: CanvasNodeFactory;
+    public tilemap: TilemapFactory;
 
     constructor(viewport: Viewport, gameState: GameState){
         this.gameState = gameState;
         this.viewport = viewport;
         this.parallax = new Vec2(1, 1);
         this.sceneGraph = new SceneGraphArray(this.viewport, this);
+        this.tilemaps = new Array<Tilemap>();
         this.paused = false;
         this.hidden = false;
 
-        this.canvas = new CanvasNodeFactory(this, this.viewport);
+        // Factories
+        this.canvasNode = new CanvasNodeFactory(this, this.viewport);
+        this.tilemap = new TilemapFactory(this, this.viewport);
     }
 
     setPaused(pauseValue: boolean): void {
@@ -71,6 +77,10 @@ export default class Scene {
         this.sceneGraph.addNode(children);
     }
 
+    addTilemap(tilemap: Tilemap): void {
+        this.tilemaps.push(tilemap);
+    }
+
     update(deltaT: number): void {
         if(!this.paused){
             this.viewport.update(deltaT);
@@ -83,7 +93,17 @@ export default class Scene {
             let visibleSet = this.sceneGraph.getVisibleSet();
             let viewportOrigin = this.viewport.getPosition();
             let origin = new Vec2(viewportOrigin.x*this.parallax.x, viewportOrigin.y*this.parallax.y);
+            let size = this.viewport.getSize();
+
+            // Render visible set
             visibleSet.forEach(node => node.render(ctx, origin));
+
+            // Render tilemaps
+            this.tilemaps.forEach(tilemap => {
+                if(tilemap.isReady()){
+                    tilemap.render(ctx, origin, size);
+                }
+            });
         }
     }
 }

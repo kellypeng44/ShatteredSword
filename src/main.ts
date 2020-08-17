@@ -6,6 +6,7 @@ import ColoredCircle from "./Nodes/ColoredCircle";
 import Color from "./Utils/Color";
 import Button from "./Nodes/UIElements/Button";
 import {} from "./index";
+import OrthogonalTilemap from "./Nodes/Tilemaps/OrthogonalTilemap";
 
 function main(){
     // Create the game object
@@ -23,28 +24,28 @@ function main(){
     pauseMenu.setParallax(0, 0);
 
     // Initialize GameObjects
-    let player = mainScene.canvas.add(Player);
+    let player = mainScene.canvasNode.add(Player);
     mainScene.getViewport().follow(player);
 
-    let recordButton = uiLayer.canvas.add(Button);
+    let recordButton = uiLayer.canvasNode.add(Button);
     recordButton.setSize(100, 50);
     recordButton.setText("Record");
     recordButton.setPosition(400, 30);
     recordButton.onClickEventId = "record_button_press";
 
-    let stopButton = uiLayer.canvas.add(Button);
+    let stopButton = uiLayer.canvasNode.add(Button);
     stopButton.setSize(100, 50);
     stopButton.setText("Stop");
     stopButton.setPosition(550, 30);
     stopButton.onClickEventId = "stop_button_press";
 
-    let playButton = uiLayer.canvas.add(Button);
+    let playButton = uiLayer.canvasNode.add(Button);
     playButton.setSize(100, 50);
     playButton.setText("Play");
     playButton.setPosition(700, 30);
     playButton.onClickEventId = "play_button_press";
 
-    let cycleFramerateButton = uiLayer.canvas.add(Button);
+    let cycleFramerateButton = uiLayer.canvasNode.add(Button);
     cycleFramerateButton.setSize(150, 50);
     cycleFramerateButton.setText("Cycle FPS");
     cycleFramerateButton.setPosition(5, 400);
@@ -55,7 +56,7 @@ function main(){
         i = (i + 1) % 3;
     }
 
-    let pauseButton = uiLayer.canvas.add(Button);
+    let pauseButton = uiLayer.canvasNode.add(Button);
     pauseButton.setSize(100, 50);
     pauseButton.setText("Pause");
     pauseButton.setPosition(700, 400);
@@ -64,12 +65,12 @@ function main(){
         pauseMenu.enable();
     }
 
-    let modalBackground = pauseMenu.canvas.add(UIElement);
+    let modalBackground = pauseMenu.canvasNode.add(UIElement);
     modalBackground.setSize(400, 200);
     modalBackground.setBackgroundColor(new Color(0, 0, 0, 0.4));
     modalBackground.setPosition(200, 100);
 
-    let resumeButton = pauseMenu.canvas.add(Button);
+    let resumeButton = pauseMenu.canvasNode.add(Button);
     resumeButton.setSize(100, 50);
     resumeButton.setText("Resume");
     resumeButton.setPosition(400, 200);
@@ -79,18 +80,13 @@ function main(){
     }
 
     for(let i = 0; i < 10; i++){
-        mainScene.canvas.add(ColoredCircle);
+        mainScene.canvasNode.add(ColoredCircle);
     }
 
-    for(let i = 0; i < 20; i++){
-        let cc = backgroundScene.canvas.add(ColoredCircle);
-        cc.setSize(30, 30);
-        cc.setColor(cc.getColor().darken().darken())
-        cc.getColor().a = 0.8;
-    }
+    backgroundScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/MultiLayer.json");
 
     for(let i = 0; i < 30; i++){
-        let cc = foregroundLayer.canvas.add(ColoredCircle);
+        let cc = foregroundLayer.canvasNode.add(ColoredCircle);
         cc.setSize(80, 80);
         cc.setColor(cc.getColor().lighten().lighten())
         cc.getColor().a = 0.5;

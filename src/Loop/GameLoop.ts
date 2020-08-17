@@ -4,6 +4,7 @@ import InputHandler from "../Input/InputHandler";
 import Recorder from "../Playback/Recorder";
 import GameState from "../GameState/GameState";
 import Debug from "../Debug/Debug";
+import ResourceManager from "../ResourceManager/ResourceManager";
 
 export default class GameLoop{
 	// The amount of time to spend on a physics step
@@ -36,6 +37,7 @@ export default class GameLoop{
 	private recorder: Recorder;
     private gameState: GameState;
     private debug: Debug;
+    private resourceManager: ResourceManager;
 
     constructor(){
         this.maxFPS = 60;
@@ -62,12 +64,15 @@ export default class GameLoop{
         this.recorder = new Recorder();
         this.gameState = new GameState();
         this.debug = Debug.getInstance();
+        this.resourceManager = ResourceManager.getInstance();
     }
 
     private initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
         canvas.width = width;
         canvas.height = height;
-        return canvas.getContext("2d");
+        let ctx = canvas.getContext("2d");
+        ctx.imageSmoothingEnabled = false;
+        return ctx;
     }
 
     setMaxFPS(initMax: number): void {

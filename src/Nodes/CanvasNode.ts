@@ -1,6 +1,5 @@
 import GameNode from "./GameNode";
 import Vec2 from "../DataTypes/Vec2";
-import Viewport from "../SceneGraph/Viewport";
 import Scene from "../GameState/Scene";
 
 export default abstract class CanvasNode extends GameNode{
