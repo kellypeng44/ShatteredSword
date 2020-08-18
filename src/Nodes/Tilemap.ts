@@ -15,7 +15,7 @@ export default abstract class Tilemap extends GameNode {
         super();
         this.tilesets = new Array<Tileset>();
         this.worldSize = new Vec2(0, 0);
-        this.init(tilemapData, layerData);
+        this.parseTilemapData(tilemapData, layerData);
     }
 
     getTilesets(): Tileset[] {
@@ -36,7 +36,7 @@ export default abstract class Tilemap extends GameNode {
     /**
      * Sets up the tileset using the data loaded from file
      */
-    abstract init(tilemapData: TiledTilemapData, layerData: TiledLayerData): void;
+    abstract parseTilemapData(tilemapData: TiledTilemapData, layerData: TiledLayerData): void;
 
     abstract render(ctx: CanvasRenderingContext2D, origin: Vec2, viewportSize: Vec2): void;
 }

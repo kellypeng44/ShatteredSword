@@ -1,6 +1,5 @@
 import GameLoop from "./Loop/GameLoop";
-import Scene from "./GameState/Scene";
-import Player from "./Nodes/Player";
+import Player from "./Player";
 import UIElement from "./Nodes/UIElement";
 import ColoredCircle from "./Nodes/ColoredCircle";
 import Color from "./Utils/Color";
@@ -24,7 +23,7 @@ function main(){
     pauseMenu.setParallax(0, 0);
 
     // Initialize GameObjects
-    let player = mainScene.canvasNode.add(Player);
+    let player = mainScene.physics.add(Player);
     mainScene.getViewport().follow(player);
 
     let recordButton = uiLayer.canvasNode.add(Button);
@@ -79,11 +78,7 @@ function main(){
         pauseMenu.disable();
     }
 
-    for(let i = 0; i < 10; i++){
-        mainScene.canvasNode.add(ColoredCircle);
-    }
-
-    backgroundScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/MultiLayer.json");
+    mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/MultiLayer.json");
 
     for(let i = 0; i < 30; i++){
         let cc = foregroundLayer.canvasNode.add(ColoredCircle);

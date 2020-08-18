@@ -1,7 +1,10 @@
 {
     "files": [
         "src/main.ts",
+        "src/Player.ts",
 
+        "src/DataTypes/Tilesets/TiledData",
+        "src/DataTypes/Tilesets/Tileset",
         "src/DataTypes/Collection.ts",
         "src/DataTypes/Map.ts",
         "src/DataTypes/Queue.ts",
@@ -9,10 +12,15 @@
         "src/DataTypes/Vec2.ts",
         "src/DataTypes/Vec4.ts",
 
+        "src/Debug/Debug.ts",
+
         "src/Events/EventQueue.ts",
         "src/Events/GameEvent.ts",
         "src/Events/Receiver.ts",
 
+        "src/GameState/Factories/CanvasNodeFactory.ts",
+        "src/GameState/Factories/PhysicsNodeFactory.ts",
+        "src/GameState/Factories/TilemapFactory.ts",
         "src/GameState/GameState.ts",
         "src/GameState/Scene.ts",
 
@@ -21,12 +29,24 @@
         
         "src/Loop/GameLoop.ts",
 
+        "src/Nodes/Tilemaps/OrgthogonalTilemap.ts",
+        "src/Nodes/UIElements/Button.ts",
+        "src/Nodes/UIElements/Label.ts",
+        "src/Nodes/CanvasNode.ts",
         "src/Nodes/ColoredCircle.ts",
         "src/Nodes/GameNode.ts",
-        "src/Nodes/Player.ts",
+        "src/Nodes/PlayerSprite.ts",
+        "src/Nodes/Tilemap.ts",
         "src/Nodes/UIElement.ts",
 
+        "src/Physics/Colliders/AABB.ts",
+        "src/Physics/Colliders/Collider.ts",
+        "src/Physics/PhysicsManager.ts",
+        "src/Physics/PhysicsNode.ts",
+
         "src/Playback/Recorder.ts",
+
+        "src/ResourceManager/ResourceManager.ts",
 
         "src/SceneGraph/SceneGraph.ts",
         "src/SceneGraph/SceneGraphArray.ts",
@@ -34,7 +54,8 @@
         
         "src/Utils/Color.ts",
         "src/Utils/MathUtils.ts",
-        "src/Utils/RandUtils.ts"
+        "src/Utils/RandUtils.ts",
+        "src/Utils/StringUtils.ts"
     ],
     "compilerOptions": {
         "noImplicitAny": true,

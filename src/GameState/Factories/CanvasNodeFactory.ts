@@ -1,6 +1,7 @@
 import Scene from "../Scene";
 import Viewport from "../../SceneGraph/Viewport";
 import CanvasItem from "../../Nodes/CanvasNode"
+import PlayerSprite from "../../Nodes/PlayerSprite";
 
 export default class CanvasNodeFactory {
 	private scene: Scene;

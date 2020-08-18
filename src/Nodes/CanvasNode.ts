@@ -4,15 +4,10 @@ import Scene from "../GameState/Scene";
 
 export default abstract class CanvasNode extends GameNode{
 	protected size: Vec2;
-	protected scene: Scene;
 
 	constructor(){
 		super();
 		this.size = new Vec2(0, 0);
-	}
-
-	init(scene: Scene){
-		this.scene = scene;
 	}
 
 	getSize(): Vec2 {

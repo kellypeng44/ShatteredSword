@@ -20,6 +20,7 @@ export default class TilemapFactory {
             // For each of the layers in the tilemap, create a tilemap
             for(let layer of tilemapData.layers){
                 let tilemap = new constr(tilemapData, layer);
+                tilemap.init(this.scene);
 
                 // Add to scene
                 this.scene.addTilemap(tilemap);

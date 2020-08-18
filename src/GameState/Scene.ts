@@ -7,12 +7,15 @@ import CanvasNodeFactory from "./Factories/CanvasNodeFactory";
 import GameState from "./GameState";
 import Tilemap from "../Nodes/Tilemap";
 import TilemapFactory from "./Factories/TilemapFactory";
+import PhysicsManager from "../Physics/PhysicsManager";
+import PhysicsNodeFactory from "./Factories/PhysicsNodeFactory";
 
 export default class Scene {
     private gameState: GameState;
     private viewport: Viewport
     private parallax: Vec2;
     sceneGraph: SceneGraph;
+    private physicsManager: PhysicsManager;
     private tilemaps: Array<Tilemap>;
     private paused: boolean;
     private hidden: boolean;
@@ -20,6 +23,7 @@ export default class Scene {
     // Factories
     public canvasNode: CanvasNodeFactory;
     public tilemap: TilemapFactory;
+    public physics: PhysicsNodeFactory;
 
     constructor(viewport: Viewport, gameState: GameState){
         this.gameState = gameState;
@@ -29,10 +33,12 @@ export default class Scene {
         this.tilemaps = new Array<Tilemap>();
         this.paused = false;
         this.hidden = false;
+        this.physicsManager = new PhysicsManager();
 
         // Factories
         this.canvasNode = new CanvasNodeFactory(this, this.viewport);
         this.tilemap = new TilemapFactory(this, this.viewport);
+        this.physics = new PhysicsNodeFactory(this, this.physicsManager);
     }
 
     setPaused(pauseValue: boolean): void {
@@ -84,6 +90,7 @@ export default class Scene {
     update(deltaT: number): void {
         if(!this.paused){
             this.viewport.update(deltaT);
+            this.physicsManager.update(deltaT);
             this.sceneGraph.update(deltaT);
         }
     }
