@@ -10,16 +10,26 @@ export default abstract class Tilemap extends GameNode {
     protected data: number[];
     protected tilesets: Tileset[];
     protected worldSize: Vec2;
+    protected tileSize: Vec2;
 
     constructor(tilemapData: TiledTilemapData, layerData: TiledLayerData){
         super();
         this.tilesets = new Array<Tileset>();
         this.worldSize = new Vec2(0, 0);
+        this.tileSize = new Vec2(0, 0);
         this.parseTilemapData(tilemapData, layerData);
     }
 
     getTilesets(): Tileset[] {
         return this.tilesets;
+    }
+
+    getWorldSize(): Vec2 {
+        return this.worldSize;
+    }
+
+    getTileSize(): Vec2 {
+        return this.tileSize;
     }
 
     isReady(): boolean {
@@ -32,6 +42,8 @@ export default abstract class Tilemap extends GameNode {
         }
         return true;
     }
+
+    abstract forEachTile(func: Function): void;
 
     /**
      * Sets up the tileset using the data loaded from file

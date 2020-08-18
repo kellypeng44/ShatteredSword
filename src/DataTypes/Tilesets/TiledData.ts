@@ -1,6 +1,8 @@
 export class TiledTilemapData {
     height: number;
     width: number;
+    tileheight: number;
+    tilewidth: number;
     orientation: string;
     layers: TiledLayerData[];
     tilesets: TiledTilesetData[];

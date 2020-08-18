@@ -4,6 +4,8 @@ import Tilemap from "../../Nodes/Tilemap"
 import ResourceManager from "../../ResourceManager/ResourceManager";
 import { TiledTilemapData } from "../../DataTypes/Tilesets/TiledData";
 import StringUtils from "../../Utils/StringUtils";
+import StaticBody from "../../Physics/StaticBody";
+import Vec2 from "../../DataTypes/Vec2";
 
 export default class TilemapFactory {
     private scene: Scene;
@@ -24,6 +26,17 @@ export default class TilemapFactory {
 
                 // Add to scene
                 this.scene.addTilemap(tilemap);
+
+                let worldSize = tilemap.getWorldSize();
+                let tileSize = tilemap.getTileSize();
+
+                tilemap.forEachTile((tileIndex: number, i: number) => {
+                    if(tileIndex !== 0){
+                        let x = (i % worldSize.x) * tileSize.x * 4;
+                        let y = Math.floor(i / worldSize.y) * tileSize.y * 4;
+                        this.scene.physics.add(StaticBody, new Vec2(x, y), new Vec2(tileSize.x * 4, tileSize.y * 4));
+                    }
+                });
 
                 // Load images for the tilesets
                 tilemap.getTilesets().forEach(tileset => {

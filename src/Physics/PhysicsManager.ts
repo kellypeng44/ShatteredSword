@@ -1,5 +1,7 @@
 import PhysicsNode from "./PhysicsNode";
 import Vec2 from "../DataTypes/Vec2";
+import StaticBody from "./StaticBody";
+import Debug from "../Debug/Debug";
 
 export default class PhysicsManager {
 
@@ -47,11 +49,8 @@ export default class PhysicsManager {
                 }
             }
 
-
             for(let staticNode of staticSet){
-                if(movingNode.getCollider().willCollideWith(staticNode.getCollider(), velocity, new Vec2(0, 0))){
-                    this.handleCollision(movingNode, staticNode, velocity);
-                }
+                this.handleCollision(movingNode, staticNode, velocity, (<StaticBody>staticNode).id);
             }
 
             movingNode.finishMove(velocity);
@@ -61,20 +60,94 @@ export default class PhysicsManager {
         this.movements = new Array();
     }
 
-    handleCollision(movingNode: PhysicsNode, staticNode: PhysicsNode, velocity: Vec2){
-        let ASize = movingNode.getCollider().getSize();
-        let A = new Vec2(movingNode.getPosition().x + ASize.x, movingNode.getPosition().y + ASize.y);
-        let BSize = staticNode.getCollider().getSize();
-        let B = new Vec2(staticNode.getPosition().x + BSize.x, staticNode.getPosition().y + BSize.y);
+    handleCollision(movingNode: PhysicsNode, staticNode: PhysicsNode, velocity: Vec2, id: String){
+        let sizeA = movingNode.getCollider().getSize();
+        let A = movingNode.getPosition();
+        let velA = velocity;
+        let sizeB = staticNode.getCollider().getSize();
+        let B = staticNode.getPosition();
+        let velB = new Vec2(0, 0);
         
         let firstContact = new Vec2(0, 0);
-        firstContact.x = (B.x-(BSize.x/2) - (A.x + (ASize.x/2)))/(velocity.x - 0);
-        firstContact.y = (B.y-(BSize.y/2) - (A.y + (ASize.y/2)))/(velocity.y - 0);
+        let lastContact = new Vec2(0, 0);
 
-        if(firstContact.x < 1 || firstContact.y < 1){
-            // We collided
-            let firstCollisionTime = Math.min(firstContact.x, firstContact.y);
-            velocity.scale(firstCollisionTime);
+        let collidingX = false;
+        let collidingY = false;
+
+        // Sort by position
+        if(B.x < A.x){
+            // Swap, because B is to the left of A
+            let temp: Vec2;
+            temp = sizeA;
+            sizeA = sizeB;
+            sizeB = temp;
+
+            temp = A;
+            A = B;
+            B = temp;
+
+            temp = velA;
+            velA = velB;
+            velB = temp;
+        }
+
+        // A is left, B is right
+        firstContact.x = Infinity;
+        lastContact.x = Infinity;
+
+        if (B.x >= A.x + sizeA.x){
+            // If we aren't currently colliding
+            let relVel = velA.x - velB.x;
+            
+            if(relVel > 0){
+                // If they are moving towards each other
+                firstContact.x = (B.x - (A.x + (sizeA.x)))/(relVel);
+                lastContact.x = ((B.x + sizeB.x) - A.x)/(relVel);
+            }
+        } else {
+            collidingX = true;
+        }
+
+        if(B.y < A.y){
+            // Swap, because B is above A
+            let temp: Vec2;
+            temp = sizeA;
+            sizeA = sizeB;
+            sizeB = temp;
+
+            temp = A;
+            A = B;
+            B = temp;
+
+            temp = velA;
+            velA = velB;
+            velB = temp;
+        }
+
+        // A is top, B is bottom
+        firstContact.y = Infinity;
+        lastContact.y = Infinity;
+
+        if (B.y >= A.y + sizeA.y){
+            // If we aren't currently colliding
+            let relVel = velA.y - velB.y;
+            
+            if(relVel > 0){
+                // If they are moving towards each other
+                firstContact.y = (B.y - (A.y + (sizeA.y)))/(relVel);
+                lastContact.y = ((B.y + sizeB.y) - A.y)/(relVel);
+            }
+        } else {
+            collidingY = true;
+        }
+
+        if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
+            if(collidingX && collidingY){
+                // If we're already intersecting, freak out I guess?
+            } else {
+                let contactTime = Math.min(firstContact.x, firstContact.y);
+                velocity.scale(contactTime);
+            }
         }
     }
 }

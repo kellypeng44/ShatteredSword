@@ -7,14 +7,16 @@ import PlayerSprite from "./Nodes/PlayerSprite";
 export default class Player extends PhysicsNode {
 	velocity: Vec2;
 	speed: number;
-	debug: Debug;
+    debug: Debug;
+    size: Vec2;
 
     constructor(){
         super();
         this.velocity = new Vec2(0, 0);
         this.speed = 300;
+        this.size = new Vec2(50, 50);
         this.collider = new AABB();
-        this.collider.setSize(new Vec2(50, 50));
+        this.collider.setSize(this.size);
         this.position = new Vec2(0, 0);
 		this.debug = Debug.getInstance();
     }
@@ -22,7 +24,7 @@ export default class Player extends PhysicsNode {
     create(): void {
         let sprite = this.scene.canvasNode.add(PlayerSprite);
         sprite.setPosition(this.position);
-        sprite.setSize(50, 50);
+        sprite.setSize(this.size);
         this.children.push(sprite);
     }
 
@@ -38,7 +40,7 @@ export default class Player extends PhysicsNode {
         this.velocity = dir.scale(this.speed);
 		this.move(this.velocity.scale(deltaT));
 
-		this.debug.log("player", "Player Pos: " + this.position.toFixed());
+		this.debug.log("player", "Player Pos: " + this.position.toFixed() + " " + this.velocity.toFixed());
     }
 
 }

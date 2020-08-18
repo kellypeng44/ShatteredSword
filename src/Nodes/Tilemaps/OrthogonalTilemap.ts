@@ -7,8 +7,15 @@ import Tileset from "../../DataTypes/Tilesets/Tileset";
 export default class OrthogonalTilemap extends Tilemap {
     parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void {
         this.worldSize.set(tilemapData.width, tilemapData.height);
+        this.tileSize.set(tilemapData.tilewidth, tilemapData.tileheight);
         this.data = layer.data;
         tilemapData.tilesets.forEach(tilesetData => this.tilesets.push(new Tileset(tilesetData)));
+    }
+
+    forEachTile(func: Function){
+        for(let i = 0; i < this.data.length; i++){
+            func(this.data[i], i);
+        }
     }
 
     update(deltaT: number): void {}

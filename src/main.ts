@@ -78,7 +78,7 @@ function main(){
         pauseMenu.disable();
     }
 
-    mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/MultiLayer.json");
+    mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/SmallTest.json");
 
     for(let i = 0; i < 30; i++){
         let cc = foregroundLayer.canvasNode.add(ColoredCircle);
