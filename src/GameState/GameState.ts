@@ -13,7 +13,7 @@ export default class GameState{
         this.worldSize = new Vec2(1600, 1000);
         this.viewport = new Viewport();
         this.viewport.setSize(800, 500);
-        this.viewport.setBounds(0, 0, 1600, 1000);
+        this.viewport.setBounds(0, 0, 2560, 1280);
     }
 
     createScene(): Scene{

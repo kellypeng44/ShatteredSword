@@ -9,15 +9,21 @@ export default class Player extends PhysicsNode {
 	speed: number;
     debug: Debug;
     size: Vec2;
+    gravity: number = 7000;
+    type: string;
 
-    constructor(){
+    constructor(type: string){
         super();
+        this.type = type;
         this.velocity = new Vec2(0, 0);
-        this.speed = 300;
+        this.speed = 500;
         this.size = new Vec2(50, 50);
         this.collider = new AABB();
         this.collider.setSize(this.size);
         this.position = new Vec2(0, 0);
+        if(this.type === "topdown"){
+            this.position = new Vec2(100, 100);
+        }
 		this.debug = Debug.getInstance();
     }
 
@@ -29,18 +35,60 @@ export default class Player extends PhysicsNode {
     }
 
     update(deltaT: number): void {
+        if(this.type === "topdown"){
+            let dir = this.topdown_computeDirection();
+            this.velocity = this.topdown_computeVelocity(dir, deltaT);
+        } else {
+            let dir = this.platformer_computeDirection();
+            this.velocity = this.platformer_computeVelocity(dir, deltaT);
+        }
+
+		this.move(new Vec2(this.velocity.x * deltaT, this.velocity.y * deltaT));
+
+		this.debug.log("player", "Player Pos: " + this.position.toFixed() + ", Player Vel: " + this.velocity.toFixed());
+    }
+
+    topdown_computeDirection(): Vec2 {
         let dir = new Vec2(0, 0);
 		dir.x += this.input.isPressed('a') ? -1 : 0;
-		dir.x += this.input.isPressed('d') ? 1 : 0;
-		dir.y += this.input.isPressed('s') ? 1 : 0;
-		dir.y += this.input.isPressed('w') ? -1 : 0;
+        dir.x += this.input.isPressed('d') ? 1 : 0;
+        dir.y += this.input.isPressed('w') ? -1 : 0;
+        dir.y += this.input.isPressed('s') ? 1 : 0;
 
-		dir.normalize();
+        dir.normalize();        
 
-        this.velocity = dir.scale(this.speed);
-		this.move(this.velocity.scale(deltaT));
+        return dir;
+    }
 
-		this.debug.log("player", "Player Pos: " + this.position.toFixed() + " " + this.velocity.toFixed());
+    topdown_computeVelocity(dir: Vec2, deltaT: number): Vec2 {
+        let vel = new Vec2(dir.x * this.speed, dir.y * this.speed);
+        return vel
+    }
+
+    platformer_computeDirection(): Vec2 {
+        let dir = new Vec2(0, 0);
+		dir.x += this.input.isPressed('a') ? -1 : 0;
+        dir.x += this.input.isPressed('d') ? 1 : 0;
+        
+        if(this.isGrounded){
+            dir.y += this.input.isJustPressed('w') ? -1 : 0;
+        }
+
+        return dir;
+    }
+
+    platformer_computeVelocity(dir: Vec2, deltaT: number): Vec2 {
+        let vel = new Vec2(0, this.velocity.y);
+
+        if(this.isGrounded){
+            vel.y = dir.y*1800;
+        }
+
+        vel.y += this.gravity * deltaT;
+
+        vel.x = dir.x * this.speed;
+
+        return vel
     }
 
 }

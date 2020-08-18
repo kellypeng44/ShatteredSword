@@ -2,6 +2,7 @@ import PhysicsNode from "./PhysicsNode";
 import Vec2 from "../DataTypes/Vec2";
 import StaticBody from "./StaticBody";
 import Debug from "../Debug/Debug";
+import MathUtils from "../Utils/MathUtils";
 
 export default class PhysicsManager {
 
@@ -41,6 +42,7 @@ export default class PhysicsManager {
 
         // For now, we will only have the moving player, don't bother checking for collisions with other moving things
         for(let movingNode of dynamicSet){
+            movingNode.setIsGrounded(false);
             // Get velocity of node
             let velocity = null;
             for(let data of this.movements){
@@ -141,12 +143,34 @@ export default class PhysicsManager {
             collidingY = true;
         }
 
+        if(B.x < A.x){
+            // Swap, because B is to the left of A
+            let temp: Vec2;
+            temp = sizeA;
+            sizeA = sizeB;
+            sizeB = temp;
+
+            temp = A;
+            A = B;
+            B = temp;
+
+            temp = velA;
+            velA = velB;
+            velB = temp;
+        }
+
         if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
             if(collidingX && collidingY){
                 // If we're already intersecting, freak out I guess?
             } else {
-                let contactTime = Math.min(firstContact.x, firstContact.y);
-                velocity.scale(contactTime);
+                // let contactTime = Math.min(firstContact.x, firstContact.y);
+                // velocity.scale(contactTime);
+                let xScale = MathUtils.clamp(firstContact.x, 0, 1);
+                let yScale = MathUtils.clamp(firstContact.y, 0, 1);
+                if(yScale !== 1){
+                    movingNode.setIsGrounded(true);
+                } 
+                velocity.scale(xScale, yScale);
             }
         }
     }

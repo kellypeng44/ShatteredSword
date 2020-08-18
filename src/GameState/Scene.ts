@@ -102,15 +102,15 @@ export default class Scene {
             let origin = new Vec2(viewportOrigin.x*this.parallax.x, viewportOrigin.y*this.parallax.y);
             let size = this.viewport.getSize();
 
-            // Render visible set
-            visibleSet.forEach(node => node.render(ctx, origin));
-
             // Render tilemaps
             this.tilemaps.forEach(tilemap => {
-                if(tilemap.isReady()){
+                if(tilemap.isReady() && tilemap.isVisible()){
                     tilemap.render(ctx, origin, size);
                 }
             });
+
+            // Render visible set
+            visibleSet.forEach(node => node.render(ctx, origin));
         }
     }
 }

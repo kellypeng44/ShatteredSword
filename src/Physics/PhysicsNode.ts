@@ -9,11 +9,16 @@ export default abstract class PhysicsNode extends GameNode {
     protected children: Array<GameNode>;
     private manager: PhysicsManager;
     isMoving: boolean;
+    protected isGrounded: boolean;
 
     constructor(){
         super();
         this.children = new Array();
         this.isMoving = false;
+    }
+
+    setIsGrounded(isGrounded: boolean): void {
+        this.isGrounded = isGrounded;
     }
 
     addManager(manager: PhysicsManager): void {

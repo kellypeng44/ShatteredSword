@@ -58,8 +58,10 @@ export default class InputReceiver{
 
 			if(event.type === "key_down"){
 				let key = event.data.get("key")
-				this.keyJustPressed.set(key, true);
-				this.keyPressed.set(key, true);
+				if(!this.keyPressed.get(key)){
+					this.keyJustPressed.set(key, true);
+					this.keyPressed.set(key, true);
+				}
 			}
 
 			if(event.type === "key_up"){

@@ -5,10 +5,18 @@ import Tileset from "../../DataTypes/Tilesets/Tileset";
 
 
 export default class OrthogonalTilemap extends Tilemap {
+
     parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void {
         this.worldSize.set(tilemapData.width, tilemapData.height);
         this.tileSize.set(tilemapData.tilewidth, tilemapData.tileheight);
         this.data = layer.data;
+        this.visible = layer.visible;
+        this.collidable = false;
+        for(let item of layer.properties){
+            if(item.name === "Collidable"){
+                this.collidable = item.value;
+            }
+        }
         tilemapData.tilesets.forEach(tilesetData => this.tilesets.push(new Tileset(tilesetData)));
     }
 
@@ -20,6 +28,7 @@ export default class OrthogonalTilemap extends Tilemap {
 
     update(deltaT: number): void {}
 
+    // TODO: Don't render tiles that aren't on screen
     render(ctx: CanvasRenderingContext2D, origin: Vec2, viewportSize: Vec2) {
         for(let i = 0; i < this.data.length; i++){
             let tileIndex = this.data[i];

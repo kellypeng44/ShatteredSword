@@ -11,6 +11,8 @@ export default abstract class Tilemap extends GameNode {
     protected tilesets: Tileset[];
     protected worldSize: Vec2;
     protected tileSize: Vec2;
+    protected visible: boolean;
+    protected collidable: boolean;
 
     constructor(tilemapData: TiledTilemapData, layerData: TiledLayerData){
         super();
@@ -18,6 +20,14 @@ export default abstract class Tilemap extends GameNode {
         this.worldSize = new Vec2(0, 0);
         this.tileSize = new Vec2(0, 0);
         this.parseTilemapData(tilemapData, layerData);
+    }
+
+    isCollidable(): boolean {
+        return this.collidable;
+    }
+
+    isVisible(): boolean {
+        return this.visible;
     }
 
     getTilesets(): Tileset[] {

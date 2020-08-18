@@ -15,17 +15,12 @@ function main(){
     let backgroundScene = gameState.createScene();
     backgroundScene.setParallax(0.5, 0.5);
     let mainScene = gameState.createScene();
-    let foregroundLayer = gameState.createScene();
-    foregroundLayer.setParallax(1.5, 1.5);
     let uiLayer = gameState.createScene();
     uiLayer.setParallax(0, 0);
     let pauseMenu = gameState.createScene();
     pauseMenu.setParallax(0, 0);
 
     // Initialize GameObjects
-    let player = mainScene.physics.add(Player);
-    mainScene.getViewport().follow(player);
-
     let recordButton = uiLayer.canvasNode.add(Button);
     recordButton.setSize(100, 50);
     recordButton.setText("Record");
@@ -79,13 +74,8 @@ function main(){
     }
 
     mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/Platformer.json");
-
-    for(let i = 0; i < 30; i++){
-        let cc = foregroundLayer.canvasNode.add(ColoredCircle);
-        cc.setSize(80, 80);
-        cc.setColor(cc.getColor().lighten().lighten())
-        cc.getColor().a = 0.5;
-    }
+    let player = mainScene.physics.add(Player, "platformer");
+    mainScene.getViewport().follow(player);
 
     pauseMenu.disable();
 

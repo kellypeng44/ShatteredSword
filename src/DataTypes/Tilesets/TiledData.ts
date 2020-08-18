@@ -8,6 +8,12 @@ export class TiledTilemapData {
     tilesets: TiledTilesetData[];
 }
 
+export class TiledLayerProperty {
+    name: string;
+    type: string;
+    value: any;
+}
+
 export class TiledTilesetData {
     columns: number;
     tilewidth: number;
@@ -31,5 +37,6 @@ export class TiledLayerData {
     name: string;
     opacity: number;
     visible: boolean;
+    properties: TiledLayerProperty[];
 }
 
