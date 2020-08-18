@@ -3,8 +3,8 @@
         "src/main.ts",
         "src/Player.ts",
 
-        "src/DataTypes/Tilesets/TiledData",
-        "src/DataTypes/Tilesets/Tileset",
+        "src/DataTypes/Tilesets/TiledData.ts",
+        "src/DataTypes/Tilesets/Tileset.ts",
         "src/DataTypes/Collection.ts",
         "src/DataTypes/Map.ts",
         "src/DataTypes/Queue.ts",

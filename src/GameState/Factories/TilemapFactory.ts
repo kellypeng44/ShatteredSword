@@ -33,7 +33,7 @@ export default class TilemapFactory {
                 tilemap.forEachTile((tileIndex: number, i: number) => {
                     if(tileIndex !== 0){
                         let x = (i % worldSize.x) * tileSize.x * 4;
-                        let y = Math.floor(i / worldSize.y) * tileSize.y * 4;
+                        let y = Math.floor(i / worldSize.x) * tileSize.y * 4;
                         this.scene.physics.add(StaticBody, new Vec2(x, y), new Vec2(tileSize.x * 4, tileSize.y * 4));
                     }
                 });
