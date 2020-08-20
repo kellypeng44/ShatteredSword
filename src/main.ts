@@ -13,7 +13,8 @@ function main(){
     let gameState = game.getGameState();
 
     let backgroundScene = gameState.createScene();
-    backgroundScene.setParallax(0.5, 0.5);
+    backgroundScene.setParallax(0.5, 0.8);
+    backgroundScene.setAlpha(0.5);
     let mainScene = gameState.createScene();
     let uiLayer = gameState.createScene();
     uiLayer.setParallax(0, 0);
@@ -73,8 +74,13 @@ function main(){
         pauseMenu.disable();
     }
 
-    mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/Platformer.json");
-    let player = mainScene.physics.add(Player, "platformer");
+    // backgroundScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/Background.json");
+    // mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/Platformer.json");
+    // let player = mainScene.physics.add(Player, "platformer");
+
+    mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/TopDown.json");
+    let player = mainScene.physics.add(Player, "topdown");
+
     mainScene.getViewport().follow(player);
 
     pauseMenu.disable();

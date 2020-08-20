@@ -9,6 +9,7 @@ import Tilemap from "../Nodes/Tilemap";
 import TilemapFactory from "./Factories/TilemapFactory";
 import PhysicsManager from "../Physics/PhysicsManager";
 import PhysicsNodeFactory from "./Factories/PhysicsNodeFactory";
+import MathUtils from "../Utils/MathUtils";
 
 export default class Scene {
     private gameState: GameState;
@@ -19,6 +20,7 @@ export default class Scene {
     private tilemaps: Array<Tilemap>;
     private paused: boolean;
     private hidden: boolean;
+    private alpha: number;
     
     // Factories
     public canvasNode: CanvasNodeFactory;
@@ -43,6 +45,10 @@ export default class Scene {
 
     setPaused(pauseValue: boolean): void {
         this.paused = pauseValue;
+    }
+
+    setAlpha(alpha: number): void {
+        this.alpha = MathUtils.clamp(alpha, 0, 1);
     }
 
     isPaused(): boolean {
@@ -97,6 +103,9 @@ export default class Scene {
 
     render(ctx: CanvasRenderingContext2D): void {
         if(!this.hidden){
+            let previousAlpha = ctx.globalAlpha;
+            ctx.globalAlpha = this.alpha;
+
             let visibleSet = this.sceneGraph.getVisibleSet();
             let viewportOrigin = this.viewport.getPosition();
             let origin = new Vec2(viewportOrigin.x*this.parallax.x, viewportOrigin.y*this.parallax.y);
@@ -111,6 +120,8 @@ export default class Scene {
 
             // Render visible set
             visibleSet.forEach(node => node.render(ctx, origin));
+
+            ctx.globalAlpha = previousAlpha;
         }
     }
 }

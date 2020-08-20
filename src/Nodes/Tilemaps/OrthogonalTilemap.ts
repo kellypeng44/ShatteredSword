@@ -12,9 +12,11 @@ export default class OrthogonalTilemap extends Tilemap {
         this.data = layer.data;
         this.visible = layer.visible;
         this.collidable = false;
-        for(let item of layer.properties){
-            if(item.name === "Collidable"){
-                this.collidable = item.value;
+        if(layer.properties){
+            for(let item of layer.properties){
+                if(item.name === "Collidable"){
+                    this.collidable = item.value;
+                }
             }
         }
         tilemapData.tilesets.forEach(tilesetData => this.tilesets.push(new Tileset(tilesetData)));
