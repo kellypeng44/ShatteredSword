@@ -16,7 +16,7 @@ export default class Player extends PhysicsNode {
         super();
         this.type = type;
         this.velocity = new Vec2(0, 0);
-        this.speed = 500;
+        this.speed = 600;
         this.size = new Vec2(50, 50);
         this.collider = new AABB();
         this.collider.setSize(this.size);

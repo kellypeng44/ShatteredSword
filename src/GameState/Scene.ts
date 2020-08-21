@@ -98,6 +98,7 @@ export default class Scene {
             this.viewport.update(deltaT);
             this.physicsManager.update(deltaT);
             this.sceneGraph.update(deltaT);
+            this.tilemaps.forEach((tilemap: Tilemap) => tilemap.update(deltaT));
         }
     }
 

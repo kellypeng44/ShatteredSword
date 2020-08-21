@@ -8,11 +8,13 @@ import { TiledTilemapData, TiledLayerData } from "../DataTypes/Tilesets/TiledDat
  */
 export default abstract class Tilemap extends GameNode {
     protected data: number[];
+    protected collisionData: number [];
     protected tilesets: Tileset[];
     protected worldSize: Vec2;
     protected tileSize: Vec2;
     protected visible: boolean;
     protected collidable: boolean;
+    protected scale: Vec2;
 
     constructor(tilemapData: TiledTilemapData, layerData: TiledLayerData){
         super();
@@ -20,6 +22,7 @@ export default abstract class Tilemap extends GameNode {
         this.worldSize = new Vec2(0, 0);
         this.tileSize = new Vec2(0, 0);
         this.parseTilemapData(tilemapData, layerData);
+        this.scale = new Vec2(4, 4);
     }
 
     isCollidable(): boolean {
@@ -39,8 +42,18 @@ export default abstract class Tilemap extends GameNode {
     }
 
     getTileSize(): Vec2 {
-        return this.tileSize;
+        return this.tileSize.clone().scale(this.scale.x, this.scale.y);
     }
+
+    getScale(): Vec2 {
+        return this.scale;
+    }
+
+    setScale(scale: Vec2): void {
+        this.scale = scale;
+    }
+
+    abstract getTileAt(worldCoords: Vec2): number;
 
     isReady(): boolean {
         if(this.tilesets.length !== 0){

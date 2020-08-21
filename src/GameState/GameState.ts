@@ -8,11 +8,10 @@ export default class GameState{
     private worldSize: Vec2;
     private viewport: Viewport;
 
-    constructor(){
+    constructor(viewport: Viewport){
         this.sceneStack = new Stack(10);
         this.worldSize = new Vec2(1600, 1000);
-        this.viewport = new Viewport();
-        this.viewport.setSize(800, 500);
+        this.viewport = viewport;
         this.viewport.setBounds(0, 0, 2560, 1280);
     }
 

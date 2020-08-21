@@ -2,6 +2,7 @@ import Scene from "../Scene";
 import Viewport from "../../SceneGraph/Viewport";
 import PhysicsNode from "../../Physics/PhysicsNode";
 import PhysicsManager from "../../Physics/PhysicsManager";
+import Tilemap from "../../Nodes/Tilemap";
 
 export default class PhysicsNodeFactory {
 	private scene: Scene;
@@ -19,5 +20,9 @@ export default class PhysicsNodeFactory {
         instance.create();
 		this.physicsManager.add(instance);
 		return instance;
+	}
+
+	addTilemap(tilemap: Tilemap): void {
+		this.physicsManager.addTilemap(tilemap);
 	}
 }

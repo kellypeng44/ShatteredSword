@@ -29,7 +29,7 @@
         
         "src/Loop/GameLoop.ts",
 
-        "src/Nodes/Tilemaps/OrgthogonalTilemap.ts",
+        "src/Nodes/Tilemaps/OrthogonalTilemap.ts",
         "src/Nodes/UIElements/Button.ts",
         "src/Nodes/UIElements/Label.ts",
         "src/Nodes/CanvasNode.ts",

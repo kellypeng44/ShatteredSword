@@ -65,7 +65,7 @@ export default class Tileset {
         return tileIndex >= this.startIndex && tileIndex <= this.endIndex;
     }
 
-    renderTile(ctx: CanvasRenderingContext2D, tileIndex: number, dataIndex: number, worldSize: Vec2, origin: Vec2): void {
+    renderTile(ctx: CanvasRenderingContext2D, tileIndex: number, dataIndex: number, worldSize: Vec2, origin: Vec2, scale: Vec2): void {
         let index = tileIndex - this.startIndex;
         let row = Math.floor(index / this.numCols);
         let col = index % this.numCols;
@@ -73,8 +73,8 @@ export default class Tileset {
         let height = this.tileSize.y;
         let left = col * width;
         let top = row * height;
-        let x = (dataIndex % worldSize.x) * width * 4;
-        let y = Math.floor(dataIndex / worldSize.x) * height * 4;
-        ctx.drawImage(this.image, left, top, width, height, x - origin.x, y - origin.y, width * 4, height * 4);
+        let x = (dataIndex % worldSize.x) * width * scale.x;
+        let y = Math.floor(dataIndex / worldSize.x) * height * scale.y;
+        ctx.drawImage(this.image, left, top, width, height, x - origin.x, y - origin.y, width * scale.x, height * scale.y);
     }
 }

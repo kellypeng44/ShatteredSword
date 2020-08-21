@@ -28,17 +28,20 @@ export default class TilemapFactory {
                 this.scene.addTilemap(tilemap);
 
                 if(tilemap.isCollidable()){
-                    // Create colliders
-                    let worldSize = tilemap.getWorldSize();
-                    let tileSize = tilemap.getTileSize();
+                    // Register in physics as a tilemap
+                    this.scene.physics.addTilemap(tilemap);
 
-                    tilemap.forEachTile((tileIndex: number, i: number) => {
-                        if(tileIndex !== 0){
-                            let x = (i % worldSize.x) * tileSize.x * 4;
-                            let y = Math.floor(i / worldSize.x) * tileSize.y * 4;
-                            this.scene.physics.add(StaticBody, new Vec2(x, y), new Vec2(tileSize.x * 4, tileSize.y * 4));
-                        }
-                    });
+                    // Create colliders
+                    // let worldSize = tilemap.getWorldSize();
+                    // let tileSize = tilemap.getTileSize();
+
+                    // tilemap.forEachTile((tileIndex: number, i: number) => {
+                    //     if(tileIndex !== 0){
+                    //         let x = (i % worldSize.x) * tileSize.x * 4;
+                    //         let y = Math.floor(i / worldSize.x) * tileSize.y * 4;
+                    //         this.scene.physics.add(StaticBody, new Vec2(x, y), new Vec2(tileSize.x * 4, tileSize.y * 4));
+                    //     }
+                    // });
                 }
 
                 // Load images for the tilesets

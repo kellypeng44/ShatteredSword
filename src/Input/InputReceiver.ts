@@ -2,6 +2,7 @@ import Receiver from "../Events/Receiver";
 import Map from "../DataTypes/Map";
 import Vec2 from "../DataTypes/Vec2";
 import EventQueue from "../Events/EventQueue";
+import Viewport from "../SceneGraph/Viewport";
 
 export default class InputReceiver{
 	private static instance: InputReceiver = null;
@@ -14,6 +15,7 @@ export default class InputReceiver{
 	private mousePressPosition: Vec2;
 	private eventQueue: EventQueue;
 	private receiver: Receiver;
+	private viewport: Viewport;
 
 	private constructor(){
 		this.mousePressed = false;
@@ -108,7 +110,19 @@ export default class InputReceiver{
 		return this.mousePosition;
 	}
 
+	getGlobalMousePosition(): Vec2 {
+		return this.mousePosition.clone().add(this.viewport.getPosition());
+	}
+
 	getMousePressPosition(): Vec2 {
 		return this.mousePressPosition;
+	}
+
+	getGlobalMousePressPosition(): Vec2 {
+		return this.mousePressPosition.clone().add(this.viewport.getPosition());
+	}
+
+	setViewport(viewport: Viewport): void {
+		this.viewport = viewport;
 	}
 }

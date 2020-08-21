@@ -5,6 +5,7 @@ import Recorder from "../Playback/Recorder";
 import GameState from "../GameState/GameState";
 import Debug from "../Debug/Debug";
 import ResourceManager from "../ResourceManager/ResourceManager";
+import Viewport from "../SceneGraph/Viewport";
 
 export default class GameLoop{
 	// The amount of time to spend on a physics step
@@ -29,7 +30,8 @@ export default class GameLoop{
 
 	readonly GAME_CANVAS: HTMLCanvasElement;
 	readonly WIDTH: number;
-	readonly HEIGHT: number;
+    readonly HEIGHT: number;
+    private viewport: Viewport;
 	private ctx: CanvasRenderingContext2D;
 	private eventQueue: EventQueue;
 	private inputHandler: InputHandler;
@@ -57,12 +59,15 @@ export default class GameLoop{
         this.WIDTH = 800;
         this.HEIGHT = 500;
         this.ctx = this.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
+        this.viewport = new Viewport();
+        this.viewport.setSize(this.WIDTH, this.HEIGHT);
 
         this.eventQueue = EventQueue.getInstance();
         this.inputHandler = new InputHandler(this.GAME_CANVAS);
         this.inputReceiver = InputReceiver.getInstance();
+        this.inputReceiver.setViewport(this.viewport);
         this.recorder = new Recorder();
-        this.gameState = new GameState();
+        this.gameState = new GameState(this.viewport);
         this.debug = Debug.getInstance();
         this.resourceManager = ResourceManager.getInstance();
     }

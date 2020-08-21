@@ -80,4 +80,8 @@ export default class Vec2 {
 	toFixed(): string {
 		return "(" + this.x.toFixed(1) + ", " + this.y.toFixed(1) + ")";
 	}
+
+	clone(): Vec2 {
+		return new Vec2(this.x, this.y);
+	}
 }

@@ -74,12 +74,12 @@ function main(){
         pauseMenu.disable();
     }
 
-    // backgroundScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/Background.json");
-    // mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/Platformer.json");
-    // let player = mainScene.physics.add(Player, "platformer");
+    backgroundScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/Background.json");
+    mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/Platformer.json");
+    let player = mainScene.physics.add(Player, "platformer");
 
-    mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/TopDown.json");
-    let player = mainScene.physics.add(Player, "topdown");
+    // mainScene.tilemap.add(OrthogonalTilemap, "assets/tilemaps/TopDown.json");
+    // let player = mainScene.physics.add(Player, "topdown");
 
     mainScene.getViewport().follow(player);
 
