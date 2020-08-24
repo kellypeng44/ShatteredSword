@@ -26,19 +26,12 @@ export default class Stack<T> implements Collection{
     /**
      * Removes an item from the top of the stack
      */
-    pop(): T{
+    pop(): T {
         if(this.head === -1){
             throw "Stack empty - cannot remove element";
         }
         this.head -= 1;
         return this.stack[this.head + 1];
-    }
-
-    /**
-     * Removes all elements from the stack
-     */
-    clear(): void{
-        this.head = -1;
     }
 
     /**
@@ -49,6 +42,13 @@ export default class Stack<T> implements Collection{
             throw "Stack empty - cannot get element";
         }
         return this.stack[this.head];
+    }
+
+    /**
+     * Removes all elements from the stack
+     */
+    clear(): void{
+        this.head = -1;
     }
 
     /**

@@ -15,7 +15,7 @@ export default class Scene {
     private gameState: GameState;
     private viewport: Viewport
     private parallax: Vec2;
-    sceneGraph: SceneGraph;
+    private sceneGraph: SceneGraph;
     private physicsManager: PhysicsManager;
     private tilemaps: Array<Tilemap>;
     private paused: boolean;
@@ -38,25 +38,25 @@ export default class Scene {
         this.physicsManager = new PhysicsManager();
 
         // Factories
-        this.canvasNode = new CanvasNodeFactory(this, this.viewport);
-        this.tilemap = new TilemapFactory(this, this.viewport);
+        this.canvasNode = new CanvasNodeFactory(this);
+        this.tilemap = new TilemapFactory(this);
         this.physics = new PhysicsNodeFactory(this, this.physicsManager);
     }
 
     setPaused(pauseValue: boolean): void {
         this.paused = pauseValue;
     }
+    
+    isPaused(): boolean {
+        return this.paused;
+    }
 
     setAlpha(alpha: number): void {
         this.alpha = MathUtils.clamp(alpha, 0, 1);
     }
 
-    isPaused(): boolean {
-        return this.paused;
-    }
-
-    setHidden(hiddenValue: boolean): void {
-        this.hidden = hiddenValue;
+    setHidden(hidden: boolean): void {
+        this.hidden = hidden;
     }
 
     isHidden(): boolean {
@@ -85,8 +85,8 @@ export default class Scene {
         return this.parallax;
     }
 
-    add(children: CanvasNode): void {
-        this.sceneGraph.addNode(children);
+    add(child: CanvasNode): void {
+        this.sceneGraph.addNode(child);
     }
 
     addTilemap(tilemap: Tilemap): void {

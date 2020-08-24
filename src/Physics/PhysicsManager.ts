@@ -8,10 +8,10 @@ import OrthogonalTilemap from "../Nodes/Tilemaps/OrthogonalTilemap";
 
 export default class PhysicsManager {
 
-    physicsNodes: Array<PhysicsNode>;
-    tilemaps: Array<Tilemap>;
-    movements: Array<MovementData>;
-
+    private physicsNodes: Array<PhysicsNode>;
+    private tilemaps: Array<Tilemap>;
+    private movements: Array<MovementData>;
+ 
     constructor(){
         this.physicsNodes = new Array();
         this.tilemaps = new Array();
@@ -26,63 +26,17 @@ export default class PhysicsManager {
         this.tilemaps.push(tilemap);
     }
 
-    addMovement(node: PhysicsNode, velocity: Vec2){
+    addMovement(node: PhysicsNode, velocity: Vec2): void {
         this.movements.push(new MovementData(node, velocity));
     }
 
-    update(deltaT: number): void {
-        for(let node of this.physicsNodes){
-            node.update(deltaT);
-        }
-        
-        let staticSet = new Array<PhysicsNode>();
-        let dynamicSet = new Array<PhysicsNode>();
-
-        // TODO: REALLY bad, the physics system has to be improved, but that isn't the focus for now
-        for(let node of this.physicsNodes){
-            if(node.isMoving){
-                dynamicSet.push(node);
-                node.isMoving = false;
-            } else {
-                staticSet.push(node);
-            }
-        }
-
-        // For now, we will only have the moving player, don't bother checking for collisions with other moving things
-        for(let movingNode of dynamicSet){
-            movingNode.setIsGrounded(false);
-            // Get velocity of node
-            let velocity = null;
-            for(let data of this.movements){
-                if(data.node === movingNode){
-                    velocity = new Vec2(data.velocity.x, data.velocity.y);
-                }
-            }
-
-            // TODO handle collisions between dynamic nodes
-            // We probably want to sort them by their left edges
-
-            // TODO: handle collisions between dynamic nodes and static nodes
-
-            // Handle Collisions with the tilemaps
-            for(let tilemap of this.tilemaps){
-                this.collideWithTilemap(movingNode, tilemap, velocity);
-            }
-
-            movingNode.finishMove(velocity);
-        }
-        
-        // Reset movements
-        this.movements = new Array();
-    }
-
-    collideWithTilemap(node: PhysicsNode, tilemap: Tilemap, velocity: Vec2){
+    private collideWithTilemap(node: PhysicsNode, tilemap: Tilemap, velocity: Vec2): void {
         if(tilemap instanceof OrthogonalTilemap){
             this.collideWithOrthogonalTilemap(node, tilemap, velocity);
         }
     }
 
-    collideWithOrthogonalTilemap(node: PhysicsNode, tilemap: OrthogonalTilemap, velocity: Vec2){
+    private collideWithOrthogonalTilemap(node: PhysicsNode, tilemap: OrthogonalTilemap, velocity: Vec2): void {
         let startPos = node.getPosition();
         let endPos = startPos.clone().add(velocity);
         let size = node.getCollider().getSize();
@@ -95,12 +49,12 @@ export default class PhysicsManager {
         let tilemapCollisions = new Array<TileCollisionData>();
         let tileSize = tilemap.getTileSize();
 
-        Debug.getInstance().log("tilemapCollision", "");
+        Debug.log("tilemapCollision", "");
         // Loop over all possible tiles
         for(let col = minIndex.x; col <= maxIndex.x; col++){
             for(let row = minIndex.y; row <= maxIndex.y; row++){
                 if(tilemap.isTileCollidable(col, row)){
-                    Debug.getInstance().log("tilemapCollision", "Colliding with Tile");
+                    Debug.log("tilemapCollision", "Colliding with Tile");
                 
                     // Tile position
                     let tilePos = new Vec2(col * tileSize.x, row * tileSize.y);
@@ -124,7 +78,7 @@ export default class PhysicsManager {
 
         // Resolve the collisions
         tilemapCollisions.forEach(collision => {
-            let [firstContact, _, collidingX, collidingY] = this.getTimeOfCollision(startPos, size, velocity, collision.position, tileSize, new Vec2(0, 0));
+            let [firstContact, _, collidingX, collidingY] = this.getTimeOfAABBCollision(startPos, size, velocity, collision.position, tileSize, new Vec2(0, 0));
 
             // Handle collision
             if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
@@ -142,7 +96,7 @@ export default class PhysicsManager {
                     }
 
                     if(yScale !== 1){
-                        node.setIsGrounded(true);
+                        node.setGrounded(true);
                     }
 
                     velocity.scale(xScale, yScale);
@@ -151,7 +105,7 @@ export default class PhysicsManager {
         })
     }
 
-    handleCollision(movingNode: PhysicsNode, staticNode: PhysicsNode, velocity: Vec2, id: String){
+    private handleCollision(movingNode: PhysicsNode, staticNode: PhysicsNode, velocity: Vec2, id: String){
         let sizeA = movingNode.getCollider().getSize();
         let posA = movingNode.getPosition();
         let velA = velocity;
@@ -159,7 +113,7 @@ export default class PhysicsManager {
         let posB = staticNode.getPosition();
         let velB = new Vec2(0, 0);
 
-        let [firstContact, _, collidingX, collidingY] = this.getTimeOfCollision(posA, sizeA, velA, posB, sizeB, velB);
+        let [firstContact, _, collidingX, collidingY] = this.getTimeOfAABBCollision(posA, sizeA, velA, posB, sizeB, velB);
 
         if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
             if(collidingX && collidingY){
@@ -170,7 +124,7 @@ export default class PhysicsManager {
                 let xScale = MathUtils.clamp(firstContact.x, 0, 1);
                 let yScale = MathUtils.clamp(firstContact.y, 0, 1);
                 if(yScale !== 1){
-                    movingNode.setIsGrounded(true);
+                    movingNode.setGrounded(true);
                 }
                 velocity.scale(xScale, yScale);
             }
@@ -182,7 +136,7 @@ export default class PhysicsManager {
      * of the start and end of the collision and booleans for whether or not the objects are currently overlapping
      * (before they move).
      */
-    getTimeOfCollision(posA: Vec2, sizeA: Vec2, velA: Vec2, posB: Vec2, sizeB: Vec2, velB: Vec2): [Vec2, Vec2, boolean, boolean] {
+    private getTimeOfAABBCollision(posA: Vec2, sizeA: Vec2, velA: Vec2, posB: Vec2, sizeB: Vec2, velB: Vec2): [Vec2, Vec2, boolean, boolean] {
         let firstContact = new Vec2(0, 0);
         let lastContact = new Vec2(0, 0);
 
@@ -258,10 +212,57 @@ export default class PhysicsManager {
 
         return [firstContact, lastContact, collidingX, collidingY];
     }
+
+    update(deltaT: number): void {
+        for(let node of this.physicsNodes){
+            node.update(deltaT);
+        }
+        
+        let staticSet = new Array<PhysicsNode>();
+        let dynamicSet = new Array<PhysicsNode>();
+
+        // TODO: REALLY bad, the physics system has to be improved, but that isn't the focus for now
+        for(let node of this.physicsNodes){
+            if(node.isMoving()){
+                dynamicSet.push(node);
+                node.setMoving(false);
+            } else {
+                staticSet.push(node);
+            }
+        }
+
+        // For now, we will only have the moving player, don't bother checking for collisions with other moving things
+        for(let movingNode of dynamicSet){
+            movingNode.setGrounded(false);
+            // Get velocity of node
+            let velocity = null;
+            for(let data of this.movements){
+                if(data.node === movingNode){
+                    velocity = new Vec2(data.velocity.x, data.velocity.y);
+                }
+            }
+
+            // TODO handle collisions between dynamic nodes
+            // We probably want to sort them by their left edges
+
+            // TODO: handle collisions between dynamic nodes and static nodes
+
+            // Handle Collisions with the tilemaps
+            for(let tilemap of this.tilemaps){
+                this.collideWithTilemap(movingNode, tilemap, velocity);
+            }
+
+            movingNode.finishMove(velocity);
+        }
+        
+        // Reset movements
+        this.movements = new Array();
+    }
 }
 
 // Helper classes for internal data
-class MovementData{
+// TODO: Move these to data
+class MovementData {
     node: PhysicsNode;
     velocity: Vec2;
     constructor(node: PhysicsNode, velocity: Vec2){

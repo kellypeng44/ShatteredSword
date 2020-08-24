@@ -8,17 +8,18 @@ export default abstract class PhysicsNode extends GameNode {
     protected collider: Collider = null;
     protected children: Array<GameNode>;
     private manager: PhysicsManager;
-    isMoving: boolean;
-    protected isGrounded: boolean;
+    protected moving: boolean;
+    protected grounded: boolean;
 
     constructor(){
         super();
         this.children = new Array();
-        this.isMoving = false;
+        this.grounded = false;
+        this.moving = false;
     }
 
-    setIsGrounded(isGrounded: boolean): void {
-        this.isGrounded = isGrounded;
+    setGrounded(grounded: boolean): void {
+        this.grounded = grounded;
     }
 
     addManager(manager: PhysicsManager): void {
@@ -33,8 +34,16 @@ export default abstract class PhysicsNode extends GameNode {
         return this.collider;
     }
 
-    move(velocity: Vec2): void {
-        this.isMoving = true;
+    setMoving(moving: boolean): void {
+        this.moving = moving;
+    }
+
+    isMoving(): boolean {
+        return this.moving;
+    }
+
+    protected move(velocity: Vec2): void {
+        this.moving = true;
         this.manager.addMovement(this, velocity);
     }
 

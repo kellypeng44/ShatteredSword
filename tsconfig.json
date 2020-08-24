@@ -33,9 +33,9 @@
         "src/Nodes/UIElements/Button.ts",
         "src/Nodes/UIElements/Label.ts",
         "src/Nodes/CanvasNode.ts",
-        "src/Nodes/ColoredCircle.ts",
+        "src/ColoredCircle.ts",
         "src/Nodes/GameNode.ts",
-        "src/Nodes/PlayerSprite.ts",
+        "src/PlayerSprite.ts",
         "src/Nodes/Tilemap.ts",
         "src/Nodes/UIElement.ts",
 

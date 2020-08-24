@@ -1,5 +1,6 @@
 import MathUtils from "./MathUtils";
 
+// TODO: This should be moved to the datatypes folder
 export default class Color{
 	public r: number;
 	public g: number;

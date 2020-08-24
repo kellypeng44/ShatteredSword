@@ -4,16 +4,16 @@ import Vec2 from "../DataTypes/Vec2";
 
 export default class UIElement extends CanvasNode{
 	// Style attributes
-	textColor: Color;
-	backgroundColor: Color;
-	borderColor: Color;
-	text: string;
-	font: string;
-	fontSize: number;
-	hAlign: string;
-	vAlign: string;
-	borderRadius: number;
-	borderWidth: number;
+	protected textColor: Color;
+	protected backgroundColor: Color;
+	protected borderColor: Color;
+	protected text: string;
+	protected font: string;
+	protected fontSize: number;
+	protected hAlign: string;
+	protected vAlign: string;
+	protected borderRadius: number;
+	protected borderWidth: number;
 
 	// EventAttributes
 	onClick: Function;

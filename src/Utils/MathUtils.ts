@@ -1,11 +1,11 @@
 export default class MathUtils{
-    static clamp(x: number, min: number, max: number): number{
+    static clamp(x: number, min: number, max: number): number {
         if(x < min) return min;
         if(x > max) return max;
         return x;
     }
 
-    static toHex(num: number, minLength: number = null): string{
+    static toHex(num: number, minLength: number = null): string {
         let factor = 1;
         while(factor*16 < num){
             factor *= 16;
@@ -27,7 +27,7 @@ export default class MathUtils{
         return hexStr;
     }
 
-    static toHexDigit(num: number): string{
+    static toHexDigit(num: number): string {
         if(num < 10){
             return "" + num;
         } else {

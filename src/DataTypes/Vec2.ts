@@ -45,7 +45,7 @@ export default class Vec2 {
 		return this;
 	}
 
-	rotate(angle: number): Vec2 {
+	rotateCCW(angle: number): Vec2 {
 		let cs = Math.cos(angle);
 		let sn = Math.sin(angle);
 		let tempX = this.x*cs - this.y*sn;
@@ -74,11 +74,11 @@ export default class Vec2 {
 	}
 
 	toString(): string {
-		return "(" + this.x + ", " + this.y + ")";
+		return this.toFixed();
 	}
 
-	toFixed(): string {
-		return "(" + this.x.toFixed(1) + ", " + this.y.toFixed(1) + ")";
+	toFixed(numDecimalPoints: number = 1): string {
+		return "(" + this.x.toFixed(numDecimalPoints) + ", " + this.y.toFixed(numDecimalPoints) + ")";
 	}
 
 	clone(): Vec2 {

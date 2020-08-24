@@ -1,7 +1,7 @@
 import Collection from "./Collection";
 
 export default class Queue<T> implements Collection{
-	readonly MAX_ELEMENTS: number;
+	private readonly MAX_ELEMENTS: number;
 	private q: Array<T>;
 	private head: number;
 	private tail: number;

@@ -8,6 +8,7 @@ export default abstract class Collider extends GameNode {
         return this.size;
     }
 
+    // TODO: Make this accept vector arguments and number arguments
     setSize(size: Vec2): void {
         this.size = size;
     }

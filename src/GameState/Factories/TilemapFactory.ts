@@ -9,10 +9,10 @@ import Vec2 from "../../DataTypes/Vec2";
 
 export default class TilemapFactory {
     private scene: Scene;
-    private viewport: Viewport;
+    // TODO: get the resource manager OUT of here, it does not belong
     private resourceManager: ResourceManager;
 
-	constructor(scene: Scene, viewport: Viewport){
+	constructor(scene: Scene){
         this.scene = scene;
         this.resourceManager = ResourceManager.getInstance();
 	}
@@ -30,18 +30,6 @@ export default class TilemapFactory {
                 if(tilemap.isCollidable()){
                     // Register in physics as a tilemap
                     this.scene.physics.addTilemap(tilemap);
-
-                    // Create colliders
-                    // let worldSize = tilemap.getWorldSize();
-                    // let tileSize = tilemap.getTileSize();
-
-                    // tilemap.forEachTile((tileIndex: number, i: number) => {
-                    //     if(tileIndex !== 0){
-                    //         let x = (i % worldSize.x) * tileSize.x * 4;
-                    //         let y = Math.floor(i / worldSize.x) * tileSize.y * 4;
-                    //         this.scene.physics.add(StaticBody, new Vec2(x, y), new Vec2(tileSize.x * 4, tileSize.y * 4));
-                    //     }
-                    // });
                 }
 
                 // Load images for the tilesets

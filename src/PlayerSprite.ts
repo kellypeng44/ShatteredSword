@@ -1,6 +1,6 @@
-import CanvasNode from "./CanvasNode";
-import Vec2 from "../DataTypes/Vec2";
-import Debug from "../Debug/Debug";
+import CanvasNode from "./Nodes/CanvasNode";
+import Vec2 from "./DataTypes/Vec2";
+import Debug from "./Debug/Debug";
 
 export default class Player extends CanvasNode{
 	debug: Debug;

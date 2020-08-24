@@ -6,7 +6,7 @@ import Tileset from "../../DataTypes/Tilesets/Tileset";
 
 export default class OrthogonalTilemap extends Tilemap {
 
-    parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void {
+    protected parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void {
         this.worldSize.set(tilemapData.width, tilemapData.height);
         this.tileSize.set(tilemapData.tilewidth, tilemapData.tileheight);
         this.data = layer.data;

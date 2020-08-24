@@ -4,8 +4,8 @@ export class TiledTilemapData {
     tileheight: number;
     tilewidth: number;
     orientation: string;
-    layers: TiledLayerData[];
-    tilesets: TiledTilesetData[];
+    layers: Array<TiledLayerData>;
+    tilesets: Array<TiledTilesetData>;
 }
 
 export class TiledLayerProperty {

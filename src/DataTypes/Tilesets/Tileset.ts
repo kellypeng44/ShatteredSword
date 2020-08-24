@@ -15,11 +15,12 @@ export default class Tileset {
     protected numRows: number;
     protected numCols: number;
 
+    // TODO: Change this to be more general and work with other tileset formats
     constructor(tilesetData: TiledTilesetData){
         this.initFromTiledData(tilesetData);
     }
 
-    initFromTiledData(tiledData: TiledTilesetData){
+    initFromTiledData(tiledData: TiledTilesetData): void {
         this.numRows = tiledData.tilecount/tiledData.columns;
         this.numCols = tiledData.columns;
         this.startIndex = tiledData.firstgid;
@@ -57,6 +58,7 @@ export default class Tileset {
         return this.numCols;
     }
 
+    // TODO: This should probably be a thing that is tracked in the resource loader, not here
     isReady(): boolean {
         return this.image !== null;
     }

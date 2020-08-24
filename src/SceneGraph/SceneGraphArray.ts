@@ -6,11 +6,9 @@ import Scene from "../GameState/Scene";
 export default class SceneGraphArray extends SceneGraph{
 	private nodeList: Array<CanvasNode>;
     private turnOffViewportCulling_demoTool: boolean;
-    private scene: Scene;
 
     constructor(viewport: Viewport, scene: Scene){
-        super(viewport);
-        this.scene = scene;
+        super(viewport, scene);
 
         this.nodeList = new Array<CanvasNode>();
         this.turnOffViewportCulling_demoTool = false;

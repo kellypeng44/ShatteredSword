@@ -1,7 +1,6 @@
 import GameLoop from "./Loop/GameLoop";
 import Player from "./Player";
 import UIElement from "./Nodes/UIElement";
-import ColoredCircle from "./Nodes/ColoredCircle";
 import Color from "./Utils/Color";
 import Button from "./Nodes/UIElements/Button";
 import {} from "./index";

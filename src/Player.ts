@@ -2,7 +2,7 @@ import PhysicsNode from "./Physics/PhysicsNode";
 import Vec2 from "./DataTypes/Vec2";
 import Debug from "./Debug/Debug";
 import AABB from "./Physics/Colliders/AABB";
-import PlayerSprite from "./Nodes/PlayerSprite";
+import PlayerSprite from "./PlayerSprite";
 
 export default class Player extends PhysicsNode {
 	velocity: Vec2;
@@ -24,7 +24,6 @@ export default class Player extends PhysicsNode {
         if(this.type === "topdown"){
             this.position = new Vec2(100, 100);
         }
-		this.debug = Debug.getInstance();
     }
 
     create(): void {
@@ -45,7 +44,7 @@ export default class Player extends PhysicsNode {
 
 		this.move(new Vec2(this.velocity.x * deltaT, this.velocity.y * deltaT));
 
-		this.debug.log("player", "Player Pos: " + this.position.toFixed() + ", Player Vel: " + this.velocity.toFixed());
+		Debug.log("player", "Player Pos: " + this.position + ", Player Vel: " + this.velocity);
     }
 
     topdown_computeDirection(): Vec2 {
@@ -70,7 +69,7 @@ export default class Player extends PhysicsNode {
 		dir.x += this.input.isPressed('a') ? -1 : 0;
         dir.x += this.input.isPressed('d') ? 1 : 0;
         
-        if(this.isGrounded){
+        if(this.grounded){
             dir.y += this.input.isJustPressed('w') ? -1 : 0;
         }
 
@@ -80,7 +79,7 @@ export default class Player extends PhysicsNode {
     platformer_computeVelocity(dir: Vec2, deltaT: number): Vec2 {
         let vel = new Vec2(0, this.velocity.y);
 
-        if(this.isGrounded){
+        if(this.grounded){
             vel.y = dir.y*1800;
         }
 

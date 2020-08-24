@@ -39,11 +39,11 @@ export default abstract class GameNode{
 		}
 	}
 
-	subscribe(eventType: string){
+	subscribe(eventType: string): void {
 		this.eventQueue.subscribe(this.receiver, eventType);
 	}
 
-	emit(eventType: string, data: Map<any> | Record<string, any> = null){
+	emit(eventType: string, data: Map<any> | Record<string, any> = null): void {
 		let event = new GameEvent(eventType, data);
 		this.eventQueue.addEvent(event);
 	}

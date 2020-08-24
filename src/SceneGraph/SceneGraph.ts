@@ -2,14 +2,17 @@ import Viewport from "./Viewport";
 import CanvasNode from "../Nodes/CanvasNode";
 import Map from "../DataTypes/Map";
 import Vec2 from "../DataTypes/Vec2";
+import Scene from "../GameState/Scene";
 
 export default abstract class SceneGraph{
 	protected viewport: Viewport;
 	protected nodeMap: Map<CanvasNode>;
 	protected idCounter: number;
+	protected scene: Scene;
 
-    constructor(viewport: Viewport){
+    constructor(viewport: Viewport, scene: Scene){
 		this.viewport = viewport;
+		this.scene = scene;
 		this.nodeMap = new Map<CanvasNode>();
 		this.idCounter = 0;
     }
@@ -39,7 +42,7 @@ export default abstract class SceneGraph{
 		return this.nodeMap.get(id);
 	};
 
-    getNodeAt(vecOrX: Vec2 | number, y: number = null): CanvasNode{
+    getNodeAt(vecOrX: Vec2 | number, y: number = null): CanvasNode {
 		if(vecOrX instanceof Vec2){
 			return this.getNodeAtCoords(vecOrX.x, vecOrX.y);
 		} else {

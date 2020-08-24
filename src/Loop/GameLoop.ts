@@ -38,7 +38,6 @@ export default class GameLoop{
 	private inputReceiver: InputReceiver;
 	private recorder: Recorder;
     private gameState: GameState;
-    private debug: Debug;
     private resourceManager: ResourceManager;
 
     constructor(){
@@ -68,7 +67,6 @@ export default class GameLoop{
         this.inputReceiver.setViewport(this.viewport);
         this.recorder = new Recorder();
         this.gameState = new GameState(this.viewport);
-        this.debug = Debug.getInstance();
         this.resourceManager = ResourceManager.getInstance();
     }
 
@@ -99,7 +97,7 @@ export default class GameLoop{
             this.runningFrameSum = 0;
         }
 
-        this.debug.log("fps", "FPS: " + this.fps.toFixed(1));
+        Debug.log("fps", "FPS: " + this.fps.toFixed(1));
     }
 
     start(): void {
@@ -157,6 +155,6 @@ export default class GameLoop{
     render(): void {
         this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         this.gameState.render(this.ctx);
-        this.debug.render(this.ctx);
+        Debug.render(this.ctx);
     }
 }
