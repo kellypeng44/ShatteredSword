@@ -4,15 +4,15 @@ import SceneGraph from "../SceneGraph/SceneGraph";
 import SceneGraphArray from "../SceneGraph/SceneGraphArray";
 import CanvasNode from "../Nodes/CanvasNode";
 import CanvasNodeFactory from "./Factories/CanvasNodeFactory";
-import GameState from "./GameState";
+import Scene from "./Scene";
 import Tilemap from "../Nodes/Tilemap";
 import TilemapFactory from "./Factories/TilemapFactory";
 import PhysicsManager from "../Physics/PhysicsManager";
 import PhysicsNodeFactory from "./Factories/PhysicsNodeFactory";
 import MathUtils from "../Utils/MathUtils";
 
-export default class Scene {
-    private gameState: GameState;
+export default class Layer {
+    private gameState: Scene;
     private viewport: Viewport
     private parallax: Vec2;
     private sceneGraph: SceneGraph;
@@ -27,7 +27,7 @@ export default class Scene {
     public tilemap: TilemapFactory;
     public physics: PhysicsNodeFactory;
 
-    constructor(viewport: Viewport, gameState: GameState){
+    constructor(viewport: Viewport, gameState: Scene){
         this.gameState = gameState;
         this.viewport = viewport;
         this.parallax = new Vec2(1, 1);
@@ -114,9 +114,7 @@ export default class Scene {
 
             // Render tilemaps
             this.tilemaps.forEach(tilemap => {
-                if(tilemap.isReady() && tilemap.isVisible()){
-                    tilemap.render(ctx, origin, size);
-                }
+                tilemap.render(ctx, origin, size);
             });
 
             // Render visible set

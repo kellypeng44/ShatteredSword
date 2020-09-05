@@ -2,15 +2,15 @@ import Viewport from "./Viewport";
 import CanvasNode from "../Nodes/CanvasNode";
 import Map from "../DataTypes/Map";
 import Vec2 from "../DataTypes/Vec2";
-import Scene from "../GameState/Scene";
+import Layer from "../Scene/Layer";
 
 export default abstract class SceneGraph{
 	protected viewport: Viewport;
 	protected nodeMap: Map<CanvasNode>;
 	protected idCounter: number;
-	protected scene: Scene;
+	protected scene: Layer;
 
-    constructor(viewport: Viewport, scene: Scene){
+    constructor(viewport: Viewport, scene: Layer){
 		this.viewport = viewport;
 		this.scene = scene;
 		this.nodeMap = new Map<CanvasNode>();

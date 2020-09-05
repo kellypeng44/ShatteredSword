@@ -1,6 +1,6 @@
 import GameNode from "./GameNode";
 import Vec2 from "../DataTypes/Vec2";
-import Scene from "../GameState/Scene";
+import Layer from "../Scene/Layer";
 
 export default abstract class CanvasNode extends GameNode{
 	protected size: Vec2;

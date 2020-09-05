@@ -4,14 +4,14 @@ import Vec2 from "../DataTypes/Vec2";
 import Map from "../DataTypes/Map";
 import Receiver from "../Events/Receiver";
 import GameEvent from "../Events/GameEvent";
-import Scene from "../GameState/Scene";
+import Layer from "../Scene/Layer";
 
 export default abstract class GameNode{
 	private eventQueue: EventQueue;
 	protected input: InputReceiver;
 	protected position: Vec2;
 	private receiver: Receiver;
-	protected scene: Scene;
+	protected scene: Layer;
 
 	constructor(){
 		this.eventQueue = EventQueue.getInstance();
@@ -19,11 +19,11 @@ export default abstract class GameNode{
 		this.position = new Vec2(0, 0);
 	}
 
-	init(scene: Scene){
+	init(scene: Layer){
 		this.scene = scene;
 	}
 
-	getScene(): Scene {
+	getScene(): Layer {
 		return this.scene;
 	}
 	

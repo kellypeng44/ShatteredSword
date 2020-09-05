@@ -18,11 +18,11 @@
         "src/Events/GameEvent.ts",
         "src/Events/Receiver.ts",
 
-        "src/GameState/Factories/CanvasNodeFactory.ts",
-        "src/GameState/Factories/PhysicsNodeFactory.ts",
-        "src/GameState/Factories/TilemapFactory.ts",
-        "src/GameState/GameState.ts",
-        "src/GameState/Scene.ts",
+        "src/Scene/Factories/CanvasNodeFactory.ts",
+        "src/Scene/Factories/PhysicsNodeFactory.ts",
+        "src/Scene/Factories/TilemapFactory.ts",
+        "src/Scene/Scene.ts",
+        "src/Scene/Layer.ts",
 
         "src/Input/InputHandler.ts",
         "src/Input/InputReceiver.ts",

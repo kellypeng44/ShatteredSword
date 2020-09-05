@@ -2,10 +2,10 @@ import EventQueue from "../Events/EventQueue";
 import InputReceiver from "../Input/InputReceiver";
 import InputHandler from "../Input/InputHandler";
 import Recorder from "../Playback/Recorder";
-import GameState from "../GameState/GameState";
 import Debug from "../Debug/Debug";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import Viewport from "../SceneGraph/Viewport";
+import SceneManager from "../Scene/SceneManager";
 
 export default class GameLoop{
 	// The amount of time to spend on a physics step
@@ -37,8 +37,8 @@ export default class GameLoop{
 	private inputHandler: InputHandler;
 	private inputReceiver: InputReceiver;
 	private recorder: Recorder;
-    private gameState: GameState;
     private resourceManager: ResourceManager;
+    private sceneManager: SceneManager;
 
     constructor(){
         this.maxFPS = 60;
@@ -66,8 +66,8 @@ export default class GameLoop{
         this.inputReceiver = InputReceiver.getInstance();
         this.inputReceiver.setViewport(this.viewport);
         this.recorder = new Recorder();
-        this.gameState = new GameState(this.viewport);
         this.resourceManager = ResourceManager.getInstance();
+        this.sceneManager = new SceneManager(this.viewport);
     }
 
     private initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
@@ -83,8 +83,8 @@ export default class GameLoop{
         this.simulationTimestep = Math.floor(1000/this.maxFPS);
     }
 
-    getGameState(): GameState {
-        return this.gameState;
+    getSceneManager(): SceneManager {
+        return this.sceneManager;
     }
 
     private updateFrameCount(timestep: number): void {
@@ -149,12 +149,12 @@ export default class GameLoop{
         this.eventQueue.update(deltaT);
         this.inputReceiver.update(deltaT);
         this.recorder.update(deltaT);
-        this.gameState.update(deltaT);
+        this.sceneManager.update(deltaT);
     }
 
     render(): void {
         this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
-        this.gameState.render(this.ctx);
+        this.sceneManager.render(this.ctx);
         Debug.render(this.ctx);
     }
 }

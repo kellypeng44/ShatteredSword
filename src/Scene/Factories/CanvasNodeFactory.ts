@@ -1,11 +1,11 @@
-import Scene from "../Scene";
+import Layer from "../Layer";
 import Viewport from "../../SceneGraph/Viewport";
 import CanvasItem from "../../Nodes/CanvasNode"
 
 export default class CanvasNodeFactory {
-	private scene: Scene;
+	private scene: Layer;
 
-	constructor(scene: Scene){
+	constructor(scene: Layer){
 		this.scene = scene;
 	}
 

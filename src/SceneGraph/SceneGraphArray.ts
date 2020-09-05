@@ -1,13 +1,13 @@
 import SceneGraph from "./SceneGraph";
 import CanvasNode from "../Nodes/CanvasNode";
 import Viewport from "./Viewport";
-import Scene from "../GameState/Scene";
+import Layer from "../Scene/Layer";
 
 export default class SceneGraphArray extends SceneGraph{
 	private nodeList: Array<CanvasNode>;
     private turnOffViewportCulling_demoTool: boolean;
 
-    constructor(viewport: Viewport, scene: Scene){
+    constructor(viewport: Viewport, scene: Layer){
         super(viewport, scene);
 
         this.nodeList = new Array<CanvasNode>();

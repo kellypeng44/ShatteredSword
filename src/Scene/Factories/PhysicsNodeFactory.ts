@@ -1,14 +1,14 @@
-import Scene from "../Scene";
+import Layer from "../Layer";
 import Viewport from "../../SceneGraph/Viewport";
 import PhysicsNode from "../../Physics/PhysicsNode";
 import PhysicsManager from "../../Physics/PhysicsManager";
 import Tilemap from "../../Nodes/Tilemap";
 
 export default class PhysicsNodeFactory {
-	private scene: Scene;
+	private scene: Layer;
 	private physicsManager: PhysicsManager;
 
-	constructor(scene: Scene, physicsManager: PhysicsManager){
+	constructor(scene: Layer, physicsManager: PhysicsManager){
         this.scene = scene;
         this.physicsManager = physicsManager;
 	}
