@@ -67,7 +67,7 @@ export default class GameLoop{
         this.inputReceiver.setViewport(this.viewport);
         this.recorder = new Recorder();
         this.resourceManager = ResourceManager.getInstance();
-        this.sceneManager = new SceneManager(this.viewport);
+        this.sceneManager = new SceneManager(this.viewport, this);
     }
 
     private initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {

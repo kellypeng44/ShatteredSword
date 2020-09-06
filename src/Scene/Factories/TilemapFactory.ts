@@ -1,45 +1,55 @@
-import Layer from "../Layer";
-import Viewport from "../../SceneGraph/Viewport";
+import Scene from "../Scene";
 import Tilemap from "../../Nodes/Tilemap";
+import PhysicsManager from "../../Physics/PhysicsManager";
 import ResourceManager from "../../ResourceManager/ResourceManager";
-import { TiledTilemapData } from "../../DataTypes/Tilesets/TiledData";
-import StringUtils from "../../Utils/StringUtils";
-import StaticBody from "../../Physics/StaticBody";
-import Vec2 from "../../DataTypes/Vec2";
 
 export default class TilemapFactory {
-    private scene: Layer;
-    // TODO: get the resource manager OUT of here, it does not belong
+    private scene: Scene;
+    private tilemaps: Array<Tilemap>;
+    private physicsManager: PhysicsManager;
     private resourceManager: ResourceManager;
-
-	constructor(scene: Layer){
+    
+    init(scene: Scene, tilemaps: Array<Tilemap>, physicsManager: PhysicsManager): void {
         this.scene = scene;
+        this.tilemaps = tilemaps;
+        this.physicsManager = physicsManager;
         this.resourceManager = ResourceManager.getInstance();
-	}
+    }
 
-	add<T extends Tilemap>(constr: new (...a: any) => T, path: string, ...args: any): void {
-        // this.resourceManager.loadTilemap(path, (tilemapData: TiledTilemapData) => {
-        //     // For each of the layers in the tilemap, create a tilemap
-        //     for(let layer of tilemapData.layers){
-        //         let tilemap = new constr(tilemapData, layer);
-        //         tilemap.init(this.scene);
+	add = <T extends Tilemap>(key: string, constr: new (...a: any) => T, ...args: any): Array<Tilemap> => {
+        // Get Tilemap Data
+        let tilemapData = this.resourceManager.getTilemap(key);
 
-        //         // Add to scene
-        //         this.scene.addTilemap(tilemap);
+        // Get the return values
+        let tilemaps = new Array<Tilemap>();
 
-        //         if(tilemap.isCollidable()){
-        //             // Register in physics as a tilemap
-        //             this.scene.physics.addTilemap(tilemap);
-        //         }
+        for(let layer of tilemapData.layers){
+            // Create a new tilemap object for the layer
+            let tilemap = new constr(tilemapData, layer);
+            tilemap.setScene(this.scene);
 
-        //         // Load images for the tilesets
-        //         tilemap.getTilesets().forEach(tileset => {
-        //             let imagePath = StringUtils.getPathFromFilePath(path) + tileset.getImageUrl();
-        //             this.resourceManager.loadImage(imagePath, (path: string, image: HTMLImageElement) => {
-        //                 tileset.setImage(image);
-        //             })
-        //         });
-        //     }
-        // });
+            // Add tilemap to scene
+            this.tilemaps.push(tilemap);
+
+            // Create a new layer in the scene
+            let sceneLayer = this.scene.addLayer();
+            sceneLayer.addNode(tilemap);
+
+            // Register tilemap with physics if it's collidable
+            if(tilemap.isCollidable()){
+                this.physicsManager.addTilemap(tilemap);
+            }
+
+            // Assign each tileset it's image
+            tilemap.getTilesets().forEach(tileset => {
+                let image = this.resourceManager.getImage(tileset.getImageUrl());
+                tileset.setImage(image);
+            });
+
+            // Update the return value
+            tilemaps.push(tilemap);
+        }
+
+        return tilemaps;
 	}
 }

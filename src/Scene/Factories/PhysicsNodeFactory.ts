@@ -1,28 +1,27 @@
-import Layer from "../Layer";
-import Viewport from "../../SceneGraph/Viewport";
+import Scene from "../Scene";
 import PhysicsNode from "../../Physics/PhysicsNode";
 import PhysicsManager from "../../Physics/PhysicsManager";
-import Tilemap from "../../Nodes/Tilemap";
+import Layer from "../Layer";
 
 export default class PhysicsNodeFactory {
-	private scene: Layer;
+	private scene: Scene;
 	private physicsManager: PhysicsManager;
 
-	constructor(scene: Layer, physicsManager: PhysicsManager){
-        this.scene = scene;
+	init(scene: Scene, physicsManager: PhysicsManager): void {
+		this.scene = scene;
         this.physicsManager = physicsManager;
 	}
 
-	add<T extends PhysicsNode>(constr: new (...a: any) => T, ...args: any): T {
+	// TODO: Currently this doesn't care about layers
+	add = <T extends PhysicsNode>(constr: new (...a: any) => T, layer: Layer, ...args: any): T => {
 		let instance = new constr(...args);
-        instance.init(this.scene);
+        instance.setScene(this.scene);
         instance.addManager(this.physicsManager);
-        instance.create();
+		instance.create();
+		
+		layer.addNode(instance);
+
 		this.physicsManager.add(instance);
 		return instance;
-	}
-
-	addTilemap(tilemap: Tilemap): void {
-		this.physicsManager.addTilemap(tilemap);
 	}
 }

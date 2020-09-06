@@ -2,7 +2,6 @@ import Vec2 from "../DataTypes/Vec2";
 import GameNode from "./GameNode";
 import Tileset from "../DataTypes/Tilesets/Tileset";
 import { TiledTilemapData, TiledLayerData } from "../DataTypes/Tilesets/TiledData"
-import TileLayer from "../DataTypes/Tilesets/TileLayer";
 
 /**
  * Represents one layer of tiles
@@ -12,15 +11,17 @@ export default abstract class Tilemap extends GameNode {
     protected worldSize: Vec2;
     protected tileSize: Vec2;
     protected scale: Vec2;
-    protected layers: Array<TileLayer>;
+    public data: Array<number>;
+	public collidable: boolean;
+	public visible: boolean;
 
     // TODO: Make this no longer be specific to Tiled
-    constructor(tilemapData: TiledTilemapData) {
+    constructor(tilemapData: TiledTilemapData, layer: TiledLayerData) {
         super();
         this.tilesets = new Array<Tileset>();
         this.worldSize = new Vec2(0, 0);
         this.tileSize = new Vec2(0, 0);
-        this.parseTilemapData(tilemapData);
+        this.parseTilemapData(tilemapData, layer);
         this.scale = new Vec2(4, 4);
     }
 
@@ -44,13 +45,21 @@ export default abstract class Tilemap extends GameNode {
         this.scale = scale;
     }
 
+    isCollidable(): boolean {
+        return this.collidable;
+    }
+
+    isVisible(): boolean {
+        return this.visible;
+    }
+
     abstract getTileAt(worldCoords: Vec2): number;
 
     /**
      * Sets up the tileset using the data loaded from file
      */
     // TODO: This shouldn't use tiled data specifically - it should be more general
-    protected abstract parseTilemapData(tilemapData: TiledTilemapData): void;
+    protected abstract parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void;
 
-    abstract render(ctx: CanvasRenderingContext2D, origin: Vec2, viewportSize: Vec2): void;
+    abstract render(ctx: CanvasRenderingContext2D): void;
 }

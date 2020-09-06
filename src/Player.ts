@@ -2,7 +2,7 @@ import PhysicsNode from "./Physics/PhysicsNode";
 import Vec2 from "./DataTypes/Vec2";
 import Debug from "./Debug/Debug";
 import AABB from "./Physics/Colliders/AABB";
-import PlayerSprite from "./PlayerSprite";
+import CanvasNode from "./Nodes/CanvasNode";
 
 export default class Player extends PhysicsNode {
 	velocity: Vec2;
@@ -26,8 +26,9 @@ export default class Player extends PhysicsNode {
         }
     }
 
-    create(): void {
-        let sprite = this.scene.canvasNode.add(PlayerSprite);
+    create(): void {};
+
+    setSprite(sprite: CanvasNode): void {
         sprite.setPosition(this.position);
         sprite.setSize(this.size);
         this.children.push(sprite);

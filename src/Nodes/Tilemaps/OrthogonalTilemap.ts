@@ -2,33 +2,27 @@ import Tilemap from "../Tilemap";
 import Vec2 from "../../DataTypes/Vec2";
 import { TiledTilemapData, TiledLayerData } from "../../DataTypes/Tilesets/TiledData";
 import Tileset from "../../DataTypes/Tilesets/Tileset";
-import TileLayer from "../../DataTypes/Tilesets/TileLayer";
 
 
 export default class OrthogonalTilemap extends Tilemap {
 
-    protected parseTilemapData(tilemapData: TiledTilemapData): void {
+    protected parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void {
         this.worldSize.set(tilemapData.width, tilemapData.height);
         this.tileSize.set(tilemapData.tilewidth, tilemapData.tileheight);
-        for(let layerData of tilemapData.layers){
-            let layer = new TileLayer();
-            layer.data = layer.data;
-            layer.visible = layer.visible;
-            layer.collidable = false;
-            if(layerData.properties){
-                for(let item of layerData.properties){
-                    if(item.name === "Collidable"){
-                        layer.collidable = item.value;
-                    }
+        this.data = layer.data;
+        this.visible = layer.visible;
+        this.collidable = false;
+        if(layer.properties){
+            for(let item of layer.properties){
+                if(item.name === "Collidable"){
+                    this.collidable = item.value;
                 }
             }
-            this.layers.push(layer);
         }
 
         tilemapData.tilesets.forEach(tilesetData => this.tilesets.push(new Tileset(tilesetData)));
     }
 
-    // TODO - Should this even work as it currently does? The layers make things more complicated
     getTileAt(worldCoords: Vec2): number {
         let localCoords = this.getColRowAt(worldCoords);
         if(localCoords.x < 0 || localCoords.x >= this.worldSize.x || localCoords.y < 0 || localCoords.y >= this.worldSize.y){
@@ -36,14 +30,7 @@ export default class OrthogonalTilemap extends Tilemap {
             return 0;
         }
 
-        // Return the top nonzero tile
-        let tile = 0;
-        for(let layer of this.layers){
-            if(layer.data[localCoords.y * this.worldSize.x + localCoords.x] !== 0){
-                tile = layer.data[localCoords.y * this.worldSize.x + localCoords.x];
-            }
-        }
-        return tile;
+        return this.data[localCoords.y * this.worldSize.x + localCoords.x]
     }
 
     isTileCollidable(indexOrCol: number, row?: number): boolean {
@@ -55,20 +42,15 @@ export default class OrthogonalTilemap extends Tilemap {
             }
             index = row * this.worldSize.x + indexOrCol;
         } else {
-            if(indexOrCol < 0 || indexOrCol >= this.layers[0].data.length){
+            if(indexOrCol < 0 || indexOrCol >= this.data.length){
                 // Tiles that don't exist aren't collidable
                 return false;
             }
             index = indexOrCol;
         }
 
-        for(let layer of this.layers){
-            if(layer.data[index] !== 0 && layer.collidable){
-                return true;
-            }
-        }
-
-        return false;
+        // TODO - Currently, all tiles in a collidable layer are collidable
+        return this.data[index] !== 0 && this.collidable;
     }
 
     // TODO: Should this throw an error if someone tries to access an out of bounds value?
@@ -81,19 +63,24 @@ export default class OrthogonalTilemap extends Tilemap {
     update(deltaT: number): void {}
 
     // TODO: Don't render tiles that aren't on screen
-    render(ctx: CanvasRenderingContext2D, origin: Vec2, viewportSize: Vec2) {
-        for(let layer of this.layers){
-            if(layer.visible){
-                for(let i = 0; i < layer.data.length; i++){
-                    let tileIndex = layer.data[i];
+    render(ctx: CanvasRenderingContext2D) {
+        let previousAlpha = ctx.globalAlpha;
+        ctx.globalAlpha = this.getLayer().getAlpha();
+        
+        let origin = this.getViewportOriginWithParallax();
 
-                    for(let tileset of this.tilesets){
-                        if(tileset.hasTile(tileIndex)){
-                            tileset.renderTile(ctx, tileIndex, i, this.worldSize, origin, this.scale);
-                        }
+        if(this.visible){
+            for(let i = 0; i < this.data.length; i++){
+                let tileIndex = this.data[i];
+
+                for(let tileset of this.tilesets){
+                    if(tileset.hasTile(tileIndex)){
+                        tileset.renderTile(ctx, tileIndex, i, this.worldSize, origin, this.scale);
                     }
                 }
             }
         }
+
+        ctx.globalAlpha = previousAlpha;
     }
 }

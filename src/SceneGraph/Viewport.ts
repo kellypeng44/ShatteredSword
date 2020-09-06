@@ -40,9 +40,10 @@ export default class Viewport{
 		}
     }
     
-    includes(node: CanvasNode, parallax: Vec2): boolean {
+    includes(node: CanvasNode): boolean {
         let nodePos = node.getPosition();
         let nodeSize = node.getSize();
+        let parallax = node.getLayer().getParallax();
         let originX = this.position.x*parallax.x;
         let originY = this.position.y*parallax.y;
         if(nodePos.x + nodeSize.x > originX && nodePos.x < originX + this.size.x){

@@ -45,6 +45,10 @@ export default class ResourceManager {
         this.imageLoadingQueue.enqueue({key: key, path: path});
     }
 
+    public getImage(key: string){
+        return this.images.get(key);
+    }
+
     public spritesheet(key: string, path: string, frames: {hFrames: number, vFrames: number}): void {
 
     }
@@ -57,26 +61,10 @@ export default class ResourceManager {
     public tilemap(key: string, path: string): void {
         // Add a function that loads the tilemap to the queue
         this.tilemapLoadingQueue.enqueue({key: key, path: path});
+    }
 
-        // this.tilemapLoadingQueue.enqueue((callback: Function) => {
-        //     this.loadTilemap(path, (tilemapData: TiledTilemapData) => {
-        //         // When the tilemap file loads, first construct the tilemap
-        //         // TODO: Ignore multiple layers for now, but this will have to be elegantly dealt with sometime in the future
-
-        //         // Count the total number of images that need to be loaded
-                
-        //         let tilemap = new constr(tilemapData);
-        //         // For each of the tilesets in the tilemap, load the image
-        //         tilemap.getTilesets().forEach(tileset => {
-        //             let imagePath = StringUtils.getPathFromFilePath(path) + tileset.getImageUrl();
-        //             this.loadImage(imagePath, (image: HTMLImageElement) => {
-        //                 tileset.setImage(image);
-        //             })
-        //         });
-
-        //         this.tilemaps.add(key, tilemap);
-        //     });
-        // });
+    public getTilemap(key: string): TiledTilemapData{
+        return this.tilemaps.get(key);
     }
 
     loadResourcesFromQueue(callback: Function): void {

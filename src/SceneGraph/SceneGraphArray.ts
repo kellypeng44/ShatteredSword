@@ -1,13 +1,13 @@
 import SceneGraph from "./SceneGraph";
 import CanvasNode from "../Nodes/CanvasNode";
 import Viewport from "./Viewport";
-import Layer from "../Scene/Layer";
+import Scene from "../Scene/Scene";
 
 export default class SceneGraphArray extends SceneGraph{
 	private nodeList: Array<CanvasNode>;
     private turnOffViewportCulling_demoTool: boolean;
 
-    constructor(viewport: Viewport, scene: Layer){
+    constructor(viewport: Viewport, scene: Scene){
         super(viewport, scene);
 
         this.nodeList = new Array<CanvasNode>();
@@ -41,7 +41,9 @@ export default class SceneGraphArray extends SceneGraph{
 
     update(deltaT: number): void {
         for(let node of this.nodeList){
-            node.update(deltaT);
+            if(!node.getLayer().isPaused()){
+                node.update(deltaT);
+            }
         }
     }
 
@@ -58,7 +60,7 @@ export default class SceneGraphArray extends SceneGraph{
         let visibleSet = new Array<CanvasNode>();
 
         for(let node of this.nodeList){
-            if(this.viewport.includes(node, this.scene.getParallax())){
+            if(!node.getLayer().isHidden() && this.viewport.includes(node)){
                 visibleSet.push(node);
             }
         }

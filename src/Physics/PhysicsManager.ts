@@ -215,7 +215,9 @@ export default class PhysicsManager {
 
     update(deltaT: number): void {
         for(let node of this.physicsNodes){
-            node.update(deltaT);
+            if(!node.getLayer().isPaused()){
+                node.update(deltaT);
+            }
         }
         
         let staticSet = new Array<PhysicsNode>();

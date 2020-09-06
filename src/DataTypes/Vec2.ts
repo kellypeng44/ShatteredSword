@@ -73,6 +73,12 @@ export default class Vec2 {
 		return this;
 	}
 
+	mult(other: Vec2): Vec2 {
+		this.x *= other.x;
+		this.y *= other.y;
+		return this;
+	}
+
 	toString(): string {
 		return this.toFixed();
 	}

@@ -155,7 +155,12 @@ export default class UIElement extends CanvasNode{
 		return this.textColor.toStringRGBA();
 	}
 
-	render(ctx: CanvasRenderingContext2D, origin: Vec2): void {
+	render(ctx: CanvasRenderingContext2D): void {
+		let previousAlpha = ctx.globalAlpha;
+		ctx.globalAlpha = this.getLayer().getAlpha();
+
+		let origin = this.scene.getViewport().getPosition().clone().mult(this.layer.getParallax());
+
 		ctx.font = this.fontSize + "px " + this.font;
 		let offset = this.calculateOffset(ctx);
 
@@ -168,5 +173,7 @@ export default class UIElement extends CanvasNode{
 
 		ctx.fillStyle = this.calculateTextColor();
 		ctx.fillText(this.text, this.position.x + offset.x - origin.x, this.position.y + offset.y - origin.y);
+	
+		ctx.globalAlpha = previousAlpha;
 	}
 }

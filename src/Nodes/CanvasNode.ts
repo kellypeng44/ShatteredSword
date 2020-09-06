@@ -31,5 +31,5 @@ export default abstract class CanvasNode extends GameNode{
 		return false;
 	}
 
-	abstract render(ctx: CanvasRenderingContext2D, origin: Vec2): void;
+	abstract render(ctx: CanvasRenderingContext2D): void;
 }

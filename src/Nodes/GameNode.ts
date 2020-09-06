@@ -4,6 +4,7 @@ import Vec2 from "../DataTypes/Vec2";
 import Map from "../DataTypes/Map";
 import Receiver from "../Events/Receiver";
 import GameEvent from "../Events/GameEvent";
+import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
 
 export default abstract class GameNode{
@@ -11,7 +12,8 @@ export default abstract class GameNode{
 	protected input: InputReceiver;
 	protected position: Vec2;
 	private receiver: Receiver;
-	protected scene: Layer;
+	protected scene: Scene;
+	protected layer: Layer;
 
 	constructor(){
 		this.eventQueue = EventQueue.getInstance();
@@ -19,12 +21,20 @@ export default abstract class GameNode{
 		this.position = new Vec2(0, 0);
 	}
 
-	init(scene: Layer){
+	setScene(scene: Scene): void {
 		this.scene = scene;
 	}
 
-	getScene(): Layer {
+	getScene(): Scene {
 		return this.scene;
+	}
+
+	setLayer(layer: Layer): void {
+		this.layer = layer;
+	}
+
+	getLayer(): Layer {
+		return this.layer;
 	}
 	
 	getPosition(): Vec2 {
@@ -46,6 +56,11 @@ export default abstract class GameNode{
 	emit(eventType: string, data: Map<any> | Record<string, any> = null): void {
 		let event = new GameEvent(eventType, data);
 		this.eventQueue.addEvent(event);
+	}
+
+	// TODO - This doesn't seem ideal. Is there a better way to do this?
+	getViewportOriginWithParallax(){
+		return this.scene.getViewport().getPosition().clone().mult(this.layer.getParallax());
 	}
 
 	abstract update(deltaT: number): void;
