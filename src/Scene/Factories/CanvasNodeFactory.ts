@@ -1,9 +1,9 @@
 import Scene from "../Scene";
-import CanvasItem from "../../Nodes/CanvasNode"
 import SceneGraph from "../../SceneGraph/SceneGraph";
 import UIElement from "../../Nodes/UIElement";
 import Layer from "../Layer";
 import Graphic from "../../Nodes/Graphic";
+import Sprite from "../../Nodes/Sprites/Sprite";
 
 export default class CanvasNodeFactory {
 	private scene: Scene;
@@ -27,8 +27,8 @@ export default class CanvasNodeFactory {
 		return instance;
 	}
 
-	addSprite = <T extends CanvasItem>(constr: new (...a: any) => T, layer: Layer, ...args: any): T => {
-		let instance = new constr(...args);
+	addSprite = (imageId: string, layer: Layer, ...args: any): Sprite => {
+		let instance = new Sprite(imageId);
 
 		// Add instance to scene
 		instance.setScene(this.scene);

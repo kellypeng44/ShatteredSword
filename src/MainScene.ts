@@ -13,6 +13,23 @@ export default class MainScene extends Scene {
     loadScene(){
         this.load.tilemap("platformer", "assets/tilemaps/Platformer.json");
         this.load.tilemap("background", "assets/tilemaps/Background.json");
+        this.load.image("player", "assets/sprites/player.png");
+        this.load.audio("player_jump", "assets/sounds/jump-3.wav");
+        this.load.audio("level_music", "assets/sounds/level.wav");
+
+        let loadingScreen = this.addLayer();
+        let box = this.add.graphic(Rect, loadingScreen, new Vec2(200, 300), new Vec2(400, 60));
+        box.setColor(new Color(0, 0, 0));
+        let bar = this.add.graphic(Rect, loadingScreen, new Vec2(205, 305), new Vec2(0, 50));
+        bar.setColor(new Color(0, 200, 200));
+
+        this.load.onLoadProgress = (percentProgress: number) => {
+            bar.setSize(295 * percentProgress, bar.getSize().y);
+        }
+
+        this.load.onLoadComplete = () => {
+            loadingScreen.disable();
+        }
     }
 
     startScene(){
@@ -22,6 +39,9 @@ export default class MainScene extends Scene {
         backgroundTilemap.getLayer().setParallax(0.5, 0.8);
         backgroundTilemap.getLayer().setAlpha(0.5);
 
+        // Add the music and start playing it on a loop
+        this.add.audio("level_music").play(true);
+
         // Add the tilemap
         this.add.tilemap("platformer", OrthogonalTilemap);
 
@@ -30,10 +50,12 @@ export default class MainScene extends Scene {
 
         // Add a player
         let player = this.add.physics(Player, mainLayer, "platformer");
-        let playerSprite = this.add.graphic(Rect, mainLayer, new Vec2(0, 0), new Vec2(50, 50));
-        playerSprite.setColor(new Color(255, 0, 0));
+        let playerSprite = this.add.sprite("player", mainLayer)
         player.setSprite(playerSprite);
 
+        // TODO - Should sound playing be handled with events?
+        let playerJumpSound = this.add.audio("player_jump");
+        player.jumpSound = playerJumpSound;
 
         this.viewport.follow(player);
 

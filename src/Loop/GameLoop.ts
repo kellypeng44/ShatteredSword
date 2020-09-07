@@ -6,6 +6,7 @@ import Debug from "../Debug/Debug";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import Viewport from "../SceneGraph/Viewport";
 import SceneManager from "../Scene/SceneManager";
+import AudioManager from "../Sound/AudioManager";
 
 export default class GameLoop{
 	// The amount of time to spend on a physics step
@@ -39,6 +40,7 @@ export default class GameLoop{
 	private recorder: Recorder;
     private resourceManager: ResourceManager;
     private sceneManager: SceneManager;
+    private audioManager: AudioManager;
 
     constructor(){
         this.maxFPS = 60;
@@ -68,6 +70,7 @@ export default class GameLoop{
         this.recorder = new Recorder();
         this.resourceManager = ResourceManager.getInstance();
         this.sceneManager = new SceneManager(this.viewport, this);
+        this.audioManager = AudioManager.getInstance();
     }
 
     private initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
@@ -150,6 +153,7 @@ export default class GameLoop{
         this.inputReceiver.update(deltaT);
         this.recorder.update(deltaT);
         this.sceneManager.update(deltaT);
+        this.resourceManager.update(deltaT);
     }
 
     render(): void {

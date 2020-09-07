@@ -2,6 +2,7 @@
     "files": [
         "src/main.ts",
         "src/Player.ts",
+        "src/PlayerSprite.ts",
 
         "src/DataTypes/Tilesets/TiledData.ts",
         "src/DataTypes/Tilesets/Tileset.ts",
@@ -33,9 +34,7 @@
         "src/Nodes/UIElements/Button.ts",
         "src/Nodes/UIElements/Label.ts",
         "src/Nodes/CanvasNode.ts",
-        "src/ColoredCircle.ts",
         "src/Nodes/GameNode.ts",
-        "src/PlayerSprite.ts",
         "src/Nodes/Tilemap.ts",
         "src/Nodes/UIElement.ts",
 
@@ -51,6 +50,8 @@
         "src/SceneGraph/SceneGraph.ts",
         "src/SceneGraph/SceneGraphArray.ts",
         "src/SceneGraph/Viewport.ts",
+
+        "src/Sound/AudioManager.ts",
         
         "src/Utils/Color.ts",
         "src/Utils/MathUtils.ts",

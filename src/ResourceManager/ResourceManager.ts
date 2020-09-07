@@ -3,11 +3,16 @@ import Tilemap from "../Nodes/Tilemap";
 import Queue from "../DataTypes/Queue";
 import { TiledTilemapData } from "../DataTypes/Tilesets/TiledData";
 import StringUtils from "../Utils/StringUtils";
+import AudioManager from "../Sound/AudioManager";
 
 export default class ResourceManager {
     private static instance: ResourceManager;
     
     private loading: boolean;
+    private justLoaded: boolean;
+
+    public onLoadProgress: Function;
+    public onLoadComplete: Function;
 
     private imagesLoaded: number;
     private imagesToLoad: number;
@@ -19,8 +24,17 @@ export default class ResourceManager {
     private tilemapLoadingQueue: Queue<{key: string, path: string}>;
     private tilemaps: Map<TiledTilemapData>;
 
+    private audioLoaded: number;
+    private audioToLoad: number;
+    private audioLoadingQueue: Queue<{key: string, path: string}>;
+    private audioBuffers: Map<AudioBuffer>;
+
+    // The number of different types of things to load
+    private typesToLoad: number;
+
     private constructor(){
         this.loading = false;
+        this.justLoaded = false;
 
         this.imagesLoaded = 0;
         this.imagesToLoad = 0;
@@ -31,6 +45,11 @@ export default class ResourceManager {
         this.tilemapsToLoad = 0;
         this.tilemapLoadingQueue = new Queue();
         this.tilemaps = new Map();
+
+        this.audioLoaded = 0;
+        this.audioToLoad = 0;
+        this.audioLoadingQueue = new Queue();
+        this.audioBuffers = new Map();
     };
 
     static getInstance(): ResourceManager {
@@ -45,7 +64,7 @@ export default class ResourceManager {
         this.imageLoadingQueue.enqueue({key: key, path: path});
     }
 
-    public getImage(key: string){
+    public getImage(key: string): HTMLImageElement{
         return this.images.get(key);
     }
 
@@ -54,28 +73,36 @@ export default class ResourceManager {
     }
 
     public audio(key: string, path: string): void {
-
+        this.audioLoadingQueue.enqueue({key: key, path: path});
     }
 
-    // This one is trickier than the others because we first have to load the json file, then we have to load the images
+    public getAudio(key: string): AudioBuffer {
+        return this.audioBuffers.get(key);
+    }
+
     public tilemap(key: string, path: string): void {
-        // Add a function that loads the tilemap to the queue
         this.tilemapLoadingQueue.enqueue({key: key, path: path});
     }
 
-    public getTilemap(key: string): TiledTilemapData{
+    public getTilemap(key: string): TiledTilemapData {
         return this.tilemaps.get(key);
     }
 
+    // TODO - Should everything be loaded in order, one file at a time?
     loadResourcesFromQueue(callback: Function): void {
+        this.typesToLoad = 3;
+
         this.loading = true;
 
         // Load everything in the queues. Tilemaps have to come before images because they will add new images to the queue
         this.loadTilemapsFromQueue(() => {
             this.loadImagesFromQueue(() => {
-                // Done loading
-                this.loading = false;
-                callback();
+                this.loadAudioFromQueue(() => {
+                    // Done loading
+                    this.loading = false;
+                    this.justLoaded = true;
+                    callback();
+                });
             });
         });
 
@@ -121,7 +148,7 @@ export default class ResourceManager {
 
     private loadImagesFromQueue(onFinishLoading: Function): void {
         this.imagesToLoad = this.imageLoadingQueue.getSize();
-        this.tilemapsLoaded = 0;
+        this.imagesLoaded = 0;
 
         while(this.imageLoadingQueue.hasItems()){
             let image = this.imageLoadingQueue.dequeue();
@@ -148,7 +175,47 @@ export default class ResourceManager {
         this.imagesLoaded += 1;
 
         if(this.imagesLoaded === this.imagesToLoad ){
-            // We're done loading tilemaps
+            // We're done loading images
+            callback();
+        }
+    }
+
+    private loadAudioFromQueue(onFinishLoading: Function){
+        this.audioToLoad = this.audioLoadingQueue.getSize();
+        this.audioLoaded = 0;
+
+        while(this.audioLoadingQueue.hasItems()){
+            let audio = this.audioLoadingQueue.dequeue();
+            this.loadAudio(audio.key, audio.path, onFinishLoading);
+        }
+    }
+
+    private loadAudio(key: string, path: string, callbackIfLast: Function): void {
+        let audioCtx = AudioManager.getInstance().getAudioContext();
+
+        let request = new XMLHttpRequest();
+        request.open('GET', path, true);
+        request.responseType = 'arraybuffer';
+
+        request.onload = () => {
+            audioCtx.decodeAudioData(request.response, (buffer) => {
+                // Add to list of audio buffers
+                this.audioBuffers.add(key, buffer);
+
+                // Finish loading sound
+                this.finishLoadingAudio(callbackIfLast);
+            }, (error) =>{
+                throw "Error loading sound";
+            });
+        }
+        request.send();
+    }
+
+    private finishLoadingAudio(callback: Function): void {
+        this.audioLoaded += 1;
+
+        if(this.audioLoaded === this.audioToLoad){
+            // We're done loading audio
             callback();
         }
     }
@@ -163,5 +230,21 @@ export default class ResourceManager {
             }
         };
         xobj.send(null);
+    }
+
+    private getLoadPercent(): number {
+        return (this.tilemapsLoaded/this.tilemapsToLoad
+            + this.imagesLoaded/this.imagesToLoad
+            + this.audioLoaded/this.audioToLoad)
+            / this.typesToLoad;
+    }
+
+    public update(deltaT: number): void {
+        if(this.loading){
+            this.onLoadProgress(this.getLoadPercent());
+        } else if(this.justLoaded){
+            this.justLoaded = false;
+            this.onLoadComplete();
+        }
     }
 }
