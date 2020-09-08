@@ -9,6 +9,7 @@ import FactoryManager from "./Factories/FactoryManager";
 import Tilemap from "../Nodes/Tilemap";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import GameLoop from "../Loop/GameLoop";
+import SceneManager from "./SceneManager";
 
 export default class Scene{
     protected layers: Stack<Layer>;
@@ -16,6 +17,7 @@ export default class Scene{
     protected viewport: Viewport;
     protected running: boolean;
     protected game: GameLoop;
+    protected sceneManager: SceneManager;
 
     protected tilemaps: Array<Tilemap>;
     protected sceneGraph: SceneGraph;
@@ -24,13 +26,14 @@ export default class Scene{
     public add: FactoryManager;
     public load: ResourceManager;
 
-    constructor(viewport: Viewport, game: GameLoop){
+    constructor(viewport: Viewport, sceneManager: SceneManager, game: GameLoop){
         this.layers = new Stack(10);
         this.worldSize = new Vec2(1600, 1000);
         this.viewport = viewport;
         this.viewport.setBounds(0, 0, 2560, 1280);
         this.running = false;
         this.game = game;
+        this.sceneManager = sceneManager;
 
         this.tilemaps = new Array();
         this.sceneGraph = new SceneGraphArray(this.viewport, this);

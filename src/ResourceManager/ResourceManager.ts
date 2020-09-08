@@ -108,6 +108,23 @@ export default class ResourceManager {
 
     }
 
+    unloadAllResources(): void {
+        this.loading = false;
+        this.justLoaded = false;
+
+        this.imagesLoaded = 0;
+        this.imagesToLoad = 0;
+        this.images.clear();
+
+        this.tilemapsLoaded = 0;
+        this.tilemapsToLoad = 0;
+        this.tilemaps.clear();
+
+        this.audioLoaded = 0;
+        this.audioToLoad = 0;
+        this.audioBuffers.clear();
+    }
+
     private loadTilemapsFromQueue(onFinishLoading: Function){
         this.tilemapsToLoad = this.tilemapLoadingQueue.getSize();
         this.tilemapsLoaded = 0;

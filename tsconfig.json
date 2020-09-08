@@ -2,7 +2,6 @@
     "files": [
         "src/main.ts",
         "src/Player.ts",
-        "src/PlayerSprite.ts",
 
         "src/DataTypes/Tilesets/TiledData.ts",
         "src/DataTypes/Tilesets/Tileset.ts",

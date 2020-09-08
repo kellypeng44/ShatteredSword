@@ -1,6 +1,6 @@
 import Collection from "./Collection";
 
-export default class Map<T> implements Collection{
+export default class Map<T> implements Collection {
 	private map: Record<string, T>;
 
 	constructor(){
@@ -29,5 +29,9 @@ export default class Map<T> implements Collection{
 	
 	forEach(func: Function): void {
 		Object.keys(this.map).forEach(key => func(key));
+	}
+
+	clear(): void {
+		this.forEach((key: string) => delete this.map[key]);
 	}
 }

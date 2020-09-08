@@ -16,8 +16,8 @@ export default class SceneManager{
 		this.game = game;
 	}
 
-	public addScene<T extends Scene>(constr: new (...args: any) => T){
-		let scene = new constr(this.viewport, this.game);
+	public addScene<T extends Scene>(constr: new (...args: any) => T): void {
+		let scene = new constr(this.viewport, this, this.game);
 		this.currentScene = scene;
 
 		// Enqueue all scene asset loads
@@ -27,7 +27,18 @@ export default class SceneManager{
 		this.resourceManager.loadResourcesFromQueue(() => {
 			scene.startScene();
 			scene.setRunning(true);
-		})
+		});
+	}
+
+	public changeScene<T extends Scene>(constr: new (...args: any) => T): void {
+		// unload current scene
+		this.currentScene.unloadScene();
+
+		this.resourceManager.unloadAllResources();
+
+		this.viewport.setPosition(0, 0);
+
+		this.addScene(constr);
 	}
 
 	public render(ctx: CanvasRenderingContext2D){

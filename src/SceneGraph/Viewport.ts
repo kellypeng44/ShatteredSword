@@ -25,7 +25,7 @@ export default class Viewport{
 			this.position.set(vecOrX.x, vecOrX.y);
 		} else {
 			this.position.set(vecOrX, y);
-		}
+        }
     }
 
     getSize(): Vec2{

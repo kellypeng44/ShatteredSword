@@ -7,13 +7,12 @@ import Vec2 from "./DataTypes/Vec2";
 import UIElement from "./Nodes/UIElement";
 import Button from "./Nodes/UIElements/Button";
 import Layer from "./Scene/Layer";
-import SecondScene from "./SecondScene";
 
-export default class MainScene extends Scene {
+export default class SecondScene extends Scene {
 
     loadScene(){
-        this.load.tilemap("platformer", "assets/tilemaps/Platformer.json");
-        this.load.tilemap("background", "assets/tilemaps/Background.json");
+        this.load.tilemap("level2", "assets/tilemaps/OtherMap.json");
+        this.load.tilemap("background2", "assets/tilemaps/OtherBackground.json");
         this.load.image("player", "assets/sprites/player.png");
         this.load.audio("player_jump", "assets/sounds/jump-3.wav");
         this.load.audio("level_music", "assets/sounds/level.wav");
@@ -22,7 +21,7 @@ export default class MainScene extends Scene {
         let box = this.add.graphic(Rect, loadingScreen, new Vec2(200, 300), new Vec2(400, 60));
         box.setColor(new Color(0, 0, 0));
         let bar = this.add.graphic(Rect, loadingScreen, new Vec2(205, 305), new Vec2(0, 50));
-        bar.setColor(new Color(0, 200, 200));
+        bar.setColor(new Color(255, 100, 0));
 
         this.load.onLoadProgress = (percentProgress: number) => {
             bar.setSize(295 * percentProgress, bar.getSize().y);
@@ -35,24 +34,23 @@ export default class MainScene extends Scene {
 
     startScene(){
         // Add the background tilemap
-        let backgroundTilemap = this.add.tilemap("background", OrthogonalTilemap)[0];
+        let backgroundTilemap = this.add.tilemap("background2", OrthogonalTilemap)[0];
         // ...and make it have parallax
-        backgroundTilemap.getLayer().setParallax(0.5, 0.8);
-        backgroundTilemap.getLayer().setAlpha(0.5);
+        backgroundTilemap.getLayer().setParallax(1, 1);
+        backgroundTilemap.getLayer().setAlpha(0.2);
 
         // Add the music and start playing it on a loop
-        let music = this.add.audio("level_music");
-        music.play(true);
+        this.add.audio("level_music").play(true);
 
         // Add the tilemap
-        this.add.tilemap("platformer", OrthogonalTilemap);
+        this.add.tilemap("level2", OrthogonalTilemap);
 
         // Create the main game layer
         let mainLayer = this.addLayer();
 
         // Add a player
         let player = this.add.physics(Player, mainLayer, "platformer");
-        let playerSprite = this.add.sprite("player", mainLayer)
+        let playerSprite = this.add.sprite("player", mainLayer);
         player.setSprite(playerSprite);
 
         // TODO - Should sound playing be handled with events?
@@ -116,19 +114,10 @@ export default class MainScene extends Scene {
         let resumeButton = this.add.uiElement(Button, pauseLayer);
         resumeButton.setSize(100, 50);
         resumeButton.setText("Resume");
-        resumeButton.setPosition(360, 150);
+        resumeButton.setPosition(400, 200);
         resumeButton.onClick = () => {
             this.layers.forEach((layer: Layer) => layer.setPaused(false));
             pauseLayer.disable();
-        }
-
-        let switchButton = this.add.uiElement(Button, pauseLayer);
-        switchButton.setSize(140, 50);
-        switchButton.setText("Change Scene");
-        switchButton.setPosition(340, 190);
-        switchButton.onClick = () => {
-            music.stop();
-            this.sceneManager.changeScene(SecondScene);
         }
     }
 }

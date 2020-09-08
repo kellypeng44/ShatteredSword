@@ -14,6 +14,8 @@ export default class Rect extends Graphic {
     render(ctx: CanvasRenderingContext2D): void {
         let origin = this.getViewportOriginWithParallax();
 
+        console.log(origin.toFixed());
+
 		ctx.fillStyle = this.color.toStringRGBA();
 		ctx.fillRect(this.position.x - origin.x, this.position.y - origin.y, this.size.x, this.size.y);
     }
