@@ -9,6 +9,7 @@ import Tilemap from "../../Nodes/Tilemap";
 
 export default class FactoryManager {
 
+    // Constructors are called here to allow assignment of their functions to functions in this class
     private canvasNodeFactory: CanvasNodeFactory = new CanvasNodeFactory();
     private physicsNodeFactory: PhysicsNodeFactory = new PhysicsNodeFactory();
     private tilemapFactory: TilemapFactory = new TilemapFactory();
@@ -21,6 +22,7 @@ export default class FactoryManager {
         this.audioFactory.init(scene);
     }
 
+    // Expose all of the factories through the factory manager
     uiElement = this.canvasNodeFactory.addUIElement;
     sprite = this.canvasNodeFactory.addSprite;
     graphic = this.canvasNodeFactory.addGraphic;

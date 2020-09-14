@@ -17,9 +17,14 @@ export default class Tileset {
 
     // TODO: Change this to be more general and work with other tileset formats
     constructor(tilesetData: TiledTilesetData){
+        // Defer handling of the data to a helper class
         this.initFromTiledData(tilesetData);
     }
 
+    /**
+     * Initialize the tileset from the data from a Tiled json file
+     * @param tiledData The parsed object from a Tiled json file
+     */
     initFromTiledData(tiledData: TiledTilesetData): void {
         this.numRows = tiledData.tilecount/tiledData.columns;
         this.numCols = tiledData.columns;
@@ -58,23 +63,32 @@ export default class Tileset {
         return this.numCols;
     }
 
-    // TODO: This should probably be a thing that is tracked in the resource loader, not here
-    isReady(): boolean {
-        return this.image !== null;
-    }
-
     hasTile(tileIndex: number): boolean {
         return tileIndex >= this.startIndex && tileIndex <= this.endIndex;
     }
 
+    /**
+     * Render a singular tile with index tileIndex from the tileset located at position dataIndex
+     * @param ctx The rendering context
+     * @param tileIndex The value of the tile to render
+     * @param dataIndex The index of the tile in the data array
+     * @param worldSize The size of the world
+     * @param origin The viewport origin in the current layer
+     * @param scale The scale of the tilemap
+     */
     renderTile(ctx: CanvasRenderingContext2D, tileIndex: number, dataIndex: number, worldSize: Vec2, origin: Vec2, scale: Vec2): void {
+        // Get the true index
         let index = tileIndex - this.startIndex;
         let row = Math.floor(index / this.numCols);
         let col = index % this.numCols;
         let width = this.tileSize.x;
         let height = this.tileSize.y;
+
+        // Calculate the position to start a crop in the tileset image
         let left = col * width;
         let top = row * height;
+
+        // Calculate the position in the world to render the tile
         let x = (dataIndex % worldSize.x) * width * scale.x;
         let y = Math.floor(dataIndex / worldSize.x) * height * scale.y;
         ctx.drawImage(this.image, left, top, width, height, x - origin.x, y - origin.y, width * scale.x, height * scale.y);

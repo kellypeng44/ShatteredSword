@@ -2,6 +2,9 @@ import CanvasNode from "./CanvasNode";
 import Color from "../Utils/Color";
 import Vec2 from "../DataTypes/Vec2";
 
+/**
+ * The representation of a UIElement - the parent class of things like buttons
+ */
 export default class UIElement extends CanvasNode{
 	// Style attributes
 	protected textColor: Color;
@@ -68,6 +71,7 @@ export default class UIElement extends CanvasNode{
 	}
 
 	update(deltaT: number): void {
+		// See of this object was just clicked
 		if(this.input.isMouseJustPressed()){
 			let clickPos = this.input.getMousePressPosition();
 			if(this.contains(clickPos.x, clickPos.y)){
@@ -83,12 +87,14 @@ export default class UIElement extends CanvasNode{
 			}
 		}
 
+		// If the mouse wasn't just pressed, then we definitely weren't clicked
 		if(!this.input.isMousePressed()){
 			if(this.isClicked){
 				this.isClicked = false;
 			}
 		}
 
+		// Check if the mouse is hovering over this element
 		let mousePos = this.input.getMousePosition();
 		if(mousePos && this.contains(mousePos.x, mousePos.y)){
 			this.isEntered = true;
@@ -117,6 +123,10 @@ export default class UIElement extends CanvasNode{
 		}
 	}
 
+	/**
+	 * Calculate the offset of the text - this is useful for rendering text with different alignments
+	 *
+	 */
 	protected calculateOffset(ctx: CanvasRenderingContext2D): Vec2 {
 		let textWidth = ctx.measureText(this.text).width;
 
@@ -143,19 +153,29 @@ export default class UIElement extends CanvasNode{
 		return offset;
 	}
 
+	/**
+	 * Overridable method for calculating background color - useful for elements that want to be colored on different after certain events
+	 */
 	protected calculateBackgroundColor(): string {
 		return this.backgroundColor.toStringRGBA();
 	}
 
+	/**
+	 * Overridable method for calculating border color - useful for elements that want to be colored on different after certain events
+	 */
 	protected calculateBorderColor(): string {
 		return this.borderColor.toStringRGBA();
 	}
 
+	/**
+	 * Overridable method for calculating text color - useful for elements that want to be colored on different after certain events
+	 */
 	protected calculateTextColor(): string {
 		return this.textColor.toStringRGBA();
 	}
 
 	render(ctx: CanvasRenderingContext2D): void {
+		// Grab the global alpha so we can adjust it for this render
 		let previousAlpha = ctx.globalAlpha;
 		ctx.globalAlpha = this.getLayer().getAlpha();
 
@@ -164,6 +184,7 @@ export default class UIElement extends CanvasNode{
 		ctx.font = this.fontSize + "px " + this.font;
 		let offset = this.calculateOffset(ctx);
 
+		// Stroke and fill a rounded rect and give it text
 		ctx.fillStyle = this.calculateBackgroundColor();
 		ctx.fillRoundedRect(this.position.x - origin.x, this.position.y - origin.y, this.size.x, this.size.y, this.borderRadius);
 		

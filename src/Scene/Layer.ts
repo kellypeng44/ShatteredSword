@@ -3,6 +3,9 @@ import Scene from "./Scene";
 import MathUtils from "../Utils/MathUtils";
 import GameNode from "../Nodes/GameNode";
 
+/**
+ * A layer in the scene. Has its own alpha value and parallax.
+ */
 export default class Layer {
     protected scene: Scene;
     protected parallax: Vec2;
@@ -66,6 +69,4 @@ export default class Layer {
         this.items.push(node);
         node.setLayer(this);
     }
-
-    render(ctx: CanvasRenderingContext2D): void {}
 }

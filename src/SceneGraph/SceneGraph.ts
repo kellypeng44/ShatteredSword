@@ -4,7 +4,10 @@ import Map from "../DataTypes/Map";
 import Vec2 from "../DataTypes/Vec2";
 import Scene from "../Scene/Scene";
 
-export default abstract class SceneGraph{
+/**
+ * An abstract interface of a SceneGraph. Exposes methods for use by other code, but leaves the implementation up to the subclasses.
+ */
+export default abstract class SceneGraph {
 	protected viewport: Viewport;
 	protected nodeMap: Map<CanvasNode>;
 	protected idCounter: number;
@@ -17,6 +20,10 @@ export default abstract class SceneGraph{
 		this.idCounter = 0;
     }
 
+	/**
+	 * Add a node to the SceneGraph
+	 * @param node The CanvasNode to add to the SceneGraph
+	 */
     addNode(node: CanvasNode): number {
 		this.nodeMap.add(this.idCounter.toString(), node);
 		this.addNodeSpecific(node, this.idCounter.toString());
@@ -24,8 +31,17 @@ export default abstract class SceneGraph{
 		return this.idCounter - 1;
 	};
 
+	/**
+	 * An overridable method to add a CanvasNode to the specific data structure of the SceneGraph
+	 * @param node The node to add to the data structure
+	 * @param id The id of the CanvasNode
+	 */
 	protected abstract addNodeSpecific(node: CanvasNode, id: string): void;
 
+	/**
+	 * Removes a node from the SceneGraph
+	 * @param node The node to remove
+	 */
     removeNode(node: CanvasNode): void {
 		// Find and remove node in O(n)
 		// TODO: Can this be better?
@@ -36,12 +52,26 @@ export default abstract class SceneGraph{
 		}
 	};
 
+	/**
+	 * The specific implementation of removing a node
+	 * @param node The node to remove
+	 * @param id The id of the node to remove
+	 */
 	protected abstract removeNodeSpecific(node: CanvasNode, id: string): void;
 
-	getNode(id: string): CanvasNode{
+	/**
+	 * Get a specific node using its id
+	 * @param id The id of the CanvasNode to retrieve
+	 */
+	getNode(id: string): CanvasNode {
 		return this.nodeMap.get(id);
-	};
+	}
 
+	/**
+	 * Returns the node at specific coordinates
+	 * @param vecOrX 
+	 * @param y 
+	 */
     getNodeAt(vecOrX: Vec2 | number, y: number = null): CanvasNode {
 		if(vecOrX instanceof Vec2){
 			return this.getNodeAtCoords(vecOrX.x, vecOrX.y);
@@ -49,10 +79,18 @@ export default abstract class SceneGraph{
 			return this.getNodeAtCoords(vecOrX, y);
 		}
 	}
-    
+	
+	/**
+	 * The specific implementation of getting a node at certain coordinates
+	 * @param x 
+	 * @param y 
+	 */
     protected abstract getNodeAtCoords(x: number, y: number): CanvasNode;
-    
+	
     abstract update(deltaT: number): void;
 
+	/**
+	 * Gets the visible set of CanvasNodes based on the viewport
+	 */
     abstract getVisibleSet(): Array<CanvasNode>;
 }

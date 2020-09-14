@@ -3,7 +3,7 @@ import ResourceManager from "../ResourceManager/ResourceManager";
 import Viewport from "../SceneGraph/Viewport";
 import GameLoop from "../Loop/GameLoop";
 
-export default class SceneManager{
+export default class SceneManager {
 
 	private currentScene: Scene;
 	private viewport: Viewport;
@@ -16,6 +16,10 @@ export default class SceneManager{
 		this.game = game;
 	}
 
+	/**
+	 * Add a scene as the main scene
+	 * @param constr The constructor of the scene to add
+	 */
 	public addScene<T extends Scene>(constr: new (...args: any) => T): void {
 		let scene = new constr(this.viewport, this, this.game);
 		this.currentScene = scene;
@@ -30,6 +34,10 @@ export default class SceneManager{
 		});
 	}
 
+	/**
+	 * Change from the current scene to this new scene
+	 * @param constr The constructor of the scene to change to
+	 */
 	public changeScene<T extends Scene>(constr: new (...args: any) => T): void {
 		// unload current scene
 		this.currentScene.unloadScene();

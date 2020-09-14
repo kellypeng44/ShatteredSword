@@ -1,6 +1,9 @@
 import Collection from "./Collection";
 
-export default class Stack<T> implements Collection{
+/**
+ * A LIFO stack with items of type T
+ */
+export default class Stack<T> implements Collection {
 	readonly MAX_ELEMENTS: number;
 	private stack: Array<T>;
 	private head: number;
@@ -13,7 +16,7 @@ export default class Stack<T> implements Collection{
     
     /**
      * Adds an item to the top of the stack
-     * @param {*} item The new item to add to the stack
+     * @param item The new item to add to the stack
      */
     push(item: T): void {
         if(this.head + 1 === this.MAX_ELEMENTS){
@@ -44,10 +47,8 @@ export default class Stack<T> implements Collection{
         return this.stack[this.head];
     }
 
-    /**
-     * Removes all elements from the stack
-     */
-    clear(): void{
+    clear(): void {
+        this.forEach((item, index) => delete this.stack[index]);
         this.head = -1;
     }
 
@@ -58,7 +59,7 @@ export default class Stack<T> implements Collection{
         return this.head + 1;
     }
 
-    forEach(func: Function): void{
+    forEach(func: (item: T, index?: number) => void): void{
         let i = 0;
         while(i <= this.head){
             func(this.stack[i]);

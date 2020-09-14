@@ -1,7 +1,9 @@
 import GameNode from "./GameNode";
 import Vec2 from "../DataTypes/Vec2";
-import Layer from "../Scene/Layer";
 
+/**
+ * The representation of an object in the game world that can be drawn to the screen
+ */
 export default abstract class CanvasNode extends GameNode{
 	protected size: Vec2;
 
@@ -22,6 +24,11 @@ export default abstract class CanvasNode extends GameNode{
 		}
 	}
 
+	/**
+	 * Returns true if the point (x, y) is inside of this canvas object
+	 * @param x 
+	 * @param y 
+	 */
 	contains(x: number, y: number): boolean {
 		if(this.position.x < x && this.position.x + this.size.x > x){
 			if(this.position.y < y && this.position.y + this.size.y > y){

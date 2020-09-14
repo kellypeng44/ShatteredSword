@@ -14,6 +14,12 @@ export default class CanvasNodeFactory {
 		this.sceneGraph = sceneGraph;
 	}
 
+	/**
+	 * Adds an instance of a UIElement to the current scene - i.e. any class that extends UIElement
+	 * @param constr The constructor of the UIElement to be created
+	 * @param layer The layer to add the UIElement to
+	 * @param args Any additional arguments to feed to the constructor
+	 */
 	addUIElement = <T extends UIElement>(constr: new (...a: any) => T, layer: Layer, ...args: any): T => {
 		let instance = new constr(...args);
 
@@ -27,8 +33,13 @@ export default class CanvasNodeFactory {
 		return instance;
 	}
 
-	addSprite = (imageId: string, layer: Layer, ...args: any): Sprite => {
-		let instance = new Sprite(imageId);
+	/**
+	 * Adds a sprite to the current scene
+	 * @param key The key of the image the sprite will represent
+	 * @param layer The layer on which to add the sprite
+	 */
+	addSprite = (key: string, layer: Layer): Sprite => {
+		let instance = new Sprite(key);
 
 		// Add instance to scene
 		instance.setScene(this.scene);
@@ -40,6 +51,12 @@ export default class CanvasNodeFactory {
 		return instance;
 	}
 
+	/**
+	 * Adds a new graphic element to the current Scene
+	 * @param constr The constructor of the graphic element to add
+	 * @param layer The layer on which to add the graphic
+	 * @param args Any additional arguments to send to the graphic constructor
+	 */
 	addGraphic = <T extends Graphic>(constr: new (...a: any) => T, layer: Layer, ...args: any): T => {
 		let instance = new constr(...args);
 

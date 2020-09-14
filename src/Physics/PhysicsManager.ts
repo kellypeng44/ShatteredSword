@@ -18,51 +18,85 @@ export default class PhysicsManager {
         this.movements = new Array();
     }
 
+    /**
+     * Adds a PhysicsNode to the manager to be handled in case of collisions
+     * @param node 
+     */
     add(node: PhysicsNode): void {
         this.physicsNodes.push(node);
     }
 
+    /**
+     * Adds a tilemap node to the manager to be handled for collisions
+     * @param tilemap 
+     */
     addTilemap(tilemap: Tilemap): void {
         this.tilemaps.push(tilemap);
     }
 
+    /**
+     * Adds a movement to this frame. All movements are handled at the end of the frame
+     * @param node 
+     * @param velocity 
+     */
     addMovement(node: PhysicsNode, velocity: Vec2): void {
         this.movements.push(new MovementData(node, velocity));
     }
 
+    /**
+     * Handles a collision between a physics node and a tilemap
+     * @param node 
+     * @param tilemap 
+     * @param velocity 
+     */
     private collideWithTilemap(node: PhysicsNode, tilemap: Tilemap, velocity: Vec2): void {
         if(tilemap instanceof OrthogonalTilemap){
             this.collideWithOrthogonalTilemap(node, tilemap, velocity);
         }
     }
 
+    /**
+     * Specifically handles a collision for orthogonal tilemaps
+     * @param node 
+     * @param tilemap 
+     * @param velocity 
+     */
     private collideWithOrthogonalTilemap(node: PhysicsNode, tilemap: OrthogonalTilemap, velocity: Vec2): void {
+        // Get the starting position of the moving node
         let startPos = node.getPosition();
+
+        // Get the end position of the moving node
         let endPos = startPos.clone().add(velocity);
         let size = node.getCollider().getSize();
+
+        // Get the min and max x and y coordinates of the moving node
         let min = new Vec2(Math.min(startPos.x, endPos.x), Math.min(startPos.y, endPos.y));
         let max = new Vec2(Math.max(startPos.x + size.x, endPos.x + size.x), Math.max(startPos.y + size.y, endPos.y + size.y));
 
+        // Convert the min/max x/y to the min and max row/col in the tilemap array
         let minIndex = tilemap.getColRowAt(min);
         let maxIndex = tilemap.getColRowAt(max);
 
+        // Create an empty set of tilemap collisions (We'll handle all of them at the end)
         let tilemapCollisions = new Array<TileCollisionData>();
         let tileSize = tilemap.getTileSize();
 
         Debug.log("tilemapCollision", "");
+
         // Loop over all possible tiles
         for(let col = minIndex.x; col <= maxIndex.x; col++){
             for(let row = minIndex.y; row <= maxIndex.y; row++){
                 if(tilemap.isTileCollidable(col, row)){
                     Debug.log("tilemapCollision", "Colliding with Tile");
                 
-                    // Tile position
+                    // Get the position of this tile
                     let tilePos = new Vec2(col * tileSize.x, row * tileSize.y);
 
-                    // Calculate collision area
+                    // Calculate collision area between the node and the tile
                     let dx = Math.min(startPos.x, tilePos.x) - Math.max(startPos.x + size.x, tilePos.x + size.x);
                     let dy = Math.min(startPos.y, tilePos.y) - Math.max(startPos.y + size.y, tilePos.y + size.y);
 
+                    // If we overlap, how much do we overlap by?
                     let overlap = 0;
                     if(dx * dy > 0){
                         overlap = dx * dy;
@@ -73,32 +107,35 @@ export default class PhysicsManager {
             }
         }
 
-        // Now that we have all collisions, sort by collision area
+        // Now that we have all collisions, sort by collision area highest to lowest
         tilemapCollisions = tilemapCollisions.sort((a, b) => a.overlapArea - b.overlapArea);
 
-        // Resolve the collisions
+        // Resolve the collisions in order of collision area (i.e. "closest" tiles are collided with first, so we can slide along a surface of tiles)
         tilemapCollisions.forEach(collision => {
             let [firstContact, _, collidingX, collidingY] = this.getTimeOfAABBCollision(startPos, size, velocity, collision.position, tileSize, new Vec2(0, 0));
 
             // Handle collision
             if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
                 if(collidingX && collidingY){
-                    // If we're already intersecting, freak out I guess?
+                    // If we're already intersecting, freak out I guess? Probably should handle this in some way for if nodes get spawned inside of tiles
                 } else {
-                    // let contactTime = Math.min(firstContact.x, firstContact.y);
-                    // velocity.scale(contactTime);
+                    // Get the amount to scale x and y based on their initial collision times
                     let xScale = MathUtils.clamp(firstContact.x, 0, 1);
                     let yScale = MathUtils.clamp(firstContact.y, 0, 1);
                     
-                    // Handle special case of stickiness on corner to corner collisions
+                    // Handle special case of stickiness on perfect corner to corner collisions
                     if(xScale === yScale){
                         xScale = 1;
                     }
 
+                    // If we are scaling y, we're on the ground, so tell the node it's grounded
+                    // TODO - This is a bug, check to make sure our velocity is going downwards
+                    // Maybe feed in a downward direction to check to be sure
                     if(yScale !== 1){
                         node.setGrounded(true);
                     }
 
+                    // Scale the velocity of the node
                     velocity.scale(xScale, yScale);
                 }
             }
@@ -264,6 +301,7 @@ export default class PhysicsManager {
 
 // Helper classes for internal data
 // TODO: Move these to data
+// When an object moves, store it's data as MovementData so all movements can be processed at the same time at the end of the frame
 class MovementData {
     node: PhysicsNode;
     velocity: Vec2;
@@ -273,6 +311,7 @@ class MovementData {
     }
 }
 
+// Collision data objects for tilemaps
 class TileCollisionData {
     position: Vec2;
     overlapArea: number;

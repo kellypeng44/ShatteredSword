@@ -2,6 +2,9 @@ import EventQueue from "../Events/EventQueue";
 import Vec2 from "../DataTypes/Vec2";
 import GameEvent from "../Events/GameEvent";
 
+/**
+ * Handles communication with the web browser to receive asynchronous events and send them to the event queue
+ */
 export default class InputHandler{
 	private eventQueue: EventQueue;
 	 

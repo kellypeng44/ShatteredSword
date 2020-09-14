@@ -3,6 +3,10 @@ import GameNode from "../Nodes/GameNode";
 import PhysicsManager from "./PhysicsManager";
 import Vec2 from "../DataTypes/Vec2";
 
+/**
+ * The representation of a physic-affected object in the game world. Sprites and other game nodes can be associated with
+ * a physics node to move them around as well.
+ */
 export default abstract class PhysicsNode extends GameNode {
 
     protected collider: Collider = null;
@@ -42,11 +46,19 @@ export default abstract class PhysicsNode extends GameNode {
         return this.moving;
     }
 
+    /**
+     * Register a movement to the physics manager that can be handled at the end of the frame
+     * @param velocity 
+     */
     protected move(velocity: Vec2): void {
         this.moving = true;
         this.manager.addMovement(this, velocity);
     }
 
+    /**
+     * Called by the physics manager to finish the movement and actually move the physics object and its children
+     * @param velocity 
+     */
     finishMove(velocity: Vec2): void {
         this.position.add(velocity);
         this.collider.getPosition().add(velocity);

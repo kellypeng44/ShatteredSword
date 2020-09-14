@@ -2,6 +2,7 @@ import Map from "../DataTypes/Map";
 
 export default class Debug {
 
+	// A map of log messages to display on the screen
 	private static logMessages: Map<string> = new Map();
 
 	static log(id: string, message: string): void {

@@ -4,7 +4,7 @@ import GameNode from "../Nodes/GameNode";
 import CanvasNode from "../Nodes/CanvasNode";
 import MathUtils from "../Utils/MathUtils";
 
-export default class Viewport{
+export default class Viewport {
 	private position: Vec2;
 	private size: Vec2;
 	private bounds: Vec4;
@@ -16,10 +16,18 @@ export default class Viewport{
         this.bounds = new Vec4(0, 0, 0, 0);
     }
 
+    /**
+     * Returns the position of the viewport as a Vec2
+     */
     getPosition(): Vec2 {
         return this.position;
     }
 
+    /**
+     * Set the position of the viewport
+     * @param vecOrX 
+     * @param y 
+     */
     setPosition(vecOrX: Vec2 | number, y: number = null): void {
 		if(vecOrX instanceof Vec2){
 			this.position.set(vecOrX.x, vecOrX.y);
@@ -28,10 +36,18 @@ export default class Viewport{
         }
     }
 
+    /**
+     * Returns the size of the viewport as a Vec2
+     */
     getSize(): Vec2{
         return this.size;
     }
     
+    /**
+     * Sets the size of the viewport
+     * @param vecOrX 
+     * @param y 
+     */
     setSize(vecOrX: Vec2 | number, y: number = null): void {
 		if(vecOrX instanceof Vec2){
 			this.size.set(vecOrX.x, vecOrX.y);
@@ -40,6 +56,10 @@ export default class Viewport{
 		}
     }
     
+    /**
+     * Returns true if the CanvasNode is inside of the viewport
+     * @param node 
+     */
     includes(node: CanvasNode): boolean {
         let nodePos = node.getPosition();
         let nodeSize = node.getSize();
@@ -56,17 +76,30 @@ export default class Viewport{
     }
 
 	// TODO: Put some error handling on this for trying to make the bounds too small for the viewport
-	// TODO: This should probably be done automatically, or should consider the aspect ratio or something
+    // TODO: This should probably be done automatically, or should consider the aspect ratio or something
+    /**
+     * Sets the bounds of the viewport
+     * @param lowerX 
+     * @param lowerY 
+     * @param upperX 
+     * @param upperY 
+     */
     setBounds(lowerX: number, lowerY: number, upperX: number, upperY: number): void {
         this.bounds = new Vec4(lowerX, lowerY, upperX, upperY);
     }
 
+    /**
+     * Make the viewport follow the specified GameNode
+     * @param node The GameNode to follow
+     */
     follow(node: GameNode): void {
         this.following = node;
     }
 
     update(deltaT: number): void {
+        // If viewport is following an object
         if(this.following){
+            // Set this position either to the object or to its bounds
             this.position.x = this.following.getPosition().x - this.size.x/2;
             this.position.y = this.following.getPosition().y - this.size.y/2;
             let [min, max] = this.bounds.split();

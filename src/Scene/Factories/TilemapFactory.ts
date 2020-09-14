@@ -16,6 +16,12 @@ export default class TilemapFactory {
         this.resourceManager = ResourceManager.getInstance();
     }
 
+    /**
+     * Adds a tilemap to the scene
+     * @param key The key of the loaded tilemap to load
+     * @param constr The constructor of the desired tilemap
+     * @param args Additional arguments to send to the tilemap constructor
+     */
 	add = <T extends Tilemap>(key: string, constr: new (...a: any) => T, ...args: any): Array<Tilemap> => {
         // Get Tilemap Data
         let tilemapData = this.resourceManager.getTilemap(key);

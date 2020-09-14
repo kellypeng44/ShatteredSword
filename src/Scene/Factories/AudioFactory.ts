@@ -14,7 +14,11 @@ export default class AudioFactory {
         this.audioManager = AudioManager.getInstance();
     }
 
-    addAudio = (key: string, ...args: any): Audio => {
+    /**
+     * Returns an audio element created using the previously loaded audio file specified by the key.
+     * @param key The key of the loaded audio file
+     */
+    addAudio = (key: string): Audio => {
         let audio = new Audio(key);
         return audio;
     }

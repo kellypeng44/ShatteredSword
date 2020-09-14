@@ -1,6 +1,9 @@
 import Collection from "./Collection";
 
-export default class Queue<T> implements Collection{
+/**
+ * A FIFO queue with elements of type T
+ */
+export default class Queue<T> implements Collection {
 	private readonly MAX_ELEMENTS: number;
 	private q: Array<T>;
 	private head: number;
@@ -15,6 +18,10 @@ export default class Queue<T> implements Collection{
         this.size = 0;
     }
 
+    /**
+     * Adds an item to the back of the queue
+     * @param item 
+     */
     enqueue(item: T): void{
         if((this.tail + 1) % this.MAX_ELEMENTS === this.head){
             throw "Queue full - cannot add element"
@@ -25,6 +32,9 @@ export default class Queue<T> implements Collection{
         this.tail = (this.tail + 1) % this.MAX_ELEMENTS;
     }
 
+    /**
+     * Retrieves an item from the front of the queue
+     */
     dequeue(): T {
         if(this.head === this.tail){
             throw "Queue empty - cannot remove element"
@@ -33,11 +43,16 @@ export default class Queue<T> implements Collection{
 
         this.size -= 1;
         let item = this.q[this.head];
+        // Now delete the item
+        delete this.q[this.head];
         this.head = (this.head + 1) % this.MAX_ELEMENTS;
         
         return item;
     }
 
+    /**
+     * Returns the item at the front of the queue, but does not return it
+     */
     peekNext(): T {
         if(this.head === this.tail){
             throw "Queue empty - cannot get element"
@@ -48,24 +63,30 @@ export default class Queue<T> implements Collection{
         return item;
     }
 
+    /**
+     * Returns true if the queue has items in it, false otherwise
+     */
     hasItems(): boolean {
         return this.head !== this.tail;
     }
 
+    /**
+     * Returns the number of elements in the queue.
+     */
     getSize(): number {
         return this.size;
     }
 
-    // TODO: This should actually delete the items in the queue instead of leaving them here
     clear(): void {
+        this.forEach((item, index) => delete this.q[index]);
         this.size = 0;
         this.head = this.tail;
     }
 
-    forEach(func: Function): void {
+    forEach(func: (item: T, index?: number) => void): void {
         let i = this.head;
         while(i !== this.tail){
-            func(this.q[i]);
+            func(this.q[i], i);
             i = (i + 1) % this.MAX_ELEMENTS;
         }
     }

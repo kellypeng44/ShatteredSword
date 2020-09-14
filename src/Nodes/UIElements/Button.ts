@@ -12,6 +12,7 @@ export default class Button extends UIElement{
 	}
 
 	protected calculateBackgroundColor(): string {
+		// Change the background color if clicked or hovered
 		if(this.isEntered && !this.isClicked){
 			return this.backgroundColor.lighten().toStringRGBA();
 		} else if(this.isClicked){

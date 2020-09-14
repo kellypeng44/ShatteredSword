@@ -7,6 +7,9 @@ import GameEvent from "../Events/GameEvent";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
 
+/**
+ * The representation of an object in the game world
+ */
 export default abstract class GameNode{
 	private eventQueue: EventQueue;
 	protected input: InputReceiver;
@@ -49,17 +52,26 @@ export default abstract class GameNode{
 		}
 	}
 
+	/**
+	 * Subscribe this object's receiver to the specified event type
+	 * @param eventType 
+	 */
 	subscribe(eventType: string): void {
 		this.eventQueue.subscribe(this.receiver, eventType);
 	}
 
+	/**
+	 * Emit and event of type eventType with the data packet data
+	 * @param eventType 
+	 * @param data 
+	 */
 	emit(eventType: string, data: Map<any> | Record<string, any> = null): void {
 		let event = new GameEvent(eventType, data);
 		this.eventQueue.addEvent(event);
 	}
 
 	// TODO - This doesn't seem ideal. Is there a better way to do this?
-	getViewportOriginWithParallax(){
+	protected getViewportOriginWithParallax(): Vec2 {
 		return this.scene.getViewport().getPosition().clone().mult(this.layer.getParallax());
 	}
 

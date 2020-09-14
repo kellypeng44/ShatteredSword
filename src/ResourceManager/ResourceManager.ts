@@ -6,30 +6,72 @@ import StringUtils from "../Utils/StringUtils";
 import AudioManager from "../Sound/AudioManager";
 
 export default class ResourceManager {
+    // Instance for the singleton class
     private static instance: ResourceManager;
     
+    // Booleans to keep track of whether or not the ResourceManager is currently loading something
     private loading: boolean;
     private justLoaded: boolean;
 
+    // Functions to do something when loading progresses or is completed such as render a loading screen
     public onLoadProgress: Function;
     public onLoadComplete: Function;
 
+
+    /**
+     * Number to keep track of how many images need to be loaded
+     */
     private imagesLoaded: number;
+    /**
+     * Number to keep track of how many images are loaded
+     */
     private imagesToLoad: number;
+    /**
+     * The queue of images we must load
+     */
     private imageLoadingQueue: Queue<{key: string, path: string}>;
+    /**
+     * A map of the images that are currently loaded and (presumably) being used by the scene
+     */
     private images: Map<HTMLImageElement>;
 
+    /**
+     * Number to keep track of how many tilemaps need to be loaded
+     */
     private tilemapsLoaded: number;
+    /**
+     * Number to keep track of how many tilemaps are loaded
+     */
     private tilemapsToLoad: number;
+    /**
+     * The queue of tilemaps we must load
+     */
     private tilemapLoadingQueue: Queue<{key: string, path: string}>;
+    /**
+     * A map of the tilemaps that are currently loaded and (presumably) being used by the scene
+     */
     private tilemaps: Map<TiledTilemapData>;
 
+    /**
+     * Number to keep track of how many sounds need to be loaded
+     */
     private audioLoaded: number;
+    /**
+     * Number to keep track of how many sounds are loaded
+     */
     private audioToLoad: number;
+    /**
+     * The queue of sounds we must load
+     */
     private audioLoadingQueue: Queue<{key: string, path: string}>;
+        /**
+     * A map of the sounds that are currently loaded and (presumably) being used by the scene
+     */
     private audioBuffers: Map<AudioBuffer>;
 
-    // The number of different types of things to load
+    /**
+     * The total number of "types" of things that need to be loaded (i.e. images and tilemaps)
+     */
     private typesToLoad: number;
 
     private constructor(){
@@ -52,6 +94,9 @@ export default class ResourceManager {
         this.audioBuffers = new Map();
     };
 
+    /**
+     * Returns the current instance of this class or a new instance if none exist
+     */
     static getInstance(): ResourceManager {
         if(!this.instance){
             this.instance = new ResourceManager();
@@ -60,11 +105,20 @@ export default class ResourceManager {
         return this.instance;
     }
 
+    /**
+     * Loads an image from file
+     * @param key The key to associate the loaded image with
+     * @param path The path to the image to load
+     */
     public image(key: string, path: string): void {
         this.imageLoadingQueue.enqueue({key: key, path: path});
     }
 
-    public getImage(key: string): HTMLImageElement{
+    /**
+     * Retrieves a loaded image
+     * @param key The key of the loaded image
+     */
+    public getImage(key: string): HTMLImageElement {
         return this.images.get(key);
     }
 
@@ -72,23 +126,45 @@ export default class ResourceManager {
 
     }
 
+    /**
+     * Load an audio file
+     * @param key 
+     * @param path 
+     */
     public audio(key: string, path: string): void {
         this.audioLoadingQueue.enqueue({key: key, path: path});
     }
 
+    /**
+     * Retrieves a loaded audio file
+     * @param key 
+     */
     public getAudio(key: string): AudioBuffer {
         return this.audioBuffers.get(key);
     }
 
+    /**
+     * Load a tilemap from a json file. Automatically loads related images
+     * @param key 
+     * @param path 
+     */
     public tilemap(key: string, path: string): void {
         this.tilemapLoadingQueue.enqueue({key: key, path: path});
     }
 
+    /**
+     * Retreives a loaded tilemap
+     * @param key 
+     */
     public getTilemap(key: string): TiledTilemapData {
         return this.tilemaps.get(key);
     }
 
     // TODO - Should everything be loaded in order, one file at a time?
+    /**
+     * Loads all resources currently in the queue
+     * @param callback 
+     */
     loadResourcesFromQueue(callback: Function): void {
         this.typesToLoad = 3;
 
@@ -108,6 +184,9 @@ export default class ResourceManager {
 
     }
 
+    /**
+     * Deletes references to all resources in the resource manager
+     */
     unloadAllResources(): void {
         this.loading = false;
         this.justLoaded = false;
@@ -125,7 +204,11 @@ export default class ResourceManager {
         this.audioBuffers.clear();
     }
 
-    private loadTilemapsFromQueue(onFinishLoading: Function){
+    /**
+     * Loads all tilemaps currently in the tilemap loading queue
+     * @param onFinishLoading 
+     */
+    private loadTilemapsFromQueue(onFinishLoading: Function): void {
         this.tilemapsToLoad = this.tilemapLoadingQueue.getSize();
         this.tilemapsLoaded = 0;
 
@@ -135,6 +218,12 @@ export default class ResourceManager {
         }
     }
 
+    /**
+     * Loads a singular tilemap 
+     * @param key 
+     * @param pathToTilemapJSON 
+     * @param callbackIfLast 
+     */
     private loadTilemap(key: string, pathToTilemapJSON: string, callbackIfLast: Function): void {
         this.loadTextFile(pathToTilemapJSON, (fileText: string) => {
             let tilemapObject = <TiledTilemapData>JSON.parse(fileText);
@@ -154,7 +243,11 @@ export default class ResourceManager {
         });
     }
 
-    private finishLoadingTilemap(callback: Function){
+    /**
+     * Finish loading a tilemap. Calls the callback function if this is the last tilemap being loaded
+     * @param callback 
+     */
+    private finishLoadingTilemap(callback: Function): void {
         this.tilemapsLoaded += 1;
 
         if(this.tilemapsLoaded === this.tilemapsToLoad){
@@ -163,6 +256,10 @@ export default class ResourceManager {
         }
     }
 
+    /**
+     * Loads all images currently in the tilemap loading queue
+     * @param onFinishLoading 
+     */
     private loadImagesFromQueue(onFinishLoading: Function): void {
         this.imagesToLoad = this.imageLoadingQueue.getSize();
         this.imagesLoaded = 0;
@@ -173,7 +270,12 @@ export default class ResourceManager {
         }
     }
 
-    // TODO: When you switch to WebGL, make sure to make this private and make a "loadTexture" function
+    /**
+     * Loads a singular image
+     * @param key 
+     * @param path 
+     * @param callbackIfLast 
+     */
     public loadImage(key: string, path: string, callbackIfLast: Function): void {
         var image = new Image();
 
@@ -188,6 +290,10 @@ export default class ResourceManager {
         image.src = path;
     }
 
+    /**
+     * Finish loading an image. If this is the last image, it calls the callback function
+     * @param callback 
+     */
     private finishLoadingImage(callback: Function): void {
         this.imagesLoaded += 1;
 
@@ -197,6 +303,10 @@ export default class ResourceManager {
         }
     }
 
+    /**
+     * Loads all audio currently in the tilemap loading queue
+     * @param onFinishLoading 
+     */
     private loadAudioFromQueue(onFinishLoading: Function){
         this.audioToLoad = this.audioLoadingQueue.getSize();
         this.audioLoaded = 0;
@@ -207,6 +317,12 @@ export default class ResourceManager {
         }
     }
 
+    /**
+     * Load a singular audio file
+     * @param key 
+     * @param path 
+     * @param callbackIfLast 
+     */
     private loadAudio(key: string, path: string, callbackIfLast: Function): void {
         let audioCtx = AudioManager.getInstance().getAudioContext();
 
@@ -228,6 +344,10 @@ export default class ResourceManager {
         request.send();
     }
 
+    /**
+     * Finish loading an audio file. Calls the callback functon if this is the last audio sample being loaded.
+     * @param callback 
+     */
     private finishLoadingAudio(callback: Function): void {
         this.audioLoaded += 1;
 

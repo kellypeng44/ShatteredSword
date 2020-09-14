@@ -29,11 +29,14 @@ export default class GameLoop{
 	private running: boolean;
 	private frameDelta: number;
 
+    // Game canvas and its width and height
 	readonly GAME_CANVAS: HTMLCanvasElement;
 	readonly WIDTH: number;
     readonly HEIGHT: number;
     private viewport: Viewport;
-	private ctx: CanvasRenderingContext2D;
+    private ctx: CanvasRenderingContext2D;
+    
+    // All of the necessary subsystems that need to run here
 	private eventQueue: EventQueue;
 	private inputHandler: InputHandler;
 	private inputReceiver: InputReceiver;
@@ -54,15 +57,20 @@ export default class GameLoop{
         this.started = false;
         this.running = false;
 
+        // Get the game canvas and give it a background color
         this.GAME_CANVAS = document.getElementById("game-canvas") as HTMLCanvasElement;
         this.GAME_CANVAS.style.setProperty("background-color", "whitesmoke");
     
+        // Give the canvas a size and get the rendering context
         this.WIDTH = 800;
         this.HEIGHT = 500;
         this.ctx = this.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
+
+        // Size the viewport to the game canvas
         this.viewport = new Viewport();
         this.viewport.setSize(this.WIDTH, this.HEIGHT);
 
+        // Initialize all necessary game subsystems
         this.eventQueue = EventQueue.getInstance();
         this.inputHandler = new InputHandler(this.GAME_CANVAS);
         this.inputReceiver = InputReceiver.getInstance();
@@ -77,10 +85,18 @@ export default class GameLoop{
         canvas.width = width;
         canvas.height = height;
         let ctx = canvas.getContext("2d");
+
+        // For crisp pixel art
         ctx.imageSmoothingEnabled = false;
+
         return ctx;
     }
 
+    // TODO - This currently also changes the rendering framerate
+    /**
+     * Changes the maximum allowed physics framerate of the game
+     * @param initMax 
+     */
     setMaxFPS(initMax: number): void {
         this.maxFPS = initMax;
         this.simulationTimestep = Math.floor(1000/this.maxFPS);
@@ -90,6 +106,10 @@ export default class GameLoop{
         return this.sceneManager;
     }
 
+    /**
+     * Updates the frame count and sum of time for the framerate of the game
+     * @param timestep 
+     */
     private updateFrameCount(timestep: number): void {
         this.frame += 1;
         this.numFramesInSum += 1;
@@ -103,6 +123,9 @@ export default class GameLoop{
         Debug.log("fps", "FPS: " + this.fps.toFixed(1));
     }
 
+    /**
+     * Starts up the game loop and calls the first requestAnimationFrame
+     */
     start(): void {
         if(!this.started){
             this.started = true;
@@ -111,6 +134,10 @@ export default class GameLoop{
         }
     }
 
+    /**
+     * The first game frame - initializes the first frame time and begins the render
+     * @param timestamp 
+     */
     startFrame = (timestamp: number): void => {
         this.running = true;
 
@@ -121,6 +148,10 @@ export default class GameLoop{
         window.requestAnimationFrame(this.doFrame);
     }
 
+    /**
+     * The main loop of the game. Updates and renders every frame
+     * @param timestamp 
+     */
     doFrame = (timestamp: number): void => {
         // Request animation frame to prepare for another update or render
         window.requestAnimationFrame(this.doFrame);
@@ -148,14 +179,30 @@ export default class GameLoop{
         this.render();
     }
 
+    /**
+     * Updates all necessary subsystems of the game. Defers scene updates to the sceneManager
+     * @param deltaT 
+     */
     update(deltaT: number): void {
+        // Handle all events that happened since the start of the last loop
         this.eventQueue.update(deltaT);
+
+        // Update the input data structures so game objects can see the input
         this.inputReceiver.update(deltaT);
+
+        // Update the recording of the game
         this.recorder.update(deltaT);
+
+        // Update all scenes
         this.sceneManager.update(deltaT);
+        
+        // Load or unload any resources if needed
         this.resourceManager.update(deltaT);
     }
 
+    /**
+     * Clears the canvas and defers scene rendering to the sceneManager. Renders the debug
+     */
     render(): void {
         this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         this.sceneManager.render(this.ctx);

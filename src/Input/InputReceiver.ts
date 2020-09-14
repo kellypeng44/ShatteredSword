@@ -4,6 +4,9 @@ import Vec2 from "../DataTypes/Vec2";
 import EventQueue from "../Events/EventQueue";
 import Viewport from "../SceneGraph/Viewport";
 
+/**
+ * Receives input events from the event queue and allows for easy access of information about input
+ */
 export default class InputReceiver{
 	private static instance: InputReceiver = null;
 
@@ -27,6 +30,7 @@ export default class InputReceiver{
 		this.mousePressPosition = new Vec2(0, 0);
 
 		this.eventQueue = EventQueue.getInstance();
+		// Subscribe to all input events
 		this.eventQueue.subscribe(this.receiver, ["mouse_down", "mouse_up", "mouse_move", "key_down", "key_up", "canvas_blur"]);
 	}
 
@@ -44,6 +48,8 @@ export default class InputReceiver{
 
 		while(this.receiver.hasNextEvent()){			
 			let event = this.receiver.getNextEvent();
+			
+			// Handle each event type
 			if(event.type === "mouse_down"){
 				this.mouseJustPressed = true;
 				this.mousePressed = true;
@@ -77,7 +83,7 @@ export default class InputReceiver{
 		}
 	}
 
-	clearKeyPresses(): void {
+	private clearKeyPresses(): void {
 		this.keyJustPressed.forEach((key: string) => this.keyJustPressed.set(key, false));
 		this.keyPressed.forEach((key: string) => this.keyPressed.set(key, false));
 	}

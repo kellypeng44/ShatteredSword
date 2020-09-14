@@ -4,9 +4,10 @@ import Tileset from "../DataTypes/Tilesets/Tileset";
 import { TiledTilemapData, TiledLayerData } from "../DataTypes/Tilesets/TiledData"
 
 /**
- * Represents one layer of tiles
+ * The representation of a tilemap - this can consist of a combination of tilesets in one layer
  */
 export default abstract class Tilemap extends GameNode {
+    // A tileset represents the tiles within one specific image loaded from a file
     protected tilesets: Array<Tileset>;
     protected worldSize: Vec2;
     protected tileSize: Vec2;
@@ -21,6 +22,8 @@ export default abstract class Tilemap extends GameNode {
         this.tilesets = new Array<Tileset>();
         this.worldSize = new Vec2(0, 0);
         this.tileSize = new Vec2(0, 0);
+
+        // Defer parsing of the data to child classes - this allows for isometric vs. orthographic tilemaps and handling of Tiled data or other data
         this.parseTilemapData(tilemapData, layer);
         this.scale = new Vec2(4, 4);
     }

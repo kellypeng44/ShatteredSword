@@ -8,7 +8,11 @@ export default class Audio {
         this.key = key;
     }
 
-    play(loop?: boolean){
+    /**
+     * Play the sound this audio represents
+     * @param loop A boolean for whether or not to loop the sound
+     */
+    play(loop?: boolean): void {
         this.sound = AudioManager.getInstance().createSound(this.key);
 
         if(loop){
@@ -18,7 +22,10 @@ export default class Audio {
         this.sound.start();
     }
 
-    stop(){
+    /**
+     * Stop the sound this audio represents
+     */
+    stop(): void {
         if(this.sound){
             this.sound.stop();
         }

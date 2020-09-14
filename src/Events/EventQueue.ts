@@ -27,6 +27,11 @@ export default class EventQueue {
         this.q.enqueue(event);
     }
 
+    /**
+     * Associates a receiver with a type of event. Every time this event appears in the future, it will be given to the receiver (and any others watching that type)
+     * @param receiver 
+     * @param type 
+     */
     subscribe(receiver: Receiver, type: string | Array<string>): void {
         if(type instanceof Array){
             // If it is an array, subscribe to all event types
@@ -38,6 +43,7 @@ export default class EventQueue {
         }
 	}
 
+    // Associate the receiver and the type
 	private addListener(receiver: Receiver, type: string): void {
 		if(this.receivers.has(type)){
 			this.receivers.get(type).push(receiver);
@@ -48,14 +54,17 @@ export default class EventQueue {
 	
     update(deltaT: number): void{
         while(this.q.hasItems()){
+            // Retrieve each event
 			let event = this.q.dequeue();
-			
+            
+            // If a receiver has this event type, send it the event
             if(this.receivers.has(event.type)){
                 for(let receiver of this.receivers.get(event.type)){
                     receiver.receive(event);
                 }
 			}
-			
+            
+            // If a receiver is subscribed to all events, send it the event
             if(this.receivers.has("all")){
                 for(let receiver of this.receivers.get("all")){
                     receiver.receive(event);

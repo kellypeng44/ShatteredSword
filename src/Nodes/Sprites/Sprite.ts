@@ -2,6 +2,9 @@ import CanvasNode from "../CanvasNode";
 import ResourceManager from "../../ResourceManager/ResourceManager";
 import Vec2 from "../../DataTypes/Vec2";
 
+/**
+ * The representation of a sprite - an in-game image
+ */
 export default class Sprite extends CanvasNode {
     private imageId: string;
     private scale: Vec2;
@@ -14,10 +17,17 @@ export default class Sprite extends CanvasNode {
         this.scale = new Vec2(1, 1);
     }
 
+    /**
+     * Returns the scale of the sprite
+     */
     getScale(): Vec2 {
         return this.scale;
     }
 
+    /**
+     * Sets the scale of the sprite to the value provided
+     * @param scale 
+     */
     setScale(scale: Vec2): void {
         this.scale = scale;
     }

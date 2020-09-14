@@ -1,21 +1,51 @@
+/**
+ * A two-dimensional vector (x, y)
+ */
 export default class Vec2 {
 
-	public x: number;
-	public y: number;
+	// Store x and y in an array
+	private vec: Float32Array;
 
 	constructor(x: number = 0, y: number = 0) {
-		this.x = x;
-		this.y = y;
+		this.vec = new Float32Array(2);
+		this.vec[0] = x;
+		this.vec[1] = y;
 	}
 
+	// Expose x and y with getters and setters
+	get x() {
+		return this.vec[0];
+	}
+
+	set x(x: number) {
+		this.vec[0] = x;
+	}
+
+	get y() {
+		return this.vec[1];
+	}
+
+	set y(y: number) {
+		this.vec[1] = y;
+	}
+
+	/**
+	 * The squared magnitude of the vector
+	 */
 	magSq(): number {
 		return this.x*this.x + this.y*this.y;
 	}
 
+	/**
+	 * The magnitude of the vector
+	 */
 	mag(): number {
 		return Math.sqrt(this.magSq());
 	}
 
+	/**
+	 * Returns this vector as a unit vector - Equivalent to dividing x and y by the magnitude
+	 */
 	normalize(): Vec2 {
 		if(this.x === 0 && this.y === 0) return this;
 		let mag = this.mag();
@@ -24,16 +54,29 @@ export default class Vec2 {
 		return this;
 	}
 
+	/**
+	 * Sets the vector's x and y based on the angle provided. Goes counter clockwise.
+	 * @param angle The angle in radians
+	 */
 	setToAngle(angle: number): Vec2 {
 		this.x = Math.cos(angle);
 		this.y = Math.sin(angle);
 		return this;
 	}
 
+	/**
+	 * Keeps the vector's direction, but sets its magnitude to be the provided magnitude
+	 * @param magnitude 
+	 */
 	scaleTo(magnitude: number): Vec2 {
 		return this.normalize().scale(magnitude);
 	}
 
+	/**
+	 * Scales x and y by the number provided, or if two number are provided, scales them individually.
+	 * @param factor 
+	 * @param yFactor 
+	 */
 	scale(factor: number, yFactor: number = null): Vec2 {
 		if(yFactor !== null){
 			this.x *= factor;
@@ -45,6 +88,10 @@ export default class Vec2 {
 		return this;
 	}
 
+	/**
+	 * Rotates the vector counter-clockwise by the angle amount specified
+	 * @param angle The angle to rotate by in radians
+	 */
 	rotateCCW(angle: number): Vec2 {
 		let cs = Math.cos(angle);
 		let sn = Math.sin(angle);
@@ -55,38 +102,65 @@ export default class Vec2 {
 		return this;
 	}
 
+	/**
+	 * Sets the vectors coordinates to be the ones provided
+	 * @param x 
+	 * @param y 
+	 */
 	set(x: number, y: number): Vec2 {
 		this.x = x;
 		this.y = y;
 		return this;
 	}
 
+	/**
+	 * Adds this vector the another vector
+	 * @param other 
+	 */
 	add(other: Vec2): Vec2 {
 		this.x += other.x;
 		this.y += other.y;
 		return this;
 	}
 
+	/**
+	 * Subtracts another vector from this vector
+	 * @param other 
+	 */
 	sub(other: Vec2): Vec2 {
 		this.x -= other.x;
 		this.y -= other.y;
 		return this;
 	}
 
+	/**
+	 * Multiplies this vector with another vector element-wise
+	 * @param other 
+	 */
 	mult(other: Vec2): Vec2 {
 		this.x *= other.x;
 		this.y *= other.y;
 		return this;
 	}
 
+	/**
+	 * Returns a string representation of this vector rounded to 1 decimal point
+	 */
 	toString(): string {
 		return this.toFixed();
 	}
 
+	/**
+	 * Returns a string representation of this vector rounded to the specified number of decimal points
+	 * @param numDecimalPoints 
+	 */
 	toFixed(numDecimalPoints: number = 1): string {
 		return "(" + this.x.toFixed(numDecimalPoints) + ", " + this.y.toFixed(numDecimalPoints) + ")";
 	}
 
+	/**
+	 * Returns a new vector with the same coordinates as this one.
+	 */
 	clone(): Vec2 {
 		return new Vec2(this.x, this.y);
 	}
