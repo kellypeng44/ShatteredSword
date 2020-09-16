@@ -40,7 +40,7 @@ export default class SecondScene extends Scene {
         backgroundTilemap.getLayer().setAlpha(0.2);
 
         // Add the music and start playing it on a loop
-        this.add.audio("level_music").play(true);
+        this.emit("play_sound", {key: "level_music", loop: true, holdReference: true});
 
         // Add the tilemap
         this.add.tilemap("level2", OrthogonalTilemap);
@@ -52,10 +52,6 @@ export default class SecondScene extends Scene {
         let player = this.add.physics(Player, mainLayer, "platformer");
         let playerSprite = this.add.sprite("player", mainLayer);
         player.setSprite(playerSprite);
-
-        // TODO - Should sound playing be handled with events?
-        let playerJumpSound = this.add.audio("player_jump");
-        player.jumpSound = playerJumpSound;
 
         this.viewport.follow(player);
 

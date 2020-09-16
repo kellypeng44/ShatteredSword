@@ -1,4 +1,5 @@
 import Queue from "../DataTypes/Queue";
+import EventQueue from "./EventQueue";
 import GameEvent from "./GameEvent";
 
 /**
@@ -11,6 +12,14 @@ export default class Receiver{
 	constructor(){
 		this.MAX_SIZE = 100;
         this.q = new Queue(this.MAX_SIZE);
+	}
+	
+	/**
+	 * Adds these types of events to this receiver's queue every update.
+	 * @param eventTypes The types of events this receiver will be subscribed to
+	 */
+	subscribe(eventTypes: string | Array<string>): void {
+		EventQueue.getInstance().subscribe(this, eventTypes);
 	}
 
 	/**

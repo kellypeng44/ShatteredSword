@@ -21,15 +21,15 @@ export default class ResourceManager {
     /**
      * Number to keep track of how many images need to be loaded
      */
-    private imagesLoaded: number;
+    private loadonly_imagesLoaded: number;
     /**
      * Number to keep track of how many images are loaded
      */
-    private imagesToLoad: number;
+    private loadonly_imagesToLoad: number;
     /**
      * The queue of images we must load
      */
-    private imageLoadingQueue: Queue<{key: string, path: string}>;
+    private loadonly_imageLoadingQueue: Queue<{key: string, path: string}>;
     /**
      * A map of the images that are currently loaded and (presumably) being used by the scene
      */
@@ -38,15 +38,15 @@ export default class ResourceManager {
     /**
      * Number to keep track of how many tilemaps need to be loaded
      */
-    private tilemapsLoaded: number;
+    private loadonly_tilemapsLoaded: number;
     /**
      * Number to keep track of how many tilemaps are loaded
      */
-    private tilemapsToLoad: number;
+    private loadonly_tilemapsToLoad: number;
     /**
      * The queue of tilemaps we must load
      */
-    private tilemapLoadingQueue: Queue<{key: string, path: string}>;
+    private loadonly_tilemapLoadingQueue: Queue<{key: string, path: string}>;
     /**
      * A map of the tilemaps that are currently loaded and (presumably) being used by the scene
      */
@@ -55,15 +55,15 @@ export default class ResourceManager {
     /**
      * Number to keep track of how many sounds need to be loaded
      */
-    private audioLoaded: number;
+    private loadonly_audioLoaded: number;
     /**
      * Number to keep track of how many sounds are loaded
      */
-    private audioToLoad: number;
+    private loadonly_audioToLoad: number;
     /**
      * The queue of sounds we must load
      */
-    private audioLoadingQueue: Queue<{key: string, path: string}>;
+    private loadonly_audioLoadingQueue: Queue<{key: string, path: string}>;
         /**
      * A map of the sounds that are currently loaded and (presumably) being used by the scene
      */
@@ -72,25 +72,25 @@ export default class ResourceManager {
     /**
      * The total number of "types" of things that need to be loaded (i.e. images and tilemaps)
      */
-    private typesToLoad: number;
+    private loadonly_typesToLoad: number;
 
     private constructor(){
         this.loading = false;
         this.justLoaded = false;
 
-        this.imagesLoaded = 0;
-        this.imagesToLoad = 0;
-        this.imageLoadingQueue = new Queue();
+        this.loadonly_imagesLoaded = 0;
+        this.loadonly_imagesToLoad = 0;
+        this.loadonly_imageLoadingQueue = new Queue();
         this.images = new Map();
 
-        this.tilemapsLoaded = 0;
-        this.tilemapsToLoad = 0;
-        this.tilemapLoadingQueue = new Queue();
+        this.loadonly_tilemapsLoaded = 0;
+        this.loadonly_tilemapsToLoad = 0;
+        this.loadonly_tilemapLoadingQueue = new Queue();
         this.tilemaps = new Map();
 
-        this.audioLoaded = 0;
-        this.audioToLoad = 0;
-        this.audioLoadingQueue = new Queue();
+        this.loadonly_audioLoaded = 0;
+        this.loadonly_audioToLoad = 0;
+        this.loadonly_audioLoadingQueue = new Queue();
         this.audioBuffers = new Map();
     };
 
@@ -111,7 +111,7 @@ export default class ResourceManager {
      * @param path The path to the image to load
      */
     public image(key: string, path: string): void {
-        this.imageLoadingQueue.enqueue({key: key, path: path});
+        this.loadonly_imageLoadingQueue.enqueue({key: key, path: path});
     }
 
     /**
@@ -132,7 +132,7 @@ export default class ResourceManager {
      * @param path 
      */
     public audio(key: string, path: string): void {
-        this.audioLoadingQueue.enqueue({key: key, path: path});
+        this.loadonly_audioLoadingQueue.enqueue({key: key, path: path});
     }
 
     /**
@@ -149,7 +149,7 @@ export default class ResourceManager {
      * @param path 
      */
     public tilemap(key: string, path: string): void {
-        this.tilemapLoadingQueue.enqueue({key: key, path: path});
+        this.loadonly_tilemapLoadingQueue.enqueue({key: key, path: path});
     }
 
     /**
@@ -166,7 +166,7 @@ export default class ResourceManager {
      * @param callback 
      */
     loadResourcesFromQueue(callback: Function): void {
-        this.typesToLoad = 3;
+        this.loadonly_typesToLoad = 3;
 
         this.loading = true;
 
@@ -191,16 +191,16 @@ export default class ResourceManager {
         this.loading = false;
         this.justLoaded = false;
 
-        this.imagesLoaded = 0;
-        this.imagesToLoad = 0;
+        this.loadonly_imagesLoaded = 0;
+        this.loadonly_imagesToLoad = 0;
         this.images.clear();
 
-        this.tilemapsLoaded = 0;
-        this.tilemapsToLoad = 0;
+        this.loadonly_tilemapsLoaded = 0;
+        this.loadonly_tilemapsToLoad = 0;
         this.tilemaps.clear();
 
-        this.audioLoaded = 0;
-        this.audioToLoad = 0;
+        this.loadonly_audioLoaded = 0;
+        this.loadonly_audioToLoad = 0;
         this.audioBuffers.clear();
     }
 
@@ -209,11 +209,11 @@ export default class ResourceManager {
      * @param onFinishLoading 
      */
     private loadTilemapsFromQueue(onFinishLoading: Function): void {
-        this.tilemapsToLoad = this.tilemapLoadingQueue.getSize();
-        this.tilemapsLoaded = 0;
+        this.loadonly_tilemapsToLoad = this.loadonly_tilemapLoadingQueue.getSize();
+        this.loadonly_tilemapsLoaded = 0;
 
-        while(this.tilemapLoadingQueue.hasItems()){
-            let tilemap = this.tilemapLoadingQueue.dequeue();
+        while(this.loadonly_tilemapLoadingQueue.hasItems()){
+            let tilemap = this.loadonly_tilemapLoadingQueue.dequeue();
             this.loadTilemap(tilemap.key, tilemap.path, onFinishLoading);
         }
     }
@@ -235,7 +235,7 @@ export default class ResourceManager {
             for(let tileset of tilemapObject.tilesets){
                 let key = tileset.image;
                 let path = StringUtils.getPathFromFilePath(pathToTilemapJSON) + key;
-                this.imageLoadingQueue.enqueue({key: key, path: path});
+                this.loadonly_imageLoadingQueue.enqueue({key: key, path: path});
             }
 
             // Finish loading
@@ -248,9 +248,9 @@ export default class ResourceManager {
      * @param callback 
      */
     private finishLoadingTilemap(callback: Function): void {
-        this.tilemapsLoaded += 1;
+        this.loadonly_tilemapsLoaded += 1;
 
-        if(this.tilemapsLoaded === this.tilemapsToLoad){
+        if(this.loadonly_tilemapsLoaded === this.loadonly_tilemapsToLoad){
             // We're done loading tilemaps
             callback();
         }
@@ -261,11 +261,11 @@ export default class ResourceManager {
      * @param onFinishLoading 
      */
     private loadImagesFromQueue(onFinishLoading: Function): void {
-        this.imagesToLoad = this.imageLoadingQueue.getSize();
-        this.imagesLoaded = 0;
+        this.loadonly_imagesToLoad = this.loadonly_imageLoadingQueue.getSize();
+        this.loadonly_imagesLoaded = 0;
 
-        while(this.imageLoadingQueue.hasItems()){
-            let image = this.imageLoadingQueue.dequeue();
+        while(this.loadonly_imageLoadingQueue.hasItems()){
+            let image = this.loadonly_imageLoadingQueue.dequeue();
             this.loadImage(image.key, image.path, onFinishLoading);
         }
     }
@@ -295,9 +295,9 @@ export default class ResourceManager {
      * @param callback 
      */
     private finishLoadingImage(callback: Function): void {
-        this.imagesLoaded += 1;
+        this.loadonly_imagesLoaded += 1;
 
-        if(this.imagesLoaded === this.imagesToLoad ){
+        if(this.loadonly_imagesLoaded === this.loadonly_imagesToLoad ){
             // We're done loading images
             callback();
         }
@@ -308,11 +308,11 @@ export default class ResourceManager {
      * @param onFinishLoading 
      */
     private loadAudioFromQueue(onFinishLoading: Function){
-        this.audioToLoad = this.audioLoadingQueue.getSize();
-        this.audioLoaded = 0;
+        this.loadonly_audioToLoad = this.loadonly_audioLoadingQueue.getSize();
+        this.loadonly_audioLoaded = 0;
 
-        while(this.audioLoadingQueue.hasItems()){
-            let audio = this.audioLoadingQueue.dequeue();
+        while(this.loadonly_audioLoadingQueue.hasItems()){
+            let audio = this.loadonly_audioLoadingQueue.dequeue();
             this.loadAudio(audio.key, audio.path, onFinishLoading);
         }
     }
@@ -349,9 +349,9 @@ export default class ResourceManager {
      * @param callback 
      */
     private finishLoadingAudio(callback: Function): void {
-        this.audioLoaded += 1;
+        this.loadonly_audioLoaded += 1;
 
-        if(this.audioLoaded === this.audioToLoad){
+        if(this.loadonly_audioLoaded === this.loadonly_audioToLoad){
             // We're done loading audio
             callback();
         }
@@ -370,10 +370,10 @@ export default class ResourceManager {
     }
 
     private getLoadPercent(): number {
-        return (this.tilemapsLoaded/this.tilemapsToLoad
-            + this.imagesLoaded/this.imagesToLoad
-            + this.audioLoaded/this.audioToLoad)
-            / this.typesToLoad;
+        return (this.loadonly_tilemapsLoaded/this.loadonly_tilemapsToLoad
+            + this.loadonly_imagesLoaded/this.loadonly_imagesToLoad
+            + this.loadonly_audioLoaded/this.loadonly_audioToLoad)
+            / this.loadonly_typesToLoad;
     }
 
     public update(deltaT: number): void {

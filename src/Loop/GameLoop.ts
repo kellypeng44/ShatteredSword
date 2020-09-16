@@ -195,6 +195,9 @@ export default class GameLoop{
 
         // Update all scenes
         this.sceneManager.update(deltaT);
+
+        // Update all sounds
+        this.audioManager.update(deltaT);
         
         // Load or unload any resources if needed
         this.resourceManager.update(deltaT);

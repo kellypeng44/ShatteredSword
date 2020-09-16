@@ -10,6 +10,9 @@ import Tilemap from "../Nodes/Tilemap";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import GameLoop from "../Loop/GameLoop";
 import SceneManager from "./SceneManager";
+import EventQueue from "../Events/EventQueue";
+import GameEvent from "../Events/GameEvent";
+import Map from "../DataTypes/Map";
 
 export default class Scene{
     protected layers: Stack<Layer>;
@@ -143,4 +146,14 @@ export default class Scene{
     getViewport(): Viewport {
         return this.viewport;
     }
+
+    /**
+	 * Emit and event of type eventType with the data packet data
+	 * @param eventType 
+	 * @param data 
+	 */
+	emit(eventType: string, data: Map<any> | Record<string, any> = null): void {
+		let event = new GameEvent(eventType, data);
+        EventQueue.getInstance().addEvent(event);
+	}
 }

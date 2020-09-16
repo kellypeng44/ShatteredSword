@@ -8,6 +8,7 @@ import UIElement from "./Nodes/UIElement";
 import Button from "./Nodes/UIElements/Button";
 import Layer from "./Scene/Layer";
 import SecondScene from "./SecondScene";
+import GameEvent from "./Events/GameEvent";
 
 export default class MainScene extends Scene {
 
@@ -41,8 +42,7 @@ export default class MainScene extends Scene {
         backgroundTilemap.getLayer().setAlpha(0.5);
 
         // Add the music and start playing it on a loop
-        let music = this.add.audio("level_music");
-        music.play(true);
+        this.emit("play_sound", {key: "level_music", loop: true, holdReference: true});
 
         // Add the tilemap
         this.add.tilemap("platformer", OrthogonalTilemap);
@@ -54,10 +54,6 @@ export default class MainScene extends Scene {
         let player = this.add.physics(Player, mainLayer, "platformer");
         let playerSprite = this.add.sprite("player", mainLayer)
         player.setSprite(playerSprite);
-
-        // TODO - Should sound playing be handled with events?
-        let playerJumpSound = this.add.audio("player_jump");
-        player.jumpSound = playerJumpSound;
 
         this.viewport.follow(player);
 
@@ -127,7 +123,7 @@ export default class MainScene extends Scene {
         switchButton.setText("Change Scene");
         switchButton.setPosition(340, 190);
         switchButton.onClick = () => {
-            music.stop();
+            this.emit("stop_sound", {key: "level_music"});
             this.sceneManager.changeScene(SecondScene);
         }
     }

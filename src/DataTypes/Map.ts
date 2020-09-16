@@ -55,6 +55,14 @@ export default class Map<T> implements Collection {
 		Object.keys(this.map).forEach(key => func(key));
 	}
 
+	/**
+	 * Deletes an item associated with a key
+	 * @param key The key at which to delete an item
+	 */
+	delete(key: string): void {
+		delete this.map[key];
+	}
+
 	clear(): void {
 		this.forEach(key => delete this.map[key]);
 	}
