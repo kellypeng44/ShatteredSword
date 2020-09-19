@@ -29,6 +29,10 @@ export default class Vec2 {
 		this.vec[1] = y;
 	}
 
+	static get ZERO() {
+		return new Vec2(0, 0);
+	}
+
 	/**
 	 * The squared magnitude of the vector
 	 */

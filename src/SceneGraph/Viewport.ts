@@ -3,17 +3,30 @@ import Vec4 from "../DataTypes/Vec4";
 import GameNode from "../Nodes/GameNode";
 import CanvasNode from "../Nodes/CanvasNode";
 import MathUtils from "../Utils/MathUtils";
+import Queue from "../DataTypes/Queue";
 
 export default class Viewport {
 	private position: Vec2;
 	private size: Vec2;
 	private bounds: Vec4;
-	private following: GameNode;
+    private following: GameNode;
+
+    /**
+     * A queue of previous positions of what this viewport is following. Used for smoothing viewport movement
+     */
+    private lastPositions: Queue<Vec2>;
+
+    /**
+     * The number of previous positions this viewport tracks
+     */
+    private smoothingFactor: number;
 
     constructor(){
         this.position = new Vec2(0, 0);
         this.size = new Vec2(0, 0);
         this.bounds = new Vec4(0, 0, 0, 0);
+        this.lastPositions = new Queue();
+        this.smoothingFactor = 10;
     }
 
     /**
@@ -29,11 +42,15 @@ export default class Viewport {
      * @param y 
      */
     setPosition(vecOrX: Vec2 | number, y: number = null): void {
+        let pos: Vec2;
 		if(vecOrX instanceof Vec2){
-			this.position.set(vecOrX.x, vecOrX.y);
-		} else {
-			this.position.set(vecOrX, y);
+            pos = vecOrX;
+        } else {
+            pos = new Vec2(vecOrX, y);
         }
+
+        this.lastPositions.clear();
+        this.lastPositions.enqueue(pos);
     }
 
     /**
@@ -54,6 +71,15 @@ export default class Viewport {
 		} else {
 			this.size.set(vecOrX, y);
 		}
+    }
+
+    /**
+     * Sets the smoothing factor for the viewport movement.
+     * @param smoothingFactor The smoothing factor for the viewport
+     */
+    setSmoothingFactor(smoothingFactor: number): void {
+        if(smoothingFactor < 1) smoothingFactor = 1;
+        this.smoothingFactor = smoothingFactor;
     }
     
     /**
@@ -99,9 +125,20 @@ export default class Viewport {
     update(deltaT: number): void {
         // If viewport is following an object
         if(this.following){
+            // Update our list of previous positions
+            this.lastPositions.enqueue(this.following.getPosition().clone());
+            if(this.lastPositions.getSize() > this.smoothingFactor){
+                this.lastPositions.dequeue();
+            }
+            
+            // Get the average of the last 10 positions
+            let pos = Vec2.ZERO;
+            this.lastPositions.forEach(position => pos.add(position));
+            pos.scale(1/this.lastPositions.getSize());
+
             // Set this position either to the object or to its bounds
-            this.position.x = this.following.getPosition().x - this.size.x/2;
-            this.position.y = this.following.getPosition().y - this.size.y/2;
+            this.position.x = pos.x - this.size.x/2;
+            this.position.y = pos.y - this.size.y/2;
             let [min, max] = this.bounds.split();
             this.position.x = MathUtils.clamp(this.position.x, min.x, max.x - this.size.x);
             this.position.y = MathUtils.clamp(this.position.y, min.y, max.y - this.size.y);
