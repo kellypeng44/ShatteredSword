@@ -30,6 +30,10 @@ export default abstract class PhysicsNode extends GameNode {
         this.manager = manager;
     }
 
+    addChild(child: GameNode): void {
+        this.children.push(child);
+    }
+
     isCollidable(): boolean {
         return this.collider !== null;
     }

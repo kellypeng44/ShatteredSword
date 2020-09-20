@@ -14,6 +14,7 @@ export default class StaticBody extends PhysicsNode {
         this.collider.setPosition(position.x, position.y);
         this.collider.setSize(new Vec2(size.x, size.y));
         this.id = StaticBody.numCreated.toString();
+        this.moving = false;
         StaticBody.numCreated += 1;
     }
     

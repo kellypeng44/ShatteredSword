@@ -26,8 +26,6 @@ export default class OrthogonalTilemap extends Tilemap {
                 }
             }
         }
-
-        tilemapData.tilesets.forEach(tilesetData => this.tilesets.push(new Tileset(tilesetData)));
     }
 
     /**

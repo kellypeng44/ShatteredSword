@@ -142,15 +142,14 @@ export default class PhysicsManager {
         })
     }
 
-    private handleCollision(movingNode: PhysicsNode, staticNode: PhysicsNode, velocity: Vec2, id: String){
+    private collideWithStaticNode(movingNode: PhysicsNode, staticNode: PhysicsNode, velocity: Vec2){
         let sizeA = movingNode.getCollider().getSize();
         let posA = movingNode.getPosition();
         let velA = velocity;
         let sizeB = staticNode.getCollider().getSize();
         let posB = staticNode.getPosition();
-        let velB = new Vec2(0, 0);
 
-        let [firstContact, _, collidingX, collidingY] = this.getTimeOfAABBCollision(posA, sizeA, velA, posB, sizeB, velB);
+        let [firstContact, _, collidingX, collidingY] = this.getTimeOfAABBCollision(posA, sizeA, velA, posB, sizeB, new Vec2(0, 0));
 
         if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
             if(collidingX && collidingY){
@@ -160,9 +159,20 @@ export default class PhysicsManager {
                 // velocity.scale(contactTime);
                 let xScale = MathUtils.clamp(firstContact.x, 0, 1);
                 let yScale = MathUtils.clamp(firstContact.y, 0, 1);
+
+                 // Handle special case of stickiness on perfect corner to corner collisions
+                 if(xScale === yScale){
+                    xScale = 1;
+                }
+
+                // If we are scaling y, we're on the ground, so tell the node it's grounded
+                // TODO - This is a bug, check to make sure our velocity is going downwards
+                // Maybe feed in a downward direction to check to be sure
                 if(yScale !== 1){
                     movingNode.setGrounded(true);
                 }
+
+                // Scale the velocity of the node
                 velocity.scale(xScale, yScale);
             }
         }
@@ -284,7 +294,9 @@ export default class PhysicsManager {
             // TODO handle collisions between dynamic nodes
             // We probably want to sort them by their left edges
 
-            // TODO: handle collisions between dynamic nodes and static nodes
+            for(let staticNode of staticSet){
+                this.collideWithStaticNode(movingNode, staticNode, velocity);
+            }
 
             // Handle Collisions with the tilemaps
             for(let tilemap of this.tilemaps){

@@ -35,16 +35,16 @@ export default class SecondScene extends Scene {
 
     startScene(){
         // Add the background tilemap
-        let backgroundTilemap = this.add.tilemap("background2", OrthogonalTilemap)[0];
+        let backgroundTilemapLayer = this.add.tilemap("background2")[0];
         // ...and make it have parallax
-        backgroundTilemap.getLayer().setParallax(1, 1);
-        backgroundTilemap.getLayer().setAlpha(0.2);
+        backgroundTilemapLayer.setParallax(1, 1);
+        backgroundTilemapLayer.setAlpha(0.2);
 
         // Add the music and start playing it on a loop
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
 
         // Add the tilemap
-        this.add.tilemap("level2", OrthogonalTilemap);
+        this.add.tilemap("level2");
 
         // Create the main game layer
         let mainLayer = this.addLayer();

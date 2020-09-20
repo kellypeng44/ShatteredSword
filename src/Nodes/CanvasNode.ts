@@ -6,11 +6,28 @@ import Vec2 from "../DataTypes/Vec2";
  */
 export default abstract class CanvasNode extends GameNode{
 	protected size: Vec2;
+	protected scale: Vec2;
 
 	constructor(){
 		super();
 		this.size = new Vec2(0, 0);
+		this.scale = new Vec2(1, 1);
 	}
+
+	/**
+     * Returns the scale of the sprite
+     */
+    getScale(): Vec2 {
+        return this.scale;
+    }
+
+    /**
+     * Sets the scale of the sprite to the value provided
+     * @param scale 
+     */
+    setScale(scale: Vec2): void {
+		this.scale = scale;
+    }
 
 	getSize(): Vec2 {
 		return this.size;

@@ -36,16 +36,16 @@ export default class MainScene extends Scene {
 
     startScene(){
         // Add the background tilemap
-        let backgroundTilemap = this.add.tilemap("background", OrthogonalTilemap)[0];
+        let backgroundTilemapLayer = this.add.tilemap("background")[0];
         // ...and make it have parallax
-        backgroundTilemap.getLayer().setParallax(0.5, 0.8);
-        backgroundTilemap.getLayer().setAlpha(0.5);
+        backgroundTilemapLayer.setParallax(0.5, 0.8);
+        backgroundTilemapLayer.setAlpha(0.5);
 
         // Add the music and start playing it on a loop
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
 
         // Add the tilemap
-        this.add.tilemap("platformer", OrthogonalTilemap);
+        this.add.tilemap("platformer");
 
         // Create the main game layer
         let mainLayer = this.addLayer();

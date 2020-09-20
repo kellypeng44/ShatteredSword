@@ -1,3 +1,4 @@
+import ResourceManager from "../../ResourceManager/ResourceManager";
 import Vec2 from "../Vec2";
 import { TiledTilesetData } from "./TiledData";
 
@@ -6,8 +7,7 @@ import { TiledTilesetData } from "./TiledData";
  * with a startIndex if required (as it is with Tiled using two images in one tilset).
  */
 export default class Tileset {
-    protected imageUrl: string;
-    protected image: HTMLImageElement = null;
+    protected imageKey: string;
     protected imageSize: Vec2;
     protected startIndex: number;
     protected endIndex: number;
@@ -31,20 +31,31 @@ export default class Tileset {
         this.startIndex = tiledData.firstgid;
         this.endIndex = this.startIndex + tiledData.tilecount - 1;
         this.tileSize = new Vec2(tiledData.tilewidth, tiledData.tilewidth);
-        this.imageUrl = tiledData.image;
+        this.imageKey = tiledData.image;
         this.imageSize = new Vec2(tiledData.imagewidth, tiledData.imageheight);
     }
 
-    getImageUrl(): string {
-        return this.imageUrl
+    getImageKey(): string {
+        return this.imageKey;
     }
 
-    getImage(): HTMLImageElement {
-        return this.image;
-    }
+    /**
+     * Returns a Vec2 containing the left and top offset from the image origin for this tile.
+     * @param tileIndex The index of the tile from startIndex to endIndex of this tileset
+     */
+    getImageOffsetForTile(tileIndex: number): Vec2 {
+        // Get the true index
+        let index = tileIndex - this.startIndex;
+        let row = Math.floor(index / this.numCols);
+        let col = index % this.numCols;
+        let width = this.tileSize.x;
+        let height = this.tileSize.y;
 
-    setImage(image: HTMLImageElement){
-        this.image = image;
+        // Calculate the position to start a crop in the tileset image
+        let left = col * width;
+        let top = row * height;
+
+        return new Vec2(left, top);
     }
 
     getStartIndex(): number {
@@ -77,6 +88,8 @@ export default class Tileset {
      * @param scale The scale of the tilemap
      */
     renderTile(ctx: CanvasRenderingContext2D, tileIndex: number, dataIndex: number, worldSize: Vec2, origin: Vec2, scale: Vec2): void {
+        let image = ResourceManager.getInstance().getImage(this.imageKey);
+
         // Get the true index
         let index = tileIndex - this.startIndex;
         let row = Math.floor(index / this.numCols);
@@ -91,6 +104,6 @@ export default class Tileset {
         // Calculate the position in the world to render the tile
         let x = (dataIndex % worldSize.x) * width * scale.x;
         let y = Math.floor(dataIndex / worldSize.x) * height * scale.y;
-        ctx.drawImage(this.image, left, top, width, height, x - origin.x, y - origin.y, width * scale.x, height * scale.y);
+        ctx.drawImage(image, left, top, width, height, x - origin.x, y - origin.y, width * scale.x, height * scale.y);
     }
 }

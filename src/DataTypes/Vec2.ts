@@ -148,6 +148,14 @@ export default class Vec2 {
 	}
 
 	/**
+	 * Returns the squared distance between this vector and another vector
+	 * @param other 
+	 */
+	distanceSqTo(other: Vec2): number {
+		return (this.x - other.x)*(this.x - other.x) + (this.y - other.y)*(this.y - other.y);
+	}
+
+	/**
 	 * Returns a string representation of this vector rounded to 1 decimal point
 	 */
 	toString(): string {

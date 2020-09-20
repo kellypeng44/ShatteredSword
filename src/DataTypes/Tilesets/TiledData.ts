@@ -35,6 +35,7 @@ export class TiledTilesetData {
     spacing: number;
     name: string;
     image: string;
+    tiles: Array<TiledCollectionTile>
 }
 
 /**
@@ -50,5 +51,27 @@ export class TiledLayerData {
     opacity: number;
     visible: boolean;
     properties: TiledLayerProperty[];
+    type: string;
+    objects: Array<TiledObject>;
 }
 
+export class TiledObject {
+    gid: number;
+    height: number;
+    width: number;
+    id: number;
+    name: string;;
+    properties: Array<TiledLayerProperty>;
+    rotation: number;
+    type: string;
+    visible: boolean;
+    x: number;
+    y: number;
+}
+
+export class TiledCollectionTile {
+    id: number;
+    image: string;
+    imageheight: number;
+    imagewidth: number;
+}

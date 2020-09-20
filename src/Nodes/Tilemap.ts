@@ -17,9 +17,9 @@ export default abstract class Tilemap extends GameNode {
 	public visible: boolean;
 
     // TODO: Make this no longer be specific to Tiled
-    constructor(tilemapData: TiledTilemapData, layer: TiledLayerData) {
+    constructor(tilemapData: TiledTilemapData, layer: TiledLayerData, tilesets: Array<Tileset>) {
         super();
-        this.tilesets = new Array<Tileset>();
+        this.tilesets = tilesets;
         this.worldSize = new Vec2(0, 0);
         this.tileSize = new Vec2(0, 0);
 

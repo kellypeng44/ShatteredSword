@@ -233,9 +233,18 @@ export default class ResourceManager {
 
             // Grab the tileset images we need to load and add them to the imageloading queue
             for(let tileset of tilemapObject.tilesets){
-                let key = tileset.image;
-                let path = StringUtils.getPathFromFilePath(pathToTilemapJSON) + key;
-                this.loadonly_imageLoadingQueue.enqueue({key: key, path: path});
+                if(tileset.image){
+                    let key = tileset.image;
+                    let path = StringUtils.getPathFromFilePath(pathToTilemapJSON) + key;
+                    this.loadonly_imageLoadingQueue.enqueue({key: key, path: path});
+                } else if(tileset.tiles){
+                    for(let tile of tileset.tiles){
+                        let key = tile.image;
+                        let path = StringUtils.getPathFromFilePath(pathToTilemapJSON) + key;
+                        this.loadonly_imageLoadingQueue.enqueue({key: key, path: path});
+                    }
+                }
+
             }
 
             // Finish loading
