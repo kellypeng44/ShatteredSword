@@ -3,6 +3,8 @@ import Map from "../DataTypes/Map";
 import Vec2 from "../DataTypes/Vec2";
 import EventQueue from "../Events/EventQueue";
 import Viewport from "../SceneGraph/Viewport";
+import GameEvent from "../Events/GameEvent";
+import { GameEventType } from "../Events/GameEventType";
 
 /**
  * Receives input events from the event queue and allows for easy access of information about input
@@ -31,7 +33,8 @@ export default class InputReceiver{
 
 		this.eventQueue = EventQueue.getInstance();
 		// Subscribe to all input events
-		this.eventQueue.subscribe(this.receiver, ["mouse_down", "mouse_up", "mouse_move", "key_down", "key_up", "canvas_blur"]);
+		this.eventQueue.subscribe(this.receiver, [GameEventType.MOUSE_DOWN, GameEventType.MOUSE_UP, GameEventType.MOUSE_MOVE,
+			 GameEventType.KEY_DOWN, GameEventType.KEY_UP, GameEventType.CANVAS_BLUR]);
 	}
 
 	static getInstance(): InputReceiver{
@@ -50,21 +53,21 @@ export default class InputReceiver{
 			let event = this.receiver.getNextEvent();
 			
 			// Handle each event type
-			if(event.type === "mouse_down"){
+			if(event.type === GameEventType.MOUSE_DOWN){
 				this.mouseJustPressed = true;
 				this.mousePressed = true;
 				this.mousePressPosition = event.data.get("position");	
 			}
 
-			if(event.type === "mouse_up"){
+			if(event.type === GameEventType.MOUSE_UP){
 				this.mousePressed = false;
 			}
 
-			if(event.type === "mouse_move"){
+			if(event.type === GameEventType.MOUSE_MOVE){
 				this.mousePosition = event.data.get("position");
 			}
 
-			if(event.type === "key_down"){
+			if(event.type === GameEventType.KEY_DOWN){
 				let key = event.data.get("key")
 				if(!this.keyPressed.get(key)){
 					this.keyJustPressed.set(key, true);
@@ -72,12 +75,12 @@ export default class InputReceiver{
 				}
 			}
 
-			if(event.type === "key_up"){
+			if(event.type === GameEventType.KEY_UP){
 				let key = event.data.get("key")
 				this.keyPressed.set(key, false);
 			}
 
-			if(event.type === "canvas_blur"){
+			if(event.type === GameEventType.CANVAS_BLUR){
 				this.clearKeyPresses()
 			}
 		}

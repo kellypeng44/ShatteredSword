@@ -2,6 +2,7 @@ import Queue from "../DataTypes/Queue";
 import Receiver from "../Events/Receiver";
 import GameEvent from "../Events/GameEvent";
 import EventQueue from "../Events/EventQueue";
+import { GameEventType } from "../Events/GameEventType";
 
 export default class Recorder{
 	private receiver: Receiver;
@@ -53,7 +54,7 @@ export default class Recorder{
 			while(this.receiver.hasNextEvent()){
 				let event = this.receiver.getNextEvent();
 
-				if(event.type === "stop_button_press"){
+				if(event.type === GameEventType.STOP_RECORDING){
 					this.recording = false;
 				}
 
@@ -61,13 +62,13 @@ export default class Recorder{
 					this.log.enqueue(new LogItem(this.frame, deltaT, event));
 				}
 
-				if(event.type === "record_button_press"){
+				if(event.type === GameEventType.START_RECORDING){
 					this.log.clear();
 					this.recording = true;
 					this.frame = 0
 				}
 
-				if(event.type === "play_button_press"){
+				if(event.type === GameEventType.PLAY_RECORDING){
 					this.frame = 0;
 					this.recording = false;
 					this.playing = true;

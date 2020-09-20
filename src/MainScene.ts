@@ -8,7 +8,7 @@ import UIElement from "./Nodes/UIElement";
 import Button from "./Nodes/UIElements/Button";
 import Layer from "./Scene/Layer";
 import SecondScene from "./SecondScene";
-import GameEvent from "./Events/GameEvent";
+import { GameEventType } from "./Events/GameEventType";
 
 export default class MainScene extends Scene {
 
@@ -42,7 +42,7 @@ export default class MainScene extends Scene {
         backgroundTilemap.getLayer().setAlpha(0.5);
 
         // Add the music and start playing it on a loop
-        this.emit("play_sound", {key: "level_music", loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
 
         // Add the tilemap
         this.add.tilemap("platformer", OrthogonalTilemap);
@@ -65,19 +65,19 @@ export default class MainScene extends Scene {
         recordButton.setSize(100, 50);
         recordButton.setText("Record");
         recordButton.setPosition(400, 30);
-        recordButton.onClickEventId = "record_button_press";
+        recordButton.onClickEventId = GameEventType.START_RECORDING;
 
         let stopButton = this.add.uiElement(Button, uiLayer);
         stopButton.setSize(100, 50);
         stopButton.setText("Stop");
         stopButton.setPosition(550, 30);
-        stopButton.onClickEventId = "stop_button_press";
+        stopButton.onClickEventId = GameEventType.STOP_RECORDING;
 
         let playButton = this.add.uiElement(Button, uiLayer);
         playButton.setSize(100, 50);
         playButton.setText("Play");
         playButton.setPosition(700, 30);
-        playButton.onClickEventId = "play_button_press";
+        playButton.onClickEventId = GameEventType.PLAY_RECORDING;
 
         let cycleFramerateButton = this.add.uiElement(Button, uiLayer);
         cycleFramerateButton.setSize(150, 50);
@@ -123,7 +123,7 @@ export default class MainScene extends Scene {
         switchButton.setText("Change Scene");
         switchButton.setPosition(340, 190);
         switchButton.onClick = () => {
-            this.emit("stop_sound", {key: "level_music"});
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
             this.sceneManager.changeScene(SecondScene);
         }
     }

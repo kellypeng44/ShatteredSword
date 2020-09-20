@@ -1,6 +1,7 @@
 import Map from "../DataTypes/Map";
 import Receiver from "../Events/Receiver";
 import ResourceManager from "../ResourceManager/ResourceManager";
+import { GameEventType } from "../Events/GameEventType";
 
 export default class AudioManager {
     private static instance: AudioManager;
@@ -12,7 +13,7 @@ export default class AudioManager {
     private constructor(){
         this.initAudio();
         this.receiver = new Receiver();
-        this.receiver.subscribe(["play_sound", "stop_sound"]);
+        this.receiver.subscribe([GameEventType.PLAY_SOUND, GameEventType.STOP_SOUND]);
         this.currentSounds = new Map();
     }
 
@@ -117,14 +118,14 @@ export default class AudioManager {
         // TODO - Add logic to merge sounds if there are multiple of the same key
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
-            if(event.type === "play_sound"){
+            if(event.type === GameEventType.PLAY_SOUND){
                 let soundKey = event.data.get("key");
                 let loop = event.data.get("loop");
                 let holdReference = event.data.get("holdReference");
                 this.playSound(soundKey, loop, holdReference);
             }
 
-            if(event.type === "stop_sound"){
+            if(event.type === GameEventType.STOP_SOUND){
                 let soundKey = event.data.get("key");
                 this.stopSound(soundKey);
             }

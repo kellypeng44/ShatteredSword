@@ -82,7 +82,7 @@ export default class UIElement extends CanvasNode{
 				}
 				if(this.onClickEventId !== null){
 					let data = {};
-					this.emit(this.onClickEventId, data);
+					this.emitter.fireEvent(this.onClickEventId, data);
 				}
 			}
 		}
@@ -104,7 +104,7 @@ export default class UIElement extends CanvasNode{
 			}
 			if(this.onEnterEventId !== null){
 				let data = {};
-				this.emit(this.onEnterEventId, data);
+				this.emitter.fireEvent(this.onEnterEventId, data);
 			}
 
 		} else if(this.isEntered) {
@@ -115,7 +115,7 @@ export default class UIElement extends CanvasNode{
 			}
 			if(this.onLeaveEventId !== null){
 				let data = {};
-				this.emit(this.onLeaveEventId, data);
+				this.emitter.fireEvent(this.onLeaveEventId, data);
 			}
 		} else if(this.isClicked) {
 			// If mouse is dragged off of element while down, it is not clicked anymore

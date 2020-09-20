@@ -1,6 +1,7 @@
 import EventQueue from "../Events/EventQueue";
 import Vec2 from "../DataTypes/Vec2";
 import GameEvent from "../Events/GameEvent";
+import { GameEventType } from "../Events/GameEventType";
 
 /**
  * Handles communication with the web browser to receive asynchronous events and send them to the event queue
@@ -23,36 +24,36 @@ export default class InputHandler{
 
     private handleMouseDown = (event: MouseEvent, canvas: HTMLCanvasElement): void => {
 		let pos = this.getMousePosition(event, canvas);
-        let gameEvent = new GameEvent("mouse_down", {position: pos});
+        let gameEvent = new GameEvent(GameEventType.MOUSE_DOWN, {position: pos});
         this.eventQueue.addEvent(gameEvent);
     }
 
     private handleMouseUp = (event: MouseEvent, canvas: HTMLCanvasElement): void => {
         let pos = this.getMousePosition(event, canvas);
-        let gameEvent = new GameEvent("mouse_up", {position: pos});
+        let gameEvent = new GameEvent(GameEventType.MOUSE_UP, {position: pos});
         this.eventQueue.addEvent(gameEvent);
     }
 
     private handleMouseMove = (event: MouseEvent, canvas: HTMLCanvasElement): void => {
         let pos = this.getMousePosition(event, canvas);
-        let gameEvent = new GameEvent("mouse_move", {position: pos});
+        let gameEvent = new GameEvent(GameEventType.MOUSE_MOVE, {position: pos});
         this.eventQueue.addEvent(gameEvent);
     }
 
     private handleKeyDown = (event: KeyboardEvent): void => {
         let key = this.getKey(event);
-        let gameEvent = new GameEvent("key_down", {key: key});
+        let gameEvent = new GameEvent(GameEventType.KEY_DOWN, {key: key});
         this.eventQueue.addEvent(gameEvent);
     }
 
     private handleKeyUp = (event: KeyboardEvent): void => {
         let key = this.getKey(event);
-        let gameEvent = new GameEvent("key_up", {key: key});
+        let gameEvent = new GameEvent(GameEventType.KEY_UP, {key: key});
         this.eventQueue.addEvent(gameEvent);
     }
 
     private handleBlur = (event: Event): void => {
-        let gameEvent = new GameEvent("canvas_blur", {});
+        let gameEvent = new GameEvent(GameEventType.CANVAS_BLUR, {});
         this.eventQueue.addEvent(gameEvent);
     }
 

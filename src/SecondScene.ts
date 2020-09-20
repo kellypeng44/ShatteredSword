@@ -7,6 +7,7 @@ import Vec2 from "./DataTypes/Vec2";
 import UIElement from "./Nodes/UIElement";
 import Button from "./Nodes/UIElements/Button";
 import Layer from "./Scene/Layer";
+import { GameEventType } from "./Events/GameEventType";
 
 export default class SecondScene extends Scene {
 
@@ -40,7 +41,7 @@ export default class SecondScene extends Scene {
         backgroundTilemap.getLayer().setAlpha(0.2);
 
         // Add the music and start playing it on a loop
-        this.emit("play_sound", {key: "level_music", loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
 
         // Add the tilemap
         this.add.tilemap("level2", OrthogonalTilemap);
@@ -63,19 +64,19 @@ export default class SecondScene extends Scene {
         recordButton.setSize(100, 50);
         recordButton.setText("Record");
         recordButton.setPosition(400, 30);
-        recordButton.onClickEventId = "record_button_press";
+        recordButton.onClickEventId = GameEventType.START_RECORDING;
 
         let stopButton = this.add.uiElement(Button, uiLayer);
         stopButton.setSize(100, 50);
         stopButton.setText("Stop");
         stopButton.setPosition(550, 30);
-        stopButton.onClickEventId = "stop_button_press";
+        stopButton.onClickEventId = GameEventType.STOP_RECORDING;
 
         let playButton = this.add.uiElement(Button, uiLayer);
         playButton.setSize(100, 50);
         playButton.setText("Play");
         playButton.setPosition(700, 30);
-        playButton.onClickEventId = "play_button_press";
+        playButton.onClickEventId = GameEventType.PLAY_RECORDING;
 
         let cycleFramerateButton = this.add.uiElement(Button, uiLayer);
         cycleFramerateButton.setSize(150, 50);

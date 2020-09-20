@@ -2,6 +2,7 @@ import Queue from "../DataTypes/Queue";
 import Map from "../DataTypes/Map";
 import GameEvent from "./GameEvent";
 import Receiver from "./Receiver";
+import { GameEventType } from "./GameEventType";
 
 export default class EventQueue {
 	private static instance: EventQueue = null;
@@ -65,8 +66,8 @@ export default class EventQueue {
 			}
             
             // If a receiver is subscribed to all events, send it the event
-            if(this.receivers.has("all")){
-                for(let receiver of this.receivers.get("all")){
+            if(this.receivers.has(GameEventType.ALL)){
+                for(let receiver of this.receivers.get(GameEventType.ALL)){
                     receiver.receive(event);
                 }
             }

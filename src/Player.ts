@@ -3,6 +3,7 @@ import Vec2 from "./DataTypes/Vec2";
 import Debug from "./Debug/Debug";
 import AABB from "./Physics/Colliders/AABB";
 import CanvasNode from "./Nodes/CanvasNode";
+import { GameEventType } from "./Events/GameEventType";
 
 export default class Player extends PhysicsNode {
 	velocity: Vec2;
@@ -83,7 +84,7 @@ export default class Player extends PhysicsNode {
         if(this.grounded){
             if(dir.y === -1){
                 // Jumping
-                this.emit("play_sound", {key: "player_jump"});
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_jump"});
             }
             vel.y = dir.y*1800;
         }
