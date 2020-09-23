@@ -12,11 +12,9 @@ import { GameEventType } from "./Events/GameEventType";
 export default class SecondScene extends Scene {
 
     loadScene(){
-        this.load.tilemap("level2", "assets/tilemaps/OtherMap.json");
-        this.load.tilemap("background2", "assets/tilemaps/OtherBackground.json");
+        this.load.tilemap("level2", "assets/tilemaps/TopDown2.json");
         this.load.image("player", "assets/sprites/player.png");
-        this.load.audio("player_jump", "assets/sounds/jump-3.wav");
-        this.load.audio("level_music", "assets/sounds/level.wav");
+        this.load.audio("music", "assets/sounds/level.wav")
 
         let loadingScreen = this.addLayer();
         let box = this.add.graphic(Rect, loadingScreen, new Vec2(200, 300), new Vec2(400, 60));
@@ -34,23 +32,12 @@ export default class SecondScene extends Scene {
     }
 
     startScene(){
-        // Add the background tilemap
-        let backgroundTilemapLayer = this.add.tilemap("background2")[0];
-        // ...and make it have parallax
-        backgroundTilemapLayer.setParallax(1, 1);
-        backgroundTilemapLayer.setAlpha(0.2);
-
-        // Add the music and start playing it on a loop
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
-
         // Add the tilemap
-        this.add.tilemap("level2");
-
-        // Create the main game layer
-        let mainLayer = this.addLayer();
+        let mainLayer = this.add.tilemap("level2")[1];
+        mainLayer.setYSort(true);
 
         // Add a player
-        let player = this.add.physics(Player, mainLayer, "platformer");
+        let player = this.add.physics(Player, mainLayer, "topdown");
         let playerSprite = this.add.sprite("player", mainLayer);
         player.setSprite(playerSprite);
 
@@ -99,7 +86,7 @@ export default class SecondScene extends Scene {
         pauseButton.setText("Pause");
         pauseButton.setPosition(700, 400);
         pauseButton.onClick = () => {
-            this.layers.forEach((layer: Layer) => layer.setPaused(true));
+            this.sceneGraph.getLayers().forEach((layer: Layer) => layer.setPaused(true));
             pauseLayer.enable();
         }
 
@@ -113,7 +100,7 @@ export default class SecondScene extends Scene {
         resumeButton.setText("Resume");
         resumeButton.setPosition(400, 200);
         resumeButton.onClick = () => {
-            this.layers.forEach((layer: Layer) => layer.setPaused(false));
+            this.sceneGraph.getLayers().forEach((layer: Layer) => layer.setPaused(false));
             pauseLayer.disable();
         }
     }

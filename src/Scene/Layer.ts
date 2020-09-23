@@ -13,6 +13,8 @@ export default class Layer {
     protected hidden: boolean;
     protected alpha: number;
     protected items: Array<GameNode>;
+    protected ySort: boolean;
+    protected depth: number;
 
     constructor(scene: Scene){
         this.scene = scene;
@@ -21,6 +23,8 @@ export default class Layer {
         this.hidden = false;
         this.alpha = 1;
         this.items = new Array();
+        this.ySort = false;
+        this.depth = 0;
     }
 
     setPaused(pauseValue: boolean): void {
@@ -63,6 +67,22 @@ export default class Layer {
 
     getParallax(): Vec2 {
         return this.parallax;
+    }
+
+    setYSort(ySort: boolean): void {
+        this.ySort = ySort;
+    }
+
+    getYSort(): boolean {
+        return this.ySort;
+    }
+
+    setDepth(depth: number): void {
+        this.depth = depth;
+    }
+
+    getDepth(): number {
+        return this.depth;
     }
 
     addNode(node: GameNode): void {

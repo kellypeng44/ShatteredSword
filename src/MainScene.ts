@@ -100,7 +100,7 @@ export default class MainScene extends Scene {
         pauseButton.setText("Pause");
         pauseButton.setPosition(700, 400);
         pauseButton.onClick = () => {
-            this.layers.forEach((layer: Layer) => layer.setPaused(true));
+            this.sceneGraph.getLayers().forEach((layer: Layer) => layer.setPaused(true));
             pauseLayer.enable();
         }
 
@@ -114,7 +114,7 @@ export default class MainScene extends Scene {
         resumeButton.setText("Resume");
         resumeButton.setPosition(360, 150);
         resumeButton.onClick = () => {
-            this.layers.forEach((layer: Layer) => layer.setPaused(false));
+            this.sceneGraph.getLayers().forEach((layer: Layer) => layer.setPaused(false));
             pauseLayer.disable();
         }
 

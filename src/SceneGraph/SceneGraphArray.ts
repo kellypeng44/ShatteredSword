@@ -2,6 +2,8 @@ import SceneGraph from "./SceneGraph";
 import CanvasNode from "../Nodes/CanvasNode";
 import Viewport from "./Viewport";
 import Scene from "../Scene/Scene";
+import Stack from "../DataTypes/Stack";
+import Layer from "../Scene/Layer"
 
 export default class SceneGraphArray extends SceneGraph{
 	private nodeList: Array<CanvasNode>;
@@ -64,6 +66,16 @@ export default class SceneGraphArray extends SceneGraph{
                 visibleSet.push(node);
             }
         }
+
+        // Sort by depth, then by visible set by y-value
+        visibleSet.sort((a, b) => {
+            if(a.getLayer().getDepth() === b.getLayer().getDepth()){
+                return (a.getPosition().y + a.getSize().y*a.getScale().y)
+                - (b.getPosition().y + b.getSize().y*b.getScale().y);
+            } else {
+                return a.getLayer().getDepth() - b.getLayer().getDepth();
+            }
+        });
 
         return visibleSet;
     }

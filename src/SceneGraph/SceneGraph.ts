@@ -3,6 +3,8 @@ import CanvasNode from "../Nodes/CanvasNode";
 import Map from "../DataTypes/Map";
 import Vec2 from "../DataTypes/Vec2";
 import Scene from "../Scene/Scene";
+import Layer from "../Scene/Layer";
+import Stack from "../DataTypes/Stack";
 
 /**
  * An abstract interface of a SceneGraph. Exposes methods for use by other code, but leaves the implementation up to the subclasses.
@@ -12,12 +14,14 @@ export default abstract class SceneGraph {
 	protected nodeMap: Map<CanvasNode>;
 	protected idCounter: number;
 	protected scene: Scene;
+	protected layers: Stack<Layer>;
 
     constructor(viewport: Viewport, scene: Scene){
 		this.viewport = viewport;
 		this.scene = scene;
 		this.nodeMap = new Map<CanvasNode>();
 		this.idCounter = 0;
+		this.layers = new Stack(10);
     }
 
 	/**
@@ -87,6 +91,18 @@ export default abstract class SceneGraph {
 	 */
     protected abstract getNodeAtCoords(x: number, y: number): CanvasNode;
 	
+	addLayer(): Layer {
+		let layer = new Layer(this.scene);
+		let depth = this.layers.size();
+		layer.setDepth(depth);
+        this.layers.push(layer);
+        return layer;
+    }
+
+	getLayers(): Stack<Layer> {
+		return this.layers;
+	}
+
     abstract update(deltaT: number): void;
 
 	/**

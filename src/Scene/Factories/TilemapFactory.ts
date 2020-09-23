@@ -88,9 +88,11 @@ export default class TilemapFactory {
                     // Check if obj is collidable
                     let collidable = false;
 
-                    for(let prop of obj.properties){
-                        if(prop.name === "Collidable"){
-                            collidable = prop.value;
+                    if(obj.properties){
+                        for(let prop of obj.properties){
+                            if(prop.name === "Collidable"){
+                                collidable = prop.value;
+                            }
                         }
                     }
 

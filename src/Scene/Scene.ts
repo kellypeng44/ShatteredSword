@@ -14,7 +14,6 @@ import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
 
 export default class Scene{
-    protected layers: Stack<Layer>;
     protected worldSize: Vec2;
     protected viewport: Viewport;
     protected running: boolean;
@@ -42,7 +41,7 @@ export default class Scene{
     public load: ResourceManager;
 
     constructor(viewport: Viewport, sceneManager: SceneManager, game: GameLoop){
-        this.layers = new Stack(10);
+        
         this.worldSize = new Vec2(1600, 1000);
         this.viewport = viewport;
         this.viewport.setBounds(0, 0, 2560, 1280);
@@ -138,9 +137,7 @@ export default class Scene{
      * Adds a new layer to the scene and returns it
      */
     addLayer(): Layer {
-        let layer = new Layer(this);
-        this.layers.push(layer);
-        return layer;
+        return this.sceneGraph.addLayer();
     }
 
     /**

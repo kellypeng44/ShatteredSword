@@ -172,8 +172,11 @@ export default class ResourceManager {
 
         // Load everything in the queues. Tilemaps have to come before images because they will add new images to the queue
         this.loadTilemapsFromQueue(() => {
+            console.log("Loaded Tilemaps");
             this.loadImagesFromQueue(() => {
+                console.log("Loaded Images");
                 this.loadAudioFromQueue(() => {
+                    console.log("Loaded Audio");
                     // Done loading
                     this.loading = false;
                     this.justLoaded = true;
