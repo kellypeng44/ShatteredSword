@@ -41,8 +41,7 @@ export default class Scene{
     public load: ResourceManager;
 
     constructor(viewport: Viewport, sceneManager: SceneManager, game: GameLoop){
-        
-        this.worldSize = new Vec2(1600, 1000);
+        this.worldSize = new Vec2(500, 500);
         this.viewport = viewport;
         this.viewport.setBounds(0, 0, 2560, 1280);
         this.running = false;
@@ -56,7 +55,7 @@ export default class Scene{
         this.physicsManager = new PhysicsManager();
 
 
-        this.add = new FactoryManager(this, this.sceneGraph, this.physicsManager, this.tilemaps);
+        this.add = new FactoryManager(this, this.physicsManager, this.tilemaps);
 
 
         this.load = ResourceManager.getInstance();
@@ -81,7 +80,7 @@ export default class Scene{
      * Called every frame of the game. This is where you can dynamically do things like add in new enemies
      * @param delta 
      */
-    updateScene(delta: number): void {}
+    updateScene(deltaT: number): void {}
 
     /**
      * Updates all scene elements
@@ -116,6 +115,9 @@ export default class Scene{
         // We need to keep track of the order of things.
         let visibleSet = this.sceneGraph.getVisibleSet();
 
+        // Render scene graph for demo
+        this.sceneGraph.render(ctx);
+
         // Render tilemaps
         this.tilemaps.forEach(tilemap => {
             tilemap.render(ctx);
@@ -145,5 +147,17 @@ export default class Scene{
      */
     getViewport(): Viewport {
         return this.viewport;
+    }
+
+    getWorldSize(): Vec2 {
+        return this.worldSize;
+    }
+
+    getSceneGraph(): SceneGraph {
+        return this.sceneGraph;
+    }
+
+    generateId(): number {
+        return this.sceneManager.generateId();
     }
 }

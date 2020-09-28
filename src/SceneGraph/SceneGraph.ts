@@ -5,6 +5,7 @@ import Vec2 from "../DataTypes/Vec2";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
 import Stack from "../DataTypes/Stack";
+import AABB from "../DataTypes/AABB";
 
 /**
  * An abstract interface of a SceneGraph. Exposes methods for use by other code, but leaves the implementation up to the subclasses.
@@ -76,20 +77,22 @@ export default abstract class SceneGraph {
 	 * @param vecOrX 
 	 * @param y 
 	 */
-    getNodeAt(vecOrX: Vec2 | number, y: number = null): CanvasNode {
+    getNodesAt(vecOrX: Vec2 | number, y: number = null): Array<CanvasNode> {
 		if(vecOrX instanceof Vec2){
-			return this.getNodeAtCoords(vecOrX.x, vecOrX.y);
+			return this.getNodesAtCoords(vecOrX.x, vecOrX.y);
 		} else {
-			return this.getNodeAtCoords(vecOrX, y);
+			return this.getNodesAtCoords(vecOrX, y);
 		}
 	}
+
+	abstract getNodesInRegion(boundary: AABB): Array<CanvasNode>;
 	
 	/**
 	 * The specific implementation of getting a node at certain coordinates
 	 * @param x 
 	 * @param y 
 	 */
-    protected abstract getNodeAtCoords(x: number, y: number): CanvasNode;
+    protected abstract getNodesAtCoords(x: number, y: number): Array<CanvasNode>;
 	
 	addLayer(): Layer {
 		let layer = new Layer(this.scene);
@@ -103,7 +106,9 @@ export default abstract class SceneGraph {
 		return this.layers;
 	}
 
-    abstract update(deltaT: number): void;
+	abstract update(deltaT: number): void;
+	
+	abstract render(ctx: CanvasRenderingContext2D): void;
 
 	/**
 	 * Gets the visible set of CanvasNodes based on the viewport

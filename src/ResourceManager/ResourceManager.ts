@@ -215,6 +215,11 @@ export default class ResourceManager {
         this.loadonly_tilemapsToLoad = this.loadonly_tilemapLoadingQueue.getSize();
         this.loadonly_tilemapsLoaded = 0;
 
+        // If no items to load, we're finished
+        if(this.loadonly_tilemapsToLoad === 0){
+            onFinishLoading();
+        }
+
         while(this.loadonly_tilemapLoadingQueue.hasItems()){
             let tilemap = this.loadonly_tilemapLoadingQueue.dequeue();
             this.loadTilemap(tilemap.key, tilemap.path, onFinishLoading);
@@ -276,6 +281,11 @@ export default class ResourceManager {
         this.loadonly_imagesToLoad = this.loadonly_imageLoadingQueue.getSize();
         this.loadonly_imagesLoaded = 0;
 
+        // If no items to load, we're finished
+        if(this.loadonly_imagesToLoad === 0){
+            onFinishLoading();
+        }
+
         while(this.loadonly_imageLoadingQueue.hasItems()){
             let image = this.loadonly_imageLoadingQueue.dequeue();
             this.loadImage(image.key, image.path, onFinishLoading);
@@ -322,6 +332,11 @@ export default class ResourceManager {
     private loadAudioFromQueue(onFinishLoading: Function){
         this.loadonly_audioToLoad = this.loadonly_audioLoadingQueue.getSize();
         this.loadonly_audioLoaded = 0;
+
+        // If no items to load, we're finished
+        if(this.loadonly_audioToLoad === 0){
+            onFinishLoading();
+        }
 
         while(this.loadonly_audioLoadingQueue.hasItems()){
             let audio = this.loadonly_audioLoadingQueue.dequeue();
@@ -390,10 +405,14 @@ export default class ResourceManager {
 
     public update(deltaT: number): void {
         if(this.loading){
-            this.onLoadProgress(this.getLoadPercent());
+            if(this.onLoadProgress){
+                this.onLoadProgress(this.getLoadPercent());
+            }
         } else if(this.justLoaded){
             this.justLoaded = false;
-            this.onLoadComplete();
+            if(this.onLoadComplete){
+                this.onLoadComplete();
+            }
         }
     }
 }

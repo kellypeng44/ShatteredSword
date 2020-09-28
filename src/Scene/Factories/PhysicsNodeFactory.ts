@@ -21,7 +21,8 @@ export default class PhysicsNodeFactory {
 	 */
 	add = <T extends PhysicsNode>(constr: new (...a: any) => T, layer: Layer, ...args: any): T => {
 		let instance = new constr(...args);
-        instance.setScene(this.scene);
+		instance.setScene(this.scene);
+		instance.setId(this.scene.generateId());
         instance.addManager(this.physicsManager);
 		instance.create();
 		

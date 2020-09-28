@@ -5,21 +5,24 @@ import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
+import { Positioned, Unique } from "../DataTypes/Interfaces/Descriptors"
 
 /**
  * The representation of an object in the game world
  */
-export default abstract class GameNode {
+export default abstract class GameNode implements Positioned, Unique {
 	protected input: InputReceiver;
-	protected position: Vec2;
+	private _position: Vec2;
 	protected receiver: Receiver;
 	protected emitter: Emitter;
 	protected scene: Scene;
 	protected layer: Layer;
+	private id: number;
 
 	constructor(){
 		this.input = InputReceiver.getInstance();
-		this.position = new Vec2(0, 0);
+		this._position = new Vec2(0, 0);
+		this._position.setOnChange(this.positionChanged);
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
 	}
@@ -40,8 +43,18 @@ export default abstract class GameNode {
 		return this.layer;
 	}
 	
+	get position(): Vec2 {
+		return this._position;
+	}
+
+	set position(pos: Vec2) {
+		this._position = pos;
+		this._position.setOnChange(this.positionChanged);
+		this.positionChanged();
+	}
+
 	getPosition(): Vec2 {
-		return this.position;
+		return this._position.clone();
 	}
 
 	setPosition(vecOrX: Vec2 | number, y: number = null): void {
@@ -51,6 +64,19 @@ export default abstract class GameNode {
 			this.position.set(vecOrX, y);
 		}
 	}
+
+	setId(id: number): void {
+		this.id = id;
+	}
+
+	getId(): number {
+		return this.id;
+	}
+
+	/**
+	 * Called if the position vector is modified or replaced
+	 */
+	protected positionChanged(){}
 
 	// TODO - This doesn't seem ideal. Is there a better way to do this?
 	protected getViewportOriginWithParallax(): Vec2 {

@@ -8,6 +8,11 @@ export default abstract class Graphic extends CanvasNode {
 
     protected color: Color;
 
+    constructor(){
+        super();
+        this.color = Color.RED;
+    }
+
     setColor(color: Color){
         this.color = color;
     }

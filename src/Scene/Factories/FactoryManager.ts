@@ -13,8 +13,8 @@ export default class FactoryManager {
     private physicsNodeFactory: PhysicsNodeFactory = new PhysicsNodeFactory();
     private tilemapFactory: TilemapFactory = new TilemapFactory();
 
-    constructor(scene: Scene, sceneGraph: SceneGraph, physicsManager: PhysicsManager, tilemaps: Array<Tilemap>){
-        this.canvasNodeFactory.init(scene, sceneGraph);
+    constructor(scene: Scene, physicsManager: PhysicsManager, tilemaps: Array<Tilemap>){
+        this.canvasNodeFactory.init(scene);
         this.physicsNodeFactory.init(scene, physicsManager);
         this.tilemapFactory.init(scene, tilemaps, physicsManager);
     }

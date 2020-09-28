@@ -1,13 +1,13 @@
 import GameLoop from "./Loop/GameLoop";
 import {} from "./index";
-import MainScene from "./MainScene";
+import QuadTreeScene from "./QuadTreeScene";
 
 function main(){
     // Create the game object
-    let game = new GameLoop();
+    let game = new GameLoop({viewportSize: {x: 500, y: 500}});
     game.start();
     let sm = game.getSceneManager();
-    sm.addScene(MainScene);
+    sm.addScene(QuadTreeScene);
 }
 
 CanvasRenderingContext2D.prototype.roundedRect = function(x: number, y: number, w: number, h: number, r: number): void {

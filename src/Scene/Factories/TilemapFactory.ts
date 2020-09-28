@@ -71,6 +71,7 @@ export default class TilemapFactory {
             if(layer.type === "tilelayer"){
                 // Create a new tilemap object for the layer
                 let tilemap = new constr(tilemapData, layer, tilesets);
+                tilemap.setId(this.scene.generateId());
                 tilemap.setScene(this.scene);
     
                 // Add tilemap to scene

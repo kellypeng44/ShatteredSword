@@ -11,6 +11,16 @@ export default class MathUtils {
         return x;
     }
 
+    	/**
+	 * Linear Interpolation
+	 * @param a The first value for the interpolation bound
+	 * @param b The second value for the interpolation bound
+	 * @param x The value we are interpolating
+	 */
+	static lerp(a: number, b: number, x: number){
+		return a + x * (b - a);
+	}
+
     /**
      * Returns the number as a hexadecimal
      * @param num The number to convert to hex

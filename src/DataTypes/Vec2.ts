@@ -6,6 +6,11 @@ export default class Vec2 {
 	// Store x and y in an array
 	private vec: Float32Array;
 
+	/**	
+	 * When this vector changes its value, do something
+	 */
+	private onChange: Function;
+
 	constructor(x: number = 0, y: number = 0) {
 		this.vec = new Float32Array(2);
 		this.vec[0] = x;
@@ -19,6 +24,10 @@ export default class Vec2 {
 
 	set x(x: number) {
 		this.vec[0] = x;
+
+		if(this.onChange){
+			this.onChange();
+		}
 	}
 
 	get y() {
@@ -27,10 +36,18 @@ export default class Vec2 {
 
 	set y(y: number) {
 		this.vec[1] = y;
+
+		if(this.onChange){
+			this.onChange();
+		}
 	}
 
 	static get ZERO() {
 		return new Vec2(0, 0);
+	}
+
+	static get UP() {
+		return new Vec2(0, -1);
 	}
 
 	/**
@@ -69,6 +86,14 @@ export default class Vec2 {
 	}
 
 	/**
+	 * Returns a vector that point from this vector to another one
+	 * @param other 
+	 */
+	vecTo(other: Vec2): Vec2 {
+		return new Vec2(other.x - this.x, other.y - this.y);
+	}
+
+	/**
 	 * Keeps the vector's direction, but sets its magnitude to be the provided magnitude
 	 * @param magnitude 
 	 */
@@ -90,6 +115,15 @@ export default class Vec2 {
 		this.x *= factor;
 		this.y *= factor;
 		return this;
+	}
+
+	/**
+	 * Returns a scaled version of this vector without modifying it.
+	 * @param factor 
+	 * @param yFactor 
+	 */
+	scaled(factor: number, yFactor: number = null): Vec2 {
+		return this.clone().scale(factor, yFactor);
 	}
 
 	/**
@@ -175,5 +209,13 @@ export default class Vec2 {
 	 */
 	clone(): Vec2 {
 		return new Vec2(this.x, this.y);
+	}
+	
+	/**
+	 * Sets the function that is called whenever this vector is changed.
+	 * @param f The function to be called
+	 */
+	setOnChange(f: Function): void {
+		this.onChange = f;
 	}
 }

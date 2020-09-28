@@ -1,5 +1,14 @@
 import MathUtils from "./MathUtils";
 import Color from "./Color";
+import Perlin from "./Rand/Perlin";
+
+class Noise {
+    p: Perlin = new Perlin();
+
+    perlin(x: number, y: number, z?: number): number {
+        return this.p.perlin(x, y, z);
+    }
+}
 
 export default class RandUtils {
     /**
@@ -29,4 +38,7 @@ export default class RandUtils {
         let b = RandUtils.randInt(0, 256);
         return new Color(r, g, b);
     }
+
+    static noise: Noise = new Noise();
+
 }

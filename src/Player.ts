@@ -1,7 +1,7 @@
 import PhysicsNode from "./Physics/PhysicsNode";
 import Vec2 from "./DataTypes/Vec2";
 import Debug from "./Debug/Debug";
-import AABB from "./Physics/Colliders/AABB";
+import AABBCollider from "./Physics/Colliders/AABBCollider";
 import CanvasNode from "./Nodes/CanvasNode";
 import { GameEventType } from "./Events/GameEventType";
 
@@ -19,7 +19,7 @@ export default class Player extends PhysicsNode {
         this.velocity = new Vec2(0, 0);
         this.speed = 600;
         this.size = new Vec2(50, 50);
-        this.collider = new AABB();
+        this.collider = new AABBCollider();
         this.collider.setSize(this.size);
         this.position = new Vec2(0, 0);
         if(this.type === "topdown"){

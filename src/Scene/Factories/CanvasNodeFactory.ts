@@ -7,11 +7,9 @@ import Sprite from "../../Nodes/Sprites/Sprite";
 
 export default class CanvasNodeFactory {
 	private scene: Scene;
-	private sceneGraph: SceneGraph;
 
-	init(scene: Scene, sceneGraph: SceneGraph): void {
+	init(scene: Scene): void {
 		this.scene = scene;
-		this.sceneGraph = sceneGraph;
 	}
 
 	/**
@@ -25,7 +23,8 @@ export default class CanvasNodeFactory {
 
 		// Add instance to scene
 		instance.setScene(this.scene);
-		this.sceneGraph.addNode(instance);
+		instance.setId(this.scene.generateId());
+		this.scene.getSceneGraph().addNode(instance);
 
 		// Add instance to layer
 		layer.addNode(instance);
@@ -43,7 +42,8 @@ export default class CanvasNodeFactory {
 
 		// Add instance to scene
 		instance.setScene(this.scene);
-		this.sceneGraph.addNode(instance);
+		instance.setId(this.scene.generateId());
+		this.scene.getSceneGraph().addNode(instance);
 
 		// Add instance to layer
 		layer.addNode(instance);
@@ -62,7 +62,8 @@ export default class CanvasNodeFactory {
 
 		// Add instance to scene
 		instance.setScene(this.scene);
-		this.sceneGraph.addNode(instance);
+		instance.setId(this.scene.generateId());
+		this.scene.getSceneGraph().addNode(instance);
 
 		// Add instance to layer
 		layer.addNode(instance);

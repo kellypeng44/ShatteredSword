@@ -9,11 +9,13 @@ export default class SceneManager {
 	private viewport: Viewport;
 	private resourceManager: ResourceManager;
 	private game: GameLoop;
+	private idCounter: number;
 
 	constructor(viewport: Viewport, game: GameLoop){
 		this.resourceManager = ResourceManager.getInstance();
 		this.viewport = viewport;
 		this.game = game;
+		this.idCounter = 0;
 	}
 
 	/**
@@ -21,6 +23,7 @@ export default class SceneManager {
 	 * @param constr The constructor of the scene to add
 	 */
 	public addScene<T extends Scene>(constr: new (...args: any) => T): void {
+		console.log("Adding Scene");
 		let scene = new constr(this.viewport, this, this.game);
 		this.currentScene = scene;
 
@@ -28,7 +31,9 @@ export default class SceneManager {
 		scene.loadScene();
 
 		// Load all assets
+		console.log("Starting Scene Load");
 		this.resourceManager.loadResourcesFromQueue(() => {
+			console.log("Starting Scene");
 			scene.startScene();
 			scene.setRunning(true);
 		});
@@ -47,6 +52,10 @@ export default class SceneManager {
 		this.viewport.setPosition(0, 0);
 
 		this.addScene(constr);
+	}
+
+	public generateId(): number {
+		return this.idCounter++;
 	}
 
 	public render(ctx: CanvasRenderingContext2D){

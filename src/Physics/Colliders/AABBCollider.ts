@@ -1,10 +1,10 @@
 import Collider from "./Collider";
 import Vec2 from "../../DataTypes/Vec2";
 
-export default class AABB extends Collider {
+export default class AABBCollider extends Collider {
 
     isCollidingWith(other: Collider): boolean {
-        if(other instanceof AABB){
+        if(other instanceof AABBCollider){
             if(other.position.x > this.position.x && other.position.x < this.position.x + this.size.x){
                 return other.position.y > this.position.y && other.position.y < this.position.y + this.size.y;
             }
@@ -13,7 +13,7 @@ export default class AABB extends Collider {
     }
     
     willCollideWith(other: Collider, thisVel: Vec2, otherVel: Vec2): boolean {
-        if(other instanceof AABB){
+        if(other instanceof AABBCollider){
             let thisPos = new Vec2(this.position.x + thisVel.x, this.position.y + thisVel.y);
             let otherPos = new Vec2(other.position.x + otherVel.x, other.position.y + otherVel.y);
 

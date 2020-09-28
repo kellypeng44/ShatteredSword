@@ -7,11 +7,50 @@ export default class Color {
 	public b: number;
 	public a: number;
 
-	constructor(r: number = 0, g: number = 0, b: number = 0, a: number = null){
+	constructor(r: number = 0, g: number = 0, b: number = 0, a: number = 1){
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
+	}
+
+	static get TRANSPARENT(): Color {
+		return new Color(0, 0, 0, 0);
+	}
+	
+	static get RED(): Color {
+		return new Color(255, 0, 0, 1);
+	}
+
+	static get GREEN(): Color {
+		return new Color(0, 255, 0, 1);
+	}
+
+	static get BLUE(): Color {
+		return new Color(0, 0, 255, 1);
+	}
+
+	static get YELLOW(): Color {
+		return new Color(255, 255, 0, 1);
+	}
+
+	static get PURPLE(): Color {
+		return new Color(255, 0, 255, 1);
+	}
+	static get CYAN(): Color {
+		return new Color(0, 255, 255, 1);
+	}
+
+	static get WHITE(): Color {
+		return new Color(255, 255, 255, 1);
+	} 
+
+	static get BLACK(): Color {
+		return new Color(0, 0, 0, 1);
+	}
+
+	static get ORANGE(): Color {
+		return new Color(255, 100, 0, 1);
 	}
 
 	/**
@@ -46,7 +85,7 @@ export default class Color {
 	 * Returns the color as a string of the form rgba(r, g, b, a)
 	 */
 	toStringRGBA(): string {
-		if(this.a === null){
+		if(this.a === 0){
 			return this.toStringRGB();
 		}
 		return "rgba(" + this.r.toString() + ", " + this.g.toString() + ", " + this.b.toString() + ", " + this.a.toString() +")"

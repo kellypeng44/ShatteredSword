@@ -8,7 +8,7 @@ import Viewport from "../SceneGraph/Viewport";
 import SceneManager from "../Scene/SceneManager";
 import AudioManager from "../Sound/AudioManager";
 
-export default class GameLoop{
+export default class GameLoop {
 	// The amount of time to spend on a physics step
 	private maxFPS: number;
 	private simulationTimestep: number;
@@ -45,7 +45,11 @@ export default class GameLoop{
     private sceneManager: SceneManager;
     private audioManager: AudioManager;
 
-    constructor(){
+    constructor(config?: object){
+        // Typecast the config object to a GameConfig object
+        let gameConfig = config ? <GameConfig>config : new GameConfig();
+        console.log(gameConfig)
+
         this.maxFPS = 60;
         this.simulationTimestep = Math.floor(1000/this.maxFPS);
         this.frame = 0;
@@ -62,8 +66,8 @@ export default class GameLoop{
         this.GAME_CANVAS.style.setProperty("background-color", "whitesmoke");
     
         // Give the canvas a size and get the rendering context
-        this.WIDTH = 800;
-        this.HEIGHT = 500;
+        this.WIDTH = gameConfig.viewportSize ? gameConfig.viewportSize.x : 800;
+        this.HEIGHT = gameConfig.viewportSize ? gameConfig.viewportSize.y : 500;
         this.ctx = this.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
 
         // Size the viewport to the game canvas
@@ -211,4 +215,8 @@ export default class GameLoop{
         this.sceneManager.render(this.ctx);
         Debug.render(this.ctx);
     }
+}
+
+class GameConfig {
+    viewportSize: {x: number, y: number}
 }
