@@ -30,8 +30,15 @@ export default class Sprite extends CanvasNode {
     render(ctx: CanvasRenderingContext2D): void {
         let image = ResourceManager.getInstance().getImage(this.imageId);
         let origin = this.getViewportOriginWithParallax();
+
         ctx.drawImage(image,
             this.imageOffset.x, this.imageOffset.y, this.size.x, this.size.y,
-            this.position.x - origin.x, this.position.y - origin.y, this.size.x * this.scale.x, this.size.y * this.scale.y);
+            this.position.x - origin.x - this.size.x*this.scale.x/2, this.position.y - origin.y - this.size.y*this.scale.y/2,
+            this.size.x * this.scale.x, this.size.y * this.scale.y);
+
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "#00FF00"
+        let b = this.getBoundary();
+        ctx.strokeRect(b.x - b.hw - origin.x, b.y - b.hh - origin.y, b.hw*2, b.hh*2);
     }
 }

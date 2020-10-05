@@ -56,14 +56,9 @@ export default class SceneGraphQuadTree extends SceneGraph {
     }
 
     getVisibleSet(): Array<CanvasNode> {
-        let visibleSet = new Array<CanvasNode>();
+        let visibleSet = this.qt.queryRegion(this.viewport.getView());
 
-        // TODO - Currently just gets all of them
-        this.qt.forEach((node: CanvasNode) => {
-            if(!node.getLayer().isHidden() && this.viewport.includes(node)){
-                visibleSet.push(node);
-            }
-        });
+        visibleSet = visibleSet.filter(node => !node.getLayer().isHidden());
 
         // Sort by depth, then by visible set by y-value
         visibleSet.sort((a, b) => {

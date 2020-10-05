@@ -123,8 +123,9 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
     }
 
 /**
-     * Returns all items at this point.
-     * @param point The point to query at
+     * Returns all items in this region
+     * @param boundary The region to check
+     * @param inclusionCheck Allows for additional inclusion checks to further refine searches
      */
     queryRegion(boundary: AABB): Array<T> {
         // A matrix to keep track of our results
@@ -212,6 +213,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
      * @param ctx 
      */
     public render_demo(ctx: CanvasRenderingContext2D): void {
+        return;
         ctx.strokeStyle = "#0000FF";
         ctx.strokeRect(this.boundary.x - this.boundary.hw, this.boundary.y - this.boundary.hh, 2*this.boundary.hw, 2*this.boundary.hh);
 

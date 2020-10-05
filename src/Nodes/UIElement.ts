@@ -5,7 +5,7 @@ import Vec2 from "../DataTypes/Vec2";
 /**
  * The representation of a UIElement - the parent class of things like buttons
  */
-export default class UIElement extends CanvasNode{
+export default class UIElement extends CanvasNode {
 	// Style attributes
 	protected textColor: Color;
 	protected backgroundColor: Color;
@@ -179,22 +179,29 @@ export default class UIElement extends CanvasNode{
 		let previousAlpha = ctx.globalAlpha;
 		ctx.globalAlpha = this.getLayer().getAlpha();
 
-		let origin = this.scene.getViewport().getPosition().clone().mult(this.layer.getParallax());
+		let origin = this.getViewportOriginWithParallax();
 
 		ctx.font = this.fontSize + "px " + this.font;
 		let offset = this.calculateOffset(ctx);
 
 		// Stroke and fill a rounded rect and give it text
 		ctx.fillStyle = this.calculateBackgroundColor();
-		ctx.fillRoundedRect(this.position.x - origin.x, this.position.y - origin.y, this.size.x, this.size.y, this.borderRadius);
+		ctx.fillRoundedRect(this.position.x - origin.x - this.size.x/2, this.position.y - origin.y - this.size.y/2,
+			this.size.x, this.size.y, this.borderRadius);
 		
 		ctx.strokeStyle = this.calculateBorderColor();
 		ctx.lineWidth = this.borderWidth;
-		ctx.strokeRoundedRect(this.position.x - origin.x, this.position.y - origin.y, this.size.x, this.size.y, this.borderRadius);
+		ctx.strokeRoundedRect(this.position.x - origin.x - this.size.x/2, this.position.y - origin.y - this.size.y/2,
+			this.size.x, this.size.y, this.borderRadius);
 
 		ctx.fillStyle = this.calculateTextColor();
-		ctx.fillText(this.text, this.position.x + offset.x - origin.x, this.position.y + offset.y - origin.y);
+		ctx.fillText(this.text, this.position.x + offset.x - origin.x - this.size.x/2, this.position.y + offset.y - origin.y - this.size.y/2);
 	
 		ctx.globalAlpha = previousAlpha;
+
+		ctx.lineWidth = 4;
+        ctx.strokeStyle = "#00FF00"
+        let b = this.getBoundary();
+        ctx.strokeRect(b.x - b.hw - origin.x, b.y - b.hh - origin.y, b.hw*2, b.hh*2);
 	}
 }

@@ -4,11 +4,12 @@ import GameNode from "../Nodes/GameNode";
 import CanvasNode from "../Nodes/CanvasNode";
 import MathUtils from "../Utils/MathUtils";
 import Queue from "../DataTypes/Queue";
+import AABB from "../DataTypes/AABB";
+import Debug from "../Debug/Debug";
 
 export default class Viewport {
-	private position: Vec2;
-	private size: Vec2;
-	private bounds: Vec4;
+    private view: AABB;
+	private boundary: AABB;
     private following: GameNode;
 
     /**
@@ -22,9 +23,8 @@ export default class Viewport {
     private smoothingFactor: number;
 
     constructor(){
-        this.position = new Vec2(0, 0);
-        this.size = new Vec2(0, 0);
-        this.bounds = new Vec4(0, 0, 0, 0);
+        this.view = new AABB(Vec2.ZERO, Vec2.ZERO);
+        this.boundary = new AABB(Vec2.ZERO, Vec2.ZERO);
         this.lastPositions = new Queue();
         this.smoothingFactor = 10;
     }
@@ -32,8 +32,19 @@ export default class Viewport {
     /**
      * Returns the position of the viewport as a Vec2
      */
-    getPosition(): Vec2 {
-        return this.position;
+    getCenter(): Vec2 {
+        return this.view.getCenter();
+    }
+
+    getOrigin(): Vec2 {
+        return this.view.getCenter().clone().sub(this.view.getHalfSize())
+    }
+
+    /**
+     * Returns the region visible to this viewport
+     */
+    getView(): AABB {
+        return this.view;
     }
 
     /**
@@ -41,7 +52,7 @@ export default class Viewport {
      * @param vecOrX 
      * @param y 
      */
-    setPosition(vecOrX: Vec2 | number, y: number = null): void {
+    setCenter(vecOrX: Vec2 | number, y: number = null): void {
         let pos: Vec2;
 		if(vecOrX instanceof Vec2){
             pos = vecOrX;
@@ -56,8 +67,8 @@ export default class Viewport {
     /**
      * Returns the size of the viewport as a Vec2
      */
-    getSize(): Vec2{
-        return this.size;
+    getHalfSize(): Vec2 {
+        return this.view.getHalfSize();
     }
     
     /**
@@ -67,9 +78,17 @@ export default class Viewport {
      */
     setSize(vecOrX: Vec2 | number, y: number = null): void {
 		if(vecOrX instanceof Vec2){
-			this.size.set(vecOrX.x, vecOrX.y);
+			this.view.setHalfSize(vecOrX.scaled(1/2));
 		} else {
-			this.size.set(vecOrX, y);
+			this.view.setHalfSize(new Vec2(vecOrX/2, y/2));
+		}
+    }
+
+    setHalfSize(vecOrX: Vec2 | number, y: number = null): void {
+		if(vecOrX instanceof Vec2){
+			this.view.setHalfSize(vecOrX.clone());
+		} else {
+			this.view.setHalfSize(new Vec2(vecOrX, y));
 		}
     }
 
@@ -87,19 +106,12 @@ export default class Viewport {
      * @param node 
      */
     includes(node: CanvasNode): boolean {
-        let nodePos = node.getPosition();
-        let nodeSize = node.getSize();
-        let nodeScale = node.getScale();
         let parallax = node.getLayer().getParallax();
-        let originX = this.position.x*parallax.x;
-        let originY = this.position.y*parallax.y;
-        if(nodePos.x + nodeSize.x * nodeScale.x > originX && nodePos.x < originX + this.size.x){
-            if(nodePos.y + nodeSize.y * nodeScale.y > originY && nodePos.y < originY + this.size.y){
-                return true;
-            }
-        }
-
-        return false;
+        let center = this.view.getCenter().clone();
+        this.view.getCenter().mult(parallax);
+        let overlaps = this.view.overlaps(node.getBoundary());
+        this.view.setCenter(center);
+        return overlaps;
     }
 
 	// TODO: Put some error handling on this for trying to make the bounds too small for the viewport
@@ -112,7 +124,12 @@ export default class Viewport {
      * @param upperY 
      */
     setBounds(lowerX: number, lowerY: number, upperX: number, upperY: number): void {
-        this.bounds = new Vec4(lowerX, lowerY, upperX, upperY);
+        let hwidth = (upperX - lowerX)/2;
+        let hheight = (upperY - lowerY)/2;
+        let x = lowerX + hwidth;
+        let y = lowerY + hheight;
+        this.boundary.setCenter(new Vec2(x, y));
+        this.boundary.setHalfSize(new Vec2(hwidth, hheight));
     }
 
     /**
@@ -138,11 +155,10 @@ export default class Viewport {
             pos.scale(1/this.lastPositions.getSize());
 
             // Set this position either to the object or to its bounds
-            this.position.x = pos.x - this.size.x/2;
-            this.position.y = pos.y - this.size.y/2;
-            let [min, max] = this.bounds.split();
-            this.position.x = MathUtils.clamp(this.position.x, min.x, max.x - this.size.x);
-            this.position.y = MathUtils.clamp(this.position.y, min.y, max.y - this.size.y);
+            pos.x = MathUtils.clamp(pos.x, this.boundary.left + this.view.hw, this.boundary.right - this.view.hw);
+            pos.y = MathUtils.clamp(pos.y, this.boundary.top + this.view.hh, this.boundary.bottom - this.view.hh);
+
+            this.view.setCenter(pos);
         }
     }
 }

@@ -67,7 +67,7 @@ export default abstract class PhysicsNode extends GameNode {
         this.position.add(velocity);
         this.collider.getPosition().add(velocity);
         for(let child of this.children){
-            child.getPosition().add(velocity);
+            child.position.add(velocity);
         }
     }
 

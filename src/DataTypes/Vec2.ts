@@ -4,26 +4,31 @@
 export default class Vec2 {
 
 	// Store x and y in an array
-	private vec: Float32Array;
+	//private vec: Float32Array;
+
+	protected _x: number;
+	protected _y: number;
 
 	/**	
 	 * When this vector changes its value, do something
 	 */
-	private onChange: Function;
+	private onChange: Function = () => {};
 
 	constructor(x: number = 0, y: number = 0) {
-		this.vec = new Float32Array(2);
-		this.vec[0] = x;
-		this.vec[1] = y;
+		// this.vec = new Float32Array(2);
+		// this.vec[0] = x;
+		// this.vec[1] = y;
+		this._x = x;
+		this._y = y;
 	}
 
 	// Expose x and y with getters and setters
 	get x() {
-		return this.vec[0];
+		return this._x; //this.vec[0];
 	}
 
 	set x(x: number) {
-		this.vec[0] = x;
+		this._x = x;//this.vec[0] = x;
 
 		if(this.onChange){
 			this.onChange();
@@ -31,11 +36,11 @@ export default class Vec2 {
 	}
 
 	get y() {
-		return this.vec[1];
+		return this._y;//this.vec[1];
 	}
 
 	set y(y: number) {
-		this.vec[1] = y;
+		this._y = y;//this.vec[1] = y;
 
 		if(this.onChange){
 			this.onChange();
@@ -182,6 +187,17 @@ export default class Vec2 {
 	}
 
 	/**
+	 * Divides this vector with another vector element-wise
+	 * @param other 
+	 */
+	div(other: Vec2): Vec2 {
+		if(other.x === 0 || other.y === 0) throw "Divide by zero error";
+		this.x /= other.x;
+		this.y /= other.y;
+		return this;
+	}
+
+	/**
 	 * Returns the squared distance between this vector and another vector
 	 * @param other 
 	 */
@@ -217,5 +233,9 @@ export default class Vec2 {
 	 */
 	setOnChange(f: Function): void {
 		this.onChange = f;
+	}
+	
+	getOnChange(): string {
+		return this.onChange.toString();
 	}
 }

@@ -1,9 +1,10 @@
 import PhysicsNode from "./Physics/PhysicsNode";
 import Vec2 from "./DataTypes/Vec2";
 import Debug from "./Debug/Debug";
-import AABBCollider from "./Physics/Colliders/AABBCollider";
 import CanvasNode from "./Nodes/CanvasNode";
 import { GameEventType } from "./Events/GameEventType";
+import AABB from "./DataTypes/AABB";
+import Collider from "./Physics/Colliders/Collider";
 
 export default class Player extends PhysicsNode {
 	velocity: Vec2;
@@ -19,18 +20,20 @@ export default class Player extends PhysicsNode {
         this.velocity = new Vec2(0, 0);
         this.speed = 600;
         this.size = new Vec2(50, 50);
-        this.collider = new AABBCollider();
-        this.collider.setSize(this.size);
         this.position = new Vec2(0, 0);
         if(this.type === "topdown"){
             this.position = new Vec2(100, 100);
         }
+
+        this.collider = new Collider(new AABB(this.position.clone(), this.size.scaled(1/2)));
     }
 
     create(): void {};
 
+    sprite: CanvasNode;
     setSprite(sprite: CanvasNode): void {
-        sprite.setPosition(this.position);
+        this.sprite = sprite;
+        sprite.position = this.position.clone();
         sprite.setSize(this.size);
         this.children.push(sprite);
     }
@@ -46,7 +49,8 @@ export default class Player extends PhysicsNode {
 
 		this.move(new Vec2(this.velocity.x * deltaT, this.velocity.y * deltaT));
 
-		Debug.log("player", "Player Pos: " + this.position + ", Player Vel: " + this.velocity);
+        Debug.log("player", "Pos: " + this.sprite.getPosition() + ", Size: " + this.sprite.getSize());
+        Debug.log("playerbound", "Pos: " + this.sprite.getBoundary().getCenter() + ", Size: " + this.sprite.getBoundary().getHalfSize());
     }
 
     topdown_computeDirection(): Vec2 {

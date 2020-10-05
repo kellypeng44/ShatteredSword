@@ -13,6 +13,7 @@ export default abstract class CanvasNode extends GameNode implements Region {
 
 	constructor(){
 		super();
+		this.position.setOnChange(this.positionChanged);
 		this._size = new Vec2(0, 0);
 		this._size.setOnChange(this.sizeChanged);
 		this._scale = new Vec2(1, 1);
@@ -37,7 +38,7 @@ export default abstract class CanvasNode extends GameNode implements Region {
 
 	set scale(scale: Vec2){
 		this._scale = scale;
-		this._scale.setOnChange(this.sizeChanged);
+		this._scale.setOnChange(this.scaleChanged);
 		this.scaleChanged();
 	}
 
@@ -68,15 +69,15 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		this.scale = scale;
     }
 
-	positionChanged = (): void => {
+	protected positionChanged = (): void => {
 		this.updateBoundary();
 	}
 
-	sizeChanged = (): void => {
+	protected sizeChanged = (): void => {
 		this.updateBoundary();
 	}
 
-	scaleChanged = (): void => {
+	protected scaleChanged = (): void => {
 		this.updateBoundary();
 	}
 

@@ -125,6 +125,9 @@ export default class Scene{
 
         // Render visible set
         visibleSet.forEach(node => node.render(ctx));
+
+        // Debug render the physicsManager
+        this.physicsManager.render(ctx);
     }
 
     setRunning(running: boolean): void {

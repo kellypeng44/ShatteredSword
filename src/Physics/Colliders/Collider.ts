@@ -1,19 +1,39 @@
-import GameNode from "../../Nodes/GameNode";
+import AABB from "../../DataTypes/AABB";
+import { Positioned } from "../../DataTypes/Interfaces/Descriptors";
+import Shape from "../../DataTypes/Shape";
 import Vec2 from "../../DataTypes/Vec2";
 
-export default abstract class Collider extends GameNode {
-    protected size: Vec2;
+export default class Collider implements Positioned {
+    protected shape: Shape;
 
-    getSize(): Vec2 {
-        return this.size;
+    constructor(shape: Shape){
+        this.shape = shape;
     }
 
-    // TODO: Make this accept vector arguments and number arguments
-    setSize(size: Vec2): void {
-        this.size = size;
+    setPosition(position: Vec2): void {
+        this.shape.setCenter(position);
     }
 
-    abstract isCollidingWith(other: Collider): boolean;
+    getPosition(): Vec2 {
+        return this.shape.getCenter();
+    }
 
-    abstract willCollideWith(other: Collider, thisVel: Vec2, otherVel: Vec2): boolean;
+    getBoundingRect(): AABB {
+        return this.shape.getBoundingRect();
+    }
+
+    /**
+     * Sets the collision shape for this collider.
+     * @param shape 
+     */
+    setCollisionShape(shape: Shape): void {
+        this.shape = shape;
+    }
+
+    /**
+     * Returns the collision shape this collider has
+     */
+    getCollisionShape(): Shape {
+        return this.shape;
+    }
 }

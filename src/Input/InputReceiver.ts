@@ -120,7 +120,7 @@ export default class InputReceiver{
 	}
 
 	getGlobalMousePosition(): Vec2 {
-		return this.mousePosition.clone().add(this.viewport.getPosition());
+		return this.mousePosition.clone().add(this.viewport.getOrigin());
 	}
 
 	getMousePressPosition(): Vec2 {
@@ -128,7 +128,7 @@ export default class InputReceiver{
 	}
 
 	getGlobalMousePressPosition(): Vec2 {
-		return this.mousePressPosition.clone().add(this.viewport.getPosition());
+		return this.mousePressPosition.clone().add(this.viewport.getOrigin());
 	}
 
 	setViewport(viewport: Viewport): void {

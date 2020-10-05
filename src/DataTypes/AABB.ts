@@ -1,11 +1,13 @@
+import Shape from "./Shape";
 import Vec2 from "./Vec2";
 
-export default class AABB {
+export default class AABB extends Shape {
 
     protected center: Vec2;
     protected halfSize: Vec2;
 
     constructor(center?: Vec2, halfSize?: Vec2){
+        super();
         this.center = center ? center : new Vec2(0, 0);
         this.halfSize = halfSize ? halfSize : new Vec2(0, 0);
     }
@@ -26,12 +28,32 @@ export default class AABB {
         return this.halfSize.y;
     }
 
+    get top(): number {
+        return this.y - this.hh;
+    }
+
+    get bottom(): number {
+        return this.y + this.hh;
+    }
+
+    get left(): number {
+        return this.x - this.hw;
+    }
+
+    get right(): number {
+        return this.x + this.hw;
+    }
+
     getCenter(): Vec2 {
         return this.center;
     }
 
     setCenter(center: Vec2): void {
         this.center = center;
+    }
+
+    getBoundingRect(): AABB {
+        return this;
     }
 
     getHalfSize(): Vec2 {
@@ -99,5 +121,20 @@ export default class AABB {
         }
 
         return true;
+    }
+
+    // TODO - Implement this generally and use it in the tilemap
+    overlapArea(other: AABB): number {
+        let leftx = Math.max(this.x - this.hw, other.x - other.hw);
+        let rightx = Math.min(this.x + this.hw, other.x + other.hw);
+        let dx = rightx - leftx;
+
+        let lefty = Math.max(this.y - this.hh, other.y - other.hh);
+        let righty = Math.min(this.y + this.hh, other.y + other.hh);
+        let dy = righty - lefty;
+
+        if(dx < 0 || dy < 0) return 0;
+        
+        return dx*dy;
     }
 }

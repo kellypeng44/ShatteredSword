@@ -9,6 +9,7 @@ import Button from "./Nodes/UIElements/Button";
 import Layer from "./Scene/Layer";
 import SecondScene from "./SecondScene";
 import { GameEventType } from "./Events/GameEventType";
+import SceneGraphQuadTree from "./SceneGraph/SceneGraphQuadTree";
 
 export default class MainScene extends Scene {
 
@@ -17,7 +18,7 @@ export default class MainScene extends Scene {
         this.load.tilemap("background", "assets/tilemaps/Background.json");
         this.load.image("player", "assets/sprites/player.png");
         this.load.audio("player_jump", "assets/sounds/jump-3.wav");
-        this.load.audio("level_music", "assets/sounds/level.wav");
+        //this.load.audio("level_music", "assets/sounds/level.wav");
 
         let loadingScreen = this.addLayer();
         let box = this.add.graphic(Rect, loadingScreen, new Vec2(200, 300), new Vec2(400, 60));
@@ -35,17 +36,23 @@ export default class MainScene extends Scene {
     }
 
     startScene(){
+        // Set world size
+        this.worldSize = new Vec2(2560, 1280)
+
+        // Use a quadtree
+        this.sceneGraph = new SceneGraphQuadTree(this.viewport, this);
+
         // Add the background tilemap
-        let backgroundTilemapLayer = this.add.tilemap("background")[0];
+        let backgroundTilemapLayer = this.add.tilemap("background", new Vec2(4, 4))[0];
         // ...and make it have parallax
         backgroundTilemapLayer.setParallax(0.5, 0.8);
         backgroundTilemapLayer.setAlpha(0.5);
 
         // Add the music and start playing it on a loop
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
+        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
 
         // Add the tilemap
-        this.add.tilemap("platformer");
+        this.add.tilemap("platformer", new Vec2(4, 4));
 
         // Create the main game layer
         let mainLayer = this.addLayer();

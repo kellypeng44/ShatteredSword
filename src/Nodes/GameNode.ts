@@ -6,6 +6,7 @@ import Emitter from "../Events/Emitter";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
 import { Positioned, Unique } from "../DataTypes/Interfaces/Descriptors"
+import UIElement from "./UIElement";
 
 /**
  * The representation of an object in the game world
@@ -76,11 +77,11 @@ export default abstract class GameNode implements Positioned, Unique {
 	/**
 	 * Called if the position vector is modified or replaced
 	 */
-	protected positionChanged(){}
+	protected positionChanged = (): void => {};
 
 	// TODO - This doesn't seem ideal. Is there a better way to do this?
-	protected getViewportOriginWithParallax(): Vec2 {
-		return this.scene.getViewport().getPosition().clone().mult(this.layer.getParallax());
+	getViewportOriginWithParallax(): Vec2 {
+		return this.scene.getViewport().getOrigin().mult(this.layer.getParallax());
 	}
 
 	abstract update(deltaT: number): void;

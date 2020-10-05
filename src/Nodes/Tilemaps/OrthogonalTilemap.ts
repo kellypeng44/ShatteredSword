@@ -14,7 +14,7 @@ export default class OrthogonalTilemap extends Tilemap {
      * @param layer 
      */
     protected parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void {
-        this.worldSize.set(tilemapData.width, tilemapData.height);
+        this.size.set(tilemapData.width, tilemapData.height);
         this.tileSize.set(tilemapData.tilewidth, tilemapData.tileheight);
         this.data = layer.data;
         this.visible = layer.visible;
@@ -34,12 +34,12 @@ export default class OrthogonalTilemap extends Tilemap {
      */
     getTileAt(worldCoords: Vec2): number {
         let localCoords = this.getColRowAt(worldCoords);
-        if(localCoords.x < 0 || localCoords.x >= this.worldSize.x || localCoords.y < 0 || localCoords.y >= this.worldSize.y){
+        if(localCoords.x < 0 || localCoords.x >= this.size.x || localCoords.y < 0 || localCoords.y >= this.size.y){
             // There are no tiles in negative positions or out of bounds positions
             return 0;
         }
 
-        return this.data[localCoords.y * this.worldSize.x + localCoords.x]
+        return this.data[localCoords.y * this.size.x + localCoords.x]
     }
 
     /**
@@ -50,11 +50,11 @@ export default class OrthogonalTilemap extends Tilemap {
     isTileCollidable(indexOrCol: number, row?: number): boolean {
         let index = 0;
         if(row){
-            if(indexOrCol < 0 || indexOrCol >= this.worldSize.x || row < 0 || row >= this.worldSize.y){
+            if(indexOrCol < 0 || indexOrCol >= this.size.x || row < 0 || row >= this.size.y){
                 // There are no tiles in negative positions or out of bounds positions
                 return false;
             }
-            index = row * this.worldSize.x + indexOrCol;
+            index = row * this.size.x + indexOrCol;
         } else {
             if(indexOrCol < 0 || indexOrCol >= this.data.length){
                 // Tiles that don't exist aren't collidable
@@ -93,7 +93,7 @@ export default class OrthogonalTilemap extends Tilemap {
 
                 for(let tileset of this.tilesets){
                     if(tileset.hasTile(tileIndex)){
-                        tileset.renderTile(ctx, tileIndex, i, this.worldSize, origin, this.scale);
+                        tileset.renderTile(ctx, tileIndex, i, this.size, origin, this.scale);
                     }
                 }
             }

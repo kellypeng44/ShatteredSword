@@ -29,7 +29,7 @@ export default class TilemapFactory {
      * @param constr The constructor of the desired tilemap
      * @param args Additional arguments to send to the tilemap constructor
      */
-	add = (key: string): Array<Layer> => {
+	add = (key: string, scale: Vec2 = new Vec2(1, 1)): Array<Layer> => {
         // Get Tilemap Data
         let tilemapData = this.resourceManager.getTilemap(key);
 
@@ -70,7 +70,7 @@ export default class TilemapFactory {
             
             if(layer.type === "tilelayer"){
                 // Create a new tilemap object for the layer
-                let tilemap = new constr(tilemapData, layer, tilesets);
+                let tilemap = new constr(tilemapData, layer, tilesets, scale);
                 tilemap.setId(this.scene.generateId());
                 tilemap.setScene(this.scene);
     
@@ -107,10 +107,10 @@ export default class TilemapFactory {
                             let offset = tileset.getImageOffsetForTile(obj.gid);
                             sprite = this.scene.add.sprite(imageKey, sceneLayer);
                             let size = tileset.getTileSize().clone();
-                            sprite.setPosition(obj.x*4, (obj.y - size.y)*4);
+                            sprite.setPosition((obj.x + size.x/2)*scale.x, (obj.y - size.y/2)*scale.y);
                             sprite.setImageOffset(offset);
                             sprite.setSize(size);
-                            sprite.setScale(new Vec2(4, 4));
+                            sprite.setScale(new Vec2(scale.x, scale.y));
                         }
                     }
 
@@ -120,8 +120,8 @@ export default class TilemapFactory {
                             if(obj.gid === tile.id){
                                 let imageKey = tile.image;
                                 sprite = this.scene.add.sprite(imageKey, sceneLayer);
-                                sprite.setPosition(obj.x*4, (obj.y - tile.imageheight)*4);
-                                sprite.setScale(new Vec2(4, 4));
+                                sprite.setPosition((obj.x + tile.imagewidth/2)*scale.x, (obj.y - tile.imageheight/2)*scale.y);
+                                sprite.setScale(new Vec2(scale.x, scale.y));
                             }
                         }
                     }
@@ -129,9 +129,9 @@ export default class TilemapFactory {
                     // Now we have sprite. Associate it with our physics object if there is one
                     if(collidable){
                         let pos = sprite.getPosition().clone();
+                        let size = sprite.getSize().clone().mult(sprite.getScale());
                         pos.x = Math.floor(pos.x);
                         pos.y = Math.floor(pos.y);
-                        let size = sprite.getSize().clone().mult(sprite.getScale());
                         let staticBody = this.scene.add.physics(StaticBody, sceneLayer, pos, size);
                         staticBody.addChild(sprite);
                     }

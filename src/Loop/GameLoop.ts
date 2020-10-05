@@ -48,7 +48,6 @@ export default class GameLoop {
     constructor(config?: object){
         // Typecast the config object to a GameConfig object
         let gameConfig = config ? <GameConfig>config : new GameConfig();
-        console.log(gameConfig)
 
         this.maxFPS = 60;
         this.simulationTimestep = Math.floor(1000/this.maxFPS);

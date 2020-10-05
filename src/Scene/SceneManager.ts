@@ -49,7 +49,7 @@ export default class SceneManager {
 
 		this.resourceManager.unloadAllResources();
 
-		this.viewport.setPosition(0, 0);
+		this.viewport.setCenter(0, 0);
 
 		this.addScene(constr);
 	}

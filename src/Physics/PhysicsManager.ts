@@ -5,12 +5,16 @@ import Debug from "../Debug/Debug";
 import MathUtils from "../Utils/MathUtils";
 import Tilemap from "../Nodes/Tilemap";
 import OrthogonalTilemap from "../Nodes/Tilemaps/OrthogonalTilemap";
+import AABB from "../DataTypes/AABB";
+import { getTimeOfCollision } from "./Colliders/Collisions";
+import Collider from "./Colliders/Collider";
 
 export default class PhysicsManager {
 
     private physicsNodes: Array<PhysicsNode>;
     private tilemaps: Array<Tilemap>;
     private movements: Array<MovementData>;
+    private tcols: Array<TileCollisionData> = [];
  
     constructor(){
         this.physicsNodes = new Array();
@@ -63,14 +67,14 @@ export default class PhysicsManager {
      */
     private collideWithOrthogonalTilemap(node: PhysicsNode, tilemap: OrthogonalTilemap, velocity: Vec2): void {
         // Get the starting position of the moving node
-        let startPos = node.getPosition();
+        let startPos = node.getCollider().getPosition();
 
         // Get the end position of the moving node
         let endPos = startPos.clone().add(velocity);
-        let size = node.getCollider().getSize();
+        let size = node.getCollider().getBoundingRect().getHalfSize();
 
         // Get the min and max x and y coordinates of the moving node
-        let min = new Vec2(Math.min(startPos.x, endPos.x), Math.min(startPos.y, endPos.y));
+        let min = new Vec2(Math.min(startPos.x - size.x, endPos.x - size.x), Math.min(startPos.y - size.y, endPos.y - size.y));
         let max = new Vec2(Math.max(startPos.x + size.x, endPos.x + size.x), Math.max(startPos.y + size.y, endPos.y + size.y));
 
         // Convert the min/max x/y to the min and max row/col in the tilemap array
@@ -79,6 +83,7 @@ export default class PhysicsManager {
 
         // Create an empty set of tilemap collisions (We'll handle all of them at the end)
         let tilemapCollisions = new Array<TileCollisionData>();
+        this.tcols = [];
         let tileSize = tilemap.getTileSize();
 
         Debug.log("tilemapCollision", "");
@@ -88,9 +93,12 @@ export default class PhysicsManager {
             for(let row = minIndex.y; row <= maxIndex.y; row++){
                 if(tilemap.isTileCollidable(col, row)){
                     Debug.log("tilemapCollision", "Colliding with Tile");
-                
+
                     // Get the position of this tile
-                    let tilePos = new Vec2(col * tileSize.x, row * tileSize.y);
+                    let tilePos = new Vec2(col * tileSize.x + tileSize.x/2, row * tileSize.y + tileSize.y/2);
+
+                    // Create a new collider for this tile
+                    let collider = new Collider(new AABB(tilePos, tileSize.scaled(1/2)));
 
                     // Calculate collision area between the node and the tile
                     let dx = Math.min(startPos.x, tilePos.x) - Math.max(startPos.x + size.x, tilePos.x + size.x);
@@ -102,17 +110,21 @@ export default class PhysicsManager {
                         overlap = dx * dy;
                     }
 
-                    tilemapCollisions.push(new TileCollisionData(tilePos, overlap));
+                    this.tcols.push(new TileCollisionData(collider, overlap))
+                    tilemapCollisions.push(new TileCollisionData(collider, overlap));
                 }
             }
         }
 
         // Now that we have all collisions, sort by collision area highest to lowest
         tilemapCollisions = tilemapCollisions.sort((a, b) => a.overlapArea - b.overlapArea);
+        let areas = "";
+        tilemapCollisions.forEach(col => areas += col.overlapArea + ", ")
+        Debug.log("cols", areas)
 
         // Resolve the collisions in order of collision area (i.e. "closest" tiles are collided with first, so we can slide along a surface of tiles)
         tilemapCollisions.forEach(collision => {
-            let [firstContact, _, collidingX, collidingY] = this.getTimeOfAABBCollision(startPos, size, velocity, collision.position, tileSize, new Vec2(0, 0));
+            let [firstContact, _, collidingX, collidingY] = getTimeOfCollision(node.getCollider(), velocity, collision.collider, Vec2.ZERO);
 
             // Handle collision
             if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
@@ -143,13 +155,7 @@ export default class PhysicsManager {
     }
 
     private collideWithStaticNode(movingNode: PhysicsNode, staticNode: PhysicsNode, velocity: Vec2){
-        let sizeA = movingNode.getCollider().getSize();
-        let posA = movingNode.getPosition();
-        let velA = velocity;
-        let sizeB = staticNode.getCollider().getSize();
-        let posB = staticNode.getPosition();
-
-        let [firstContact, _, collidingX, collidingY] = this.getTimeOfAABBCollision(posA, sizeA, velA, posB, sizeB, new Vec2(0, 0));
+        let [firstContact, _, collidingX, collidingY] = getTimeOfCollision(movingNode.getCollider(), velocity, staticNode.getCollider(), Vec2.ZERO);
 
         if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
             if(collidingX && collidingY){
@@ -176,88 +182,6 @@ export default class PhysicsManager {
                 velocity.scale(xScale, yScale);
             }
         }
-    }
-
-    /**
-     * Gets the collision time of two AABBs using continuous collision checking. Returns vectors representing the time
-     * of the start and end of the collision and booleans for whether or not the objects are currently overlapping
-     * (before they move).
-     */
-    private getTimeOfAABBCollision(posA: Vec2, sizeA: Vec2, velA: Vec2, posB: Vec2, sizeB: Vec2, velB: Vec2): [Vec2, Vec2, boolean, boolean] {
-        let firstContact = new Vec2(0, 0);
-        let lastContact = new Vec2(0, 0);
-
-        let collidingX = false;
-        let collidingY = false;
-
-        // Sort by position
-        if(posB.x < posA.x){
-            // Swap, because B is to the left of A
-            let temp: Vec2;
-            temp = sizeA;
-            sizeA = sizeB;
-            sizeB = temp;
-
-            temp = posA;
-            posA = posB;
-            posB = temp;
-
-            temp = velA;
-            velA = velB;
-            velB = temp;
-        }
-
-        // A is left, B is right
-        firstContact.x = Infinity;
-        lastContact.x = Infinity;
-
-        if (posB.x >= posA.x + sizeA.x){
-            // If we aren't currently colliding
-            let relVel = velA.x - velB.x;
-            
-            if(relVel > 0){
-                // If they are moving towards each other
-                firstContact.x = (posB.x - (posA.x + (sizeA.x)))/(relVel);
-                lastContact.x = ((posB.x + sizeB.x) - posA.x)/(relVel);
-            }
-        } else {
-            collidingX = true;
-        }
-
-        if(posB.y < posA.y){
-            // Swap, because B is above A
-            let temp: Vec2;
-            temp = sizeA;
-            sizeA = sizeB;
-            sizeB = temp;
-
-            temp = posA;
-            posA = posB;
-            posB = temp;
-
-            temp = velA;
-            velA = velB;
-            velB = temp;
-        }
-
-        // A is top, B is bottom
-        firstContact.y = Infinity;
-        lastContact.y = Infinity;
-
-        if (posB.y >= posA.y + sizeA.y){
-            // If we aren't currently colliding
-            let relVel = velA.y - velB.y;
-            
-            if(relVel > 0){
-                // If they are moving towards each other
-                firstContact.y = (posB.y - (posA.y + (sizeA.y)))/(relVel);
-                lastContact.y = ((posB.y + sizeB.y) - posA.y)/(relVel);
-            }
-        } else {
-            collidingY = true;
-        }
-
-        return [firstContact, lastContact, collidingX, collidingY];
     }
 
     update(deltaT: number): void {
@@ -309,6 +233,28 @@ export default class PhysicsManager {
         // Reset movements
         this.movements = new Array();
     }
+
+    render(ctx: CanvasRenderingContext2D): void {
+        let vpo;
+        for(let node of this.physicsNodes){
+            vpo = node.getViewportOriginWithParallax();
+            let pos = node.getPosition().sub(node.getViewportOriginWithParallax());
+            let size = (<AABB>node.getCollider().getCollisionShape()).getHalfSize();
+
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "#FF0000";
+            ctx.strokeRect(pos.x - size.x, pos.y-size.y, size.x*2, size.y*2);
+        }
+
+        for(let node of this.tcols){
+            let pos = node.collider.getPosition().sub(vpo);
+            let size = node.collider.getBoundingRect().getHalfSize();
+
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "#FF0000";
+            ctx.strokeRect(pos.x - size.x, pos.y-size.y, size.x*2, size.y*2);
+        }
+    }
 }
 
 // Helper classes for internal data
@@ -325,10 +271,11 @@ class MovementData {
 
 // Collision data objects for tilemaps
 class TileCollisionData {
-    position: Vec2;
+    collider: Collider;
     overlapArea: number;
-    constructor(position: Vec2, overlapArea: number){
-        this.position = position;
+
+    constructor(collider: Collider, overlapArea: number){
+        this.collider = collider;
         this.overlapArea = overlapArea;
     }
 }
