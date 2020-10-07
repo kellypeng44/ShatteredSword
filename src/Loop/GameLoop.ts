@@ -27,7 +27,9 @@ export default class GameLoop {
 
 	private started: boolean;
 	private running: boolean;
-	private frameDelta: number;
+    private frameDelta: number;
+    private panic: boolean;
+    private numUpdateSteps: number;
 
     // Game canvas and its width and height
 	readonly GAME_CANVAS: HTMLCanvasElement;
@@ -61,7 +63,7 @@ export default class GameLoop {
         this.running = false;
 
         // Get the game canvas and give it a background color
-        this.GAME_CANVAS = document.getElementById("game-canvas") as HTMLCanvasElement;
+        this.GAME_CANVAS = <HTMLCanvasElement>document.getElementById("game-canvas");
         this.GAME_CANVAS.style.setProperty("background-color", "whitesmoke");
     
         // Give the canvas a size and get the rendering context
@@ -169,10 +171,15 @@ export default class GameLoop {
         this.lastFrameTime = timestamp;
 
         // Update while we can (This will present problems if we leave the window)
-        let i = 0;
+        this.numUpdateSteps = 0;
         while(this.frameDelta >= this.simulationTimestep){
             this.update(this.simulationTimestep/1000);
             this.frameDelta -= this.simulationTimestep;
+
+            this.numUpdateSteps++;
+            if(this.numUpdateSteps > 100){
+                this.panic = true;
+            }
 
             // Update the frame of the game
             this.updateFrameCount(this.simulationTimestep);
@@ -180,6 +187,24 @@ export default class GameLoop {
 
         // Updates are done, draw
         this.render();
+
+        // End the frame
+        this.end();
+
+        this.panic = false;
+    }
+
+    end(){
+        if(this.panic) {
+            var discardedTime = Math.round(this.resetFrameDelta());
+            console.warn('Main loop panicked, probably because the browser tab was put in the background. Discarding ' + discardedTime + 'ms');
+        }
+    }
+
+    resetFrameDelta() : number {
+        var oldFrameDelta = this.frameDelta;
+        this.frameDelta = 0;
+        return oldFrameDelta;
     }
 
     /**

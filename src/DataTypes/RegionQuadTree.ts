@@ -178,10 +178,10 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         let hw = this.boundary.hw;
         let hh = this.boundary.hh;
 
-        this.nw = new QuadTree(new Vec2(x-hw/2, y-hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1);
-        this.ne = new QuadTree(new Vec2(x+hw/2, y-hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1)
-        this.sw = new QuadTree(new Vec2(x-hw/2, y+hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1)
-        this.se = new QuadTree(new Vec2(x+hw/2, y+hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1)
+        this.nw = new QuadTree(new Vec2(x-hw/2, y-hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
+        this.ne = new QuadTree(new Vec2(x+hw/2, y-hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
+        this.sw = new QuadTree(new Vec2(x-hw/2, y+hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
+        this.se = new QuadTree(new Vec2(x+hw/2, y+hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
 
         this.distributeItems();
     }
@@ -213,7 +213,6 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
      * @param ctx 
      */
     public render_demo(ctx: CanvasRenderingContext2D): void {
-        return;
         ctx.strokeStyle = "#0000FF";
         ctx.strokeRect(this.boundary.x - this.boundary.hw, this.boundary.y - this.boundary.hh, 2*this.boundary.hw, 2*this.boundary.hh);
 

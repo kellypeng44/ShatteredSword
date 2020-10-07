@@ -45,7 +45,15 @@ export default class SceneGraphArray extends SceneGraph{
     }
 
     getNodesInRegion(boundary: AABB): Array<CanvasNode> {
-        return [];
+        let results = [];
+
+        for(let node of this.nodeList){
+            if(boundary.overlapArea(node.getBoundary())){
+                results.push(node);
+            }
+        }
+
+        return results;
     }
 
     update(deltaT: number): void {

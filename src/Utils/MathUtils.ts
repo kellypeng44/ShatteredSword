@@ -1,4 +1,14 @@
+import Vec2 from "../DataTypes/Vec2";
+
 export default class MathUtils {
+    /**
+     * Returns the sign of the value provided
+     * @param x The value to extract the sign from
+     */
+    static sign(x: number): number {
+        return x < 0 ? -1 : 1;
+    }
+
     /**
      * Clamps the value x to the range [min, max], rounding up or down if needed
      * @param x The value to be clamped
@@ -11,7 +21,23 @@ export default class MathUtils {
         return x;
     }
 
-    	/**
+    /**
+     * Clamps the value x to the range between 0 and 1
+     * @param x The value to be clamped
+     */
+    static clamp01(x: number): number {
+        return MathUtils.clamp(x, 0, 1);
+    }
+
+    static clampMagnitude(v: Vec2, m: number): Vec2 {
+        if(v.magSq() > m*m){
+            return v.scaleTo(m);
+        } else{
+            return v;
+        }
+    }
+
+    /**
 	 * Linear Interpolation
 	 * @param a The first value for the interpolation bound
 	 * @param b The second value for the interpolation bound

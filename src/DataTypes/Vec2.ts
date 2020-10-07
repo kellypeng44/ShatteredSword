@@ -81,6 +81,14 @@ export default class Vec2 {
 	}
 
 	/**
+	 * Returns a new vector that is the normalized version of this one
+	 */
+	normalized(){
+		let mag = this.mag();
+		return new Vec2(this.x/mag, this.y/mag);
+	}
+
+	/**
 	 * Sets the vector's x and y based on the angle provided. Goes counter clockwise.
 	 * @param angle The angle in radians
 	 */
@@ -203,6 +211,22 @@ export default class Vec2 {
 	 */
 	distanceSqTo(other: Vec2): number {
 		return (this.x - other.x)*(this.x - other.x) + (this.y - other.y)*(this.y - other.y);
+	}
+
+	/**
+	 * Returns the distance between this vector and another vector
+	 * @param other 
+	 */
+	distanceTo(other: Vec2): number {
+		return Math.sqrt(this.distanceSqTo(other));
+	}
+
+	/**
+	 * Returns the dot product of this vector and another
+	 * @param other 
+	 */
+	dot(other: Vec2): number {
+		return this.x*other.x + this.y*other.y;
 	}
 
 	/**

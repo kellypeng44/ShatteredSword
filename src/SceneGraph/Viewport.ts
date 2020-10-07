@@ -159,6 +159,20 @@ export default class Viewport {
             pos.y = MathUtils.clamp(pos.y, this.boundary.top + this.view.hh, this.boundary.bottom - this.view.hh);
 
             this.view.setCenter(pos);
+        } else {
+            if(this.lastPositions.getSize() > this.smoothingFactor){
+                this.lastPositions.dequeue();
+            }
+
+            let pos = Vec2.ZERO;
+            this.lastPositions.forEach(position => pos.add(position));
+            pos.scale(1/this.lastPositions.getSize());
+            
+            // Set this position either to the object or to its bounds
+            pos.x = MathUtils.clamp(pos.x, this.boundary.left + this.view.hw, this.boundary.right - this.view.hw);
+            pos.y = MathUtils.clamp(pos.y, this.boundary.top + this.view.hh, this.boundary.bottom - this.view.hh);
+
+            this.view.setCenter(pos);
         }
     }
 }

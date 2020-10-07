@@ -14,7 +14,7 @@ export default class SceneGraphQuadTree extends SceneGraph {
         super(viewport, scene);
 
         let size = this.scene.getWorldSize();
-        this.qt = new RegionQuadTree(size.clone().scale(1/2), size.clone().scale(1/2), 5);
+        this.qt = new RegionQuadTree(size.clone().scale(1/2), size.clone().scale(1/2), 5, 30);
         this.nodes = new Array();
     }
 
@@ -44,11 +44,13 @@ export default class SceneGraphQuadTree extends SceneGraph {
             this.qt.insert(node);
         }
 
-        this.qt.forEach((node: CanvasNode) => {
-            if(!node.getLayer().isPaused()){
-                node.update(deltaT);
-            }
-        });
+        this.nodes.forEach((node: CanvasNode) => node.update(deltaT));
+        // TODO: forEach is buggy, some nodes are update multiple times
+        // this.qt.forEach((node: CanvasNode) => {
+        //     if(!node.getLayer().isPaused()){
+        //         node.update(deltaT);
+        //     }
+        // });
     }
 
     render(ctx: CanvasRenderingContext2D): void {
