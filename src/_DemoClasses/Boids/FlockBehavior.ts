@@ -1,13 +1,11 @@
-import Behavior from "../Behaviors/Behavior";
-import AABB from "../DataTypes/AABB";
-import Vec2 from "../DataTypes/Vec2";
-import Point from "../Nodes/Graphics/Point";
-import Scene from "../Scene/Scene";
-import Color from "../Utils/Color";
+import AABB from "../../DataTypes/AABB";
+import Vec2 from "../../DataTypes/Vec2";
+import Point from "../../Nodes/Graphics/Point";
+import Scene from "../../Scene/Scene";
+import Color from "../../Utils/Color";
 import Boid from "./Boid";
-import BoidBehavior from "./BoidBehavior";
 
-export default class FlockBehavior extends Behavior {
+export default class FlockBehavior {
     scene: Scene;
     actor: Boid;
     flock: Array<Boid>;
@@ -19,7 +17,6 @@ export default class FlockBehavior extends Behavior {
     separationHeading: Vec2;
 
     constructor(scene: Scene, actor: Boid, flock: Array<Boid>, visionRange: number, avoidRadius: number) {
-        super();
         this.scene = scene;
         this.actor = actor;
         this.flock = flock;
@@ -28,7 +25,7 @@ export default class FlockBehavior extends Behavior {
         this.avoidRadius = avoidRadius;
     }
 
-    doBehavior(deltaT: number): void {
+    update(): void {
         
         // Update the visible region
         this.visibleRegion.setCenter(this.actor.getPosition().clone());

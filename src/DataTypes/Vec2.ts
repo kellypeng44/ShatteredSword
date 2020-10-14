@@ -4,10 +4,7 @@
 export default class Vec2 {
 
 	// Store x and y in an array
-	//private vec: Float32Array;
-
-	protected _x: number;
-	protected _y: number;
+	private vec: Float32Array;
 
 	/**	
 	 * When this vector changes its value, do something
@@ -15,20 +12,18 @@ export default class Vec2 {
 	private onChange: Function = () => {};
 
 	constructor(x: number = 0, y: number = 0) {
-		// this.vec = new Float32Array(2);
-		// this.vec[0] = x;
-		// this.vec[1] = y;
-		this._x = x;
-		this._y = y;
+		this.vec = new Float32Array(2);
+		this.vec[0] = x;
+		this.vec[1] = y;
 	}
 
 	// Expose x and y with getters and setters
 	get x() {
-		return this._x; //this.vec[0];
+		return this.vec[0];
 	}
 
 	set x(x: number) {
-		this._x = x;//this.vec[0] = x;
+		this.vec[0] = x;
 
 		if(this.onChange){
 			this.onChange();
@@ -36,11 +31,11 @@ export default class Vec2 {
 	}
 
 	get y() {
-		return this._y;//this.vec[1];
+		return this.vec[1];
 	}
 
 	set y(y: number) {
-		this._y = y;//this.vec[1] = y;
+		this.vec[1] = y;
 
 		if(this.onChange){
 			this.onChange();
@@ -49,6 +44,10 @@ export default class Vec2 {
 
 	static get ZERO() {
 		return new Vec2(0, 0);
+	}
+
+	static get INF() {
+		return new Vec2(Infinity, Infinity);
 	}
 
 	static get UP() {
@@ -86,6 +85,13 @@ export default class Vec2 {
 	normalized(){
 		let mag = this.mag();
 		return new Vec2(this.x/mag, this.y/mag);
+	}
+
+	/**
+	 * Sets the x and y elements of this vector to zero
+	 */
+	zero(){
+		return this.set(0, 0);
 	}
 
 	/**
@@ -162,6 +168,14 @@ export default class Vec2 {
 		this.x = x;
 		this.y = y;
 		return this;
+	}
+
+	/**
+	 * Copies the values of the other Vec2 into this one.
+	 * @param other The Vec2 to copy
+	 */
+	copy(other: Vec2): Vec2 {
+		return this.set(other.x, other.y);
 	}
 
 	/**
@@ -249,6 +263,21 @@ export default class Vec2 {
 	 */
 	clone(): Vec2 {
 		return new Vec2(this.x, this.y);
+	}
+
+	/**
+	 * Returns true if this vector and other have the same x and y
+	 * @param other The vector to check against
+	 */
+	equals(other: Vec2): boolean {
+		return this.x === other.x && this.y === other.y;
+	}
+
+	/**
+	 * Returns true if this vector is the zero vector
+	 */
+	isZero(): boolean {
+		return this.x === 0 && this.y === 0;
 	}
 	
 	/**

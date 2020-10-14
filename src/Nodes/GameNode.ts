@@ -1,18 +1,15 @@
-import EventQueue from "../Events/EventQueue";
 import InputReceiver from "../Input/InputReceiver";
 import Vec2 from "../DataTypes/Vec2";
 import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
-import { Positioned, Unique } from "../DataTypes/Interfaces/Descriptors"
-import UIElement from "./UIElement";
-import Behavior from "../Behaviors/Behavior";
+import { Positioned, Unique, Updateable } from "../DataTypes/Interfaces/Descriptors"
 
 /**
  * The representation of an object in the game world
  */
-export default abstract class GameNode implements Positioned, Unique {
+export default abstract class GameNode implements Positioned, Unique, Updateable {
 	protected input: InputReceiver;
 	private _position: Vec2;
 	protected receiver: Receiver;
@@ -20,7 +17,6 @@ export default abstract class GameNode implements Positioned, Unique {
 	protected scene: Scene;
 	protected layer: Layer;
 	private id: number;
-	protected behaviors: Array<Behavior>;
 
 	constructor(){
 		this.input = InputReceiver.getInstance();
@@ -28,7 +24,6 @@ export default abstract class GameNode implements Positioned, Unique {
 		this._position.setOnChange(this.positionChanged);
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
-		this.behaviors = new Array();
 	}
 
 	setScene(scene: Scene): void {
@@ -75,33 +70,6 @@ export default abstract class GameNode implements Positioned, Unique {
 
 	getId(): number {
 		return this.id;
-	}
-
-	/**
-	 * Adds a behavior to the list of behaviors in this GameNode
-	 * @param behavior The behavior to add to this GameNode
-	 */
-	addBehavior(behavior: Behavior): void {
-		this.behaviors.push(behavior);
-	}
-
-	/**
-	 * Does all of the behaviors of this GameNode
-	 */
-	doBehaviors(deltaT: number): void {
-		this.behaviors.forEach(behavior => behavior.doBehavior(deltaT));
-	}
-
-	getBehavior<T extends Behavior>(constr: new (...args: any) => T): T {
-		let query = null;
-
-		for(let behavior of this.behaviors){
-			if(behavior instanceof constr){
-				query = <T>behavior;
-			}
-		}
-
-		return query;
 	}
 
 	/**

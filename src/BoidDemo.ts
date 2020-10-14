@@ -1,12 +1,10 @@
 import Vec2 from "./DataTypes/Vec2";
-import Debug from "./Debug/Debug";
-import Point from "./Nodes/Graphics/Point";
 import Scene from "./Scene/Scene";
 import SceneGraphQuadTree from "./SceneGraph/SceneGraphQuadTree";
 import Color from "./Utils/Color";
-import Boid from "./_DemoClasses/Boid";
-import BoidBehavior from "./_DemoClasses/BoidBehavior";
-import FlockBehavior from "./_DemoClasses/FlockBehavior";
+import Boid from "./_DemoClasses/Boids/Boid";
+import FlockBehavior from "./_DemoClasses/Boids/FlockBehavior";
+import Player from "./_DemoClasses/Player/Player";
 
 /**
  * This demo emphasizes an ai system for the game engine with component architecture
@@ -24,17 +22,16 @@ export default class BoidDemo extends Scene {
         this.viewport.setBounds(0, 0, 800, 600)
         this.viewport.setCenter(400, 300);
 
-        let layer = this.addLayer()
+        let layer = this.addLayer();
         this.boids = new Array();
 
+        // Add the player
+        this.add.graphic(Player, layer, new Vec2(0, 0));
+
         // Create a bunch of boids
-        for(let i = 0; i < 200; i++){
+        for(let i = 0; i < 100; i++){
             let boid = this.add.graphic(Boid, layer, new Vec2(this.worldSize.x*Math.random(), this.worldSize.y*Math.random()));
-            let separation = 3;
-            let alignment = 1;
-            let cohesion = 3;
-            boid.addBehavior(new BoidBehavior(this, boid, separation, alignment, cohesion));
-            boid.addBehavior(new FlockBehavior(this, boid, this.boids, 75, 50));
+            boid.fb = new FlockBehavior(this, boid, this.boids, 75, 50);
             boid.setSize(5, 5);
             this.boids.push(boid);
         }
@@ -44,14 +41,14 @@ export default class BoidDemo extends Scene {
         for(let boid of this.boids){
             boid.setColor(Color.RED);
         }
-        
-        for(let boid of this.boids){
-            boid.getBehavior(FlockBehavior).doBehavior(deltaT);
-        }
 
-        
+        this.updateFlock();
+    }
+
+    updateFlock(): void {
         for(let boid of this.boids){
-            boid.getBehavior(BoidBehavior).doBehavior(deltaT);
+            boid.fb.update();
         }
     }
+
 }

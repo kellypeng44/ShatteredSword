@@ -15,10 +15,18 @@ export default class Rect extends Graphic {
         this.borderWidth = 0;
     }
 
+    /**
+     * Sets the border color of this rectangle
+     * @param color The border color
+     */
     setBorderColor(color: Color){
         this.borderColor = color;
     }
 
+    /**Sets the border width of this rectangle
+     * 
+     * @param width The width of the rectangle in pixels
+     */
     setBorderWidth(width: number){
         this.borderWidth = width;
     }
