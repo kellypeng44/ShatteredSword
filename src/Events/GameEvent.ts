@@ -26,6 +26,10 @@ export default class GameEvent {
         this.time = Date.now();
     }
 
+    isType(type: string): boolean {
+        return this.type === type;
+    }
+
     toString(): string {
         return this.type + ": @" + this.time;
     }

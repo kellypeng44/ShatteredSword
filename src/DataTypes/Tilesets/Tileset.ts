@@ -102,8 +102,8 @@ export default class Tileset {
         let top = row * height;
 
         // Calculate the position in the world to render the tile
-        let x = (dataIndex % worldSize.x) * width * scale.x;
-        let y = Math.floor(dataIndex / worldSize.x) * height * scale.y;
+        let x = Math.floor((dataIndex % worldSize.x) * width * scale.x);
+        let y = Math.floor(Math.floor(dataIndex / worldSize.x) * height * scale.y);
         ctx.drawImage(image, left, top, width, height, x - origin.x, y - origin.y, width * scale.x, height * scale.y);
     }
 }

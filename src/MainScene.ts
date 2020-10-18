@@ -61,6 +61,8 @@ export default class MainScene extends Scene {
         let player = this.add.physics(Player, mainLayer, "platformer");
         let playerSprite = this.add.sprite("player", mainLayer)
         player.setSprite(playerSprite);
+        playerSprite.position = player.position.clone();
+        playerSprite.setSize(new Vec2(64, 64));
 
         this.viewport.follow(player);
 

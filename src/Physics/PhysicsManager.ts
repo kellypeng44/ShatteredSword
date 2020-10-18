@@ -144,7 +144,17 @@ export default class PhysicsManager {
                     // TODO - This is a bug, check to make sure our velocity is going downwards
                     // Maybe feed in a downward direction to check to be sure
                     if(yScale !== 1){
-                        node.setGrounded(true);
+                        // If the collider is below us
+                        if(collision.collider.getPosition().y > node.position.y){
+                            node.setGrounded(true);
+                        } else {
+                            console.log("On ceiling")
+                            node.setOnCeiling(true);
+                        }
+                    }
+
+                    if(xScale !== 1){
+                        node.setOnWall(true);
                     }
 
                     // Scale the velocity of the node
@@ -175,7 +185,16 @@ export default class PhysicsManager {
                 // TODO - This is a bug, check to make sure our velocity is going downwards
                 // Maybe feed in a downward direction to check to be sure
                 if(yScale !== 1){
-                    movingNode.setGrounded(true);
+                    // If the collider is below us
+                    if(staticNode.position.y > movingNode.position.y){
+                        movingNode.setGrounded(true);
+                    } else {
+                        movingNode.setOnCeiling(true);
+                    }
+                }
+
+                if(xScale !== 1){
+                    movingNode.setOnWall(true);
                 }
 
                 // Scale the velocity of the node
@@ -207,6 +226,8 @@ export default class PhysicsManager {
         // For now, we will only have the moving player, don't bother checking for collisions with other moving things
         for(let movingNode of dynamicSet){
             movingNode.setGrounded(false);
+            movingNode.setOnCeiling(false);
+            movingNode.setOnWall(false);
             // Get velocity of node
             let velocity = null;
             for(let data of this.movements){

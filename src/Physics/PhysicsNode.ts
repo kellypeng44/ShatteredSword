@@ -14,16 +14,40 @@ export default abstract class PhysicsNode extends GameNode {
     private manager: PhysicsManager;
     protected moving: boolean;
     protected grounded: boolean;
+    protected onCeiling: boolean;
+    protected onWall: boolean;
 
     constructor(){
         super();
         this.children = new Array();
         this.grounded = false;
+        this.onCeiling = false;
+        this.onWall = false;
         this.moving = false;
     }
 
     setGrounded(grounded: boolean): void {
         this.grounded = grounded;
+    }
+
+    isGrounded(): boolean {
+        return this.grounded;
+    }
+
+    setOnCeiling(onCeiling: boolean): void {
+        this.onCeiling = onCeiling;
+    }
+
+    isOnCeiling(): boolean {
+        return this.onCeiling;
+    }
+
+    setOnWall(onWall: boolean): void {
+        this.onWall = onWall;
+    }
+
+    isOnWall(): boolean {
+        return this.onWall;
     }
 
     addManager(manager: PhysicsManager): void {
@@ -54,7 +78,7 @@ export default abstract class PhysicsNode extends GameNode {
      * Register a movement to the physics manager that can be handled at the end of the frame
      * @param velocity 
      */
-    protected move(velocity: Vec2): void {
+    move(velocity: Vec2): void {
         this.moving = true;
         this.manager.addMovement(this, velocity);
     }

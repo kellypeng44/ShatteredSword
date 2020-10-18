@@ -158,6 +158,12 @@ export default class Viewport {
             pos.x = MathUtils.clamp(pos.x, this.boundary.left + this.view.hw, this.boundary.right - this.view.hw);
             pos.y = MathUtils.clamp(pos.y, this.boundary.top + this.view.hh, this.boundary.bottom - this.view.hh);
 
+            // Assure there are no lines in the tilemap
+            pos.x = Math.floor(pos.x);
+            pos.y = Math.floor(pos.y);
+
+            Debug.log("vp", "Viewport pos: " + pos.toString())
+            
             this.view.setCenter(pos);
         } else {
             if(this.lastPositions.getSize() > this.smoothingFactor){
@@ -172,6 +178,11 @@ export default class Viewport {
             pos.x = MathUtils.clamp(pos.x, this.boundary.left + this.view.hw, this.boundary.right - this.view.hw);
             pos.y = MathUtils.clamp(pos.y, this.boundary.top + this.view.hh, this.boundary.bottom - this.view.hh);
 
+            // Assure there are no lines in the tilemap
+            pos.x = Math.floor(pos.x);
+            pos.y = Math.floor(pos.y);
+
+            Debug.log("vp", "Viewport pos: " + pos.toString())
             this.view.setCenter(pos);
         }
     }

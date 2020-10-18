@@ -68,7 +68,11 @@ export default class InputReceiver{
 			}
 
 			if(event.type === GameEventType.KEY_DOWN){
-				let key = event.data.get("key")
+				let key = event.data.get("key");
+				// Handle space bar
+				if(key === " "){
+					key = "space";
+				}
 				if(!this.keyPressed.get(key)){
 					this.keyJustPressed.set(key, true);
 					this.keyPressed.set(key, true);
@@ -76,7 +80,11 @@ export default class InputReceiver{
 			}
 
 			if(event.type === GameEventType.KEY_UP){
-				let key = event.data.get("key")
+				let key = event.data.get("key");
+				// Handle space bar
+				if(key === " "){
+					key = "space";
+				}
 				this.keyPressed.set(key, false);
 			}
 
