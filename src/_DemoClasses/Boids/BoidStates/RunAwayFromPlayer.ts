@@ -23,7 +23,6 @@ export default class RunAwayFromPlayer extends State {
     }
 
     onEnter(): void {
-        console.log("Entered Running away")
         this.runAwayDirection = Vec2.ZERO;
         this.lastPlayerPosition = Vec2.INF;
         this.timeElapsed = 0;

@@ -67,12 +67,13 @@ export default class GameLoop {
         this.GAME_CANVAS.style.setProperty("background-color", "whitesmoke");
     
         // Give the canvas a size and get the rendering context
-        this.WIDTH = gameConfig.viewportSize ? gameConfig.viewportSize.x : 800;
-        this.HEIGHT = gameConfig.viewportSize ? gameConfig.viewportSize.y : 500;
+        this.WIDTH = gameConfig.canvasSize ? gameConfig.canvasSize.x : 800;
+        this.HEIGHT = gameConfig.canvasSize ? gameConfig.canvasSize.y : 500;
         this.ctx = this.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
 
         // Size the viewport to the game canvas
         this.viewport = new Viewport();
+        this.viewport.setCanvasSize(this.WIDTH, this.HEIGHT);
         this.viewport.setSize(this.WIDTH, this.HEIGHT);
 
         // Initialize all necessary game subsystems
@@ -242,5 +243,5 @@ export default class GameLoop {
 }
 
 class GameConfig {
-    viewportSize: {x: number, y: number}
+    canvasSize: {x: number, y: number}
 }

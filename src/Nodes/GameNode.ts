@@ -82,5 +82,10 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		return this.scene.getViewport().getOrigin().mult(this.layer.getParallax());
 	}
 
+	getViewportScale(): number {
+		return this.scene.getViewport().getZoomLevel();
+	}
+
+
 	abstract update(deltaT: number): void;
 }

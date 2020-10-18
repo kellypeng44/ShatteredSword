@@ -20,6 +20,7 @@ export default class InputHandler{
         document.onkeyup = this.handleKeyUp;
         document.onblur = this.handleBlur;
         document.oncontextmenu = this.handleBlur;
+        document.onwheel = this.handleWheel;
     }
 
     private handleMouseDown = (event: MouseEvent, canvas: HTMLCanvasElement): void => {
@@ -60,6 +61,19 @@ export default class InputHandler{
     private handleContextMenu = (event: Event): void => {
         event.preventDefault();
         event.stopPropagation();
+    }
+
+    private handleWheel = (event: WheelEvent): void => {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        let gameEvent: GameEvent;
+        if(event.deltaY < 0){
+            gameEvent = new GameEvent(GameEventType.WHEEL_UP, {});
+        } else {
+            gameEvent = new GameEvent(GameEventType.WHEEL_DOWN, {});
+        }
+        this.eventQueue.addEvent(gameEvent);
     }
 
     private getKey(keyEvent: KeyboardEvent){

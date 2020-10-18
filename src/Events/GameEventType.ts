@@ -28,6 +28,16 @@ export enum GameEventType {
 	CANVAS_BLUR = "canvas_blur",
 
 	/**
+	 * Mouse wheel up event. Has data: {}
+	 */
+	WHEEL_UP = "wheel_up",
+
+	/**
+	 * Mouse wheel down event. Has data: {}
+	 */
+	WHEEL_DOWN = "wheel_down",
+
+	/**
 	 * Start Recording event. Has data: {}
 	 */
 	START_RECORDING = "start_recording",

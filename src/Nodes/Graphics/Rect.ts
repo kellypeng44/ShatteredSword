@@ -35,15 +35,16 @@ export default class Rect extends Graphic {
 
     render(ctx: CanvasRenderingContext2D): void {
         let origin = this.getViewportOriginWithParallax();
+        let zoom = this.getViewportScale();
 
         if(this.color.a !== 0){
             ctx.fillStyle = this.color.toStringRGB();
-            ctx.fillRect(this.position.x - this.size.x/2 - origin.x, this.position.y - this.size.y/2 - origin.y, this.size.x, this.size.y);
+            ctx.fillRect((this.position.x - this.size.x/2 - origin.x)*zoom, (this.position.y - this.size.y/2 - origin.y)*zoom, this.size.x*zoom, this.size.y*zoom);
         }
 
         ctx.strokeStyle = this.borderColor.toStringRGB();
         ctx.lineWidth = this.borderWidth;
-        ctx.strokeRect(this.position.x - this.size.x/2 - origin.x, this.position.y - this.size.y/2 - origin.y, this.size.x, this.size.y);
+        ctx.strokeRect((this.position.x - this.size.x/2 - origin.x)*zoom, (this.position.y - this.size.y/2 - origin.y)*zoom, this.size.x*zoom, this.size.y*zoom);
     }
 
 }

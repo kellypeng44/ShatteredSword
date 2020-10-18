@@ -14,10 +14,16 @@ export default class InputReceiver{
 
 	private mousePressed: boolean;
 	private mouseJustPressed: boolean;
+
 	private keyJustPressed: Map<boolean>;
 	private keyPressed: Map<boolean>;
+
 	private mousePosition: Vec2;
 	private mousePressPosition: Vec2;
+
+	private scrollDirection: number;
+	private justScrolled: boolean;
+
 	private eventQueue: EventQueue;
 	private receiver: Receiver;
 	private viewport: Viewport;
@@ -30,11 +36,13 @@ export default class InputReceiver{
 		this.keyPressed = new Map<boolean>();
 		this.mousePosition = new Vec2(0, 0);
 		this.mousePressPosition = new Vec2(0, 0);
+		this.scrollDirection = 0;
+		this.justScrolled = false;
 
 		this.eventQueue = EventQueue.getInstance();
 		// Subscribe to all input events
 		this.eventQueue.subscribe(this.receiver, [GameEventType.MOUSE_DOWN, GameEventType.MOUSE_UP, GameEventType.MOUSE_MOVE,
-			 GameEventType.KEY_DOWN, GameEventType.KEY_UP, GameEventType.CANVAS_BLUR]);
+			 GameEventType.KEY_DOWN, GameEventType.KEY_UP, GameEventType.CANVAS_BLUR, GameEventType.WHEEL_UP, GameEventType.WHEEL_DOWN]);
 	}
 
 	static getInstance(): InputReceiver{
@@ -48,6 +56,8 @@ export default class InputReceiver{
 		// Reset the justPressed values to false
 		this.mouseJustPressed = false;
 		this.keyJustPressed.forEach((key: string) => this.keyJustPressed.set(key, false));
+		this.justScrolled = false;
+		this.scrollDirection = 0;
 
 		while(this.receiver.hasNextEvent()){			
 			let event = this.receiver.getNextEvent();
@@ -91,6 +101,14 @@ export default class InputReceiver{
 			if(event.type === GameEventType.CANVAS_BLUR){
 				this.clearKeyPresses()
 			}
+
+			if(event.type === GameEventType.WHEEL_UP){
+				this.scrollDirection = -1;
+				this.justScrolled = true;
+			} else if(event.type === GameEventType.WHEEL_DOWN){
+				this.scrollDirection = 1;
+				this.justScrolled = true;
+			}
 		}
 	}
 
@@ -121,6 +139,14 @@ export default class InputReceiver{
 
 	isMousePressed(): boolean {
 		return this.mousePressed;
+	}
+
+	didJustScroll(): boolean {
+		return this.justScrolled;
+	}
+
+	getScrollDirection(): number {
+		return this.scrollDirection;
 	}
 
 	getMousePosition(): Vec2 {

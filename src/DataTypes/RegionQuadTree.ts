@@ -212,15 +212,15 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
      * Renders the quadtree for demo purposes.
      * @param ctx 
      */
-    public render_demo(ctx: CanvasRenderingContext2D): void {
+    public render_demo(ctx: CanvasRenderingContext2D, origin: Vec2, zoom: number): void {
         ctx.strokeStyle = "#0000FF";
-        ctx.strokeRect(this.boundary.x - this.boundary.hw, this.boundary.y - this.boundary.hh, 2*this.boundary.hw, 2*this.boundary.hh);
+        ctx.strokeRect((this.boundary.x - this.boundary.hw - origin.x)*zoom, (this.boundary.y - this.boundary.hh - origin.y)*zoom, 2*this.boundary.hw*zoom, 2*this.boundary.hh*zoom);
 
         if(this.divided){
-            this.nw.render_demo(ctx);
-            this.ne.render_demo(ctx);
-            this.sw.render_demo(ctx);
-            this.se.render_demo(ctx);
+            this.nw.render_demo(ctx, origin, zoom);
+            this.ne.render_demo(ctx, origin, zoom);
+            this.sw.render_demo(ctx, origin, zoom);
+            this.se.render_demo(ctx, origin, zoom);
         }
     }
 

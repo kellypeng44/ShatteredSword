@@ -1,11 +1,11 @@
 import Vec2 from "../DataTypes/Vec2";
-import Vec4 from "../DataTypes/Vec4";
 import GameNode from "../Nodes/GameNode";
 import CanvasNode from "../Nodes/CanvasNode";
 import MathUtils from "../Utils/MathUtils";
 import Queue from "../DataTypes/Queue";
 import AABB from "../DataTypes/AABB";
 import Debug from "../Debug/Debug";
+import InputReceiver from "../Input/InputReceiver";
 
 export default class Viewport {
     private view: AABB;
@@ -22,11 +22,21 @@ export default class Viewport {
      */
     private smoothingFactor: number;
 
+    private scrollZoomEnabled: boolean;
+    private ZOOM_FACTOR: number = 1.2;
+    private canvasSize: Vec2;
+
     constructor(){
         this.view = new AABB(Vec2.ZERO, Vec2.ZERO);
         this.boundary = new AABB(Vec2.ZERO, Vec2.ZERO);
         this.lastPositions = new Queue();
         this.smoothingFactor = 10;
+        this.scrollZoomEnabled = false;
+        this.canvasSize = Vec2.ZERO;
+    }
+
+    enableZoom(): void {
+        this.scrollZoomEnabled = true;
     }
 
     /**
@@ -93,6 +103,23 @@ export default class Viewport {
     }
 
     /**
+     * Sets the size of the canvas that the viewport is projecting to.
+     * @param vecOrX 
+     * @param y 
+     */
+    setCanvasSize(vecOrX: Vec2 | number, y: number = null): void {
+		if(vecOrX instanceof Vec2){
+			this.canvasSize = vecOrX.clone();
+		} else {
+			this.canvasSize = new Vec2(vecOrX, y);
+		}
+    }
+
+    getZoomLevel(): number {
+        return this.canvasSize.x/this.view.hw/2
+    }
+
+    /**
      * Sets the smoothing factor for the viewport movement.
      * @param smoothingFactor The smoothing factor for the viewport
      */
@@ -141,6 +168,37 @@ export default class Viewport {
     }
 
     update(deltaT: number): void {
+        // If zoom is enabled
+        if(this.scrollZoomEnabled){
+            let input = InputReceiver.getInstance();
+            if(input.didJustScroll()){
+                let currentSize = this.view.getHalfSize().clone();
+                if(input.getScrollDirection() < 0){
+                    // Zoom in
+                    currentSize.scale(1/this.ZOOM_FACTOR);
+                } else {
+                    // Zoom out
+                    currentSize.scale(this.ZOOM_FACTOR);
+                }
+
+                if(currentSize.x > this.boundary.hw){
+                    let factor = this.boundary.hw/currentSize.x;
+                    currentSize.x = this.boundary.hw;
+                    currentSize.y *= factor;
+                }
+
+                if(currentSize.y > this.boundary.hh){
+                    let factor = this.boundary.hh/currentSize.y;
+                    currentSize.y = this.boundary.hh;
+                    currentSize.x *= factor;
+                }
+
+                this.view.setHalfSize(currentSize);
+            }
+        }
+
+        Debug.log("vpzoom", "View size: " + this.view.getHalfSize());
+
         // If viewport is following an object
         if(this.following){
             // Update our list of previous positions

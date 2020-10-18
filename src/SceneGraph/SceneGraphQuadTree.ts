@@ -54,7 +54,9 @@ export default class SceneGraphQuadTree extends SceneGraph {
     }
 
     render(ctx: CanvasRenderingContext2D): void {
-        this.qt.render_demo(ctx);
+        let origin = this.viewport.getOrigin();
+        let zoom = this.viewport.getZoomLevel();
+        this.qt.render_demo(ctx, origin, zoom);
     }
 
     getVisibleSet(): Array<CanvasNode> {

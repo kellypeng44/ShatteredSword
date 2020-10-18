@@ -23,6 +23,7 @@ export default class Boid extends Graphic {
 
     render(ctx: CanvasRenderingContext2D): void {
         let origin = this.getViewportOriginWithParallax();
+        let zoom = this.getViewportScale();
 
         let dirVec = this.direction.scaled(this.size.x, this.size.y);
         let finVec1 = this.direction.clone().rotateCCW(Math.PI/2).scale(this.size.x/2, this.size.y/2).sub(this.direction.scaled(this.size.x/1.5, this.size.y/1.5));
@@ -31,11 +32,11 @@ export default class Boid extends Graphic {
         ctx.lineWidth = 1;
         ctx.fillStyle = this.color.toString();
         ctx.beginPath();
-        ctx.moveTo(this.position.x - origin.x + dirVec.x,      this.position.y - origin.y + dirVec.y);
-        ctx.lineTo(this.position.x - origin.x + finVec1.x,     this.position.y - origin.y + finVec1.y);
-        ctx.lineTo(this.position.x - origin.x - dirVec.x/3,    this.position.y - origin.y - dirVec.y/3);
-        ctx.lineTo(this.position.x - origin.x + finVec2.x,     this.position.y - origin.y + finVec2.y);
-        ctx.lineTo(this.position.x - origin.x + dirVec.x,      this.position.y - origin.y + dirVec.y);
+        ctx.moveTo((this.position.x - origin.x + dirVec.x)*zoom,      (this.position.y - origin.y + dirVec.y)*zoom);
+        ctx.lineTo((this.position.x - origin.x + finVec1.x)*zoom,     (this.position.y - origin.y + finVec1.y)*zoom);
+        ctx.lineTo((this.position.x - origin.x - dirVec.x/3)*zoom,    (this.position.y - origin.y - dirVec.y/3)*zoom);
+        ctx.lineTo((this.position.x - origin.x + finVec2.x)*zoom,     (this.position.y - origin.y + finVec2.y)*zoom);
+        ctx.lineTo((this.position.x - origin.x + dirVec.x)*zoom,      (this.position.y - origin.y + dirVec.y)*zoom);
         ctx.fill();
     }
 }

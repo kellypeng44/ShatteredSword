@@ -26,7 +26,10 @@ export default class BoidDemo extends Scene {
         this.boids = new Array();
 
         // Add the player
-        this.add.graphic(Player, layer, new Vec2(0, 0));
+        let player = this.add.graphic(Player, layer, new Vec2(0, 0));
+
+        this.viewport.follow(player);
+        this.viewport.enableZoom();
 
         // Create a bunch of boids
         for(let i = 0; i < 100; i++){
