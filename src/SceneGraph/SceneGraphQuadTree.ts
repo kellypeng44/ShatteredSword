@@ -5,6 +5,7 @@ import Scene from "../Scene/Scene";
 import RegionQuadTree from "../DataTypes/RegionQuadTree";
 import Vec2 from "../DataTypes/Vec2";
 import AABB from "../DataTypes/AABB";
+import Stats from "../Debug/Stats";
 
 export default class SceneGraphQuadTree extends SceneGraph {
     private qt: RegionQuadTree<CanvasNode>;
@@ -34,23 +35,35 @@ export default class SceneGraphQuadTree extends SceneGraph {
     }
 
     getNodesInRegion(boundary: AABB): Array<CanvasNode> {
-        return this.qt.queryRegion(boundary);
+        let t0 = performance.now();
+        let res = this.qt.queryRegion(boundary);
+        let t1 = performance.now();
+
+        Stats.log("sgquery", (t1-t0));
+
+        return res;
     }
 
     update(deltaT: number): void {
+        let t0 = performance.now();
         this.qt.clear();
+        let t1 = performance.now();
 
+        Stats.log("sgclear", (t1-t0));
+
+        t0 = performance.now();
         for(let node of this.nodes){
             this.qt.insert(node);
         }
+        t1 = performance.now();
 
+        Stats.log("sgfill", (t1-t0));
+
+        t0 = performance.now();
         this.nodes.forEach((node: CanvasNode) => node.update(deltaT));
-        // TODO: forEach is buggy, some nodes are update multiple times
-        // this.qt.forEach((node: CanvasNode) => {
-        //     if(!node.getLayer().isPaused()){
-        //         node.update(deltaT);
-        //     }
-        // });
+        t1 = performance.now();
+
+        Stats.log("sgupdate", (t1-t0));
     }
 
     render(ctx: CanvasRenderingContext2D): void {

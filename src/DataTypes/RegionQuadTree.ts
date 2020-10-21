@@ -3,6 +3,7 @@ import Collection from "./Collection";
 import AABB from "./AABB"
 import { Region, Unique } from "./Interfaces/Descriptors";
 import Map from "./Map";
+import Stats from "../Debug/Stats";
 
 /**
  * Primarily used to organize the scene graph
@@ -144,7 +145,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         let results = new Array<T>();
 
         // A map to keep track of the items we've already found
-        let uniqueMap = new Map<T>();
+        let uniqueMap = new Array<boolean>();
 
         // Query and return
         this._queryRegion(boundary, results, uniqueMap);
@@ -157,7 +158,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
      * @param results The results matrix
      * @param uniqueMap A map that stores the unique ids of the results so we know what was already found
      */
-    protected _queryRegion(boundary: AABB, results: Array<T>, uniqueMap: Map<T>): void {
+    protected _queryRegion(boundary: AABB, results: Array<T>, uniqueMap: Array<boolean>): void {
         // Does this quadtree even contain the point?
         if(!this.boundary.overlaps(boundary)) return;
 
@@ -170,12 +171,22 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         } else {
             // Otherwise, return a set of the items
             for(let item of this.items){
-                let id = item.getId().toString();
-                // If the item hasn't been found yet and it contains the point
-                if(!uniqueMap.has(id) && item.getBoundary().overlaps(boundary)){
-                    // Add it to our found points
-                    uniqueMap.add(id, item);
-                    results.push(item);
+                // TODO - This is REALLY slow for some reason when we check for unique keys
+
+                // let id = item.getId().toString();
+                // // If the item hasn't been found yet and it contains the point
+                // if(!uniqueMap.has(id) && item.getBoundary().overlaps(boundary)){
+                //     // Add it to our found points
+                //     uniqueMap.add(id, item);
+                //     results.push(item);
+                // }
+
+                // Maybe this is better? Just use a boolean array with no string nonsense?
+                if(item.getId() >= uniqueMap.length || !uniqueMap[item.getId()]){
+                    if(item.getBoundary().overlaps(boundary)){
+                        results.push(item);
+                        uniqueMap[item.getId()] = true;
+                    }
                 }
             }
         }

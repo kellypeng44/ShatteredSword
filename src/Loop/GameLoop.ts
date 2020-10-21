@@ -7,6 +7,7 @@ import ResourceManager from "../ResourceManager/ResourceManager";
 import Viewport from "../SceneGraph/Viewport";
 import SceneManager from "../Scene/SceneManager";
 import AudioManager from "../Sound/AudioManager";
+import Stats from "../Debug/Stats";
 
 export default class GameLoop {
 	/** The max allowed update fps.*/
@@ -112,6 +113,8 @@ export default class GameLoop {
         this.resourceManager = ResourceManager.getInstance();
         this.sceneManager = new SceneManager(this.viewport, this);
         this.audioManager = AudioManager.getInstance();
+
+        Stats.initStats();
     }
 
     private initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
@@ -153,6 +156,7 @@ export default class GameLoop {
         this.framesSinceLastFpsUpdate = 0;
 
         Debug.log("fps", "FPS: " + this.fps.toFixed(1));
+        Stats.updateFPS(this.fps);
     }
 
     /**
@@ -216,6 +220,7 @@ export default class GameLoop {
             this.numUpdateSteps++;
             if(this.numUpdateSteps > 100){
                 this.panic = true;
+                break;
             }
         }
 
@@ -272,6 +277,7 @@ export default class GameLoop {
         this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         this.sceneManager.render(this.ctx);
         Debug.render(this.ctx);
+        Stats.render();
     }
 }
 

@@ -2,10 +2,18 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <title>Game</title>
   </head>
   <body>
-    <canvas id="game-canvas"></canvas>
+    <div style="display: flex; flex-direction: row;">
+      <canvas id="game-canvas"></canvas>
+      <div>
+        <canvas id="stats-canvas"></canvas>
+        <select name="Display" id="chart-option">
+        </select>
+        <div id="stats-display"></div>
+      </div>
+    </div>
     <script src="bundle.js"></script>
   </body>
 </html>

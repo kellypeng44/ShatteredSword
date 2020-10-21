@@ -5,6 +5,7 @@ import Scene from "../Scene/Scene";
 import Stack from "../DataTypes/Stack";
 import Layer from "../Scene/Layer"
 import AABB from "../DataTypes/AABB";
+import Stats from "../Debug/Stats";
 
 export default class SceneGraphArray extends SceneGraph{
 	private nodeList: Array<CanvasNode>;
@@ -45,23 +46,29 @@ export default class SceneGraphArray extends SceneGraph{
     }
 
     getNodesInRegion(boundary: AABB): Array<CanvasNode> {
+        let t0 = performance.now();
         let results = [];
 
         for(let node of this.nodeList){
-            if(boundary.overlapArea(node.getBoundary())){
+            if(boundary.overlaps(node.getBoundary())){
                 results.push(node);
             }
         }
+        let t1 = performance.now();
+        Stats.log("sgquery", (t1-t0));
 
         return results;
     }
 
     update(deltaT: number): void {
+        let t0 = performance.now();
         for(let node of this.nodeList){
             if(!node.getLayer().isPaused()){
                 node.update(deltaT);
             }
         }
+        let t1 = performance.now();
+        Stats.log("sgupdate", (t1-t0));
     }
 
     render(ctx: CanvasRenderingContext2D): void {}
