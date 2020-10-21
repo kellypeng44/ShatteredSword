@@ -72,7 +72,7 @@ export default class SecondScene extends Scene {
         let i = 0;
         let fps = [15, 30, 60];
         cycleFramerateButton.onClick = () => {
-            this.game.setMaxFPS(fps[i]);
+            this.game.setMaxUpdateFPS(fps[i]);
             i = (i + 1) % 3;
         }
 

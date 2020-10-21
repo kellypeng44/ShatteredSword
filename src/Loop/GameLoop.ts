@@ -9,26 +9,46 @@ import SceneManager from "../Scene/SceneManager";
 import AudioManager from "../Sound/AudioManager";
 
 export default class GameLoop {
-	// The amount of time to spend on a physics step
-	private maxFPS: number;
+	/** The max allowed update fps.*/
+    private maxUpdateFPS: number;
+    
+    /** The timestep for each update. This is the deltaT passed to update calls. */
 	private simulationTimestep: number;
 
-	// The time when the last frame was drawn
-	private lastFrameTime: number;
+    /** The amount of time we are yet to simulate. */
+    private frameDelta: number;
 
-	// The current frame of the game
+    /** The time when the last frame was drawn. */
+    private lastFrameTime: number;
+    
+    /** The minimum time we want to wait between game frames. */
+    private minFrameDelay: number;
+
+	/** The current frame of the game. */
 	private frame: number;
 
-	// Keeping track of the fps
-	private runningFrameSum: number;
-	private numFramesInSum: number;
-	private maxFramesInSum: number;
-	private fps: number;
+	/** The actual fps of the game. */
+    private fps: number;
+    
+    /** The time between fps measurement updates. */
+    private fpsUpdateInterval: number;
 
-	private started: boolean;
-	private running: boolean;
-    private frameDelta: number;
+    /** The time of the last fps update. */
+    private lastFpsUpdate: number;
+
+    /** The number of frames since the last fps update was done. */
+    private framesSinceLastFpsUpdate: number;
+
+    /** The status of whether or not the game loop has started. */
+    private started: boolean;
+    
+    /** The status of whether or not the game loop is currently running. */
+    private running: boolean;
+    
+    /** The panic state of the game. True if we have too many update frames in a single render. */
     private panic: boolean;
+
+    /** The number of update steps this iteration of the game loop. */
     private numUpdateSteps: number;
 
     // Game canvas and its width and height
@@ -51,16 +71,23 @@ export default class GameLoop {
         // Typecast the config object to a GameConfig object
         let gameConfig = config ? <GameConfig>config : new GameConfig();
 
-        this.maxFPS = 60;
-        this.simulationTimestep = Math.floor(1000/this.maxFPS);
+        this.maxUpdateFPS = 60;
+        this.simulationTimestep = Math.floor(1000/this.maxUpdateFPS);
+        this.frameDelta = 0;
+        this.lastFrameTime = 0;
+        this.minFrameDelay = 0;
         this.frame = 0;
-        this.runningFrameSum = 0;
-        this.numFramesInSum = 0;
-        this.maxFramesInSum = 30;
-        this.fps = this.maxFPS;
-
+        this.fps = this.maxUpdateFPS;   // Initialize the fps to the max allowed fps
+        this.fpsUpdateInterval = 1000;
+        this.lastFpsUpdate = 0;
+        this.framesSinceLastFpsUpdate = 0;
         this.started = false;
         this.running = false;
+        this.panic = false;
+        this.numUpdateSteps = 0;
+
+        // Set the max fps to 60fps
+        // this.setMaxFPS(60);
 
         // Get the game canvas and give it a background color
         this.GAME_CANVAS = <HTMLCanvasElement>document.getElementById("game-canvas");
@@ -103,9 +130,13 @@ export default class GameLoop {
      * Changes the maximum allowed physics framerate of the game
      * @param initMax 
      */
-    setMaxFPS(initMax: number): void {
-        this.maxFPS = initMax;
-        this.simulationTimestep = Math.floor(1000/this.maxFPS);
+    setMaxUpdateFPS(initMax: number): void {
+        this.maxUpdateFPS = initMax;
+        this.simulationTimestep = Math.floor(1000/this.maxUpdateFPS);
+    }
+
+    setMaxFPS(maxFPS: number): void {
+        this.minFrameDelay = 1000/maxFPS;
     }
 
     getSceneManager(): SceneManager {
@@ -116,15 +147,10 @@ export default class GameLoop {
      * Updates the frame count and sum of time for the framerate of the game
      * @param timestep 
      */
-    private updateFrameCount(timestep: number): void {
-        this.frame += 1;
-        this.numFramesInSum += 1;
-        this.runningFrameSum += timestep;
-        if(this.numFramesInSum >= this.maxFramesInSum){
-            this.fps = 1000 * this.numFramesInSum / this.runningFrameSum;
-            this.numFramesInSum = 0;
-            this.runningFrameSum = 0;
-        }
+    private updateFPS(timestamp: number): void {
+        this.fps = 0.9 * this.framesSinceLastFpsUpdate * 1000 / (timestamp - this.lastFpsUpdate) +(1 - 0.9) * this.fps;
+        this.lastFpsUpdate = timestamp;
+        this.framesSinceLastFpsUpdate = 0;
 
         Debug.log("fps", "FPS: " + this.fps.toFixed(1));
     }
@@ -150,6 +176,8 @@ export default class GameLoop {
         this.render();
 
         this.lastFrameTime = timestamp;
+        this.lastFpsUpdate = timestamp;
+        this.framesSinceLastFpsUpdate = 0;
 
         window.requestAnimationFrame(this.doFrame);
     }
@@ -163,13 +191,21 @@ export default class GameLoop {
         window.requestAnimationFrame(this.doFrame);
 
         // If we are trying to update too soon, return and do nothing
-        if(timestamp < this.lastFrameTime + this.simulationTimestep){
+        if(timestamp < this.lastFrameTime + this.minFrameDelay){
             return
         }
 
         // Currently, update and draw are synced - eventually it would probably be good to desync these
-        this.frameDelta = timestamp - this.lastFrameTime;
+        this.frameDelta += timestamp - this.lastFrameTime;
         this.lastFrameTime = timestamp;
+
+        // Update the estimate of the framerate
+        if(timestamp > this.lastFpsUpdate + this.fpsUpdateInterval){
+            this.updateFPS(timestamp);
+        }
+
+        this.frame++;
+        this.framesSinceLastFpsUpdate++;
 
         // Update while we can (This will present problems if we leave the window)
         this.numUpdateSteps = 0;
@@ -181,9 +217,6 @@ export default class GameLoop {
             if(this.numUpdateSteps > 100){
                 this.panic = true;
             }
-
-            // Update the frame of the game
-            this.updateFrameCount(this.simulationTimestep);
         }
 
         // Updates are done, draw

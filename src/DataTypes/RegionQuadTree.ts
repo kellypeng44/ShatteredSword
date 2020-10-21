@@ -45,12 +45,25 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         this.capacity = capacity ? capacity : 10;
         
         // If we're at the bottom of the tree, don't set a max size
-        if(this.maxDepth === 0){
+        if(this.maxDepth === 1){
             this.capacity = Infinity;
         }
 
         this.divided = false;
         this.items = new Array();
+
+        // Create all of the children for this quadtree if there are any
+        if(this.maxDepth > 1){
+            let x = this.boundary.x;
+            let y = this.boundary.y;
+            let hw = this.boundary.hw;
+            let hh = this.boundary.hh;
+
+            this.nw = new QuadTree(new Vec2(x-hw/2, y-hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
+            this.ne = new QuadTree(new Vec2(x+hw/2, y-hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
+            this.sw = new QuadTree(new Vec2(x-hw/2, y+hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
+            this.se = new QuadTree(new Vec2(x+hw/2, y+hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
+        }
     }
 
     /**
@@ -71,7 +84,6 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
                 // We aren't divided, but are at capacity - divide
                 this.subdivide();
                 this.deferInsert(item);
-                this.divided = true;
             }
         }
     }
@@ -173,16 +185,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
      * Divides this quadtree up into 4 smaller ones - called through insert.
      */
     protected subdivide(): void {
-        let x = this.boundary.x;
-        let y = this.boundary.y;
-        let hw = this.boundary.hw;
-        let hh = this.boundary.hh;
-
-        this.nw = new QuadTree(new Vec2(x-hw/2, y-hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
-        this.ne = new QuadTree(new Vec2(x+hw/2, y-hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
-        this.sw = new QuadTree(new Vec2(x-hw/2, y+hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
-        this.se = new QuadTree(new Vec2(x+hw/2, y+hh/2), new Vec2(hw/2, hh/2), this.maxDepth - 1, this.capacity);
-
+        this.divided = true;
         this.distributeItems();
     }
 
@@ -239,11 +242,16 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         }
     }
 
+    /**
+     * Clear the items in this quadtree
+     */
     clear(): void {
-        delete this.nw;
-        delete this.ne;
-        delete this.sw;
-        delete this.se;
+        if(this.nw){
+            this.nw.clear();
+            this.ne.clear();
+            this.sw.clear();
+            this.se.clear();
+        }
 
         for(let item in this.items){
             delete this.items[item];

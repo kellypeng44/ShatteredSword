@@ -32,7 +32,7 @@ export default class BoidDemo extends Scene {
         this.viewport.enableZoom();
 
         // Create a bunch of boids
-        for(let i = 0; i < 100; i++){
+        for(let i = 0; i < 200; i++){
             let boid = this.add.graphic(Boid, layer, new Vec2(this.worldSize.x*Math.random(), this.worldSize.y*Math.random()));
             boid.fb = new FlockBehavior(this, boid, this.boids, 75, 50);
             boid.setSize(5, 5);
