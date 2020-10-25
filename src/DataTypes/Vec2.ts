@@ -46,6 +46,8 @@ export default class Vec2 {
 		return new Vec2(0, 0);
 	}
 
+	static readonly ZERO_STATIC = new Vec2(0, 0);
+
 	static get INF() {
 		return new Vec2(Infinity, Infinity);
 	}

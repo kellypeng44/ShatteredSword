@@ -1,4 +1,4 @@
-import AABB from "../../DataTypes/AABB";
+import AABB from "../../DataTypes/Shapes/AABB";
 import Vec2 from "../../DataTypes/Vec2";
 import Point from "../../Nodes/Graphics/Point";
 import Scene from "../../Scene/Scene";
@@ -21,14 +21,14 @@ export default class FlockBehavior {
         this.actor = actor;
         this.flock = flock;
 
-        this.visibleRegion = new AABB(this.actor.getPosition().clone(), new Vec2(visionRange, visionRange));
+        this.visibleRegion = new AABB(this.actor.position.clone(), new Vec2(visionRange, visionRange));
         this.avoidRadius = avoidRadius;
     }
 
     update(): void {
         
         // Update the visible region
-        this.visibleRegion.setCenter(this.actor.getPosition().clone());
+        this.visibleRegion.center.copy(this.actor.position);
 
         let neighbors = this.scene.getSceneGraph().getNodesInRegion(this.visibleRegion);
 
@@ -46,7 +46,7 @@ export default class FlockBehavior {
         }
 
         // Draw a group
-        if(this.actor.getId() < 1){
+        if(this.actor.id < 1){
             this.actor.setColor(Color.GREEN);
             for(let neighbor of neighbors){
                 if(neighbor === this.actor) continue;

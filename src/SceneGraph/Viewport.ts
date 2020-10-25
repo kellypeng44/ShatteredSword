@@ -3,7 +3,7 @@ import GameNode from "../Nodes/GameNode";
 import CanvasNode from "../Nodes/CanvasNode";
 import MathUtils from "../Utils/MathUtils";
 import Queue from "../DataTypes/Queue";
-import AABB from "../DataTypes/AABB";
+import AABB from "../DataTypes/Shapes/AABB";
 import Debug from "../Debug/Debug";
 import InputReceiver from "../Input/InputReceiver";
 
@@ -43,11 +43,11 @@ export default class Viewport {
      * Returns the position of the viewport as a Vec2
      */
     getCenter(): Vec2 {
-        return this.view.getCenter();
+        return this.view.center;
     }
 
     getOrigin(): Vec2 {
-        return this.view.getCenter().clone().sub(this.view.getHalfSize())
+        return this.view.center.clone().sub(this.view.halfSize)
     }
 
     /**
@@ -134,10 +134,10 @@ export default class Viewport {
      */
     includes(node: CanvasNode): boolean {
         let parallax = node.getLayer().getParallax();
-        let center = this.view.getCenter().clone();
-        this.view.getCenter().mult(parallax);
-        let overlaps = this.view.overlaps(node.getBoundary());
-        this.view.setCenter(center);
+        let center = this.view.center.clone();
+        this.view.center.mult(parallax);
+        let overlaps = this.view.overlaps(node.boundary);
+        this.view.center = center
         return overlaps;
     }
 
@@ -155,8 +155,8 @@ export default class Viewport {
         let hheight = (upperY - lowerY)/2;
         let x = lowerX + hwidth;
         let y = lowerY + hheight;
-        this.boundary.setCenter(new Vec2(x, y));
-        this.boundary.setHalfSize(new Vec2(hwidth, hheight));
+        this.boundary.center.set(x, y);
+        this.boundary.halfSize.set(hwidth, hheight);
     }
 
     /**
@@ -202,7 +202,7 @@ export default class Viewport {
         // If viewport is following an object
         if(this.following){
             // Update our list of previous positions
-            this.lastPositions.enqueue(this.following.getPosition().clone());
+            this.lastPositions.enqueue(this.following.position.clone());
             if(this.lastPositions.getSize() > this.smoothingFactor){
                 this.lastPositions.dequeue();
             }
@@ -222,7 +222,7 @@ export default class Viewport {
 
             Debug.log("vp", "Viewport pos: " + pos.toString())
             
-            this.view.setCenter(pos);
+            this.view.center.copy(pos);
         } else {
             if(this.lastPositions.getSize() > this.smoothingFactor){
                 this.lastPositions.dequeue();
@@ -241,7 +241,7 @@ export default class Viewport {
             pos.y = Math.floor(pos.y);
 
             Debug.log("vp", "Viewport pos: " + pos.toString())
-            this.view.setCenter(pos);
+            this.view.center.copy(pos);
         }
     }
 }

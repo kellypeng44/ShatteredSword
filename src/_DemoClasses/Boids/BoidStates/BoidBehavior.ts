@@ -69,7 +69,7 @@ export default class BoidBehavior extends State {
             speed = MathUtils.clamp(speed, BoidBehavior.MIN_SPEED, BoidBehavior.MAX_SPEED);
             this.actor.velocity.scale(speed);
 
-            if(this.actor.getId() < 1){
+            if(this.actor.id < 1){
                 Debug.log("BoidSep", "Separation: " + separationForce.toString());
                 Debug.log("BoidAl", "Alignment: " + alignmentForce.toString());
                 Debug.log("BoidCo", "Cohesion: " + cohesionForce.toString());
@@ -77,7 +77,7 @@ export default class BoidBehavior extends State {
             }
         }
 
-        if(this.actor.getId() < 1){
+        if(this.actor.id < 1){
             Debug.log("BoidDir", "Velocity: " + this.actor.velocity.toString());
         }
 

@@ -18,11 +18,11 @@ export default class OrthogonalTilemap extends Tilemap {
         this.tileSize.set(tilemapData.tilewidth, tilemapData.tileheight);
         this.data = layer.data;
         this.visible = layer.visible;
-        this.collidable = false;
+        this.isCollidable = false;
         if(layer.properties){
             for(let item of layer.properties){
                 if(item.name === "Collidable"){
-                    this.collidable = item.value;
+                    this.isCollidable = item.value;
                 }
             }
         }
@@ -64,7 +64,7 @@ export default class OrthogonalTilemap extends Tilemap {
         }
 
         // TODO - Currently, all tiles in a collidable layer are collidable
-        return this.data[index] !== 0 && this.collidable;
+        return this.data[index] !== 0 && this.isCollidable;
     }
 
     /**

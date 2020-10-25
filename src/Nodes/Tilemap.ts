@@ -13,7 +13,6 @@ export default abstract class Tilemap extends GameNode {
     protected tileSize: Vec2;
     protected scale: Vec2;
     public data: Array<number>;
-	public collidable: boolean;
 	public visible: boolean;
 
     // TODO: Make this no longer be specific to Tiled
@@ -48,12 +47,13 @@ export default abstract class Tilemap extends GameNode {
         this.scale = scale;
     }
 
-    isCollidable(): boolean {
-        return this.collidable;
-    }
-
     isVisible(): boolean {
         return this.visible;
+    }
+
+    /** Adds this tilemaps to the physics system */
+    addPhysics = (): void => {
+        this.scene.getPhysicsManager().registerTilemap(this);
     }
 
     abstract getTileAt(worldCoords: Vec2): number;

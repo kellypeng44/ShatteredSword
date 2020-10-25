@@ -4,11 +4,11 @@ import { Updateable } from "../Interfaces/Descriptors";
 import StateMachine from "./StateMachine";
 
 export default abstract class State implements Updateable {
-    protected parentStateMachine: StateMachine;
+    protected parent: StateMachine;
     protected emitter: Emitter;
 
     constructor(parent: StateMachine) {
-        this.parentStateMachine = parent;
+        this.parent = parent;
         this.emitter = new Emitter();
     }
 
@@ -30,7 +30,7 @@ export default abstract class State implements Updateable {
      * @param stateName The name of the state to transition to
      */
     protected finished(stateName: string): void {
-        this.parentStateMachine.changeState(stateName);
+        this.parent.changeState(stateName);
     }
 
     /**

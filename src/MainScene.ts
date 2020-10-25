@@ -1,6 +1,4 @@
 import Scene from "./Scene/Scene";
-import OrthogonalTilemap from "./Nodes/Tilemaps/OrthogonalTilemap";
-import Player from "./Player";
 import Rect from "./Nodes/Graphics/Rect";
 import Color from "./Utils/Color";
 import Vec2 from "./DataTypes/Vec2";
@@ -10,6 +8,7 @@ import Layer from "./Scene/Layer";
 import SecondScene from "./SecondScene";
 import { GameEventType } from "./Events/GameEventType";
 import SceneGraphQuadTree from "./SceneGraph/SceneGraphQuadTree";
+import PlayerController from "./_DemoClasses/Player/PlayerStates/Platformer/PlayerController";
 
 export default class MainScene extends Scene {
 
@@ -27,7 +26,7 @@ export default class MainScene extends Scene {
         bar.setColor(new Color(0, 200, 200));
 
         this.load.onLoadProgress = (percentProgress: number) => {
-            bar.setSize(295 * percentProgress, bar.getSize().y);
+            bar.size.x = 295 * percentProgress;
         }
 
         this.load.onLoadComplete = () => {
@@ -58,40 +57,38 @@ export default class MainScene extends Scene {
         let mainLayer = this.addLayer();
 
         // Add a player
-        let player = this.add.physics(Player, mainLayer, "platformer");
         let playerSprite = this.add.sprite("player", mainLayer)
-        player.setSprite(playerSprite);
-        playerSprite.position = player.position.clone();
-        playerSprite.setSize(new Vec2(64, 64));
+        playerSprite.position.set(0, 0);
+        playerSprite.size.set(64, 64);
 
-        this.viewport.follow(player);
+        this.viewport.follow(playerSprite);
 
         // Initialize UI
         let uiLayer = this.addLayer();
         uiLayer.setParallax(0, 0);
 
         let recordButton = this.add.uiElement(Button, uiLayer);
-        recordButton.setSize(100, 50);
+        recordButton.size.set(100, 50);
         recordButton.setText("Record");
-        recordButton.setPosition(400, 30);
+        recordButton.position.set(400, 30);
         recordButton.onClickEventId = GameEventType.START_RECORDING;
 
         let stopButton = this.add.uiElement(Button, uiLayer);
-        stopButton.setSize(100, 50);
+        stopButton.size.set(100, 50);
         stopButton.setText("Stop");
-        stopButton.setPosition(550, 30);
+        stopButton.position.set(550, 30);
         stopButton.onClickEventId = GameEventType.STOP_RECORDING;
 
         let playButton = this.add.uiElement(Button, uiLayer);
-        playButton.setSize(100, 50);
+        playButton.size.set(100, 50);
         playButton.setText("Play");
-        playButton.setPosition(700, 30);
+        playButton.position.set(700, 30);
         playButton.onClickEventId = GameEventType.PLAY_RECORDING;
 
         let cycleFramerateButton = this.add.uiElement(Button, uiLayer);
-        cycleFramerateButton.setSize(150, 50);
+        cycleFramerateButton.size.set(150, 50);
         cycleFramerateButton.setText("Cycle FPS");
-        cycleFramerateButton.setPosition(5, 400);
+        cycleFramerateButton.position.set(5, 400);
         let i = 0;
         let fps = [15, 30, 60];
         cycleFramerateButton.onClick = () => {
@@ -105,32 +102,32 @@ export default class MainScene extends Scene {
         pauseLayer.disable();
 
         let pauseButton = this.add.uiElement(Button, uiLayer);
-        pauseButton.setSize(100, 50);
+        pauseButton.size.set(100, 50);
         pauseButton.setText("Pause");
-        pauseButton.setPosition(700, 400);
+        pauseButton.position.set(700, 400);
         pauseButton.onClick = () => {
             this.sceneGraph.getLayers().forEach((layer: Layer) => layer.setPaused(true));
             pauseLayer.enable();
         }
 
         let modalBackground = this.add.uiElement(UIElement, pauseLayer);
-        modalBackground.setSize(400, 200);
+        modalBackground.size.set(400, 200);
         modalBackground.setBackgroundColor(new Color(0, 0, 0, 0.4));
-        modalBackground.setPosition(200, 100);
+        modalBackground.position.set(200, 100);
 
         let resumeButton = this.add.uiElement(Button, pauseLayer);
-        resumeButton.setSize(100, 50);
+        resumeButton.size.set(100, 50);
         resumeButton.setText("Resume");
-        resumeButton.setPosition(360, 150);
+        resumeButton.position.set(360, 150);
         resumeButton.onClick = () => {
             this.sceneGraph.getLayers().forEach((layer: Layer) => layer.setPaused(false));
             pauseLayer.disable();
         }
 
         let switchButton = this.add.uiElement(Button, pauseLayer);
-        switchButton.setSize(140, 50);
+        switchButton.size.set(140, 50);
         switchButton.setText("Change Scene");
-        switchButton.setPosition(340, 190);
+        switchButton.position.set(340, 190);
         switchButton.onClick = () => {
             this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
             this.sceneManager.changeScene(SecondScene);

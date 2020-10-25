@@ -1,10 +1,11 @@
 import StateMachine from "../../DataTypes/State/StateMachine";
 import { CustomGameEventType } from "../CustomGameEventType";
-import Goomba from "../MarioClone/Goomba";
 import Idle from "../Enemies/Idle";
 import Jump from "../Enemies/Jump";
 import Walk from "../Enemies/Walk";
 import Debug from "../../Debug/Debug";
+import GameNode from "../../Nodes/GameNode";
+import Vec2 from "../../DataTypes/Vec2";
 
 export enum GoombaStates {
 	IDLE = "idle",
@@ -14,10 +15,13 @@ export enum GoombaStates {
 }
 
 export default class GoombaController extends StateMachine {
-	owner: Goomba;
+	owner: GameNode;
 	jumpy: boolean;
+	direction: Vec2 = Vec2.ZERO;
+	velocity: Vec2 = Vec2.ZERO;
+	speed: number = 200;
 
-	constructor(owner: Goomba, jumpy: boolean){
+	constructor(owner: GameNode, jumpy: boolean){
 		super();
 
 		this.owner = owner;

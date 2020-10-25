@@ -3,21 +3,21 @@ import OnGround from "./OnGround";
 
 export default class Walk extends OnGround {
 	onEnter(): void {
-		if(this.owner.direction.isZero()){
-			this.owner.direction = new Vec2(-1, 0);
+		if(this.parent.direction.isZero()){
+			this.parent.direction = new Vec2(-1, 0);
 		}
 	}
 
 	update(deltaT: number): void {
 		super.update(deltaT);
 
-		if(this.owner.isOnWall()){
+		if(this.owner.onWall){
 			// Flip around
-			this.owner.direction.x *= -1;
+			this.parent.direction.x *= -1;
 		}
 
-		this.owner.velocity.x = this.owner.direction.x * this.owner.speed;
+		this.parent.velocity.x = this.parent.direction.x * this.parent.speed;
 
-		this.owner.move(this.owner.velocity.scaled(deltaT));
+		this.owner.move(this.parent.velocity.scaled(deltaT));
 	}
 }

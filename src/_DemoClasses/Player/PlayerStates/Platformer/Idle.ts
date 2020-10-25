@@ -4,7 +4,7 @@ import PlayerState from "./PlayerState";
 
 export default class Idle extends OnGround {
 	onEnter(): void {
-		this.owner.speed = this.owner.MIN_SPEED;
+		this.parent.speed = this.parent.MIN_SPEED;
 	}
 
 	update(deltaT: number): void {
@@ -20,8 +20,8 @@ export default class Idle extends OnGround {
 			}
 		}
 		
-		this.owner.velocity.x = 0;
+		this.parent.velocity.x = 0;
 
-		this.owner.move(this.owner.velocity.scaled(deltaT));
+		this.owner.move(this.parent.velocity.scaled(deltaT));
 	}
 }

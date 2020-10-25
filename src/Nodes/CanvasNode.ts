@@ -1,7 +1,7 @@
 import GameNode from "./GameNode";
 import Vec2 from "../DataTypes/Vec2";
 import { Region } from "../DataTypes/Interfaces/Descriptors";
-import AABB from "../DataTypes/AABB";
+import AABB from "../DataTypes/Shapes/AABB";
 
 /**
  * The representation of an object in the game world that can be drawn to the screen
@@ -9,7 +9,7 @@ import AABB from "../DataTypes/AABB";
 export default abstract class CanvasNode extends GameNode implements Region {
 	private _size: Vec2;
 	private _scale: Vec2;
-	private boundary: AABB;
+	private _boundary: AABB;
 
 	constructor(){
 		super();
@@ -18,7 +18,7 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		this._size.setOnChange(this.sizeChanged);
 		this._scale = new Vec2(1, 1);
 		this._scale.setOnChange(this.scaleChanged);
-		this.boundary = new AABB();
+		this._boundary = new AABB();
 		this.updateBoundary();
 	}
 
@@ -42,34 +42,11 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		this.scaleChanged();
 	}
 
-	getSize(): Vec2 {
-		return this.size.clone();
-	}
-
-	setSize(vecOrX: Vec2 | number, y: number = null): void {
-		if(vecOrX instanceof Vec2){
-			this.size.set(vecOrX.x, vecOrX.y);
-		} else {
-			this.size.set(vecOrX, y);
-		}
-	}
-
-	/**
-     * Returns the scale of the sprite
-     */
-    getScale(): Vec2 {
-        return this.scale.clone();
-    }
-
-    /**
-     * Sets the scale of the sprite to the value provided
-     * @param scale 
-     */
-    setScale(scale: Vec2): void {
-		this.scale = scale;
-    }
 
 	protected positionChanged = (): void => {
+		if(this.hasPhysics){
+			this.collisionShape.center = this.position;
+		}
 		this.updateBoundary();
 	}
 
@@ -82,12 +59,12 @@ export default abstract class CanvasNode extends GameNode implements Region {
 	}
 
 	private updateBoundary(): void {
-		this.boundary.setCenter(this.position.clone());
-		this.boundary.setHalfSize(this.size.clone().mult(this.scale).scale(1/2));
+		this._boundary.center.set(this.position.x, this.position.y);
+		this._boundary.halfSize.set(this.size.x*this.scale.x/2, this.size.y*this.scale.y/2);
 	}
 
-	getBoundary(): AABB {
-		return this.boundary;
+	get boundary(): AABB {
+		return this._boundary;
 	}
 
 	/**
@@ -96,7 +73,7 @@ export default abstract class CanvasNode extends GameNode implements Region {
 	 * @param y 
 	 */
 	contains(x: number, y: number): boolean {
-		return this.boundary.containsPoint(new Vec2(x, y));
+		return this._boundary.containsPoint(new Vec2(x, y));
 	}
 
 	abstract render(ctx: CanvasRenderingContext2D): void;

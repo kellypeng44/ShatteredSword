@@ -39,7 +39,7 @@
 
         "src/Physics/Colliders/AABB.ts",
         "src/Physics/Colliders/Collider.ts",
-        "src/Physics/PhysicsManager.ts",
+        "src/Physics/PhysicsManager_Old.ts",
         "src/Physics/PhysicsNode.ts",
 
         "src/Playback/Recorder.ts",

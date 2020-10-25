@@ -4,7 +4,7 @@ import Viewport from "./Viewport";
 import Scene from "../Scene/Scene";
 import RegionQuadTree from "../DataTypes/RegionQuadTree";
 import Vec2 from "../DataTypes/Vec2";
-import AABB from "../DataTypes/AABB";
+import AABB from "../DataTypes/Shapes/AABB";
 import Stats from "../Debug/Stats";
 
 export default class SceneGraphQuadTree extends SceneGraph {
@@ -80,8 +80,7 @@ export default class SceneGraphQuadTree extends SceneGraph {
         // Sort by depth, then by visible set by y-value
         visibleSet.sort((a, b) => {
             if(a.getLayer().getDepth() === b.getLayer().getDepth()){
-                return (a.getPosition().y + a.getSize().y*a.getScale().y)
-                - (b.getPosition().y + b.getSize().y*b.getScale().y);
+                return (a.boundary.bottom) - (b.boundary.bottom);
             } else {
                 return a.getLayer().getDepth() - b.getLayer().getDepth();
             }

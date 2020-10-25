@@ -35,7 +35,7 @@ export default class BoidDemo extends Scene {
         for(let i = 0; i < 150; i++){
             let boid = this.add.graphic(Boid, layer, new Vec2(this.worldSize.x*Math.random(), this.worldSize.y*Math.random()));
             boid.fb = new FlockBehavior(this, boid, this.boids, 75, 50);
-            boid.setSize(5, 5);
+            boid.size.set(5, 5);
             this.boids.push(boid);
         }
     }

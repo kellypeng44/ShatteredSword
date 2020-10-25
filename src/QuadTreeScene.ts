@@ -1,5 +1,4 @@
 import Scene from "./Scene/Scene";
-import { GameEventType } from "./Events/GameEventType"
 import Point from "./Nodes/Graphics/Point";
 import Rect from "./Nodes/Graphics/Rect";
 import Layer from "./Scene/Layer";
@@ -7,9 +6,6 @@ import SceneGraphQuadTree from "./SceneGraph/SceneGraphQuadTree"
 import Vec2 from "./DataTypes/Vec2";
 import InputReceiver from "./Input/InputReceiver";
 import Color from "./Utils/Color";
-import CanvasNode from "./Nodes/CanvasNode";
-import Graphic from "./Nodes/Graphic";
-import RandUtils from "./Utils/RandUtils";
 
 export default class QuadTreeScene extends Scene {
 
@@ -41,14 +37,14 @@ export default class QuadTreeScene extends Scene {
     }
 
     updateScene(deltaT: number): void {
-        this.view.setPosition(InputReceiver.getInstance().getGlobalMousePosition());
+        this.view.position.copy(InputReceiver.getInstance().getGlobalMousePosition());
         for(let point of this.points){
             point.setColor(Color.RED);
             
             point.position.add(Vec2.UP.rotateCCW(Math.random()*2*Math.PI).add(point.position.vecTo(this.view.position).normalize().scale(0.1)));
         }
 
-        let results = this.sceneGraph.getNodesInRegion(this.view.getBoundary());
+        let results = this.sceneGraph.getNodesInRegion(this.view.boundary);
 
         for(let result of results){
             if(result instanceof Point){

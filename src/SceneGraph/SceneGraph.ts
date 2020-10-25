@@ -5,7 +5,7 @@ import Vec2 from "../DataTypes/Vec2";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
 import Stack from "../DataTypes/Stack";
-import AABB from "../DataTypes/AABB";
+import AABB from "../DataTypes/Shapes/AABB";
 
 /**
  * An abstract interface of a SceneGraph. Exposes methods for use by other code, but leaves the implementation up to the subclasses.

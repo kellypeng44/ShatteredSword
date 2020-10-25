@@ -1,10 +1,11 @@
 import StateMachine from "../../../../DataTypes/State/StateMachine";
 import Debug from "../../../../Debug/Debug";
-import Player from "../../../MarioClone/Player";
 import Idle from "./Idle";
 import Jump from "./Jump";
 import Walk from "./Walk";
 import Run from "./Run";
+import GameNode from "../../../../Nodes/GameNode";
+import Vec2 from "../../../../DataTypes/Vec2";
 
 export enum PlayerStates {
 	WALK = "walk",
@@ -15,9 +16,13 @@ export enum PlayerStates {
 }
 
 export default class PlayerController extends StateMachine {
-    protected owner: Player;
+	protected owner: GameNode;
+	velocity: Vec2 = Vec2.ZERO;
+	speed: number = 400;
+	MIN_SPEED: number = 400;
+	MAX_SPEED: number = 1000;
 
-    constructor(owner: Player){
+    constructor(owner: GameNode){
         super();
         
 		this.owner = owner;

@@ -4,7 +4,7 @@ import { PlayerStates } from "./PlayerController";
 
 export default class Run extends OnGround {
 	onEnter(): void {
-		this.owner.speed = this.owner.MAX_SPEED;
+		this.parent.speed = this.parent.MAX_SPEED;
 	}
 
 	update(deltaT: number): void {
@@ -20,9 +20,9 @@ export default class Run extends OnGround {
 			}
 		}
 
-		this.owner.velocity.x = dir.x * this.owner.speed
+		this.parent.velocity.x = dir.x * this.parent.speed
 
 		this.emitter.fireEvent(CustomGameEventType.PLAYER_MOVE, {position: this.owner.position.clone()});
-		this.owner.move(this.owner.velocity.scaled(deltaT));
+		this.owner.move(this.parent.velocity.scaled(deltaT));
 	}
 }

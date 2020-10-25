@@ -2,15 +2,17 @@ import State from "../../../../DataTypes/State/State";
 import StateMachine from "../../../../DataTypes/State/StateMachine";
 import Vec2 from "../../../../DataTypes/Vec2";
 import InputReceiver from "../../../../Input/InputReceiver";
-import CanvasNode from "../../../../Nodes/CanvasNode";
-import Player from "../../../MarioClone/Player";
+import GameNode from "../../../../Nodes/GameNode";
+import PlayerController from "./PlayerController";
+
 
 export default abstract class PlayerState extends State {
 	input: InputReceiver = InputReceiver.getInstance();
-	owner: Player;
+	owner: GameNode;
 	gravity: number = 7000;
+	parent: PlayerController;
 
-	constructor(parent: StateMachine, owner: Player){
+	constructor(parent: StateMachine, owner: GameNode){
 		super(parent);
 		this.owner = owner;
 	}
@@ -27,7 +29,7 @@ export default abstract class PlayerState extends State {
 	}
 
 	update(deltaT: number): void {
-		// Do gravity;
-		this.owner.velocity.y += this.gravity*deltaT;
+		// Do gravity
+		this.parent.velocity.y += this.gravity*deltaT;
 	}
 }

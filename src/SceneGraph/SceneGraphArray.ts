@@ -4,7 +4,7 @@ import Viewport from "./Viewport";
 import Scene from "../Scene/Scene";
 import Stack from "../DataTypes/Stack";
 import Layer from "../Scene/Layer"
-import AABB from "../DataTypes/AABB";
+import AABB from "../DataTypes/Shapes/AABB";
 import Stats from "../Debug/Stats";
 
 export default class SceneGraphArray extends SceneGraph{
@@ -50,7 +50,7 @@ export default class SceneGraphArray extends SceneGraph{
         let results = [];
 
         for(let node of this.nodeList){
-            if(boundary.overlaps(node.getBoundary())){
+            if(boundary.overlaps(node.boundary)){
                 results.push(node);
             }
         }
@@ -94,8 +94,7 @@ export default class SceneGraphArray extends SceneGraph{
         // Sort by depth, then by visible set by y-value
         visibleSet.sort((a, b) => {
             if(a.getLayer().getDepth() === b.getLayer().getDepth()){
-                return (a.getPosition().y + a.getSize().y*a.getScale().y)
-                - (b.getPosition().y + b.getSize().y*b.getScale().y);
+                return (a.boundary.bottom) - (b.boundary.bottom);
             } else {
                 return a.getLayer().getDepth() - b.getLayer().getDepth();
             }

@@ -8,16 +8,16 @@ export default class OnGround extends PlayerState {
 	handleInput(event: GameEvent): void {}
 
 	update(deltaT: number): void {
-		if(this.owner.velocity.y > 0){
-			this.owner.velocity.y = 0;
+		if(this.parent.velocity.y > 0){
+			this.parent.velocity.y = 0;
 		}
 		super.update(deltaT);
 
 		if(this.input.isJustPressed("w") || this.input.isJustPressed("space")){
 			this.finished("jump");
-			this.owner.velocity.y = -2000;
+			this.parent.velocity.y = -2000;
 			this.emitter.fireEvent(CustomGameEventType.PLAYER_JUMP)
-		} else if(!this.owner.isGrounded()){
+		} else if(!this.owner.onGround){
 			this.finished("jump");
 		}
 	}

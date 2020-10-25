@@ -1,9 +1,9 @@
-import Stack from "../DataTypes/Stack";
 import Layer from "./Layer";
 import Viewport from "../SceneGraph/Viewport";
 import Vec2 from "../DataTypes/Vec2";
 import SceneGraph from "../SceneGraph/SceneGraph";
 import PhysicsManager from "../Physics/PhysicsManager";
+import BasicPhysicsManager from "../Physics/BasicPhysicsManager";
 import SceneGraphArray from "../SceneGraph/SceneGraphArray";
 import FactoryManager from "./Factories/FactoryManager";
 import Tilemap from "../Nodes/Tilemap";
@@ -12,32 +12,41 @@ import GameLoop from "../Loop/GameLoop";
 import SceneManager from "./SceneManager";
 import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
+import { Renderable, Updateable } from "../DataTypes/Interfaces/Descriptors";
 
-export default class Scene{
+export default class Scene implements Updateable, Renderable {
+    /** The size of the game world. */
     protected worldSize: Vec2;
+
+    /** The viewport. */
     protected viewport: Viewport;
+
+    /** A flag that represents whether this scene is running or not. */
     protected running: boolean;
+
+    /** The overall game loop. */
     protected game: GameLoop;
+
+    /** The manager of this scene. */
     protected sceneManager: SceneManager;
+
+    /** The receiver for this scene. */
     protected receiver: Receiver;
+
+    /** The emitter for this scene. */
     protected emitter: Emitter;
 
+    /** This list of tilemaps in this scene. */
     protected tilemaps: Array<Tilemap>;
 
-    /**
-     * The scene graph of the Scene - can be exchanged with other SceneGraphs for more variation
-     */
+    /** The scene graph of the Scene*/
     protected sceneGraph: SceneGraph;
     protected physicsManager: PhysicsManager;
     
-    /**
-    * An interface that allows the adding of different nodes to the scene
-    */
+    /** An interface that allows the adding of different nodes to the scene */
     public add: FactoryManager;
 
-    /**
-     * An interface that allows the loading of different files for use in the scene
-     */
+    /** An interface that allows the loading of different files for use in the scene */
     public load: ResourceManager;
 
     constructor(viewport: Viewport, sceneManager: SceneManager, game: GameLoop){
@@ -52,40 +61,28 @@ export default class Scene{
 
         this.tilemaps = new Array();
         this.sceneGraph = new SceneGraphArray(this.viewport, this);
-        this.physicsManager = new PhysicsManager();
-
+        this.physicsManager = new BasicPhysicsManager();
 
         this.add = new FactoryManager(this, this.physicsManager, this.tilemaps);
-
 
         this.load = ResourceManager.getInstance();
     }
 
-    /**
-     * A function that gets called when a new scene is created. Load all files you wish to access in the scene here.
-     */
+    /** A lifecycle method that gets called when a new scene is created. Load all files you wish to access in the scene here. */
     loadScene(): void {}
 
-    /**
-     * A function that gets called on scene destruction. Specify which files you no longer need for garbage collection.
-     */
+    /** A lifecycle method that gets called on scene destruction. Specify which files you no longer need for garbage collection. */
     unloadScene(): void {}
 
-    /**
-     * Called strictly after loadScene() is called. Create any game objects you wish to use in the scene here.
-     */
+    /** A lifecycle method called strictly after loadScene(). Create any game objects you wish to use in the scene here. */
     startScene(): void {}
 
     /**
-     * Called every frame of the game. This is where you can dynamically do things like add in new enemies
+     * A lifecycle method called every frame of the game. This is where you can dynamically do things like add in new enemies
      * @param delta 
      */
     updateScene(deltaT: number): void {}
 
-    /**
-     * Updates all scene elements
-     * @param deltaT 
-     */
     update(deltaT: number): void {
         this.updateScene(deltaT);
 
@@ -106,10 +103,6 @@ export default class Scene{
         this.viewport.update(deltaT);
     }
 
-    /**
-     * Render all CanvasNodes and Tilemaps in the Scene
-     * @param ctx 
-     */
     render(ctx: CanvasRenderingContext2D): void {
         // For webGL, pass a visible set to the renderer
         // We need to keep track of the order of things.
@@ -127,7 +120,7 @@ export default class Scene{
         visibleSet.forEach(node => node.render(ctx));
 
         // Debug render the physicsManager
-        this.physicsManager.render(ctx);
+        this.physicsManager.debug_render(ctx);
     }
 
     setRunning(running: boolean): void {
@@ -145,9 +138,7 @@ export default class Scene{
         return this.sceneGraph.addLayer();
     }
 
-    /**
-     * Returns the viewport associated with this scene
-     */
+    /** Returns the viewport associated with this scene */
     getViewport(): Viewport {
         return this.viewport;
     }
@@ -158,6 +149,10 @@ export default class Scene{
 
     getSceneGraph(): SceneGraph {
         return this.sceneGraph;
+    }
+
+    getPhysicsManager(): PhysicsManager {
+        return this.physicsManager;
     }
 
     generateId(): number {

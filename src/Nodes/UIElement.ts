@@ -201,7 +201,7 @@ export default class UIElement extends CanvasNode {
 
 		ctx.lineWidth = 4;
         ctx.strokeStyle = "#00FF00"
-        let b = this.getBoundary();
+        let b = this.boundary;
         ctx.strokeRect(b.x - b.hw - origin.x, b.y - b.hh - origin.y, b.hw*2, b.hh*2);
 	}
 }

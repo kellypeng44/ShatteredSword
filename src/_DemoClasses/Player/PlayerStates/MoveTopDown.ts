@@ -39,7 +39,7 @@ export default class MoveTopDown extends State {
 
         // Otherwise, we are still moving, so update position
         let velocity = this.direction.normalize().scale(this.speed);
-        this.owner.position.add(velocity.scale(deltaT));
+        this.owner.move(velocity.scale(deltaT));
 
         // Emit an event to tell the world we are moving
         this.emitter.fireEvent(CustomGameEventType.PLAYER_MOVE, {position: this.owner.position.clone()});

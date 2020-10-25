@@ -1,6 +1,6 @@
 import Vec2 from "./Vec2";
 import Collection from "./Collection";
-import AABB from "./AABB"
+import AABB from "./Shapes/AABB"
 import { Region, Unique } from "./Interfaces/Descriptors";
 import Map from "./Map";
 import Stats from "../Debug/Stats";
@@ -74,7 +74,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
      */
     insert(item: T): void {
         // If the item is inside of the bounds of this quadtree
-        if(this.boundary.overlaps(item.getBoundary())){
+        if(this.boundary.overlaps(item.boundary)){
             if(this.divided){
                 // Defer to the children
                 this.deferInsert(item);
@@ -124,9 +124,9 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         } else {
             // Otherwise, return a set of the items
             for(let item of this.items){
-                let id = item.getId().toString();
+                let id = item.id.toString();
                 // If the item hasn't been found yet and it contains the point
-                if(!uniqueMap.has(id) && item.getBoundary().containsPoint(point)){
+                if(!uniqueMap.has(id) && item.boundary.containsPoint(point)){
                     // Add it to our found points
                     uniqueMap.add(id, item);
                     results.push(item);
@@ -182,10 +182,10 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
                 // }
 
                 // Maybe this is better? Just use a boolean array with no string nonsense?
-                if(item.getId() >= uniqueMap.length || !uniqueMap[item.getId()]){
-                    if(item.getBoundary().overlaps(boundary)){
+                if(item.id >= uniqueMap.length || !uniqueMap[item.id]){
+                    if(item.boundary.overlaps(boundary)){
                         results.push(item);
-                        uniqueMap[item.getId()] = true;
+                        uniqueMap[item.id] = true;
                     }
                 }
             }

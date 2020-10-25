@@ -23,7 +23,7 @@ export default class CanvasNodeFactory {
 
 		// Add instance to scene
 		instance.setScene(this.scene);
-		instance.setId(this.scene.generateId());
+		instance.id = this.scene.generateId();
 		this.scene.getSceneGraph().addNode(instance);
 
 		// Add instance to layer
@@ -42,7 +42,7 @@ export default class CanvasNodeFactory {
 
 		// Add instance to scene
 		instance.setScene(this.scene);
-		instance.setId(this.scene.generateId());
+		instance.id = this.scene.generateId();
 		this.scene.getSceneGraph().addNode(instance);
 
 		// Add instance to layer
@@ -62,7 +62,7 @@ export default class CanvasNodeFactory {
 
 		// Add instance to scene
 		instance.setScene(this.scene);
-		instance.setId(this.scene.generateId());
+		instance.id = this.scene.generateId();
 		this.scene.getSceneGraph().addNode(instance);
 
 		// Add instance to layer

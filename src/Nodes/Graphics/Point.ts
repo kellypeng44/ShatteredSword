@@ -6,7 +6,7 @@ export default class Point extends Graphic {
     constructor(position: Vec2){
         super();
         this.position = position;
-        this.setSize(5, 5);
+        this.size.set(5, 5);
     }
 
     update(deltaT: number): void {}

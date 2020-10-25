@@ -14,20 +14,20 @@ export default class Jump extends PlayerState {
 	update(deltaT: number): void {
 		super.update(deltaT);
 
-		if(this.owner.isGrounded()){
+		if(this.owner.onGround){
 			this.finished(PlayerStates.PREVIOUS);
 		}
 
-		if(this.owner.isOnCeiling()){
-			this.owner.velocity.y = 0;
+		if(this.owner.onCeiling){
+			this.parent.velocity.y = 0;
 		}
 		
 		let dir = this.getInputDirection();
 
-		this.owner.velocity.x += dir.x * this.owner.speed/3.5 - 0.3*this.owner.velocity.x;
+		this.parent.velocity.x += dir.x * this.parent.speed/3.5 - 0.3*this.parent.velocity.x;
 
 		this.emitter.fireEvent(CustomGameEventType.PLAYER_MOVE, {position: this.owner.position.clone()});
-		this.owner.move(this.owner.velocity.scaled(deltaT));
+		this.owner.move(this.parent.velocity.scaled(deltaT));
 	}
 
 	onExit(): void {}

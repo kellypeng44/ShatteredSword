@@ -10,7 +10,7 @@ function main(){
     let game = new GameLoop({canvasSize: {x: 800, y: 600}});
     game.start();
     let sm = game.getSceneManager();
-    sm.addScene(BoidDemo);
+    sm.addScene(MarioClone);
 }
 
 CanvasRenderingContext2D.prototype.roundedRect = function(x: number, y: number, w: number, h: number, r: number): void {

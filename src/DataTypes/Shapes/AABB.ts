@@ -1,11 +1,12 @@
 import Shape from "./Shape";
-import Vec2 from "./Vec2";
-import MathUtils from "../Utils/MathUtils";
+import Vec2 from "../Vec2";
+import MathUtils from "../../Utils/MathUtils";
+import Circle from "./Circle";
 
 export default class AABB extends Shape {
 
-    protected center: Vec2;
-    protected halfSize: Vec2;
+    center: Vec2;
+    halfSize: Vec2;
 
     constructor(center?: Vec2, halfSize?: Vec2){
         super();
@@ -45,16 +46,13 @@ export default class AABB extends Shape {
         return this.x + this.hw;
     }
 
-    getCenter(): Vec2 {
-        return this.center;
-    }
-
-    setCenter(center: Vec2): void {
-        this.center = center;
-    }
-
     getBoundingRect(): AABB {
-        return this;
+        return this.clone();
+    }
+
+    getBoundingCircle(): Circle {
+        let r = Math.max(this.hw, this.hh)
+        return new Circle(this.center.clone(), r);
     }
 
     getHalfSize(): Vec2 {
@@ -126,10 +124,10 @@ export default class AABB extends Shape {
         let signX = MathUtils.sign(scaleX);
         let signY = MathUtils.sign(scaleY);
 
-        let tnearx = scaleX*(this.center.x - signX*(this.halfSize.x + _paddingX) - point.x);
-        let tneary = scaleX*(this.center.y - signY*(this.halfSize.y + _paddingY) - point.y);
-        let tfarx = scaleY*(this.center.x + signX*(this.halfSize.x + _paddingX) - point.x);
-        let tfary = scaleY*(this.center.y + signY*(this.halfSize.y + _paddingY) - point.y);
+        let tnearx = scaleX*(this.x - signX*(this.hw + _paddingX) - point.x);
+        let tneary = scaleX*(this.y - signY*(this.hh + _paddingY) - point.y);
+        let tfarx = scaleY*(this.x + signX*(this.hw + _paddingX) - point.x);
+        let tfary = scaleY*(this.y + signY*(this.hh + _paddingY) - point.y);
         
         if(tnearx > tfary || tneary > tfarx){
             // We aren't colliding - we clear one axis before intersecting another
@@ -164,11 +162,18 @@ export default class AABB extends Shape {
         return hit;
     }
 
+    overlaps(other: Shape): boolean {
+        if(other instanceof AABB){
+            return this.overlapsAABB(other);
+        }
+        throw "Overlap not defined between these shapes."
+    }
+
     /**
      * A simple boolean check of whether this AABB overlaps another
      * @param other 
      */
-    overlaps(other: AABB): boolean {
+    overlapsAABB(other: AABB): boolean {
         let dx = other.x - this.x;
         let px = this.hw + other.hw - Math.abs(dx);
         
@@ -199,6 +204,35 @@ export default class AABB extends Shape {
         if(dx < 0 || dy < 0) return 0;
         
         return dx*dy;
+    }
+
+    /**
+     * Moves and resizes this rect from its current position to the position specified
+     * @param velocity The movement of the rect from its position
+     * @param fromPosition A position specified to be the starting point of sweeping
+     * @param halfSize The halfSize of the sweeping rect 
+     */
+    sweep(velocity: Vec2, fromPosition?: Vec2, halfSize?: Vec2): void {
+        if(!fromPosition){
+            fromPosition = this.center;
+        }
+
+        if(!halfSize){
+            halfSize = this.halfSize;
+        }
+
+        let centerX = fromPosition.x + velocity.x/2;
+        let centerY = fromPosition.y + velocity.y/2;
+
+        let minX = Math.min(fromPosition.x - halfSize.x, fromPosition.x + velocity.x - halfSize.x);
+        let minY = Math.min(fromPosition.y - halfSize.y, fromPosition.y + velocity.y - halfSize.y);
+
+        this.center.set(centerX, centerY);
+        this.halfSize.set(centerX - minX, centerY - minY);
+    }
+    
+    clone(): AABB {
+        return new AABB(this.center.clone(), this.halfSize.clone());
     }
 }
 
