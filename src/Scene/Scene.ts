@@ -13,6 +13,7 @@ import SceneManager from "./SceneManager";
 import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
 import { Renderable, Updateable } from "../DataTypes/Interfaces/Descriptors";
+import Navmesh from "../DataTypes/Navmesh";
 
 export default class Scene implements Updateable, Renderable {
     /** The size of the game world. */
@@ -49,6 +50,8 @@ export default class Scene implements Updateable, Renderable {
     /** An interface that allows the loading of different files for use in the scene */
     public load: ResourceManager;
 
+    protected navmeshes: Array<Navmesh>;
+
     constructor(viewport: Viewport, sceneManager: SceneManager, game: GameLoop){
         this.worldSize = new Vec2(500, 500);
         this.viewport = viewport;
@@ -63,7 +66,7 @@ export default class Scene implements Updateable, Renderable {
         this.sceneGraph = new SceneGraphArray(this.viewport, this);
         this.physicsManager = new BasicPhysicsManager();
 
-        this.add = new FactoryManager(this, this.physicsManager, this.tilemaps);
+        this.add = new FactoryManager(this, this.tilemaps);
 
         this.load = ResourceManager.getInstance();
     }

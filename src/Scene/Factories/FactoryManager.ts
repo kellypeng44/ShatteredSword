@@ -1,7 +1,6 @@
 import Scene from "../Scene";
 import CanvasNodeFactory from "./CanvasNodeFactory";
 import TilemapFactory from "./TilemapFactory";
-import PhysicsManager from "../../Physics/PhysicsManager";
 import Tilemap from "../../Nodes/Tilemap";
 
 export default class FactoryManager {
@@ -10,9 +9,9 @@ export default class FactoryManager {
     private canvasNodeFactory: CanvasNodeFactory = new CanvasNodeFactory();
     private tilemapFactory: TilemapFactory = new TilemapFactory();
 
-    constructor(scene: Scene, physicsManager: PhysicsManager, tilemaps: Array<Tilemap>){
+    constructor(scene: Scene, tilemaps: Array<Tilemap>){
         this.canvasNodeFactory.init(scene);
-        this.tilemapFactory.init(scene, tilemaps, physicsManager);
+        this.tilemapFactory.init(scene, tilemaps);
     }
 
     // Expose all of the factories through the factory manager

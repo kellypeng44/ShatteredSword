@@ -86,6 +86,7 @@ export default class OrthogonalTilemap extends Tilemap {
         ctx.globalAlpha = this.getLayer().getAlpha();
         
         let origin = this.getViewportOriginWithParallax();
+        let zoom = this.getViewportScale();
 
         if(this.visible){
             for(let i = 0; i < this.data.length; i++){
@@ -93,7 +94,7 @@ export default class OrthogonalTilemap extends Tilemap {
 
                 for(let tileset of this.tilesets){
                     if(tileset.hasTile(tileIndex)){
-                        tileset.renderTile(ctx, tileIndex, i, this.size, origin, this.scale);
+                        tileset.renderTile(ctx, tileIndex, i, this.size, origin, this.scale, zoom);
                     }
                 }
             }

@@ -9,6 +9,7 @@ import Shape from "../DataTypes/Shapes/Shape";
 import GameEvent from "../Events/GameEvent";
 import Map from "../DataTypes/Map";
 import AABB from "../DataTypes/Shapes/AABB";
+import Debug from "../Debug/Debug";
 
 /**
  * The representation of an object in the game world
@@ -35,6 +36,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	triggers: Map<string>;
 	_velocity: Vec2;
 	sweptRect: AABB;
+	isPlayer: boolean;
 
 	protected input: InputReceiver;
 	protected receiver: Receiver;
@@ -104,7 +106,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.moving = false;
 		this.onGround = false;
 		this.onWall = false;
-		this.onCeiling= false;
+		this.onCeiling = false;
 		this.active = true;
 		this.isCollidable = isCollidable;
 		this.isStatic = isStatic;

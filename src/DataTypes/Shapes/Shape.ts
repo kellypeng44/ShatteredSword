@@ -30,6 +30,7 @@ export default abstract class Shape {
     private static getTimeOfCollision_AABB_AABB(A: AABB, velA: Vec2, B: Shape, velB: Vec2): [Vec2, Vec2, boolean, boolean] {
         let posSmaller = A.center;
         let posLarger = B.center;
+        
         let sizeSmaller = A.halfSize;
         let sizeLarger = B.halfSize;
     

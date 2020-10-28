@@ -75,6 +75,8 @@ export interface Physical {
     /** The rectangle swept by the movement of this object, if dynamic */
     sweptRect: AABB;
 
+    isPlayer: boolean;
+
     /*---------- FUNCTIONS ----------*/
 
     /**
@@ -117,5 +119,5 @@ export interface Renderable {
 
 export interface Debug_Renderable {
     /** Renders the debugging infor for this object. */
-    debug_render: (ctx: CanvasRenderingContext2D) => void;
+    debug_render: (ctx: CanvasRenderingContext2D, origin: Vec2, zoom: number) => void;
 }

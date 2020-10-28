@@ -11,6 +11,8 @@ export default class OnGround extends GoombaState {
 			this.finished(GoombaStates.JUMP);
 			this.parent.velocity.y = -2000;
 		}
+
+		super.handleInput(event);
 	}
 
 	update(deltaT: number): void {

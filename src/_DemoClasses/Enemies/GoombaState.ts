@@ -1,7 +1,8 @@
 import State from "../../DataTypes/State/State";
 import StateMachine from "../../DataTypes/State/StateMachine";
+import GameEvent from "../../Events/GameEvent";
 import GameNode from "../../Nodes/GameNode";
-import GoombaController from "./GoombaController";
+import GoombaController, { GoombaStates } from "./GoombaController";
 
 export default abstract class GoombaState extends State {
 	owner: GameNode;
@@ -12,6 +13,14 @@ export default abstract class GoombaState extends State {
 		super(parent);
 		
 		this.owner = owner;
+	}
+
+	handleInput(event: GameEvent): void {
+		if(event.type === "playerHitCoinBlock") {
+			if(event.data.get("collision").firstContact.y < 1 && event.data.get("node").collisionShape.center.y > event.data.get("other").collisionShape.center.y){
+				this.finished(GoombaStates.AFRAID);
+			}
+		}
 	}
 
 	update(deltaT: number): void {

@@ -75,14 +75,16 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			// TODO - This is problematic if a collision happens, but it is later learned that another collision happens before it
 			if(node1.triggers.has(group2)){
 				// Node1 should send an event
+				console.log("Trigger")
 				let eventType = node1.triggers.get(group2);
-				this.emitter.fireEvent(eventType, {node: node1, other: node2});
+				this.emitter.fireEvent(eventType, {node: node1, other: node2, collision: {firstContact: firstContact}});
 			}
 
 			if(node2.triggers.has(group1)){
 				// Node2 should send an event
+				console.log("Trigger")
 				let eventType = node2.triggers.get(group1);
-				this.emitter.fireEvent(eventType, {node: node2, other: node1});
+				this.emitter.fireEvent(eventType, {node: node2, other: node1, collision: {firstContact: firstContact}});
 			}
 
 			if(collidingX && collidingY){
@@ -93,6 +95,9 @@ export default class BasicPhysicsManager extends PhysicsManager {
 				// Get the amount to scale x and y based on their initial collision times
 				let xScale = MathUtils.clamp(firstContact.x, 0, 1);
 				let yScale = MathUtils.clamp(firstContact.y, 0, 1);
+
+				MathUtils.floorToPlace(xScale, 4);
+				MathUtils.floorToPlace(yScale, 4);
 				
 				// Handle special case of stickiness on perfect corner to corner collisions
 				if(xScale === yScale){
@@ -111,8 +116,8 @@ export default class BasicPhysicsManager extends PhysicsManager {
 					}
 					
 					if(!node2.isStatic && node2.moving){
-						node1.onGround = !node1onTop;
-						node1.onCeiling = node1onTop;
+						node2.onGround = !node1onTop;
+						node2.onCeiling = node1onTop;
 					}
 				}
 
@@ -129,13 +134,9 @@ export default class BasicPhysicsManager extends PhysicsManager {
 				}
 
 				// Scale velocity for either node if it is moving
-				if(!node1.isStatic && node1.moving){
-					node1._velocity.scale(xScale, yScale);
-				}
+				node1._velocity.scale(xScale, yScale);
 				
-				if(!node2.isStatic && node2.moving){
-					node2._velocity.scale(xScale, yScale);
-				}
+				node2._velocity.scale(xScale, yScale);
 			}
 		}
 	}
@@ -273,6 +274,18 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
 			// Get Collision (which may or may not happen)
 			let [firstContact, lastContact, collidingX, collidingY] = Shape.getTimeOfCollision(node1.collisionShape, node1._velocity, node2.collisionShape, node2._velocity);
+
+			if(collidingX && collidingY){
+				console.log("overlapping")
+			}
+
+			if(node1.isPlayer){
+				if(firstContact.x !== Infinity || firstContact.y !== Infinity)
+					Debug.log("playercol", "First Contact: " + firstContact.toFixed(4))
+			} else if(node2.isPlayer) {
+				if(firstContact.x !== Infinity || firstContact.y !== Infinity)
+					Debug.log("playercol", "First Contact: " + firstContact.toFixed(4))
+			}
 
 			this.resolveCollision(node1, node2, firstContact, lastContact, collidingX, collidingY);
 		}

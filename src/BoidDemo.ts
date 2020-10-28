@@ -5,6 +5,7 @@ import Color from "./Utils/Color";
 import Boid from "./_DemoClasses/Boids/Boid";
 import FlockBehavior from "./_DemoClasses/Boids/FlockBehavior";
 import Player from "./_DemoClasses/Player/Player";
+import PlayerController from "./_DemoClasses/Player/PlayerController";
 
 /**
  * This demo emphasizes an ai system for the game engine with component architecture
@@ -27,7 +28,9 @@ export default class BoidDemo extends Scene {
 
         // Add the player
         let player = this.add.graphic(Player, layer, new Vec2(0, 0));
-
+        player.addPhysics();
+        let ai = new PlayerController(player, "topdown");
+        player.update = (deltaT: number) => {ai.update(deltaT)}
         this.viewport.follow(player);
         this.viewport.enableZoom();
 

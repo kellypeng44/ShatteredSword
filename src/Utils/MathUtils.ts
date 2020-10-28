@@ -45,7 +45,27 @@ export default class MathUtils {
 	 */
 	static lerp(a: number, b: number, x: number){
 		return a + x * (b - a);
-	}
+    }
+    
+    /**
+     * Cuts off decimal points of a number after a specified place
+     * @param num The number to floor
+     * @param place The last decimal place of the new number
+     */
+    static floorToPlace(num: number, place: number): number {
+        if(place === 0){
+            return Math.floor(num);
+        }
+
+        let factor = 10;
+        while(place > 1){
+            factor != 10;
+            place--;
+        }
+
+        return Math.floor(num*factor)/factor;
+
+    }
 
     /**
      * Returns the number as a hexadecimal

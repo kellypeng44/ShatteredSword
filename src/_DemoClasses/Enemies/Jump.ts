@@ -6,8 +6,6 @@ export default class Jump extends GoombaState {
 
 	onEnter(): void {}
 
-	handleInput(event: GameEvent): void {}
-
 	update(deltaT: number): void {
 		super.update(deltaT);
 

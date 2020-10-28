@@ -3,16 +3,17 @@ import StateMachine from "../../../DataTypes/State/StateMachine";
 import Vec2 from "../../../DataTypes/Vec2";
 import GameEvent from "../../../Events/GameEvent";
 import InputReceiver from "../../../Input/InputReceiver";
-import CanvasNode from "../../../Nodes/CanvasNode";
+import GameNode from "../../../Nodes/GameNode";
 import { CustomGameEventType } from "../../CustomGameEventType";
+import PlayerController from "../PlayerController";
 
 export default class MoveTopDown extends State {
     direction: Vec2 = Vec2.ZERO;
-    speed: number = 0;
     input: InputReceiver = InputReceiver.getInstance();
-    owner: CanvasNode;
+    owner: GameNode;
+    parent: PlayerController
 
-    constructor(parent: StateMachine, owner: CanvasNode) {
+    constructor(parent: StateMachine, owner: GameNode) {
         super(parent);
         this.owner = owner;
     }
@@ -20,7 +21,6 @@ export default class MoveTopDown extends State {
     onEnter(): void {
         // Initialize or reset the direction and speed
         this.direction.zero();
-        this.speed = 100;
     }
 
     handleInput(event: GameEvent): void {
@@ -38,7 +38,7 @@ export default class MoveTopDown extends State {
         }
 
         // Otherwise, we are still moving, so update position
-        let velocity = this.direction.normalize().scale(this.speed);
+        let velocity = this.direction.normalize().scale(this.parent.speed);
         this.owner.move(velocity.scale(deltaT));
 
         // Emit an event to tell the world we are moving

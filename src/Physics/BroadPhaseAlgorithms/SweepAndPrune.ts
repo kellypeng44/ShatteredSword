@@ -29,7 +29,7 @@ export default class SweepAndPrune extends BroadPhase {
 			let node = this.xList[i];
 
 			let index = 1;
-			while(i + index < this.xList.length && node.sweptRect.right > this.xList[i + index].sweptRect.left){
+			while(i + index < this.xList.length && node.sweptRect.right >= this.xList[i + index].sweptRect.left){
 				// Colliding pair in x-axis
 				xCollisions.push([node, this.xList[i + index]]);
 				index++;
@@ -44,7 +44,7 @@ export default class SweepAndPrune extends BroadPhase {
 			let node = this.yList[i];
 
 			let index = 1;
-			while(i + index < this.yList.length && node.sweptRect.bottom > this.yList[i + index].sweptRect.top){
+			while(i + index < this.yList.length && node.sweptRect.bottom >= this.yList[i + index].sweptRect.top){
 				// Colliding pair in y-axis
 				yCollisions.push([node, this.yList[i + index]]);
 				index++;

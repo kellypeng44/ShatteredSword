@@ -16,7 +16,6 @@ export default class Idle extends OnGround {
 				this.finished(GoombaStates.WALK);
 			}
 		}
-		super.handleInput(event);
 	}
 
 	update(deltaT: number): void {

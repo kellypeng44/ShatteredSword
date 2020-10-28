@@ -12,13 +12,11 @@ import Sprite from "../../Nodes/Sprites/Sprite";
 export default class TilemapFactory {
     private scene: Scene;
     private tilemaps: Array<Tilemap>;
-    private physicsManager: PhysicsManager;
     private resourceManager: ResourceManager;
     
-    init(scene: Scene, tilemaps: Array<Tilemap>, physicsManager: PhysicsManager): void {
+    init(scene: Scene, tilemaps: Array<Tilemap>): void {
         this.scene = scene;
         this.tilemaps = tilemaps;
-        this.physicsManager = physicsManager;
         this.resourceManager = ResourceManager.getInstance();
     }
 
@@ -83,15 +81,39 @@ export default class TilemapFactory {
                     tilemap.addPhysics();
                 }
             } else {
+
+                let isNavmeshPoints = false
+                if(layer.properties){
+                    for(let prop of layer.properties){
+                        if(prop.name === "NavmeshPoints"){
+                            isNavmeshPoints = true;
+                        }
+                    }
+                }
+                
+                if(isNavmeshPoints){
+                    console.log("Parsing NavmeshPoints")
+                    continue;
+                }
+
                 // Layer is an object layer, so add each object as a sprite to a new layer
                 for(let obj of layer.objects){
                     // Check if obj is collidable
-                    let collidable = false;
+                    let isCollidable = false;
+                    let hasPhysics = false;
+                    let isStatic = true;
+                    let group = "";
 
                     if(obj.properties){
                         for(let prop of obj.properties){
                             if(prop.name === "Collidable"){
-                                collidable = prop.value;
+                                isCollidable = prop.value;
+                            } else if(prop.name === "Static"){
+                                isStatic = prop.value;
+                            } else if(prop.name === "hasPhysics"){
+                                hasPhysics = prop.value;
+                            } else if(prop.name === "Group"){
+                                group = prop.value;
                             }
                         }
                     }
@@ -126,8 +148,9 @@ export default class TilemapFactory {
                     }
 
                     // Now we have sprite. Associate it with our physics object if there is one
-                    if(collidable){
-                        sprite.addPhysics();
+                    if(hasPhysics){
+                        sprite.addPhysics(sprite.boundary.clone(), isCollidable, isStatic);
+                        sprite.group = group;
                     }
                 }
             }
