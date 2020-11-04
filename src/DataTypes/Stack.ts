@@ -47,6 +47,11 @@ export default class Stack<T> implements Collection {
         return this.stack[this.head];
     }
 
+    /** Returns true if this stack is empty  */
+    isEmpty(): boolean {
+        return this.head === -1;
+    }
+
     clear(): void {
         this.forEach((item, index) => delete this.stack[index]);
         this.head = -1;
@@ -62,8 +67,22 @@ export default class Stack<T> implements Collection {
     forEach(func: (item: T, index?: number) => void): void{
         let i = 0;
         while(i <= this.head){
-            func(this.stack[i]);
+            func(this.stack[i], i);
             i += 1;
         }
+    }
+
+    toString(): string {
+        let retval = "";
+
+        this.forEach( (item, index) => {
+            let str = item.toString()
+            if(index !== 0){
+                str += " -> "
+            }
+            retval = str + retval;
+        });
+
+        return "Top -> " + retval;
     }
 }

@@ -4,8 +4,10 @@ import Vec2 from "../../DataTypes/Vec2";
 
 export default class Button extends UIElement{
 
-	constructor(){
-		super();
+	constructor(position: Vec2, text: string){
+		super(position);
+		this.text = text;
+
 		this.backgroundColor = new Color(150, 75, 203);
 		this.borderColor = new Color(41, 46, 30);
 		this.textColor = new Color(255, 255, 255);

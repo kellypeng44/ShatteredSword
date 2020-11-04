@@ -1,3 +1,5 @@
+import MathUtils from "../Utils/MathUtils";
+
 /**
  * A two-dimensional vector (x, y)
  */
@@ -99,10 +101,11 @@ export default class Vec2 {
 	/**
 	 * Sets the vector's x and y based on the angle provided. Goes counter clockwise.
 	 * @param angle The angle in radians
+	 * @param radius The magnitude of the vector at the specified angle
 	 */
-	setToAngle(angle: number): Vec2 {
-		this.x = Math.cos(angle);
-		this.y = Math.sin(angle);
+	setToAngle(angle: number, radius: number = 1): Vec2 {
+		this.x = MathUtils.floorToPlace(Math.cos(angle)*radius, 5);
+		this.y = MathUtils.floorToPlace(-Math.sin(angle)*radius, 5);
 		return this;
 	}
 
@@ -112,6 +115,14 @@ export default class Vec2 {
 	 */
 	vecTo(other: Vec2): Vec2 {
 		return new Vec2(other.x - this.x, other.y - this.y);
+	}
+	
+	/**
+	 * Returns a vector containing the direction from this vector to another
+	 * @param other 
+	 */
+	dirTo(other: Vec2): Vec2 {
+		return this.vecTo(other).normalize();
 	}
 
 	/**
@@ -246,6 +257,22 @@ export default class Vec2 {
 	}
 
 	/**
+	 * Returns the angle counter-clockwise in radians from this vector to another vector
+	 * @param other 
+	 */
+	angleToCCW(other: Vec2): number {
+		let dot = this.dot(other);
+		let det = this.x*other.y - this.y*other.x;
+		let angle = -Math.atan2(det, dot);
+
+		if(angle < 0){
+			angle += 2*Math.PI;
+		}
+
+		return angle;
+	}
+
+	/**
 	 * Returns a string representation of this vector rounded to 1 decimal point
 	 */
 	toString(): string {
@@ -268,11 +295,22 @@ export default class Vec2 {
 	}
 
 	/**
+	 * Returns true if this vector and other have the EXACT same x and y (not assured to be safe for floats)
+	 * @param other The vector to check against
+	 */
+	strictEquals(other: Vec2): boolean {
+		return this.x === other.x && this.y === other.y;
+	}
+
+	/**
 	 * Returns true if this vector and other have the same x and y
 	 * @param other The vector to check against
 	 */
 	equals(other: Vec2): boolean {
-		return this.x === other.x && this.y === other.y;
+		let xEq = Math.abs(this.x - other.x) < 0.00000001;
+		let yEq = Math.abs(this.y - other.y) < 0.00000001;
+
+		return xEq && yEq;
 	}
 
 	/**
@@ -292,5 +330,9 @@ export default class Vec2 {
 	
 	getOnChange(): string {
 		return this.onChange.toString();
+	}
+
+	static lerp(a: Vec2, b: Vec2, t: number): Vec2 {
+		return new Vec2(MathUtils.lerp(a.x, b.x, t), MathUtils.lerp(a.y, b.y, t));
 	}
 }

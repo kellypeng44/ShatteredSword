@@ -12,11 +12,12 @@ export default class Point extends Graphic {
     update(deltaT: number): void {}
 
     render(ctx: CanvasRenderingContext2D): void {
-        let origin = this.getViewportOriginWithParallax();
+        let origin = this.scene.getViewTranslation(this);
+        let zoom = this.scene.getViewScale();
 
 		ctx.fillStyle = this.color.toStringRGBA();
-        ctx.fillRect(this.position.x - origin.x - this.size.x/2, this.position.y - origin.y - this.size.y/2,
-            this.size.x, this.size.y);
+        ctx.fillRect((this.position.x - origin.x - this.size.x/2)*zoom, (this.position.y - origin.y - this.size.y/2)*zoom,
+            this.size.x*zoom, this.size.y*zoom);
     }
 
 }

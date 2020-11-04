@@ -1,7 +1,6 @@
 import State from "../../../DataTypes/State/State";
 import StateMachine from "../../../DataTypes/State/StateMachine";
 import Vec2 from "../../../DataTypes/Vec2";
-import Debug from "../../../Debug/Debug";
 import GameEvent from "../../../Events/GameEvent";
 import MathUtils from "../../../Utils/MathUtils";
 import { CustomGameEventType } from "../../CustomGameEventType";
@@ -68,17 +67,6 @@ export default class BoidBehavior extends State {
             this.actor.direction = this.actor.velocity.clone();
             speed = MathUtils.clamp(speed, BoidBehavior.MIN_SPEED, BoidBehavior.MAX_SPEED);
             this.actor.velocity.scale(speed);
-
-            if(this.actor.id < 1){
-                Debug.log("BoidSep", "Separation: " + separationForce.toString());
-                Debug.log("BoidAl", "Alignment: " + alignmentForce.toString());
-                Debug.log("BoidCo", "Cohesion: " + cohesionForce.toString());
-                Debug.log("BoidSpd", "Speed: " + speed);
-            }
-        }
-
-        if(this.actor.id < 1){
-            Debug.log("BoidDir", "Velocity: " + this.actor.velocity.toString());
         }
 
         // Update the position

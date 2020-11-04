@@ -5,7 +5,11 @@ export default class Debug {
 	// A map of log messages to display on the screen
 	private static logMessages: Map<string> = new Map();
 
-	static log(id: string, message: string): void {
+	static log(id: string, ...messages: any): void {
+		let message = "";
+		for(let i = 0; i < messages.length; i++){
+			message += messages[i].toString();
+		}
 		this.logMessages.add(id, message);
 	}
 

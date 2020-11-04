@@ -1,24 +1,39 @@
-import Vec2 from "../DataTypes/Vec2";
 import Scene from "./Scene";
 import MathUtils from "../Utils/MathUtils";
 import GameNode from "../Nodes/GameNode";
+
 
 /**
  * A layer in the scene. Has its own alpha value and parallax.
  */
 export default class Layer {
+    /** The scene this layer belongs to */
     protected scene: Scene;
-    protected parallax: Vec2;
+
+    /** The name of this layer */
+    protected name: string;
+
+    /** Whether this layer is paused or not */
     protected paused: boolean;
+
+    /** Whether this layer is hidden from being rendered or not */
     protected hidden: boolean;
+
+    /** The global alpha level of this layer */
     protected alpha: number;
+
+    /** An array of the GameNodes that belong to this layer */
     protected items: Array<GameNode>;
+
+    /** Whether or not this layer should be ysorted */
     protected ySort: boolean;
+
+    /** The depth of this layer compared to other layers */
     protected depth: number;
 
-    constructor(scene: Scene){
+    constructor(scene: Scene, name: string){
         this.scene = scene;
-        this.parallax = new Vec2(1, 1);
+        this.name = name;
         this.paused = false;
         this.hidden = false;
         this.alpha = 1;
@@ -51,22 +66,16 @@ export default class Layer {
         return this.hidden;
     }
 
+    /** Pauses this scene and hides it */
     disable(): void {
         this.paused = true;
         this.hidden = true;
     }
 
+    /** Unpauses this layer and makes it visible */
     enable(): void {
         this.paused = false;
         this.hidden = false;
-    }
-
-    setParallax(x: number, y: number): void {
-        this.parallax.set(x, y);
-    }
-
-    getParallax(): Vec2 {
-        return this.parallax;
     }
 
     setYSort(ySort: boolean): void {
@@ -88,5 +97,9 @@ export default class Layer {
     addNode(node: GameNode): void {
         this.items.push(node);
         node.setLayer(this);
+    }
+
+    getItems(): Array<GameNode> {
+        return this.items;
     }
 }

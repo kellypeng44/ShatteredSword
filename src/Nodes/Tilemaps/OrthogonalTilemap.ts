@@ -85,8 +85,8 @@ export default class OrthogonalTilemap extends Tilemap {
         let previousAlpha = ctx.globalAlpha;
         ctx.globalAlpha = this.getLayer().getAlpha();
         
-        let origin = this.getViewportOriginWithParallax();
-        let zoom = this.getViewportScale();
+        let origin = this.scene.getViewTranslation(this);
+        let zoom = this.scene.getViewScale();
 
         if(this.visible){
             for(let i = 0; i < this.data.length; i++){

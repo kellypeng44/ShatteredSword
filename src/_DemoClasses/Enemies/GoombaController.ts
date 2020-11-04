@@ -55,13 +55,5 @@ export default class GoombaController extends StateMachine {
 
 	update(deltaT: number): void {
 		super.update(deltaT);
-
-		if(this.currentState instanceof Jump){
-			Debug.log("goombastate", "GoombaState: Jump");
-		} else if (this.currentState instanceof Walk){
-			Debug.log("goombastate", "GoombaState: Walk");
-		} else {
-			Debug.log("goombastate", "GoombaState: Idle");
-		}
 	}
 }

@@ -18,29 +18,29 @@ export default class BoidDemo extends Scene {
 
     startScene(){
         // Set the world size
-        this.worldSize = new Vec2(800, 600);
-        this.sceneGraph = new SceneGraphQuadTree(this.viewport, this);
-        this.viewport.setBounds(0, 0, 800, 600)
-        this.viewport.setCenter(400, 300);
+        // this.worldSize = new Vec2(800, 600);
+        // this.sceneGraph = new SceneGraphQuadTree(this.viewport, this);
+        // this.viewport.setBounds(0, 0, 800, 600)
+        // this.viewport.setCenter(400, 300);
 
-        let layer = this.addLayer();
-        this.boids = new Array();
+        // let layer = this.addLayer();
+        // this.boids = new Array();
 
-        // Add the player
-        let player = this.add.graphic(Player, layer, new Vec2(0, 0));
-        player.addPhysics();
-        let ai = new PlayerController(player, "topdown");
-        player.update = (deltaT: number) => {ai.update(deltaT)}
-        this.viewport.follow(player);
-        this.viewport.enableZoom();
+        // // Add the player
+        // let player = this.add.graphic(Player, layer, new Vec2(0, 0));
+        // player.addPhysics();
+        // let ai = new PlayerController(player, "topdown");
+        // player.update = (deltaT: number) => {ai.update(deltaT)}
+        // this.viewport.follow(player);
+        // this.viewport.enableZoom();
 
-        // Create a bunch of boids
-        for(let i = 0; i < 150; i++){
-            let boid = this.add.graphic(Boid, layer, new Vec2(this.worldSize.x*Math.random(), this.worldSize.y*Math.random()));
-            boid.fb = new FlockBehavior(this, boid, this.boids, 75, 50);
-            boid.size.set(5, 5);
-            this.boids.push(boid);
-        }
+        // // Create a bunch of boids
+        // for(let i = 0; i < 150; i++){
+        //     let boid = this.add.graphic(Boid, layer, new Vec2(this.worldSize.x*Math.random(), this.worldSize.y*Math.random()));
+        //     boid.fb = new FlockBehavior(this, boid, this.boids, 75, 50);
+        //     boid.size.set(5, 5);
+        //     this.boids.push(boid);
+        // }
     }
 
     updateScene(deltaT: number): void {

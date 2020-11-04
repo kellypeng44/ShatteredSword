@@ -4,17 +4,16 @@ import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
-import { Physical, Positioned, isRegion, Unique, Updateable, Region } from "../DataTypes/Interfaces/Descriptors"
+import { Physical, Positioned, isRegion, Unique, Updateable, Actor, AI } from "../DataTypes/Interfaces/Descriptors"
 import Shape from "../DataTypes/Shapes/Shape";
-import GameEvent from "../Events/GameEvent";
 import Map from "../DataTypes/Map";
 import AABB from "../DataTypes/Shapes/AABB";
-import Debug from "../Debug/Debug";
+import NavigationPath from "../Pathfinding/NavigationPath";
 
 /**
  * The representation of an object in the game world
  */
-export default abstract class GameNode implements Positioned, Unique, Updateable, Physical {
+export default abstract class GameNode implements Positioned, Unique, Updateable, Physical, Actor {
 	/*---------- POSITIONED ----------*/
 	private _position: Vec2;
 
@@ -37,6 +36,13 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	_velocity: Vec2;
 	sweptRect: AABB;
 	isPlayer: boolean;
+
+	/*---------- ACTOR ----------*/
+	_ai: AI;
+	aiActive: boolean;
+	actorId: number;
+	path: NavigationPath;
+	pathfinding: boolean = false;
 
 	protected input: InputReceiver;
 	protected receiver: Receiver;
@@ -93,6 +99,9 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	finishMove = (): void => {
 		this.moving = false;
 		this.position.add(this._velocity);
+		if(this.pathfinding){
+			this.path.handlePathProgress(this);
+		}
 	}
 
 	/**
@@ -138,6 +147,41 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.triggers.add(group, eventType);
 	};
 
+	/*---------- ACTOR ----------*/
+	get ai(): AI {
+		return this._ai;
+	}
+
+	set ai(ai: AI) {
+		if(!this._ai){
+			// If we haven't been previously had an ai, register us with the ai manager
+			this.scene.getAIManager().registerActor(this);
+		}
+
+		this._ai = ai;
+		this.aiActive = true;
+	}
+
+	addAI<T extends AI>(ai: string | (new () => T), options?: Record<string, any>): void {
+		if(!this._ai){
+			this.scene.getAIManager().registerActor(this);
+		}
+
+		if(typeof ai === "string"){
+			this._ai = this.scene.getAIManager().generateAI(ai);
+		} else {
+			this._ai = new ai();
+		}
+
+		this._ai.initializeAI(this, options);
+
+		this.aiActive = true;
+	}
+
+	setAIActive(active: boolean): void {
+		this.aiActive = active;
+	}
+
 	/*---------- GAME NODE ----------*/
 	/**
 	 * Sets the scene for this object.
@@ -174,15 +218,6 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 			this.collisionShape.center = this.position;
 		}
 	};
-
-	// TODO - This doesn't seem ideal. Is there a better way to do this?
-	getViewportOriginWithParallax(): Vec2 {
-		return this.scene.getViewport().getOrigin().mult(this.layer.getParallax());
-	}
-
-	getViewportScale(): number {
-		return this.scene.getViewport().getZoomLevel();
-	}
 
 	abstract update(deltaT: number): void;
 }

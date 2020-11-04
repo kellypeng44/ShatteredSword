@@ -6,6 +6,7 @@ import PlayerController from "../Player/PlayerStates/Platformer/PlayerController
 import { PlayerStates } from "../Player/PlayerStates/Platformer/PlayerController";
 import GoombaController from "../Enemies/GoombaController";
 import InputReceiver from "../../Input/InputReceiver";
+import { GraphicType } from "../../Nodes/Graphics/GraphicTypes";
 
 export default class MarioClone extends Scene {
 
@@ -15,24 +16,22 @@ export default class MarioClone extends Scene {
 	}
 
 	startScene(): void {
-		let layer = this.addLayer();
+		this.addLayer("main");
 		this.add.tilemap("level", new Vec2(2, 2));
 
-		let player = this.add.graphic(Rect, layer, new Vec2(0, 0), new Vec2(64, 64));
+		let player = this.add.graphic(GraphicType.RECT, "main", {position: new Vec2(0, 0), size: new Vec2(64, 64)});
 		player.setColor(Color.BLUE);
 		player.addPhysics();
 		player.isPlayer = true;
 		this.viewport.follow(player);
 		this.viewport.setBounds(0, 0, 5120, 1280);
 
-		let ai = new PlayerController(player);
-		ai.initialize(PlayerStates.IDLE);
-		player.update = (deltaT: number) => {ai.update(deltaT)};
+		player.ai = new PlayerController();
 
 		player.addTrigger("CoinBlock", "playerHitCoinBlock");
 
 		for(let xPos of [14, 20, 25, 30, 33, 37, 49, 55, 58, 70, 74]){
-			let goomba = this.add.sprite("goomba", layer);
+			let goomba = this.add.sprite("goomba", "main");
 			let ai = new GoombaController(goomba, false);
 			ai.initialize("idle");
 			goomba.update = (deltaT: number) => {ai.update(deltaT)};

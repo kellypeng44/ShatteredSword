@@ -31,8 +31,10 @@ export default class UIElement extends CanvasNode {
 	protected isClicked: boolean;
 	protected isEntered: boolean;
 
-	constructor(){
+	constructor(position: Vec2){
 		super();
+		this.position = position;
+		
 		this.textColor = new Color(0, 0, 0, 1);
 		this.backgroundColor = new Color(0, 0, 0, 0);
 		this.borderColor = new Color(0, 0, 0, 0);
@@ -82,6 +84,7 @@ export default class UIElement extends CanvasNode {
 				}
 				if(this.onClickEventId !== null){
 					let data = {};
+					console.log("Click event: " + this.onClickEventId)
 					this.emitter.fireEvent(this.onClickEventId, data);
 				}
 			}
@@ -179,7 +182,7 @@ export default class UIElement extends CanvasNode {
 		let previousAlpha = ctx.globalAlpha;
 		ctx.globalAlpha = this.getLayer().getAlpha();
 
-		let origin = this.getViewportOriginWithParallax();
+		let origin = this.scene.getViewTranslation(this);
 
 		ctx.font = this.fontSize + "px " + this.font;
 		let offset = this.calculateOffset(ctx);

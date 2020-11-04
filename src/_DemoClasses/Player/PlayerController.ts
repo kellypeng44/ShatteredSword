@@ -1,4 +1,4 @@
-import StateMachine from "../../DataTypes/State/StateMachine";
+import StateMachineAI from "../../AI/StateMachineAI";
 import Vec2 from "../../DataTypes/Vec2";
 import Debug from "../../Debug/Debug";
 import GameNode from "../../Nodes/GameNode";
@@ -23,21 +23,18 @@ export enum PlayerStates {
 	PREVIOUS = "previous"
 }
 
-export default class PlayerController extends StateMachine {
+export default class PlayerController extends StateMachineAI {
     protected owner: GameNode;
     velocity: Vec2 = Vec2.ZERO;
-	speed: number;
+	speed: number = 400;
 	MIN_SPEED: number = 400;
 	MAX_SPEED: number = 1000;
-	
 
-    constructor(owner: GameNode, playerType: string){
-        super();
-        
+    initializeAI(owner: GameNode, config: Record<string, any>){
         this.owner = owner;
 
-        if(playerType === PlayerType.TOPDOWN){
-            this.initializeTopDown();
+        if(config.playerType === PlayerType.TOPDOWN){
+            this.initializeTopDown(config.speed);
         } else {
             this.initializePlatformer();
         }
@@ -46,11 +43,11 @@ export default class PlayerController extends StateMachine {
     /**
      * Initializes the player controller for a top down player
      */
-    initializeTopDown(): void {
+    initializeTopDown(speed: number): void {
         let idle = new IdleTopDown(this);
         let move = new MoveTopDown(this, this.owner);
 
-        this.speed = 150;
+        this.speed = speed ? speed : 150;
 
         this.addState(PlayerStates.IDLE, idle);
         this.addState(PlayerStates.MOVE, move);

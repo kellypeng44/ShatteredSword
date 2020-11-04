@@ -41,10 +41,14 @@ export default class MathUtils {
 	 * Linear Interpolation
 	 * @param a The first value for the interpolation bound
 	 * @param b The second value for the interpolation bound
-	 * @param x The value we are interpolating
+	 * @param t The time we are interpolating to
 	 */
-	static lerp(a: number, b: number, x: number){
-		return a + x * (b - a);
+	static lerp(a: number, b: number, t: number): number {
+        return a + t * (b - a);
+    }
+
+    static invLerp(a: number, b: number, value: number){
+        return (value - a)/(b - a);
     }
     
     /**

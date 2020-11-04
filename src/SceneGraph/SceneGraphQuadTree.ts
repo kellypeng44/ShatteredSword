@@ -77,15 +77,6 @@ export default class SceneGraphQuadTree extends SceneGraph {
 
         visibleSet = visibleSet.filter(node => !node.getLayer().isHidden());
 
-        // Sort by depth, then by visible set by y-value
-        visibleSet.sort((a, b) => {
-            if(a.getLayer().getDepth() === b.getLayer().getDepth()){
-                return (a.boundary.bottom) - (b.boundary.bottom);
-            } else {
-                return a.getLayer().getDepth() - b.getLayer().getDepth();
-            }
-        });
-
         return visibleSet;
     }
 }

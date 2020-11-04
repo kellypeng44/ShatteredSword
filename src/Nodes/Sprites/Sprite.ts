@@ -29,8 +29,8 @@ export default class Sprite extends CanvasNode {
 
     render(ctx: CanvasRenderingContext2D): void {
         let image = ResourceManager.getInstance().getImage(this.imageId);
-        let origin = this.getViewportOriginWithParallax();
-        let zoom = this.getViewportScale();
+        let origin = this.scene.getViewTranslation(this);
+        let zoom = this.scene.getViewScale();
 
         ctx.drawImage(image,
             this.imageOffset.x, this.imageOffset.y, this.size.x, this.size.y,

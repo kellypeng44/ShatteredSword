@@ -27,9 +27,22 @@ export default class Graph {
 	addEdge(x: number, y: number, weight?: number){
 		let edge = new EdgeNode(y, weight);
 
-		edge.next = this.edges[x];
-
+		if(this.edges[x]){
+			edge.next = this.edges[x];
+		}
+		
 		this.edges[x] = edge;
+
+		if(!this.directed){
+			edge = new EdgeNode(x, weight);
+
+			if(this.edges[y]){
+				edge.next = this.edges[y];
+			}
+			
+			this.edges[y] = edge;
+		}
+
 		this.numEdges += 1;
 	}
 
@@ -39,6 +52,34 @@ export default class Graph {
 
 	getDegree(x: number): number {
 		return this.degree[x];
+	}
+
+	protected nodeToString(index: number): string {
+		return "Node " + index;
+	}
+
+	toString(): string {
+		let retval = "";
+
+		for(let i = 0; i < this.numVertices; i++){
+			let edge = this.edges[i];
+			let edgeStr = "";
+			while(edge !== null){
+				edgeStr += edge.y.toString();
+				if(this.weighted){
+					edgeStr += " (" + edge.weight + ")";
+				}
+				if(edge.next !== null){
+					edgeStr += ", ";
+				}
+
+				edge = edge.next;
+			}
+
+			retval += this.nodeToString(i) + ": " + edgeStr + "\n";
+		}
+
+		return retval;
 	}
 }
 

@@ -10,8 +10,17 @@ export default class PositionGraph extends Graph implements Debug_Renderable{
 		this.positions = new Array(MAX_V);
 	}
 
+	addPositionedNode(position: Vec2){
+		this.positions[this.numVertices] = position;
+		this.addNode();
+	}
+
 	setNodePosition(index: number, position: Vec2): void {
 		this.positions[index] = position;
+	}
+
+	getNodePosition(index: number): Vec2 {
+		return this.positions[index];
 	}
 
 	addEdge(x: number, y: number): void {
@@ -20,9 +29,13 @@ export default class PositionGraph extends Graph implements Debug_Renderable{
 		}
 
 		// Weight is the distance between the nodes
-		let weight = this.positions[x].distanceSqTo(this.positions[y]);
+		let weight = this.positions[x].distanceTo(this.positions[y]);
 
 		super.addEdge(x, y, weight);
+	}
+
+	protected nodeToString(index: number): string {
+		return "Node " + index + " - " + this.positions[index].toString();
 	}
 
 	debug_render(ctx: CanvasRenderingContext2D, origin: Vec2, zoom: number): void {

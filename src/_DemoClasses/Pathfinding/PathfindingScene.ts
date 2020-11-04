@@ -1,7 +1,10 @@
 import Scene from "../../Scene/Scene";
-import Rect from "../../Nodes/Graphics/Rect";
 import Vec2 from "../../DataTypes/Vec2";
 import PlayerController from "../Player/PlayerController";
+import { GraphicType } from "../../Nodes/Graphics/GraphicTypes";
+import { UIElementType } from "../../Nodes/UIElements/UIElementTypes";
+import Color from "../../Utils/Color";
+import PathfinderController from "./Pathfinder/PathfinderController";
 
 export default class PathfindingScene extends Scene {
 
@@ -12,15 +15,32 @@ export default class PathfindingScene extends Scene {
 	startScene(){
 		this.add.tilemap("interior");
 		
-		let layer = this.addLayer();
+		// Add a layer for the game objects
+		this.addLayer("main");
 
-		let player = this.add.graphic(Rect, layer, new Vec2(500, 500), new Vec2(64, 64));
+		// Add the player
+		let player = this.add.graphic(GraphicType.RECT, "main", {position: new Vec2(500, 500), size: new Vec2(64, 64)});
 		player.addPhysics();
-		let ai = new PlayerController(player, "topdown");
-		ai.speed = 400;
-		player.update = (deltaT: number) => {ai.update(deltaT)}
+		player.addAI(PlayerController, {playerType: "topdown", speed: 400});
+
+		// Set the viewport to follow the player
 		this.viewport.setBounds(0, 0, 40*64, 40*64);
 		this.viewport.follow(player);
 		this.viewport.enableZoom();
+
+		// Add a navigator
+		let nav = this.add.graphic(GraphicType.RECT, "main", {position: new Vec2(700, 400), size: new Vec2(64, 64)});
+		nav.setColor(Color.BLUE);
+		nav.addPhysics();
+		nav.addAI(PathfinderController, {player: player});
+
+		// Add a layer for the ui
+		this.addUILayer("uiLayer");
+
+		// Add a button that triggers the navigator
+		let btn = this.add.uiElement(UIElementType.BUTTON, "uiLayer", {position: new Vec2(400, 20), text: "Navigate"});
+		btn.size = new Vec2(120, 35);
+		btn.setBackgroundColor(Color.BLUE);
+		btn.onClickEventId = "navigate";
 	}
 }

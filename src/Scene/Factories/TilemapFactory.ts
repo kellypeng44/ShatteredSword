@@ -1,6 +1,5 @@
 import Scene from "../Scene";
 import Tilemap from "../../Nodes/Tilemap";
-import PhysicsManager from "../../Physics/PhysicsManager";
 import ResourceManager from "../../ResourceManager/ResourceManager";
 import OrthogonalTilemap from "../../Nodes/Tilemaps/OrthogonalTilemap";
 import Layer from "../Layer";
@@ -8,6 +7,8 @@ import Tileset from "../../DataTypes/Tilesets/Tileset";
 import Vec2 from "../../DataTypes/Vec2";
 import { TiledCollectionTile } from "../../DataTypes/Tilesets/TiledData";
 import Sprite from "../../Nodes/Sprites/Sprite";
+import PositionGraph from "../../DataTypes/Graphs/PositionGraph";
+import Navmesh from "../../Pathfinding/Navmesh";
 
 export default class TilemapFactory {
     private scene: Scene;
@@ -63,7 +64,7 @@ export default class TilemapFactory {
         // Loop over the layers of the tilemap and create tiledlayers or object layers
         for(let layer of tilemapData.layers){
             
-            let sceneLayer = this.scene.addLayer();
+            let sceneLayer = this.scene.addLayer(layer.name);
             
             if(layer.type === "tilelayer"){
                 // Create a new tilemap object for the layer
@@ -82,17 +83,34 @@ export default class TilemapFactory {
                 }
             } else {
 
-                let isNavmeshPoints = false
+                let isNavmeshPoints = false;
+                let navmeshName;
+                let edges;
                 if(layer.properties){
                     for(let prop of layer.properties){
                         if(prop.name === "NavmeshPoints"){
                             isNavmeshPoints = true;
+                        } else if(prop.name === "name"){
+                            navmeshName = prop.value;
+                        } else if(prop.name === "edges"){
+                            edges = prop.value
                         }
                     }
                 }
                 
                 if(isNavmeshPoints){
-                    console.log("Parsing NavmeshPoints")
+                    let g = new PositionGraph();
+
+                    for(let obj of layer.objects){
+                        g.addPositionedNode(new Vec2(obj.x, obj.y));
+                    }
+
+                    for(let edge of edges){
+                        g.addEdge(edge.from, edge.to);
+                    }
+
+                    this.scene.getNavigationManager().addNavigableEntity(navmeshName, new Navmesh(g));
+
                     continue;
                 }
 
@@ -126,7 +144,7 @@ export default class TilemapFactory {
                             // The object is a tile from this set
                             let imageKey = tileset.getImageKey();
                             let offset = tileset.getImageOffsetForTile(obj.gid);
-                            sprite = this.scene.add.sprite(imageKey, sceneLayer);
+                            sprite = this.scene.add.sprite(imageKey, layer.name);
                             let size = tileset.getTileSize().clone();
                             sprite.position.set((obj.x + size.x/2)*scale.x, (obj.y - size.y/2)*scale.y);
                             sprite.setImageOffset(offset);
@@ -140,7 +158,7 @@ export default class TilemapFactory {
                         for(let tile of collectionTiles){
                             if(obj.gid === tile.id){
                                 let imageKey = tile.image;
-                                sprite = this.scene.add.sprite(imageKey, sceneLayer);
+                                sprite = this.scene.add.sprite(imageKey, layer.name);
                                 sprite.position.set((obj.x + tile.imagewidth/2)*scale.x, (obj.y - tile.imageheight/2)*scale.y);
                                 sprite.scale.set(scale.x, scale.y);
                             }

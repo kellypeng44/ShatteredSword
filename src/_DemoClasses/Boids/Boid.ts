@@ -8,13 +8,13 @@ export default class Boid extends Graphic {
     acceleration: Vec2 = Vec2.ZERO;
     velocity: Vec2 = Vec2.ZERO;
 
-    ai: BoidController;
+    //ai: BoidController;
     fb: FlockBehavior;
 
     constructor(position: Vec2){
         super();
         this.position = position;
-        this.ai = new BoidController(this);
+        //this.ai = new BoidController(this);
     }
 
     update(deltaT: number){
@@ -22,8 +22,8 @@ export default class Boid extends Graphic {
     }
 
     render(ctx: CanvasRenderingContext2D): void {
-        let origin = this.getViewportOriginWithParallax();
-        let zoom = this.getViewportScale();
+        let origin = this.scene.getViewTranslation(this);
+        let zoom = this.scene.getViewScale();
 
         let dirVec = this.direction.scaled(this.size.x, this.size.y);
         let finVec1 = this.direction.clone().rotateCCW(Math.PI/2).scale(this.size.x/2, this.size.y/2).sub(this.direction.scaled(this.size.x/1.5, this.size.y/1.5));

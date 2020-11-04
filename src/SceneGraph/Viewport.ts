@@ -6,6 +6,8 @@ import Queue from "../DataTypes/Queue";
 import AABB from "../DataTypes/Shapes/AABB";
 import Debug from "../Debug/Debug";
 import InputReceiver from "../Input/InputReceiver";
+import ParallaxLayer from "../Scene/Layers/ParallaxLayer";
+import UILayer from "../Scene/Layers/UILayer";
 
 export default class Viewport {
     private view: AABB;
@@ -46,8 +48,9 @@ export default class Viewport {
         return this.view.center;
     }
 
+    /** Returns a new Vec2 with the origin of the viewport */
     getOrigin(): Vec2 {
-        return this.view.center.clone().sub(this.view.halfSize)
+        return new Vec2(this.view.left, this.view.top);
     }
 
     /**
@@ -133,7 +136,7 @@ export default class Viewport {
      * @param node 
      */
     includes(node: CanvasNode): boolean {
-        let parallax = node.getLayer().getParallax();
+        let parallax = node.getLayer() instanceof ParallaxLayer || node.getLayer() instanceof UILayer ? (<ParallaxLayer>node.getLayer()).parallax : new Vec2(1, 1);
         let center = this.view.center.clone();
         this.view.center.mult(parallax);
         let overlaps = this.view.overlaps(node.boundary);
@@ -197,8 +200,6 @@ export default class Viewport {
             }
         }
 
-        Debug.log("vpzoom", "View size: " + this.view.getHalfSize());
-
         // If viewport is following an object
         if(this.following){
             // Update our list of previous positions
@@ -219,8 +220,6 @@ export default class Viewport {
             // Assure there are no lines in the tilemap
             pos.x = Math.floor(pos.x);
             pos.y = Math.floor(pos.y);
-
-            Debug.log("vp", "Viewport pos: " + pos.toString())
             
             this.view.center.copy(pos);
         } else {
@@ -240,7 +239,6 @@ export default class Viewport {
             pos.x = Math.floor(pos.x);
             pos.y = Math.floor(pos.y);
 
-            Debug.log("vp", "Viewport pos: " + pos.toString())
             this.view.center.copy(pos);
         }
     }

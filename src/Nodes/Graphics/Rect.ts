@@ -34,8 +34,8 @@ export default class Rect extends Graphic {
     update(deltaT: number): void {}
 
     render(ctx: CanvasRenderingContext2D): void {
-        let origin = this.getViewportOriginWithParallax();
-        let zoom = this.getViewportScale();
+        let origin = this.scene.getViewTranslation(this);
+        let zoom = this.scene.getViewScale();
 
         if(this.color.a !== 0){
             ctx.fillStyle = this.color.toStringRGB();
