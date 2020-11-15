@@ -114,7 +114,7 @@ export interface Physical {
  */
 export interface AI extends Updateable {
     /** Initializes the AI with the actor and any additional config */
-    initializeAI: (owner: GameNode, config: Record<string, any>) => void;
+    initializeAI: (owner: GameNode, options: Record<string, any>) => void;
 }
 
 export interface Actor {

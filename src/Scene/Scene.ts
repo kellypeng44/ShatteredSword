@@ -90,7 +90,7 @@ export default class Scene implements Updateable, Renderable {
         this.uiLayers = new Map();
         this.parallaxLayers = new Map();
 
-        this.physicsManager = new BasicPhysicsManager();
+        this.physicsManager = new BasicPhysicsManager(this.game.gameOptions.physics);
         this.navManager = new NavigationManager();
         this.aiManager = new AIManager();
 
@@ -170,7 +170,7 @@ export default class Scene implements Updateable, Renderable {
         });
 
         // Render visible set
-        visibleSet.forEach(node => node.render(ctx));
+        visibleSet.forEach(node => node.visible ? node.render(ctx) : "");
 
         // Debug render the physicsManager
         this.physicsManager.debug_render(ctx);

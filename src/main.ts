@@ -1,15 +1,20 @@
 import GameLoop from "./Loop/GameLoop";
 import {} from "./index";
-import BoidDemo from "./BoidDemo";
-import MarioClone from "./_DemoClasses/MarioClone/MarioClone";
-import PathfindingScene from "./_DemoClasses/Pathfinding/PathfindingScene";
+import Level1 from "./_DemoClasses/Mario/Level1";
 
 function main(){
     // Create the game object
-    let game = new GameLoop({canvasSize: {x: 800, y: 600}});
+    let options = {
+        viewportSize: {x: 800, y: 600},
+        physics: {
+            physicsLayerNames: ["ground", "player", "enemy", "coin"]
+        }
+    }
+
+    let game = new GameLoop(options);
     game.start();
     let sm = game.getSceneManager();
-    sm.addScene(PathfindingScene);
+    sm.addScene(Level1);
 }
 
 CanvasRenderingContext2D.prototype.roundedRect = function(x: number, y: number, w: number, h: number, r: number): void {

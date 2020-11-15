@@ -1,17 +1,11 @@
 import GameEvent from "../../Events/GameEvent";
-import { CustomGameEventType } from "../CustomGameEventType";
-import GoombaController, { GoombaStates } from "./GoombaController";
+import { GoombaStates } from "./GoombaController";
 import GoombaState from "./GoombaState";
 
 export default class OnGround extends GoombaState {
 	onEnter(): void {}
 
 	handleInput(event: GameEvent): void {
-		if(event.type === CustomGameEventType.PLAYER_JUMP && (<GoombaController>this.parent).jumpy){
-			this.finished(GoombaStates.JUMP);
-			this.parent.velocity.y = -2000;
-		}
-
 		super.handleInput(event);
 	}
 

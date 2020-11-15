@@ -15,13 +15,7 @@ export default abstract class GoombaState extends State {
 		this.owner = owner;
 	}
 
-	handleInput(event: GameEvent): void {
-		if(event.type === "playerHitCoinBlock") {
-			if(event.data.get("collision").firstContact.y < 1 && event.data.get("node").collisionShape.center.y > event.data.get("other").collisionShape.center.y){
-				this.finished(GoombaStates.AFRAID);
-			}
-		}
-	}
+	handleInput(event: GameEvent): void {}
 
 	update(deltaT: number): void {
 		// Do gravity

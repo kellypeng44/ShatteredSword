@@ -30,11 +30,11 @@ export default class PlayerController extends StateMachineAI {
 	MIN_SPEED: number = 400;
 	MAX_SPEED: number = 1000;
 
-    initializeAI(owner: GameNode, config: Record<string, any>){
+    initializeAI(owner: GameNode, options: Record<string, any>){
         this.owner = owner;
 
-        if(config.playerType === PlayerType.TOPDOWN){
-            this.initializeTopDown(config.speed);
+        if(options.playerType === PlayerType.TOPDOWN){
+            this.initializeTopDown(options.speed);
         } else {
             this.initializePlatformer();
         }
@@ -65,7 +65,9 @@ export default class PlayerController extends StateMachineAI {
 		let run = new Run(this, this.owner);
 		this.addState(PlayerStates.RUN, run);
 		let jump = new Jump(this, this.owner);
-		this.addState(PlayerStates.JUMP, jump);
+        this.addState(PlayerStates.JUMP, jump);
+        
+        this.initialize(PlayerStates.IDLE);
     }
 
     changeState(stateName: string): void {

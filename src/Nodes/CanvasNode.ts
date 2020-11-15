@@ -11,6 +11,8 @@ export default abstract class CanvasNode extends GameNode implements Region {
 	private _scale: Vec2;
 	private _boundary: AABB;
 
+	visible = true;
+
 	constructor(){
 		super();
 		this.position.setOnChange(this.positionChanged);

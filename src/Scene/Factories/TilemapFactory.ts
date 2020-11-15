@@ -21,6 +21,10 @@ export default class TilemapFactory {
         this.resourceManager = ResourceManager.getInstance();
     }
 
+    // TODO - This is specifically catered to Tiled tilemaps right now. In the future,
+    // it would be good to have a "parseTilemap" function that would convert the tilemap
+    // data into a standard format. This could allow for support from other programs
+    // or the development of an internal level builder tool
     /**
      * Adds a tilemap to the scene
      * @param key The key of the loaded tilemap to load
@@ -63,8 +67,24 @@ export default class TilemapFactory {
 
         // Loop over the layers of the tilemap and create tiledlayers or object layers
         for(let layer of tilemapData.layers){
+
+            let sceneLayer;
+            let isParallaxLayer = false;
             
-            let sceneLayer = this.scene.addLayer(layer.name);
+            if(layer.properties){
+                for(let prop of layer.properties){
+                    if(prop.name === "Parallax"){
+                        isParallaxLayer = prop.value;
+                    }
+                }
+            }
+
+            if(isParallaxLayer){
+                console.log("Adding parallax layer: " + layer.name)
+                sceneLayer = this.scene.addParallaxLayer(layer.name, new Vec2(1, 1));
+            } else {
+                sceneLayer = this.scene.addLayer(layer.name);
+            }
             
             if(layer.type === "tilelayer"){
                 // Create a new tilemap object for the layer

@@ -10,6 +10,7 @@ import MathUtils from "../Utils/MathUtils";
 import OrthogonalTilemap from "../Nodes/Tilemaps/OrthogonalTilemap";
 import Debug from "../Debug/Debug";
 import AABB from "../DataTypes/Shapes/AABB";
+import Map from "../DataTypes/Map";
 
 export default class BasicPhysicsManager extends PhysicsManager {
 
@@ -25,12 +26,37 @@ export default class BasicPhysicsManager extends PhysicsManager {
 	/** The broad phase collision detection algorithm used by this physics system */
 	protected broadPhase: BroadPhase;
 
-	constructor(){
+	protected layerMap: Map<number>;
+	protected layerNames: Array<string>;
+
+	constructor(physicsOptions: Record<string, any>){
 		super();
 		this.staticNodes = new Array();
 		this.dynamicNodes = new Array();
 		this.tilemaps = new Array();
 		this.broadPhase = new SweepAndPrune();
+		this.layerMap = new Map();
+		this.layerNames = new Array();
+
+		let i = 0;
+		if(physicsOptions.physicsLayerNames !== null){
+			for(let layer of physicsOptions.physicsLayerNames){
+				if(i >= physicsOptions.numPhysicsLayers){
+					// If we have too many string layers, don't add extras
+				}
+
+				this.layerNames[i] = layer;
+				this.layerMap.add(layer, i);
+				i += 1;
+			}
+		}
+
+		for(i; i < physicsOptions.numPhysicsLayers; i++){
+			this.layerNames[i] = "" + i;
+			this.layerMap.add("" + i, i);
+		}
+
+		console.log(this.layerNames);
 	}
 
 	/**
@@ -271,13 +297,14 @@ export default class BasicPhysicsManager extends PhysicsManager {
 		for(let pair of potentialCollidingPairs){
 			let node1 = pair[0];
 			let node2 = pair[1];
+			
+			// Make sure both nodes are active
+			if(!node1.active || !node2.active){
+				continue;
+			}
 
 			// Get Collision (which may or may not happen)
 			let [firstContact, lastContact, collidingX, collidingY] = Shape.getTimeOfCollision(node1.collisionShape, node1._velocity, node2.collisionShape, node2._velocity);
-
-			if(collidingX && collidingY){
-				console.log("overlapping")
-			}
 
 			if(node1.isPlayer){
 				if(firstContact.x !== Infinity || firstContact.y !== Infinity)

@@ -8,8 +8,11 @@ import Viewport from "../SceneGraph/Viewport";
 import SceneManager from "../Scene/SceneManager";
 import AudioManager from "../Sound/AudioManager";
 import Stats from "../Debug/Stats";
+import ArrayUtils from "../Utils/ArrayUtils";
 
 export default class GameLoop {
+    gameOptions: GameOptions;
+
 	/** The max allowed update fps.*/
     private maxUpdateFPS: number;
     
@@ -68,9 +71,9 @@ export default class GameLoop {
     private sceneManager: SceneManager;
     private audioManager: AudioManager;
 
-    constructor(config?: object){
+    constructor(options?: Record<string, any>){
         // Typecast the config object to a GameConfig object
-        let gameConfig = config ? <GameConfig>config : new GameConfig();
+        this.gameOptions = GameOptions.parse(options);
 
         this.maxUpdateFPS = 60;
         this.simulationTimestep = Math.floor(1000/this.maxUpdateFPS);
@@ -95,8 +98,8 @@ export default class GameLoop {
         this.GAME_CANVAS.style.setProperty("background-color", "whitesmoke");
     
         // Give the canvas a size and get the rendering context
-        this.WIDTH = gameConfig.canvasSize ? gameConfig.canvasSize.x : 800;
-        this.HEIGHT = gameConfig.canvasSize ? gameConfig.canvasSize.y : 500;
+        this.WIDTH = this.gameOptions.viewportSize.x;
+        this.HEIGHT = this.gameOptions.viewportSize.y;
         this.ctx = this.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
 
         // Size the viewport to the game canvas
@@ -281,6 +284,31 @@ export default class GameLoop {
     }
 }
 
-class GameConfig {
-    canvasSize: {x: number, y: number}
+class GameOptions {
+    viewportSize: {x: number, y: number}
+    physics: {
+        numPhysicsLayers: number,
+        physicsLayerNames: Array<string>,
+        physicsLayerCollisions: Array<Array<number>>;
+    }
+
+    static parse(options: Record<string, any>): GameOptions {
+        let gOpt = new GameOptions();
+
+        gOpt.viewportSize = options.viewportSize ? options.viewportSize : {x: 800, y: 600};
+
+        gOpt.physics = {
+            numPhysicsLayers: 10,
+            physicsLayerNames: null,
+            physicsLayerCollisions: ArrayUtils.ones2d(10, 10)
+        };
+
+        if(options.physics){
+            if(options.physics.numPhysicsLayers)        gOpt.physics.numPhysicsLayers = options.physics.numPhysicsLayers;
+            if(options.physics.physicsLayerNames)       gOpt.physics.physicsLayerNames = options.physics.physicsLayerNames;
+            if(options.physics.physicsLayerCollisions)  gOpt.physics.physicsLayerCollisions = options.physics.physicsLayerCollisions;
+        }
+
+        return gOpt;
+    }
 }
