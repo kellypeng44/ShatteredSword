@@ -1,62 +1,83 @@
 import Vec2 from "../DataTypes/Vec2";
-import GameNode from "./GameNode";
 import Tileset from "../DataTypes/Tilesets/Tileset";
 import { TiledTilemapData, TiledLayerData } from "../DataTypes/Tilesets/TiledData"
+import CanvasNode from "./CanvasNode";
 
 /**
  * The representation of a tilemap - this can consist of a combination of tilesets in one layer
  */
-export default abstract class Tilemap extends GameNode {
-    // A tileset represents the tiles within one specific image loaded from a file
+export default abstract class Tilemap extends CanvasNode {
     protected tilesets: Array<Tileset>;
-    protected size: Vec2;
     protected tileSize: Vec2;
-    protected scale: Vec2;
-    public data: Array<number>;
-	public visible: boolean;
+    protected data: Array<number>;
+    protected collisionMap: Array<boolean>;
+    name: string;
 
     // TODO: Make this no longer be specific to Tiled
     constructor(tilemapData: TiledTilemapData, layer: TiledLayerData, tilesets: Array<Tileset>, scale: Vec2) {
         super();
         this.tilesets = tilesets;
-        this.size = new Vec2(0, 0);
         this.tileSize = new Vec2(0, 0);
+        this.name = layer.name;
+
+        let tilecount = 0;
+        for(let tileset of tilesets){
+            tilecount += tileset.getTileCount();
+        }
+
+        this.collisionMap = new Array(tilecount);
+        for(let i = 0; i < this.collisionMap.length; i++){
+            this.collisionMap[i] = false;
+        }
 
         // Defer parsing of the data to child classes - this allows for isometric vs. orthographic tilemaps and handling of Tiled data or other data
         this.parseTilemapData(tilemapData, layer);
-        this.scale = scale.clone();
+        this.scale.set(scale.x, scale.y);
     }
 
+    /**
+     * Returns an array of the tilesets associated with this tilemap
+     */
     getTilesets(): Tileset[] {
         return this.tilesets;
     }
 
-    getsize(): Vec2 {
-        return this.size;
-    }
-
+    /**
+     * Returns the size of tiles in this tilemap as they appear in the game world after scaling
+     */
     getTileSize(): Vec2 {
-        return this.tileSize.clone().scale(this.scale.x, this.scale.y);
+        return this.tileSize.scaled(this.scale.x, this.scale.y);
     }
 
-    getScale(): Vec2 {
-        return this.scale;
-    }
-
-    setScale(scale: Vec2): void {
-        this.scale = scale;
-    }
-
-    isVisible(): boolean {
-        return this.visible;
-    }
-
-    /** Adds this tilemaps to the physics system */
+    /** Adds this tilemap to the physics system */
     addPhysics = (): void => {
         this.scene.getPhysicsManager().registerTilemap(this);
     }
 
-    abstract getTileAt(worldCoords: Vec2): number;
+    /**
+     * Returns the value of the tile at the specified position
+     * @param worldCoords The position in world coordinates
+     */
+    abstract getTileAtWorldPosition(worldCoords: Vec2): number;
+
+    /**
+     * Returns the world position of the top left corner of the tile at the specified index
+     * @param index 
+     */
+    abstract getTileWorldPosition(index: number): Vec2;
+
+    /**
+     * Returns the value of the tile at the specified index
+     * @param index
+     */
+    abstract getTile(index: number): number;
+
+    /**
+     * Sets the value of the tile at the specified index
+     * @param index
+     * @param type
+     */
+    abstract setTile(index: number, type: number): void;
 
     /**
      * Sets up the tileset using the data loaded from file

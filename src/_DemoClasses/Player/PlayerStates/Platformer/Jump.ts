@@ -14,6 +14,23 @@ export default class Jump extends PlayerState {
 	update(deltaT: number): void {
 		super.update(deltaT);
 
+		if(this.owner.collidedWithTilemap && this.owner.onCeiling){
+			// We collided with a tilemap above us. First, get the tile right above us
+			let pos = this.owner.position.clone();
+
+			// Go up plus some extra
+			pos.y -= (this.owner.collisionShape.halfSize.y + 10);
+			pos = this.parent.tilemap.getColRowAt(pos);
+			let tile = this.parent.tilemap.getTileAtRowCol(pos);
+
+			console.log("Hit tile: " + tile);
+
+			// If coin block, change to empty coin block
+			if(tile === 4){
+				this.parent.tilemap.setTileAtRowCol(pos, 12);
+			}
+		}
+
 		if(this.owner.onGround){
 			this.finished(PlayerStates.PREVIOUS);
 		}

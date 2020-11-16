@@ -66,4 +66,12 @@ export default class Map<T> implements Collection {
 	clear(): void {
 		this.forEach(key => delete this.map[key]);
 	}
+
+	toString(): string {
+		let str = "";
+
+		this.forEach((key) => str += key + " -> " + this.get(key).toString() + "\n");
+
+		return str;
+	}
 }

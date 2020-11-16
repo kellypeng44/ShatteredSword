@@ -22,9 +22,8 @@ export default class SceneManager {
 	 * Add a scene as the main scene
 	 * @param constr The constructor of the scene to add
 	 */
-	public addScene<T extends Scene>(constr: new (...args: any) => T): void {
-		console.log("Adding Scene");
-		let scene = new constr(this.viewport, this, this.game);
+	public addScene<T extends Scene>(constr: new (...args: any) => T, options: Record<string, any>): void {
+		let scene = new constr(this.viewport, this, this.game, options);
 		this.currentScene = scene;
 
 		// Enqueue all scene asset loads
@@ -43,7 +42,7 @@ export default class SceneManager {
 	 * Change from the current scene to this new scene
 	 * @param constr The constructor of the scene to change to
 	 */
-	public changeScene<T extends Scene>(constr: new (...args: any) => T): void {
+	public changeScene<T extends Scene>(constr: new (...args: any) => T, options: Record<string, any>): void {
 		// unload current scene
 		this.currentScene.unloadScene();
 
@@ -51,7 +50,7 @@ export default class SceneManager {
 
 		this.viewport.setCenter(0, 0);
 
-		this.addScene(constr);
+		this.addScene(constr, options);
 	}
 
 	public generateId(): number {

@@ -20,6 +20,7 @@ import ParallaxLayer from "./Layers/ParallaxLayer";
 import UILayer from "./Layers/UILayer";
 import CanvasNode from "../Nodes/CanvasNode";
 import GameNode from "../Nodes/GameNode";
+import ArrayUtils from "../Utils/ArrayUtils";
 
 export default class Scene implements Updateable, Renderable {
     /** The size of the game world. */
@@ -73,7 +74,12 @@ export default class Scene implements Updateable, Renderable {
     /** An interface that allows the loading of different files for use in the scene */
     public load: ResourceManager;
 
-    constructor(viewport: Viewport, sceneManager: SceneManager, game: GameLoop){
+    /** The configuration options for this scene */
+    public sceneOptions: SceneOptions;
+
+    constructor(viewport: Viewport, sceneManager: SceneManager, game: GameLoop, options: Record<string, any>){
+        this.sceneOptions = SceneOptions.parse(options);
+
         this.worldSize = new Vec2(500, 500);
         this.viewport = viewport;
         this.viewport.setBounds(0, 0, 2560, 1280);
@@ -90,7 +96,7 @@ export default class Scene implements Updateable, Renderable {
         this.uiLayers = new Map();
         this.parallaxLayers = new Map();
 
-        this.physicsManager = new BasicPhysicsManager(this.game.gameOptions.physics);
+        this.physicsManager = new BasicPhysicsManager(this.sceneOptions.physics);
         this.navManager = new NavigationManager();
         this.aiManager = new AIManager();
 
@@ -324,5 +330,41 @@ export default class Scene implements Updateable, Renderable {
 
     generateId(): number {
         return this.sceneManager.generateId();
+    }
+
+    getTilemap(name: string): Tilemap {
+        for(let tilemap of this .tilemaps){
+            if(tilemap.name === name){
+                return tilemap;
+            }
+        }
+
+        return null;
+    }
+}
+
+class SceneOptions {
+    physics: {
+        numPhysicsLayers: number,
+        physicsLayerNames: Array<string>,
+        physicsLayerCollisions: Array<Array<number>>;
+    }
+
+    static parse(options: Record<string, any>): SceneOptions{
+        let sOpt = new SceneOptions();
+
+        sOpt.physics = {
+            numPhysicsLayers: 10,
+            physicsLayerNames: null,
+            physicsLayerCollisions: ArrayUtils.ones2d(10, 10)
+        };
+
+        if(options.physics){
+            if(options.physics.numPhysicsLayers)        sOpt.physics.numPhysicsLayers = options.physics.numPhysicsLayers;
+            if(options.physics.physicsLayerNames)       sOpt.physics.physicsLayerNames = options.physics.physicsLayerNames;
+            if(options.physics.physicsLayerCollisions)  sOpt.physics.physicsLayerCollisions = options.physics.physicsLayerCollisions;
+        }
+
+        return sOpt;
     }
 }

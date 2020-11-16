@@ -35,6 +35,8 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	triggers: Map<string>;
 	_velocity: Vec2;
 	sweptRect: AABB;
+	collidedWithTilemap: boolean;
+	physicsLayer: number;
 	isPlayer: boolean;
 
 	/*---------- ACTOR ----------*/
@@ -124,6 +126,8 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.triggers = new Map();
 		this._velocity = Vec2.ZERO;
 		this.sweptRect = new AABB();
+		this.collidedWithTilemap = false;
+		this.physicsLayer = -1;
 
 		if(collisionShape){
 			this.collisionShape = collisionShape;
@@ -146,6 +150,10 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.isTrigger = true;
 		this.triggers.add(group, eventType);
 	};
+
+	setPhysicsLayer = (layer: string): void => {
+		this.scene.getPhysicsManager().setLayer(this, layer);
+	}
 
 	/*---------- ACTOR ----------*/
 	get ai(): AI {

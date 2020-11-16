@@ -74,6 +74,10 @@ export default class Tileset {
         return this.numCols;
     }
 
+    getTileCount(): number {
+        return this.endIndex - this.startIndex + 1;
+    }
+
     hasTile(tileIndex: number): boolean {
         return tileIndex >= this.startIndex && tileIndex <= this.endIndex;
     }
@@ -87,7 +91,7 @@ export default class Tileset {
      * @param origin The viewport origin in the current layer
      * @param scale The scale of the tilemap
      */
-    renderTile(ctx: CanvasRenderingContext2D, tileIndex: number, dataIndex: number, worldSize: Vec2, origin: Vec2, scale: Vec2, zoom: number): void {
+    renderTile(ctx: CanvasRenderingContext2D, tileIndex: number, dataIndex: number, maxCols: number, origin: Vec2, scale: Vec2, zoom: number): void {
         let image = ResourceManager.getInstance().getImage(this.imageKey);
 
         // Get the true index
@@ -102,8 +106,8 @@ export default class Tileset {
         let top = row * height;
 
         // Calculate the position in the world to render the tile
-        let x = Math.floor((dataIndex % worldSize.x) * width * scale.x);
-        let y = Math.floor(Math.floor(dataIndex / worldSize.x) * height * scale.y);
+        let x = Math.floor((dataIndex % maxCols) * width * scale.x);
+        let y = Math.floor(Math.floor(dataIndex / maxCols) * height * scale.y);
         ctx.drawImage(image, left, top, width, height, Math.floor((x - origin.x)*zoom), Math.floor((y - origin.y)*zoom), Math.ceil(width * scale.x * zoom), Math.ceil(height * scale.y * zoom));
     }
 }

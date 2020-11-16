@@ -4,21 +4,52 @@ import { Debug_Renderable, Updateable } from "../DataTypes/Interfaces/Descriptor
 import Tilemap from "../Nodes/Tilemap";
 import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
+import Map from "../DataTypes/Map";
 
 export default abstract class PhysicsManager implements Updateable, Debug_Renderable {
 	protected receiver: Receiver;
 	protected emitter: Emitter;
 
+	/**	Layer names to numbers */
+	protected layerMap: Map<number>;
+
+	/** Layer numbers to names */
+	protected layerNames: Array<string>;
+
 	constructor(){
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
+
+		// The creation and implementation of layers is deferred to the subclass
+		this.layerMap = new Map();
+		this.layerNames = new Array();
 	}
 
+	/**
+	 * Registers a gamenode with this physics manager
+	 * @param object 
+	 */
 	abstract registerObject(object: GameNode): void;
 
+	/**
+	 * Registers a tilemap with this physics manager
+	 * @param tilemap 
+	 */
 	abstract registerTilemap(tilemap: Tilemap): void;
 
+	/**
+	 * Updates the physics
+	 * @param deltaT 
+	 */
 	abstract update(deltaT: number): void;
 
+	/**
+	 * Renders any debug shapes or graphics
+	 * @param ctx 
+	 */
 	abstract debug_render(ctx: CanvasRenderingContext2D): void;
+
+	setLayer(node: GameNode, layer: string): void {
+		node.physicsLayer = this.layerMap.get(layer);
+	}
 }

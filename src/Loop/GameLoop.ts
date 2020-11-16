@@ -286,28 +286,11 @@ export default class GameLoop {
 
 class GameOptions {
     viewportSize: {x: number, y: number}
-    physics: {
-        numPhysicsLayers: number,
-        physicsLayerNames: Array<string>,
-        physicsLayerCollisions: Array<Array<number>>;
-    }
 
     static parse(options: Record<string, any>): GameOptions {
         let gOpt = new GameOptions();
 
         gOpt.viewportSize = options.viewportSize ? options.viewportSize : {x: 800, y: 600};
-
-        gOpt.physics = {
-            numPhysicsLayers: 10,
-            physicsLayerNames: null,
-            physicsLayerCollisions: ArrayUtils.ones2d(10, 10)
-        };
-
-        if(options.physics){
-            if(options.physics.numPhysicsLayers)        gOpt.physics.numPhysicsLayers = options.physics.numPhysicsLayers;
-            if(options.physics.physicsLayerNames)       gOpt.physics.physicsLayerNames = options.physics.physicsLayerNames;
-            if(options.physics.physicsLayerCollisions)  gOpt.physics.physicsLayerCollisions = options.physics.physicsLayerCollisions;
-        }
 
         return gOpt;
     }

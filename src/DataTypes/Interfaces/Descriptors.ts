@@ -1,4 +1,3 @@
-import GameEvent from "../../Events/GameEvent";
 import Map from "../Map";
 import AABB from "../Shapes/AABB";
 import Shape from "../Shapes/Shape";
@@ -77,6 +76,12 @@ export interface Physical {
     /** The rectangle swept by the movement of this object, if dynamic */
     sweptRect: AABB;
 
+    /** A boolean representing whether or not the node just collided with the tilemap */
+    collidedWithTilemap: boolean;
+
+    /** The physics layer this node belongs to */
+    physicsLayer: number;
+
     isPlayer: boolean;
 
     /*---------- FUNCTIONS ----------*/
@@ -107,6 +112,12 @@ export interface Physical {
      * @param eventType The name of the event to send when this trigger is activated
      */
     addTrigger: (group: string, eventType: string) => void;
+    
+    /**
+     * Sets the physics layer of this node
+     * @param layer The name of the layer
+     */
+    setPhysicsLayer: (layer: String) => void;
 }
 
 /**

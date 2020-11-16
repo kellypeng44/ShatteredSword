@@ -6,15 +6,27 @@ function main(){
     // Create the game object
     let options = {
         viewportSize: {x: 800, y: 600},
-        physics: {
-            physicsLayerNames: ["ground", "player", "enemy", "coin"]
-        }
     }
 
     let game = new GameLoop(options);
     game.start();
+
+    let sceneOptions = {
+        physics: {
+            physicsLayerNames: ["ground", "player", "enemy", "coin"],
+            numPhyiscsLayers: 4,
+            physicsLayerCollisions:
+            [
+                [0, 1, 1, 1],
+                [1, 0, 0, 1],
+                [1, 0, 0, 1],
+                [1, 1, 1, 0]
+            ]
+        }
+    }
+
     let sm = game.getSceneManager();
-    sm.addScene(Level1);
+    sm.addScene(Level1, sceneOptions);
 }
 
 CanvasRenderingContext2D.prototype.roundedRect = function(x: number, y: number, w: number, h: number, r: number): void {

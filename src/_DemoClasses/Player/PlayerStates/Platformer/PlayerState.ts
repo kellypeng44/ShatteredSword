@@ -3,7 +3,7 @@ import StateMachine from "../../../../DataTypes/State/StateMachine";
 import Vec2 from "../../../../DataTypes/Vec2";
 import InputReceiver from "../../../../Input/InputReceiver";
 import GameNode from "../../../../Nodes/GameNode";
-import PlayerController from "./PlayerController";
+import PlayerController from "../../PlayerController";
 
 
 export default abstract class PlayerState extends State {

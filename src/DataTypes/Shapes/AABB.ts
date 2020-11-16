@@ -234,6 +234,10 @@ export default class AABB extends Shape {
     clone(): AABB {
         return new AABB(this.center.clone(), this.halfSize.clone());
     }
+
+    toString(): string {
+        return "(center: " + this.center.toString() + ", half-size: " + this.halfSize.toString() + ")"
+    }
 }
 
 export class Hit {

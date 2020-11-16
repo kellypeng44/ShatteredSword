@@ -1,5 +1,4 @@
 import { Physical } from "../DataTypes/Interfaces/Descriptors";
-import AABB from "../DataTypes/Shapes/AABB";
 import Vec2 from "../DataTypes/Vec2";
 
 export class Collision {

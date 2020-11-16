@@ -8,9 +8,7 @@ import SweepAndPrune from "./BroadPhaseAlgorithms/SweepAndPrune";
 import Shape from "../DataTypes/Shapes/Shape";
 import MathUtils from "../Utils/MathUtils";
 import OrthogonalTilemap from "../Nodes/Tilemaps/OrthogonalTilemap";
-import Debug from "../Debug/Debug";
 import AABB from "../DataTypes/Shapes/AABB";
-import Map from "../DataTypes/Map";
 
 export default class BasicPhysicsManager extends PhysicsManager {
 
@@ -26,8 +24,8 @@ export default class BasicPhysicsManager extends PhysicsManager {
 	/** The broad phase collision detection algorithm used by this physics system */
 	protected broadPhase: BroadPhase;
 
-	protected layerMap: Map<number>;
-	protected layerNames: Array<string>;
+	/** A 2D array that contains information about which layers interact with each other */
+	protected layerMask: number[][];
 
 	constructor(physicsOptions: Record<string, any>){
 		super();
@@ -35,8 +33,6 @@ export default class BasicPhysicsManager extends PhysicsManager {
 		this.dynamicNodes = new Array();
 		this.tilemaps = new Array();
 		this.broadPhase = new SweepAndPrune();
-		this.layerMap = new Map();
-		this.layerNames = new Array();
 
 		let i = 0;
 		if(physicsOptions.physicsLayerNames !== null){
@@ -56,7 +52,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			this.layerMap.add("" + i, i);
 		}
 
-		console.log(this.layerNames);
+		this.layerMask = physicsOptions.physicsLayerCollisions;
 	}
 
 	/**
@@ -101,14 +97,12 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			// TODO - This is problematic if a collision happens, but it is later learned that another collision happens before it
 			if(node1.triggers.has(group2)){
 				// Node1 should send an event
-				console.log("Trigger")
 				let eventType = node1.triggers.get(group2);
 				this.emitter.fireEvent(eventType, {node: node1, other: node2, collision: {firstContact: firstContact}});
 			}
 
 			if(node2.triggers.has(group1)){
 				// Node2 should send an event
-				console.log("Trigger")
 				let eventType = node2.triggers.get(group1);
 				this.emitter.fireEvent(eventType, {node: node2, other: node1, collision: {firstContact: firstContact}});
 			}
@@ -191,13 +185,10 @@ export default class BasicPhysicsManager extends PhysicsManager {
         let tilemapCollisions = new Array<TileCollisionData>();
         let tileSize = tilemap.getTileSize();
 
-        Debug.log("tilemapCollision", "");
-
         // Loop over all possible tiles (which isn't many in the scope of the velocity per frame)
         for(let col = minIndex.x; col <= maxIndex.x; col++){
             for(let row = minIndex.y; row <= maxIndex.y; row++){
                 if(tilemap.isTileCollidable(col, row)){
-                    Debug.log("tilemapCollision", "Colliding with Tile");
 
                     // Get the position of this tile
                     let tilePos = new Vec2(col * tileSize.x + tileSize.x/2, row * tileSize.y + tileSize.y/2);
@@ -222,10 +213,6 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
         // Now that we have all collisions, sort by collision area highest to lowest
 		tilemapCollisions = tilemapCollisions.sort((a, b) => a.overlapArea - b.overlapArea);
-		
-        let areas = "";
-        tilemapCollisions.forEach(col => areas += col.overlapArea + ", ")
-        Debug.log("cols", areas)
 
         // Resolve the collisions in order of collision area (i.e. "closest" tiles are collided with first, so we can slide along a surface of tiles)
         tilemapCollisions.forEach(collision => {
@@ -233,6 +220,9 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
             // Handle collision
             if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
+				// We are definitely colliding, so add to this node's tilemap collision list
+				node.collidedWithTilemap = true;
+
                 if(collidingX && collidingY){
                     // If we're already intersecting, freak out I guess? Probably should handle this in some way for if nodes get spawned inside of tiles
                 } else {
@@ -263,8 +253,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
                 }
             }
         })
-    }
-
+	}
 
 	update(deltaT: number): void {
 		/*---------- INITIALIZATION PHASE ----------*/
@@ -273,6 +262,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			node.onGround = false;
 			node.onCeiling = false;
 			node.onWall = false;
+			node.collidedWithTilemap = false;
 
 			// Update the swept shapes of each node
 			if(node.moving){
@@ -303,16 +293,14 @@ export default class BasicPhysicsManager extends PhysicsManager {
 				continue;
 			}
 
+			// Make sure both nodes can collide with each other based on their physics layer
+			if(!(node1.physicsLayer === -1 || node2.physicsLayer === -1 || this.layerMask[node1.physicsLayer][node2.physicsLayer] === 1)){
+				// Nodes do not collide. Continue onto the next pair
+				continue;
+			}
+
 			// Get Collision (which may or may not happen)
 			let [firstContact, lastContact, collidingX, collidingY] = Shape.getTimeOfCollision(node1.collisionShape, node1._velocity, node2.collisionShape, node2._velocity);
-
-			if(node1.isPlayer){
-				if(firstContact.x !== Infinity || firstContact.y !== Infinity)
-					Debug.log("playercol", "First Contact: " + firstContact.toFixed(4))
-			} else if(node2.isPlayer) {
-				if(firstContact.x !== Infinity || firstContact.y !== Infinity)
-					Debug.log("playercol", "First Contact: " + firstContact.toFixed(4))
-			}
 
 			this.resolveCollision(node1, node2, firstContact, lastContact, collidingX, collidingY);
 		}
@@ -322,7 +310,10 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			if(node.moving && node.isCollidable){
 				// If a node is moving and can collide, check it against every tilemap
 				for(let tilemap of this.tilemaps){
-					this.collideWithTilemap(node, tilemap, node._velocity);
+					// Check if there could even be a collision
+					if(node.sweptRect.overlaps(tilemap.boundary)){
+						this.collideWithTilemap(node, tilemap, node._velocity);
+					}
 				}
 			}
 		}

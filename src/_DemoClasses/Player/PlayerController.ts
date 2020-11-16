@@ -2,6 +2,7 @@ import StateMachineAI from "../../AI/StateMachineAI";
 import Vec2 from "../../DataTypes/Vec2";
 import Debug from "../../Debug/Debug";
 import GameNode from "../../Nodes/GameNode";
+import OrthogonalTilemap from "../../Nodes/Tilemaps/OrthogonalTilemap";
 import IdleTopDown from "./PlayerStates/IdleTopDown";
 import MoveTopDown from "./PlayerStates/MoveTopDown";
 import Idle from "./PlayerStates/Platformer/Idle";
@@ -28,7 +29,8 @@ export default class PlayerController extends StateMachineAI {
     velocity: Vec2 = Vec2.ZERO;
 	speed: number = 400;
 	MIN_SPEED: number = 400;
-	MAX_SPEED: number = 1000;
+    MAX_SPEED: number = 1000;
+    tilemap: OrthogonalTilemap;
 
     initializeAI(owner: GameNode, options: Record<string, any>){
         this.owner = owner;
@@ -38,6 +40,8 @@ export default class PlayerController extends StateMachineAI {
         } else {
             this.initializePlatformer();
         }
+
+        this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
     }
 
     /**
