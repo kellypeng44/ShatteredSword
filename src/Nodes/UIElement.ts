@@ -5,18 +5,13 @@ import Vec2 from "../DataTypes/Vec2";
 /**
  * The representation of a UIElement - the parent class of things like buttons
  */
-export default class UIElement extends CanvasNode {
+export default abstract class UIElement extends CanvasNode {
 	// Style attributes
-	protected textColor: Color;
 	protected backgroundColor: Color;
 	protected borderColor: Color;
-	protected text: string;
-	protected font: string;
-	protected fontSize: number;
-	protected hAlign: string;
-	protected vAlign: string;
 	protected borderRadius: number;
 	protected borderWidth: number;
+	protected padding: Vec2;
 
 	// EventAttributes
 	onClick: Function;
@@ -35,16 +30,11 @@ export default class UIElement extends CanvasNode {
 		super();
 		this.position = position;
 		
-		this.textColor = new Color(0, 0, 0, 1);
 		this.backgroundColor = new Color(0, 0, 0, 0);
 		this.borderColor = new Color(0, 0, 0, 0);
-		this.text = "";
-		this.font = "Arial";
-		this.fontSize = 30;
-		this.hAlign = "center";
-		this.vAlign = "center";
 		this.borderRadius = 5;
 		this.borderWidth = 1;
+		this.padding = Vec2.ZERO;
 
 		this.onClick = null;
 		this.onClickEventId = null;
@@ -60,16 +50,12 @@ export default class UIElement extends CanvasNode {
 		this.isEntered = false;
 	}
 
-	setText(text: string): void {
-		this.text = text;
-	}
-
 	setBackgroundColor(color: Color): void {
 		this.backgroundColor = color;
 	}
 
-	setTextColor(color: Color): void {
-		this.textColor = color;
+	setPadding(padding: Vec2): void {
+		this.padding.copy(padding);
 	}
 
 	update(deltaT: number): void {
@@ -127,36 +113,6 @@ export default class UIElement extends CanvasNode {
 	}
 
 	/**
-	 * Calculate the offset of the text - this is useful for rendering text with different alignments
-	 *
-	 */
-	protected calculateOffset(ctx: CanvasRenderingContext2D): Vec2 {
-		let textWidth = ctx.measureText(this.text).width;
-
-		let offset = new Vec2(0, 0);
-
-		let hDiff = this.size.x - textWidth;
-		if(this.hAlign === "center"){
-			offset.x = hDiff/2;
-		} else if (this.hAlign === "right"){
-			offset.x = hDiff;
-		}
-
-		if(this.vAlign === "top"){
-			ctx.textBaseline = "top";
-			offset.y = 0;
-		} else if (this.vAlign === "bottom"){
-			ctx.textBaseline = "bottom";
-			offset.y = this.size.y;
-		} else {
-			ctx.textBaseline = "middle";
-			offset.y = this.size.y/2;
-		}
-
-		return offset;
-	}
-
-	/**
 	 * Overridable method for calculating background color - useful for elements that want to be colored on different after certain events
 	 */
 	protected calculateBackgroundColor(): string {
@@ -168,43 +124,5 @@ export default class UIElement extends CanvasNode {
 	 */
 	protected calculateBorderColor(): string {
 		return this.borderColor.toStringRGBA();
-	}
-
-	/**
-	 * Overridable method for calculating text color - useful for elements that want to be colored on different after certain events
-	 */
-	protected calculateTextColor(): string {
-		return this.textColor.toStringRGBA();
-	}
-
-	render(ctx: CanvasRenderingContext2D): void {
-		// Grab the global alpha so we can adjust it for this render
-		let previousAlpha = ctx.globalAlpha;
-		ctx.globalAlpha = this.getLayer().getAlpha();
-
-		let origin = this.scene.getViewTranslation(this);
-
-		ctx.font = this.fontSize + "px " + this.font;
-		let offset = this.calculateOffset(ctx);
-
-		// Stroke and fill a rounded rect and give it text
-		ctx.fillStyle = this.calculateBackgroundColor();
-		ctx.fillRoundedRect(this.position.x - origin.x - this.size.x/2, this.position.y - origin.y - this.size.y/2,
-			this.size.x, this.size.y, this.borderRadius);
-		
-		ctx.strokeStyle = this.calculateBorderColor();
-		ctx.lineWidth = this.borderWidth;
-		ctx.strokeRoundedRect(this.position.x - origin.x - this.size.x/2, this.position.y - origin.y - this.size.y/2,
-			this.size.x, this.size.y, this.borderRadius);
-
-		ctx.fillStyle = this.calculateTextColor();
-		ctx.fillText(this.text, this.position.x + offset.x - origin.x - this.size.x/2, this.position.y + offset.y - origin.y - this.size.y/2);
-	
-		ctx.globalAlpha = previousAlpha;
-
-		ctx.lineWidth = 4;
-        ctx.strokeStyle = "#00FF00"
-        let b = this.boundary;
-        ctx.strokeRect(b.x - b.hw - origin.x, b.y - b.hh - origin.y, b.hw*2, b.hh*2);
 	}
 }

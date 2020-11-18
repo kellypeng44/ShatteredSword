@@ -56,7 +56,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	constructor(){
 		this.input = InputReceiver.getInstance();
 		this._position = new Vec2(0, 0);
-		this._position.setOnChange(this.positionChanged);
+		this._position.setOnChange(() => this.positionChanged());
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
 	}
@@ -68,7 +68,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 
 	set position(pos: Vec2) {
 		this._position = pos;
-		this._position.setOnChange(this.positionChanged);
+		this._position.setOnChange(() => this.positionChanged());
 		this.positionChanged();
 	}
 
@@ -220,8 +220,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	/**
 	 * Called if the position vector is modified or replaced
 	 */
-	// TODO - For some reason this isn't recognized in the child class
-	protected positionChanged = (): void => {
+	protected positionChanged(): void {
 		if(this.hasPhysics){
 			this.collisionShape.center = this.position;
 		}

@@ -13,6 +13,7 @@ export default class Viewport {
     private view: AABB;
 	private boundary: AABB;
     private following: GameNode;
+    private focus: Vec2;
 
     /**
      * A queue of previous positions of what this viewport is following. Used for smoothing viewport movement
@@ -35,6 +36,7 @@ export default class Viewport {
         this.smoothingFactor = 10;
         this.scrollZoomEnabled = false;
         this.canvasSize = Vec2.ZERO;
+        this.focus = Vec2.ZERO;
     }
 
     enableZoom(): void {
@@ -130,6 +132,14 @@ export default class Viewport {
         if(smoothingFactor < 1) smoothingFactor = 1;
         this.smoothingFactor = smoothingFactor;
     }
+
+    /**
+     * Tells the viewport to focus on a point. Overidden by "following".
+     * @param focus 
+     */
+    setFocus(focus: Vec2): void {
+        this.focus.copy(focus);
+    }
     
     /**
      * Returns true if the CanvasNode is inside of the viewport
@@ -223,6 +233,7 @@ export default class Viewport {
             
             this.view.center.copy(pos);
         } else {
+            this.lastPositions.enqueue(this.focus);
             if(this.lastPositions.getSize() > this.smoothingFactor){
                 this.lastPositions.dequeue();
             }

@@ -15,13 +15,14 @@ export default abstract class CanvasNode extends GameNode implements Region {
 
 	constructor(){
 		super();
-		this.position.setOnChange(this.positionChanged);
 		this._size = new Vec2(0, 0);
-		this._size.setOnChange(this.sizeChanged);
+		this._size.setOnChange(() => this.sizeChanged());
 		this._scale = new Vec2(1, 1);
-		this._scale.setOnChange(this.scaleChanged);
+		this._scale.setOnChange(() => this.scaleChanged());
 		this._boundary = new AABB();
 		this.updateBoundary();
+
+		this.size.set(101, 101);
 	}
 
 	get size(): Vec2 {
@@ -30,7 +31,8 @@ export default abstract class CanvasNode extends GameNode implements Region {
 
 	set size(size: Vec2){
 		this._size = size;
-		this._size.setOnChange(this.sizeChanged);
+		// Enter as a lambda to bind "this"
+		this._size.setOnChange(() => this.sizeChanged());
 		this.sizeChanged();
 	}
 
@@ -40,23 +42,21 @@ export default abstract class CanvasNode extends GameNode implements Region {
 
 	set scale(scale: Vec2){
 		this._scale = scale;
-		this._scale.setOnChange(this.scaleChanged);
+		// Enter as a lambda to bind "this"
+		this._scale.setOnChange(() => this.scaleChanged());
 		this.scaleChanged();
 	}
 
-
-	protected positionChanged = (): void => {
-		if(this.hasPhysics){
-			this.collisionShape.center = this.position;
-		}
+	protected positionChanged(): void {
+		super.positionChanged();
 		this.updateBoundary();
 	}
 
-	protected sizeChanged = (): void => {
+	protected sizeChanged(): void {
 		this.updateBoundary();
 	}
 
-	protected scaleChanged = (): void => {
+	protected scaleChanged(): void {
 		this.updateBoundary();
 	}
 

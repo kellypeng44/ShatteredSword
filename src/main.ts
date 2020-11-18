@@ -1,5 +1,6 @@
 import GameLoop from "./Loop/GameLoop";
 import {} from "./index";
+import MainMenu from "./_DemoClasses/Mario/MainMenu";
 import Level1 from "./_DemoClasses/Mario/Level1";
 
 function main(){
@@ -26,7 +27,7 @@ function main(){
     }
 
     let sm = game.getSceneManager();
-    sm.addScene(Level1, sceneOptions);
+    sm.addScene(MainMenu, {});
 }
 
 CanvasRenderingContext2D.prototype.roundedRect = function(x: number, y: number, w: number, h: number, r: number): void {
