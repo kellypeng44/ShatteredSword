@@ -2,6 +2,7 @@ import Vec2 from "../../../../DataTypes/Vec2";
 import GameEvent from "../../../../Events/GameEvent";
 import MathUtils from "../../../../Utils/MathUtils";
 import { CustomGameEventType } from "../../../CustomGameEventType";
+import Level1, { MarioEvents } from "../../../Mario/Level1";
 import { PlayerStates } from "./PlayerController";
 import PlayerState from "./PlayerState";
 
@@ -28,6 +29,7 @@ export default class Jump extends PlayerState {
 			// If coin block, change to empty coin block
 			if(tile === 4){
 				this.parent.tilemap.setTileAtRowCol(pos, 12);
+				this.emitter.fireEvent(MarioEvents.PLAYER_HIT_COIN_BLOCK);
 			}
 		}
 

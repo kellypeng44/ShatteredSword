@@ -4,7 +4,7 @@ import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
-import { Physical, Positioned, isRegion, Unique, Updateable, Actor, AI } from "../DataTypes/Interfaces/Descriptors"
+import { Physical, Positioned, isRegion, Unique, Updateable, Actor, AI, Debug_Renderable } from "../DataTypes/Interfaces/Descriptors"
 import Shape from "../DataTypes/Shapes/Shape";
 import Map from "../DataTypes/Map";
 import AABB from "../DataTypes/Shapes/AABB";
@@ -13,7 +13,7 @@ import NavigationPath from "../Pathfinding/NavigationPath";
 /**
  * The representation of an object in the game world
  */
-export default abstract class GameNode implements Positioned, Unique, Updateable, Physical, Actor {
+export default abstract class GameNode implements Positioned, Unique, Updateable, Physical, Actor, Debug_Renderable {
 	/*---------- POSITIONED ----------*/
 	private _position: Vec2;
 
@@ -227,4 +227,6 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	};
 
 	abstract update(deltaT: number): void;
+
+	debug_render = (ctx: CanvasRenderingContext2D): void => {};
 }

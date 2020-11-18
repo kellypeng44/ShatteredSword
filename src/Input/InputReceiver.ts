@@ -125,6 +125,16 @@ export default class InputReceiver{
 		}
 	}
 
+	getKeysJustPressed(): Array<string> {
+		let keys = Array<string>();
+		this.keyJustPressed.forEach(key => {
+			if(this.keyJustPressed.get(key)){
+				keys.push(key);
+			}
+		});
+		return keys;
+	}
+
 	isPressed(key: string): boolean {
 		if(this.keyPressed.has(key)){
 			return this.keyPressed.get(key)

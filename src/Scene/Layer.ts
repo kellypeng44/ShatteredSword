@@ -42,6 +42,10 @@ export default class Layer {
         this.depth = 0;
     }
 
+    getName(): string {
+        return this.name;
+    }
+
     setPaused(pauseValue: boolean): void {
         this.paused = pauseValue;
     }

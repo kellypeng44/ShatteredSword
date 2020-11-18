@@ -12,20 +12,6 @@ function main(){
     let game = new GameLoop(options);
     game.start();
 
-    let sceneOptions = {
-        physics: {
-            physicsLayerNames: ["ground", "player", "enemy", "coin"],
-            numPhyiscsLayers: 4,
-            physicsLayerCollisions:
-            [
-                [0, 1, 1, 1],
-                [1, 0, 0, 1],
-                [1, 0, 0, 1],
-                [1, 1, 1, 0]
-            ]
-        }
-    }
-
     let sm = game.getSceneManager();
     sm.addScene(MainMenu, {});
 }

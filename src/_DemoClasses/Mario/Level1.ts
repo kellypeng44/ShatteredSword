@@ -75,8 +75,8 @@ export default class Level1 extends Scene {
         // Add UI
         this.addUILayer("UI");
 
-        this.coinCountLabel = this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(80, 30), text: "Coins: 0"});
-        this.livesCountLabel = this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(600, 30), text: "Lives: 3"});
+        this.coinCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(80, 30), text: "Coins: 0"});
+        this.livesCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(600, 30), text: "Lives: 3"});
     }
 
     updateScene(deltaT: number): void {
@@ -101,8 +101,8 @@ export default class Level1 extends Scene {
                 this.coinCountLabel.setText("Coins: " + this.coinCount);
 
             } else if(event.type === MarioEvents.PLAYER_HIT_COIN_BLOCK){
-                console.log("Hit Coin Block")
-                console.log(event.data.get("node") === this.player);
+                this.coinCount += 1;
+                this.coinCountLabel.setText("Coins: " + this.coinCount);
             }
         }
 

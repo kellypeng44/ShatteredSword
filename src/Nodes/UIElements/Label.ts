@@ -100,7 +100,6 @@ export default class Label extends UIElement{
 		
 		// Grab the global alpha so we can adjust it for this render
 		let previousAlpha = ctx.globalAlpha;
-		ctx.globalAlpha = this.getLayer().getAlpha();
 
 		let origin = this.scene.getViewTranslation(this);
 
@@ -108,23 +107,30 @@ export default class Label extends UIElement{
 		let offset = this.calculateTextOffset(ctx);
 
 		// Stroke and fill a rounded rect and give it text
+		ctx.globalAlpha = this.backgroundColor.a;
 		ctx.fillStyle = this.calculateBackgroundColor();
 		ctx.fillRoundedRect(this.position.x - origin.x - this.size.x/2, this.position.y - origin.y - this.size.y/2,
 			this.size.x, this.size.y, this.borderRadius);
 		
 		ctx.strokeStyle = this.calculateBorderColor();
+		ctx.globalAlpha = this.borderColor.a;
 		ctx.lineWidth = this.borderWidth;
 		ctx.strokeRoundedRect(this.position.x - origin.x - this.size.x/2, this.position.y - origin.y - this.size.y/2,
 			this.size.x, this.size.y, this.borderRadius);
 
 		ctx.fillStyle = this.calculateTextColor();
+		ctx.globalAlpha = this.textColor.a;
 		ctx.fillText(this.text, this.position.x + offset.x - origin.x - this.size.x/2, this.position.y + offset.y - origin.y - this.size.y/2);
 	
 		ctx.globalAlpha = previousAlpha;
+	}
 
+	debug_render = (ctx: CanvasRenderingContext2D): void => {
+		let origin = this.scene.getViewTranslation(this);
+		
 		ctx.lineWidth = 4;
         ctx.strokeStyle = "#00FF00"
         let b = this.boundary;
         ctx.strokeRect(b.x - b.hw - origin.x, b.y - b.hh - origin.y, b.hw*2, b.hh*2);
-	}
+	};
 }

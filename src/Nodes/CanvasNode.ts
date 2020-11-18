@@ -1,12 +1,12 @@
 import GameNode from "./GameNode";
 import Vec2 from "../DataTypes/Vec2";
-import { Region } from "../DataTypes/Interfaces/Descriptors";
+import { Region, Renderable } from "../DataTypes/Interfaces/Descriptors";
 import AABB from "../DataTypes/Shapes/AABB";
 
 /**
  * The representation of an object in the game world that can be drawn to the screen
  */
-export default abstract class CanvasNode extends GameNode implements Region {
+export default abstract class CanvasNode extends GameNode implements Region, Renderable {
 	private _size: Vec2;
 	private _scale: Vec2;
 	private _boundary: AABB;
@@ -21,8 +21,6 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		this._scale.setOnChange(() => this.scaleChanged());
 		this._boundary = new AABB();
 		this.updateBoundary();
-
-		this.size.set(101, 101);
 	}
 
 	get size(): Vec2 {

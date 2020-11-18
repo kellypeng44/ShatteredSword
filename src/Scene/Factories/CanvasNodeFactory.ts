@@ -1,15 +1,15 @@
 import Scene from "../Scene";
 import UIElement from "../../Nodes/UIElement";
-import Layer from "../Layer";
 import Graphic from "../../Nodes/Graphic";
 import Sprite from "../../Nodes/Sprites/Sprite";
 import { GraphicType } from "../../Nodes/Graphics/GraphicTypes";
 import { UIElementType } from "../../Nodes/UIElements/UIElementTypes";
 import Point from "../../Nodes/Graphics/Point";
 import Vec2 from "../../DataTypes/Vec2";
-import Shape from "../../DataTypes/Shapes/Shape";
 import Button from "../../Nodes/UIElements/Button";
 import Label from "../../Nodes/UIElements/Label";
+import Slider from "../../Nodes/UIElements/Slider";
+import TextInput from "../../Nodes/UIElements/TextInput";
 import Rect from "../../Nodes/Graphics/Rect";
 
 export default class CanvasNodeFactory {
@@ -37,6 +37,12 @@ export default class CanvasNodeFactory {
 			break;
 			case UIElementType.LABEL:
 				instance = this.buildLabel(options);
+			break;
+			case UIElementType.SLIDER:
+				instance = this.buildSlider(options);
+			break;
+			case UIElementType.TEXT_INPUT:
+				instance = this.buildTextInput(options);
 			break;
 			default:
 				throw `UIElementType '${type}' does not exist, or is registered incorrectly.`
@@ -126,6 +132,18 @@ export default class CanvasNodeFactory {
 		return new Label(options.position, options.text)
 	}
 
+	buildSlider(options: Record<string, any>): Slider {
+		this.checkIfPropExists("Slider", options, "position", Vec2, "Vec2");
+
+		return new Slider(options.position);
+	}
+
+	buildTextInput(options: Record<string, any>): TextInput {
+		this.checkIfPropExists("TextInput", options, "position", Vec2, "Vec2");
+
+		return new TextInput(options.position);
+	}
+
 	buildPoint(options?: Record<string, any>): Point {
 		this.checkIfPropExists("Point", options, "position", Vec2, "Vec2");
 
@@ -142,7 +160,7 @@ export default class CanvasNodeFactory {
 	/* ---------- ERROR HANDLING ---------- */
 
 	checkIfPropExists<T>(objectName: string, options: Record<string, any>, prop: string, type: (new (...args: any) => T) | string, typeName?: string){
-		if(!options || !options[prop]){
+		if(!options || options[prop] === undefined){
 			// Check that the options object has the property
 			throw `${objectName} object requires argument ${prop} of type ${typeName}, but none was provided.`;
 		} else {
