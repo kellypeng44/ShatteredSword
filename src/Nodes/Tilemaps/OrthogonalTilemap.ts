@@ -128,27 +128,4 @@ export default class OrthogonalTilemap extends Tilemap {
     }
 
     update(deltaT: number): void {}
-
-    // TODO: Don't render tiles that aren't on screen
-    render(ctx: CanvasRenderingContext2D) {
-        let previousAlpha = ctx.globalAlpha;
-        ctx.globalAlpha = this.getLayer().getAlpha();
-        
-        let origin = this.scene.getViewTranslation(this);
-        let zoom = this.scene.getViewScale();
-
-        if(this.visible){
-            for(let i = 0; i < this.data.length; i++){
-                let tileIndex = this.data[i];
-
-                for(let tileset of this.tilesets){
-                    if(tileset.hasTile(tileIndex)){
-                        tileset.renderTile(ctx, tileIndex, i, this.numCols, origin, this.scale, zoom);
-                    }
-                }
-            }
-        }
-
-        ctx.globalAlpha = previousAlpha;
-    }
 }

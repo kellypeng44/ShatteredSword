@@ -9,6 +9,8 @@ import SceneManager from "../Scene/SceneManager";
 import AudioManager from "../Sound/AudioManager";
 import Stats from "../Debug/Stats";
 import ArrayUtils from "../Utils/ArrayUtils";
+import RenderingManager from "../Rendering/RenderingManager";
+import CanvasRenderer from "../Rendering/CanvasRenderer";
 
 export default class GameLoop {
     gameOptions: GameOptions;
@@ -70,6 +72,7 @@ export default class GameLoop {
     private resourceManager: ResourceManager;
     private sceneManager: SceneManager;
     private audioManager: AudioManager;
+    private renderingManager: RenderingManager;
 
     constructor(options?: Record<string, any>){
         // Typecast the config object to a GameConfig object
@@ -100,7 +103,10 @@ export default class GameLoop {
         // Give the canvas a size and get the rendering context
         this.WIDTH = this.gameOptions.viewportSize.x;
         this.HEIGHT = this.gameOptions.viewportSize.y;
-        this.ctx = this.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
+
+        // For now, just hard code a canvas renderer. We can do this with options later
+        this.renderingManager = new CanvasRenderer();
+        this.ctx = this.renderingManager.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
 
         // Size the viewport to the game canvas
         this.viewport = new Viewport();
@@ -114,24 +120,12 @@ export default class GameLoop {
         this.inputReceiver.setViewport(this.viewport);
         this.recorder = new Recorder();
         this.resourceManager = ResourceManager.getInstance();
-        this.sceneManager = new SceneManager(this.viewport, this);
+        this.sceneManager = new SceneManager(this.viewport, this, this.renderingManager);
         this.audioManager = AudioManager.getInstance();
 
         Stats.initStats();
     }
 
-    private initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
-        canvas.width = width;
-        canvas.height = height;
-        let ctx = canvas.getContext("2d");
-
-        // For crisp pixel art
-        ctx.imageSmoothingEnabled = false;
-
-        return ctx;
-    }
-
-    // TODO - This currently also changes the rendering framerate
     /**
      * Changes the maximum allowed physics framerate of the game
      * @param initMax 
@@ -278,7 +272,7 @@ export default class GameLoop {
      */
     render(): void {
         this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
-        this.sceneManager.render(this.ctx);
+        this.sceneManager.render();
         Debug.render(this.ctx);
         Stats.render();
     }

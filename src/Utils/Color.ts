@@ -53,6 +53,13 @@ export default class Color {
 		return new Color(255, 100, 0, 1);
 	}
 
+	set(r: number, g: number, b: number, a: number = 1): void {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.a = a;
+	}
+
 	/**
 	 * Returns a new color slightly lighter than the current color
 	 */

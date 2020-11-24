@@ -58,24 +58,4 @@ export default class TextInput extends Label {
             }
         }
     }
-
-    render(ctx: CanvasRenderingContext2D): void {
-        // Show a cursor sometimes
-        if(this.focused && this.cursorCounter % 60 > 30){
-            this.text += "|";
-        }
-
-        super.render(ctx);
-
-        if(this.focused){
-            if(this.cursorCounter % 60 > 30){
-                this.text = this.text.substring(0, this.text.length - 1);
-            }
-
-            this.cursorCounter += 1;
-            if(this.cursorCounter >= 60){
-                this.cursorCounter = 0;
-            }
-        }
-    }
 }

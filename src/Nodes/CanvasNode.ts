@@ -6,7 +6,7 @@ import AABB from "../DataTypes/Shapes/AABB";
 /**
  * The representation of an object in the game world that can be drawn to the screen
  */
-export default abstract class CanvasNode extends GameNode implements Region, Renderable {
+export default abstract class CanvasNode extends GameNode implements Region {
 	private _size: Vec2;
 	private _scale: Vec2;
 	private _boundary: AABB;
@@ -75,6 +75,4 @@ export default abstract class CanvasNode extends GameNode implements Region, Ren
 	contains(x: number, y: number): boolean {
 		return this._boundary.containsPoint(new Vec2(x, y));
 	}
-
-	abstract render(ctx: CanvasRenderingContext2D): void;
 }

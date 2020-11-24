@@ -21,6 +21,7 @@ import UILayer from "./Layers/UILayer";
 import CanvasNode from "../Nodes/CanvasNode";
 import GameNode from "../Nodes/GameNode";
 import ArrayUtils from "../Utils/ArrayUtils";
+import RenderingManager from "../Rendering/RenderingManager";
 
 export default class Scene implements Updateable, Renderable {
     /** The size of the game world. */
@@ -68,6 +69,9 @@ export default class Scene implements Updateable, Renderable {
     /** The AI manager of the Scene */
     protected aiManager: AIManager;
 
+    /** The renderingManager of the scene */
+    protected renderingManager: RenderingManager;
+
     /** An interface that allows the adding of different nodes to the scene */
     public add: FactoryManager;
 
@@ -77,7 +81,7 @@ export default class Scene implements Updateable, Renderable {
     /** The configuration options for this scene */
     public sceneOptions: SceneOptions;
 
-    constructor(viewport: Viewport, sceneManager: SceneManager, game: GameLoop, options: Record<string, any>){
+    constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, game: GameLoop, options: Record<string, any>){
         this.sceneOptions = SceneOptions.parse(options);
 
         this.worldSize = new Vec2(500, 500);
@@ -99,6 +103,7 @@ export default class Scene implements Updateable, Renderable {
         this.physicsManager = new BasicPhysicsManager(this.sceneOptions.physics);
         this.navManager = new NavigationManager();
         this.aiManager = new AIManager();
+        this.renderingManager = renderingManager;
 
         this.add = new FactoryManager(this, this.tilemaps);
 
@@ -143,9 +148,8 @@ export default class Scene implements Updateable, Renderable {
         this.viewport.update(deltaT);
     }
 
-    render(ctx: CanvasRenderingContext2D): void {
-        // For webGL, pass a visible set to the renderer
-        // We need to keep track of the order of things.
+    render(): void {
+        // Get the visible set of nodes
         let visibleSet = this.sceneGraph.getVisibleSet();
 
         // Add parallax layer items to the visible set (we're rendering them all for now)
@@ -158,31 +162,8 @@ export default class Scene implements Updateable, Renderable {
             }
         });
 
-        // Sort by depth, then by visible set by y-value
-        visibleSet.sort((a, b) => {
-            if(a.getLayer().getDepth() === b.getLayer().getDepth()){
-                return (a.boundary.bottom) - (b.boundary.bottom);
-            } else {
-                return a.getLayer().getDepth() - b.getLayer().getDepth();
-            }
-        });
-
-        // Render scene graph for demo
-        this.sceneGraph.render(ctx);
-
-        // Render tilemaps
-        this.tilemaps.forEach(tilemap => {
-            tilemap.render(ctx);
-        });
-
-        // Render visible set
-        visibleSet.forEach(node => node.visible ? node.render(ctx) : "");
-
-        // Debug render the physicsManager
-        this.physicsManager.debug_render(ctx);
-
-        // Render the uiLayers
-        this.uiLayers.forEach(key => this.uiLayers.get(key).getItems().forEach(node => (<CanvasNode>node).render(ctx)));
+        // Send the visible set, tilemaps, and uiLayers to the renderer
+        this.renderingManager.render(visibleSet, this.tilemaps, this.uiLayers);
     }
 
     setRunning(running: boolean): void {

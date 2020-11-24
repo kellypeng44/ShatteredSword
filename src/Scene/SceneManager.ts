@@ -2,19 +2,21 @@ import Scene from "./Scene";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import Viewport from "../SceneGraph/Viewport";
 import GameLoop from "../Loop/GameLoop";
+import RenderingManager from "../Rendering/RenderingManager";
 
 export default class SceneManager {
+	protected currentScene: Scene;
+	protected viewport: Viewport;
+	protected resourceManager: ResourceManager;
+	protected game: GameLoop;
+	protected idCounter: number;
+	protected renderingManager: RenderingManager;
 
-	private currentScene: Scene;
-	private viewport: Viewport;
-	private resourceManager: ResourceManager;
-	private game: GameLoop;
-	private idCounter: number;
-
-	constructor(viewport: Viewport, game: GameLoop){
+	constructor(viewport: Viewport, game: GameLoop, renderingManager: RenderingManager){
 		this.resourceManager = ResourceManager.getInstance();
 		this.viewport = viewport;
 		this.game = game;
+		this.renderingManager = renderingManager;
 		this.idCounter = 0;
 	}
 
@@ -23,7 +25,7 @@ export default class SceneManager {
 	 * @param constr The constructor of the scene to add
 	 */
 	public addScene<T extends Scene>(constr: new (...args: any) => T, options: Record<string, any>): void {
-		let scene = new constr(this.viewport, this, this.game, options);
+		let scene = new constr(this.viewport, this, this.renderingManager, this.game, options);
 		this.currentScene = scene;
 
 		// Enqueue all scene asset loads
@@ -36,6 +38,8 @@ export default class SceneManager {
 			scene.startScene();
 			scene.setRunning(true);
 		});
+
+		this.renderingManager.setScene(scene);
 	}
 
 	/**
@@ -57,8 +61,8 @@ export default class SceneManager {
 		return this.idCounter++;
 	}
 
-	public render(ctx: CanvasRenderingContext2D){
-		this.currentScene.render(ctx);
+	public render(){
+		this.currentScene.render();
 	}
 
 	public update(deltaT: number){

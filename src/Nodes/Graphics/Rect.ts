@@ -23,6 +23,10 @@ export default class Rect extends Graphic {
         this.borderColor = color;
     }
 
+    getBorderColor(): Color {
+        return this.borderColor;
+    }
+
     /**Sets the border width of this rectangle
      * 
      * @param width The width of the rectangle in pixels
@@ -31,20 +35,9 @@ export default class Rect extends Graphic {
         this.borderWidth = width;
     }
 
-    update(deltaT: number): void {}
-
-    render(ctx: CanvasRenderingContext2D): void {
-        let origin = this.scene.getViewTranslation(this);
-        let zoom = this.scene.getViewScale();
-
-        if(this.color.a !== 0){
-            ctx.fillStyle = this.color.toStringRGB();
-            ctx.fillRect((this.position.x - this.size.x/2 - origin.x)*zoom, (this.position.y - this.size.y/2 - origin.y)*zoom, this.size.x*zoom, this.size.y*zoom);
-        }
-
-        ctx.strokeStyle = this.borderColor.toStringRGB();
-        ctx.lineWidth = this.borderWidth;
-        ctx.strokeRect((this.position.x - this.size.x/2 - origin.x)*zoom, (this.position.y - this.size.y/2 - origin.y)*zoom, this.size.x*zoom, this.size.y*zoom);
+    getBorderWidth(): number {
+        return this.borderWidth;
     }
 
+    update(deltaT: number): void {}
 }

@@ -84,6 +84,4 @@ export default abstract class Tilemap extends CanvasNode {
      */
     // TODO: This shouldn't use tiled data specifically - it should be more general
     protected abstract parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void;
-
-    abstract render(ctx: CanvasRenderingContext2D): void;
 }

@@ -7,11 +7,11 @@ import Vec2 from "../DataTypes/Vec2";
  */
 export default abstract class UIElement extends CanvasNode {
 	// Style attributes
-	protected backgroundColor: Color;
-	protected borderColor: Color;
-	protected borderRadius: number;
-	protected borderWidth: number;
-	protected padding: Vec2;
+	backgroundColor: Color;
+	borderColor: Color;
+	borderRadius: number;
+	borderWidth: number;
+	padding: Vec2;
 
 	// EventAttributes
 	onClick: Function;
@@ -115,14 +115,14 @@ export default abstract class UIElement extends CanvasNode {
 	/**
 	 * Overridable method for calculating background color - useful for elements that want to be colored on different after certain events
 	 */
-	protected calculateBackgroundColor(): string {
+	calculateBackgroundColor(): string {
 		return this.backgroundColor.toStringRGBA();
 	}
 
 	/**
 	 * Overridable method for calculating border color - useful for elements that want to be colored on different after certain events
 	 */
-	protected calculateBorderColor(): string {
+	calculateBorderColor(): string {
 		return this.borderColor.toStringRGBA();
 	}
 }

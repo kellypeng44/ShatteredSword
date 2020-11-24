@@ -6,7 +6,7 @@ import Color from "../Utils/Color";
  */
 export default abstract class Graphic extends CanvasNode {
 
-    protected color: Color;
+    color: Color;
 
     constructor(){
         super();

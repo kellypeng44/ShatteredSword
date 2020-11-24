@@ -12,7 +12,7 @@ export default class Button extends Label {
 		this.textColor = new Color(255, 255, 255);
 	}
 
-	protected calculateBackgroundColor(): string {
+	calculateBackgroundColor(): string {
 		// Change the background color if clicked or hovered
 		if(this.isEntered && !this.isClicked){
 			return this.backgroundColor.lighten().toStringRGBA();

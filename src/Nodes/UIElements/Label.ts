@@ -3,8 +3,8 @@ import Color from "../../Utils/Color";
 import UIElement from "../UIElement";
 
 export default class Label extends UIElement{
-	protected textColor: Color;
-	protected text: string;
+	textColor: Color;
+	text: string;
 	protected font: string;
 	protected fontSize: number;
 	protected hAlign: string;
@@ -33,10 +33,14 @@ export default class Label extends UIElement{
 		this.textColor = color;
 	}
 
+	getFontString(): string {
+		return this.fontSize + "px " + this.font;
+	}
+
 	/**
 	 * Overridable method for calculating text color - useful for elements that want to be colored on different after certain events
 	 */
-	protected calculateTextColor(): string {
+	calculateTextColor(): string {
 		return this.textColor.toStringRGBA();
 	}
 
@@ -47,9 +51,8 @@ export default class Label extends UIElement{
 
 	/**
 	 * Calculate the offset of the text - this is useful for rendering text with different alignments
-	 *
 	 */
-	protected calculateTextOffset(ctx: CanvasRenderingContext2D): Vec2 {
+	calculateTextOffset(ctx: CanvasRenderingContext2D): Vec2 {
 		let textWidth = this.calculateTextWidth(ctx);
 
 		let offset = new Vec2(0, 0);
@@ -80,49 +83,22 @@ export default class Label extends UIElement{
 		this.sizeAssigned = true;
 	}
 
-	protected autoSize(ctx: CanvasRenderingContext2D){
+	protected autoSize(ctx: CanvasRenderingContext2D): void {
 		let width = this.calculateTextWidth(ctx);
 		let height = this.fontSize;
 		this.size.set(width + this.padding.x*2, height + this.padding.y*2);
 		this.sizeAssigned = true;
 	}
 
-	/** On the next render, size this element to it's current text using its current font size */
-	sizeToText(): void {
-		this.sizeAssigned = false;
-	}
-
-	render(ctx: CanvasRenderingContext2D): void {
-		// If the size is unassigned (by the user or automatically) assign it
+	handleInitialSizing(ctx: CanvasRenderingContext2D): void {
 		if(!this.sizeAssigned){
 			this.autoSize(ctx);
 		}
-		
-		// Grab the global alpha so we can adjust it for this render
-		let previousAlpha = ctx.globalAlpha;
+	}
 
-		let origin = this.scene.getViewTranslation(this);
-
-		ctx.font = this.fontSize + "px " + this.font;
-		let offset = this.calculateTextOffset(ctx);
-
-		// Stroke and fill a rounded rect and give it text
-		ctx.globalAlpha = this.backgroundColor.a;
-		ctx.fillStyle = this.calculateBackgroundColor();
-		ctx.fillRoundedRect(this.position.x - origin.x - this.size.x/2, this.position.y - origin.y - this.size.y/2,
-			this.size.x, this.size.y, this.borderRadius);
-		
-		ctx.strokeStyle = this.calculateBorderColor();
-		ctx.globalAlpha = this.borderColor.a;
-		ctx.lineWidth = this.borderWidth;
-		ctx.strokeRoundedRect(this.position.x - origin.x - this.size.x/2, this.position.y - origin.y - this.size.y/2,
-			this.size.x, this.size.y, this.borderRadius);
-
-		ctx.fillStyle = this.calculateTextColor();
-		ctx.globalAlpha = this.textColor.a;
-		ctx.fillText(this.text, this.position.x + offset.x - origin.x - this.size.x/2, this.position.y + offset.y - origin.y - this.size.y/2);
-	
-		ctx.globalAlpha = previousAlpha;
+	/** On the next render, size this element to it's current text using its current font size */
+	sizeToText(): void {
+		this.sizeAssigned = false;
 	}
 
 	debug_render = (ctx: CanvasRenderingContext2D): void => {
