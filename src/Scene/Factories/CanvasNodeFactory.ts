@@ -2,6 +2,7 @@ import Scene from "../Scene";
 import UIElement from "../../Nodes/UIElement";
 import Graphic from "../../Nodes/Graphic";
 import Sprite from "../../Nodes/Sprites/Sprite";
+import AnimatedSprite from "../../Nodes/Sprites/AnimatedSprite";
 import { GraphicType } from "../../Nodes/Graphics/GraphicTypes";
 import { UIElementType } from "../../Nodes/UIElements/UIElementTypes";
 import Point from "../../Nodes/Graphics/Point";
@@ -11,12 +12,15 @@ import Label from "../../Nodes/UIElements/Label";
 import Slider from "../../Nodes/UIElements/Slider";
 import TextInput from "../../Nodes/UIElements/TextInput";
 import Rect from "../../Nodes/Graphics/Rect";
+import ResourceManager from "../../ResourceManager/ResourceManager";
 
 export default class CanvasNodeFactory {
-	private scene: Scene;
+	protected scene: Scene;
+	protected resourceManager: ResourceManager;
 
 	init(scene: Scene): void {
 		this.scene = scene;
+		this.resourceManager = ResourceManager.getInstance();
 	}
 
 	/**
@@ -69,6 +73,22 @@ export default class CanvasNodeFactory {
 		let instance = new Sprite(key);
 
 		// Add instance to scene
+		instance.setScene(this.scene);
+		instance.id = this.scene.generateId();
+		this.scene.getSceneGraph().addNode(instance);
+
+		// Add instance to layer
+		layer.addNode(instance);
+
+		return instance;
+	}
+
+	addAnimatedSprite = (key: string, layerName: string): AnimatedSprite => {
+		let layer = this.scene.getLayer(layerName);
+		let spritesheet = this.resourceManager.getSpritesheet(key);
+		let instance = new AnimatedSprite(spritesheet);
+
+		// Add instance fo scene
 		instance.setScene(this.scene);
 		instance.id = this.scene.generateId();
 		this.scene.getSceneGraph().addNode(instance);

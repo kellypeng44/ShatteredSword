@@ -1,6 +1,7 @@
 import Map from "../DataTypes/Map";
 import CanvasNode from "../Nodes/CanvasNode";
 import Graphic from "../Nodes/Graphic";
+import AnimatedSprite from "../Nodes/Sprites/AnimatedSprite";
 import Sprite from "../Nodes/Sprites/Sprite";
 import Tilemap from "../Nodes/Tilemap";
 import UIElement from "../Nodes/UIElement";
@@ -29,7 +30,7 @@ export default abstract class RenderingManager {
 
     protected abstract renderSprite(sprite: Sprite): void;
 
-    protected abstract renderAnimatedSprite(): void;
+    protected abstract renderAnimatedSprite(sprite: AnimatedSprite): void;
 
     protected abstract renderGraphic(graphic: Graphic): void;
 

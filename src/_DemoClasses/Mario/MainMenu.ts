@@ -11,8 +11,13 @@ import Level1 from "./Level1";
 
 export default class MainMenu extends Scene {
 
+    loadScene(): void {
+        this.load.spritesheet("walker", "assets/spritesheets/walking.json");
+    }
+
     startScene(): void {
         this.addUILayer("Main");
+        this.addLayer("Sprite");
 
         let size = this.viewport.getHalfSize();
         this.viewport.setFocus(size);
@@ -37,10 +42,11 @@ export default class MainMenu extends Scene {
             this.sceneManager.changeScene(Level1, sceneOptions);
         }
 
-        let slider = <Slider>this.add.uiElement(UIElementType.SLIDER, "Main", {position: new Vec2(size.x, size.y*1.5)});
-        let label = this.add.uiElement(UIElementType.LABEL, "Main", {position: new Vec2(size.x + 150, size.y*1.5), text: ""});
-        slider.onValueChange = (value) => (<Label>label).setText(value.toString());
-        this.add.uiElement(UIElementType.TEXT_INPUT, "Main", {position: new Vec2(size.x, size.y*1.7)});
+        let animatedSprite = this.add.animatedSprite("walker", "Sprite");
+        animatedSprite.position.set(100, 100);
+        animatedSprite.scale.set(4, 4);
+        animatedSprite.animation.play("JUMP");
+        animatedSprite.animation.queue("WALK", true);
     }
 
     updateScene(): void {

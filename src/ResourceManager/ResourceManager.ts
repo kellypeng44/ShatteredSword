@@ -1,9 +1,9 @@
 import Map from "../DataTypes/Map";
-import Tilemap from "../Nodes/Tilemap";
 import Queue from "../DataTypes/Queue";
 import { TiledTilemapData } from "../DataTypes/Tilesets/TiledData";
 import StringUtils from "../Utils/StringUtils";
 import AudioManager from "../Sound/AudioManager";
+import Spritesheet from "../DataTypes/Spritesheet";
 
 export default class ResourceManager {
     // Instance for the singleton class
@@ -18,60 +18,43 @@ export default class ResourceManager {
     public onLoadComplete: Function;
 
 
-    /**
-     * Number to keep track of how many images need to be loaded
-     */
+    /** Number to keep track of how many images need to be loaded*/
     private loadonly_imagesLoaded: number;
-    /**
-     * Number to keep track of how many images are loaded
-     */
+    /** Number to keep track of how many images are loaded */
     private loadonly_imagesToLoad: number;
-    /**
-     * The queue of images we must load
-     */
+    /** The queue of images we must load */
     private loadonly_imageLoadingQueue: Queue<{key: string, path: string}>;
-    /**
-     * A map of the images that are currently loaded and (presumably) being used by the scene
-     */
+    /** A map of the images that are currently loaded and (presumably) being used by the scene */
     private images: Map<HTMLImageElement>;
 
-    /**
-     * Number to keep track of how many tilemaps need to be loaded
-     */
+    /** Number to keep track of how many tilemaps need to be loaded */
+    private loadonly_spritesheetsLoaded: number;
+    /** Number to keep track of how many tilemaps are loaded */
+    private loadonly_spritesheetsToLoad: number;
+    /** The queue of tilemaps we must load */
+    private loadonly_spritesheetLoadingQueue: Queue<{key: string, path: string}>;
+    /** A map of the tilemaps that are currently loaded and (presumably) being used by the scene */
+    private spritesheets: Map<Spritesheet>;
+
+    /** Number to keep track of how many tilemaps need to be loaded */
     private loadonly_tilemapsLoaded: number;
-    /**
-     * Number to keep track of how many tilemaps are loaded
-     */
+    /** Number to keep track of how many tilemaps are loaded */
     private loadonly_tilemapsToLoad: number;
-    /**
-     * The queue of tilemaps we must load
-     */
+    /** The queue of tilemaps we must load */
     private loadonly_tilemapLoadingQueue: Queue<{key: string, path: string}>;
-    /**
-     * A map of the tilemaps that are currently loaded and (presumably) being used by the scene
-     */
+    /** A map of the tilemaps that are currently loaded and (presumably) being used by the scene */
     private tilemaps: Map<TiledTilemapData>;
 
-    /**
-     * Number to keep track of how many sounds need to be loaded
-     */
+    /** Number to keep track of how many sounds need to be loaded */
     private loadonly_audioLoaded: number;
-    /**
-     * Number to keep track of how many sounds are loaded
-     */
+    /** Number to keep track of how many sounds are loaded */
     private loadonly_audioToLoad: number;
-    /**
-     * The queue of sounds we must load
-     */
+    /** The queue of sounds we must load */
     private loadonly_audioLoadingQueue: Queue<{key: string, path: string}>;
-        /**
-     * A map of the sounds that are currently loaded and (presumably) being used by the scene
-     */
+    /** A map of the sounds that are currently loaded and (presumably) being used by the scene */
     private audioBuffers: Map<AudioBuffer>;
 
-    /**
-     * The total number of "types" of things that need to be loaded (i.e. images and tilemaps)
-     */
+    /** The total number of "types" of things that need to be loaded (i.e. images and tilemaps) */
     private loadonly_typesToLoad: number;
 
     private constructor(){
@@ -82,6 +65,11 @@ export default class ResourceManager {
         this.loadonly_imagesToLoad = 0;
         this.loadonly_imageLoadingQueue = new Queue();
         this.images = new Map();
+
+        this.loadonly_spritesheetsLoaded = 0;
+        this.loadonly_spritesheetsToLoad = 0;
+        this.loadonly_spritesheetLoadingQueue = new Queue();
+        this.spritesheets = new Map();
 
         this.loadonly_tilemapsLoaded = 0;
         this.loadonly_tilemapsToLoad = 0;
@@ -122,8 +110,12 @@ export default class ResourceManager {
         return this.images.get(key);
     }
 
-    public spritesheet(key: string, path: string, frames: {hFrames: number, vFrames: number}): void {
+    public spritesheet(key: string, path: string): void {
+        this.loadonly_spritesheetLoadingQueue.enqueue({key: key, path: path});
+    }
 
+    public getSpritesheet(key: string): Spritesheet {
+        return this.spritesheets.get(key);
     }
 
     /**
@@ -160,7 +152,6 @@ export default class ResourceManager {
         return this.tilemaps.get(key);
     }
 
-    // TODO - Should everything be loaded in order, one file at a time?
     /**
      * Loads all resources currently in the queue
      * @param callback 
@@ -173,14 +164,17 @@ export default class ResourceManager {
         // Load everything in the queues. Tilemaps have to come before images because they will add new images to the queue
         this.loadTilemapsFromQueue(() => {
             console.log("Loaded Tilemaps");
-            this.loadImagesFromQueue(() => {
-                console.log("Loaded Images");
-                this.loadAudioFromQueue(() => {
-                    console.log("Loaded Audio");
-                    // Done loading
-                    this.loading = false;
-                    this.justLoaded = true;
-                    callback();
+            this.loadSpritesheetsFromQueue(() => {
+                console.log("Loaded Spritesheets");
+                this.loadImagesFromQueue(() => {
+                    console.log("Loaded Images");
+                    this.loadAudioFromQueue(() => {
+                        console.log("Loaded Audio");
+                        // Done loading
+                        this.loading = false;
+                        this.justLoaded = true;
+                        callback();
+                    });
                 });
             });
         });
@@ -197,6 +191,10 @@ export default class ResourceManager {
         this.loadonly_imagesLoaded = 0;
         this.loadonly_imagesToLoad = 0;
         this.images.clear();
+
+        this.loadonly_spritesheetsLoaded = 0;
+        this.loadonly_spritesheetsToLoad = 0;
+        this.spritesheets.clear();
 
         this.loadonly_tilemapsLoaded = 0;
         this.loadonly_tilemapsToLoad = 0;
@@ -252,7 +250,6 @@ export default class ResourceManager {
                         this.loadonly_imageLoadingQueue.enqueue({key: key, path: path});
                     }
                 }
-
             }
 
             // Finish loading
@@ -273,8 +270,62 @@ export default class ResourceManager {
         }
     }
 
+        /**
+     * Loads all spritesheets currently in the spritesheet loading queue
+     * @param onFinishLoading 
+     */
+    private loadSpritesheetsFromQueue(onFinishLoading: Function): void {
+        this.loadonly_spritesheetsToLoad = this.loadonly_spritesheetLoadingQueue.getSize();
+        this.loadonly_spritesheetsLoaded = 0;
+
+        // If no items to load, we're finished
+        if(this.loadonly_spritesheetsToLoad === 0){
+            onFinishLoading();
+        }
+
+        while(this.loadonly_spritesheetLoadingQueue.hasItems()){
+            let spritesheet = this.loadonly_spritesheetLoadingQueue.dequeue();
+            this.loadSpritesheet(spritesheet.key, spritesheet.path, onFinishLoading);
+        }
+    }
+
     /**
-     * Loads all images currently in the tilemap loading queue
+     * Loads a singular spritesheet 
+     * @param key 
+     * @param pathToSpritesheetJSON 
+     * @param callbackIfLast 
+     */
+    private loadSpritesheet(key: string, pathToSpritesheetJSON: string, callbackIfLast: Function): void {
+        this.loadTextFile(pathToSpritesheetJSON, (fileText: string) => {
+            let spritesheet = <Spritesheet>JSON.parse(fileText);
+            
+            // We can parse the object later - it's much faster than loading
+            this.spritesheets.add(key, spritesheet);
+
+            // Grab the image we need to load and add it to the imageloading queue
+            let path = StringUtils.getPathFromFilePath(pathToSpritesheetJSON) + spritesheet.spriteSheetImage;
+            this.loadonly_imageLoadingQueue.enqueue({key: spritesheet.name, path: path});
+
+            // Finish loading
+            this.finishLoadingSpritesheet(callbackIfLast);
+        });
+    }
+
+    /**
+     * Finish loading a spritesheet. Calls the callback function if this is the last spritesheet being loaded
+     * @param callback 
+     */
+    private finishLoadingSpritesheet(callback: Function): void {
+        this.loadonly_spritesheetsLoaded += 1;
+
+        if(this.loadonly_spritesheetsLoaded === this.loadonly_spritesheetsToLoad){
+            // We're done loading spritesheets
+            callback();
+        }
+    }
+
+    /**
+     * Loads all images currently in the image loading queue
      * @param onFinishLoading 
      */
     private loadImagesFromQueue(onFinishLoading: Function): void {
@@ -398,6 +449,7 @@ export default class ResourceManager {
 
     private getLoadPercent(): number {
         return (this.loadonly_tilemapsLoaded/this.loadonly_tilemapsToLoad
+            + this.loadonly_spritesheetsLoaded/this.loadonly_spritesheetsToLoad
             + this.loadonly_imagesLoaded/this.loadonly_imagesToLoad
             + this.loadonly_audioLoaded/this.loadonly_audioToLoad)
             / this.loadonly_typesToLoad;

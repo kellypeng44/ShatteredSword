@@ -17,6 +17,7 @@ export default class FactoryManager {
     // Expose all of the factories through the factory manager
     uiElement = this.canvasNodeFactory.addUIElement;
     sprite = this.canvasNodeFactory.addSprite;
+    animatedSprite = this.canvasNodeFactory.addAnimatedSprite;
     graphic = this.canvasNodeFactory.addGraphic;
     tilemap = this.tilemapFactory.add;
 }
