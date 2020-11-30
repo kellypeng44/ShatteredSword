@@ -11,6 +11,7 @@ import Stats from "../Debug/Stats";
 import ArrayUtils from "../Utils/ArrayUtils";
 import RenderingManager from "../Rendering/RenderingManager";
 import CanvasRenderer from "../Rendering/CanvasRenderer";
+import Color from "../Utils/Color";
 
 export default class GameLoop {
     gameOptions: GameOptions;
@@ -63,6 +64,7 @@ export default class GameLoop {
     readonly HEIGHT: number;
     private viewport: Viewport;
     private ctx: CanvasRenderingContext2D;
+    private clearColor: Color;
     
     // All of the necessary subsystems that need to run here
 	private eventQueue: EventQueue;
@@ -107,6 +109,7 @@ export default class GameLoop {
         // For now, just hard code a canvas renderer. We can do this with options later
         this.renderingManager = new CanvasRenderer();
         this.ctx = this.renderingManager.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
+        this.clearColor = new Color(this.gameOptions.clearColor.r, this.gameOptions.clearColor.g, this.gameOptions.clearColor.b);
 
         // Size the viewport to the game canvas
         this.viewport = new Viewport();
@@ -272,6 +275,8 @@ export default class GameLoop {
      */
     render(): void {
         this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+        this.ctx.fillStyle = this.clearColor.toString();
+        this.ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
         this.sceneManager.render();
         Debug.render(this.ctx);
         Stats.render();
@@ -279,12 +284,14 @@ export default class GameLoop {
 }
 
 class GameOptions {
-    viewportSize: {x: number, y: number}
+    viewportSize: {x: number, y: number};
+    clearColor: {r: number, g: number, b: number}
 
     static parse(options: Record<string, any>): GameOptions {
         let gOpt = new GameOptions();
 
         gOpt.viewportSize = options.viewportSize ? options.viewportSize : {x: 800, y: 600};
+        gOpt.clearColor  = options.clearColor ? options.clearColor : {r: 255, g: 255, b: 255};
 
         return gOpt;
     }

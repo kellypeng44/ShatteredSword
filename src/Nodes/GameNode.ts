@@ -9,11 +9,12 @@ import Shape from "../DataTypes/Shapes/Shape";
 import Map from "../DataTypes/Map";
 import AABB from "../DataTypes/Shapes/AABB";
 import NavigationPath from "../Pathfinding/NavigationPath";
+import TweenManager from "../Rendering/Animations/TweenManager";
 
 /**
  * The representation of an object in the game world
  */
-export default abstract class GameNode implements Positioned, Unique, Updateable, Physical, Actor, Debug_Renderable {
+export default abstract class GameNode implements Positioned, Unique, Updateable, Physical, Actor {
 	/*---------- POSITIONED ----------*/
 	private _position: Vec2;
 
@@ -46,12 +47,14 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	path: NavigationPath;
 	pathfinding: boolean = false;
 
+	/*---------- GENERAL ----------*/
 	protected input: InputReceiver;
 	protected receiver: Receiver;
 	protected emitter: Emitter;
 	protected scene: Scene;
 	protected layer: Layer;
-	
+	tweens: TweenManager;
+	rotation: number;
 
 	constructor(){
 		this.input = InputReceiver.getInstance();
@@ -59,6 +62,8 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this._position.setOnChange(() => this.positionChanged());
 		this.receiver = new Receiver();
 		this.emitter = new Emitter();
+		this.tweens = new TweenManager(this);
+		this.rotation = 0;
 	}
 
 	/*---------- POSITIONED ----------*/
@@ -190,6 +195,19 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.aiActive = active;
 	}
 
+	/*---------- TWEENABLE PROPERTIES ----------*/
+	set positionX(value: number) {
+		this.position.x = value;
+	}
+
+	set positionY(value: number) {
+		this.position.y = value;
+	}
+
+	abstract set scaleX(value: number);
+
+	abstract set scaleY(value: number);
+
 	/*---------- GAME NODE ----------*/
 	/**
 	 * Sets the scene for this object.
@@ -226,7 +244,15 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		}
 	};
 
-	abstract update(deltaT: number): void;
+	update(deltaT: number): void {
+		this.tweens.update(deltaT);
+	}
+}
 
-	debug_render = (ctx: CanvasRenderingContext2D): void => {};
+export enum TweenableProperties{
+	posX = "positionX",
+	posY = "positionY",
+	scaleX = "scaleX",
+	scaleY = "scaleY",
+	rotation = "rotation"
 }

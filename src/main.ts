@@ -7,6 +7,7 @@ function main(){
     // Create the game object
     let options = {
         viewportSize: {x: 800, y: 600},
+        clearColor: {r: 34, g: 32, b: 52}
     }
 
     let game = new GameLoop(options);

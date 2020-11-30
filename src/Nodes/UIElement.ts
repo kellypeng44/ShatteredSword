@@ -59,6 +59,8 @@ export default abstract class UIElement extends CanvasNode {
 	}
 
 	update(deltaT: number): void {
+		super.update(deltaT);
+
 		// See of this object was just clicked
 		if(this.input.isMouseJustPressed()){
 			let clickPos = this.input.getMousePressPosition();

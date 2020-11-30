@@ -1,3 +1,4 @@
+import Vec2 from "../../DataTypes/Vec2";
 import Point from "../../Nodes/Graphics/Point";
 import Rect from "../../Nodes/Graphics/Rect";
 import ResourceManager from "../../ResourceManager/ResourceManager";
@@ -17,28 +18,22 @@ export default class GraphicRenderer {
         this.scene = scene;
     }
 
-    renderPoint(point: Point): void {
-        let origin = this.scene.getViewTranslation(point);
-        let zoom = this.scene.getViewScale();
-
+    renderPoint(point: Point, origin: Vec2, zoom: number): void {
 		this.ctx.fillStyle = point.color.toStringRGBA();
-        this.ctx.fillRect((point.position.x - origin.x - point.size.x/2)*zoom, (point.position.y - origin.y - point.size.y/2)*zoom,
+        this.ctx.fillRect((-point.size.x/2)*zoom, (-point.size.y/2)*zoom,
         point.size.x*zoom, point.size.y*zoom);
     }
 
-    renderRect(rect: Rect): void {
-        let origin = this.scene.getViewTranslation(rect);
-        let zoom = this.scene.getViewScale();
-
+    renderRect(rect: Rect, origin: Vec2, zoom: number): void {
         // Draw the interior of the rect
         if(rect.color.a !== 0){
             this.ctx.fillStyle = rect.color.toStringRGB();
-            this.ctx.fillRect((rect.position.x - rect.size.x/2 - origin.x)*zoom, (rect.position.y - rect.size.y/2 - origin.y)*zoom, rect.size.x*zoom, rect.size.y*zoom);
+            this.ctx.fillRect((-rect.size.x/2)*zoom, (-rect.size.y/2)*zoom, rect.size.x*zoom, rect.size.y*zoom);
         }
 
         // Draw the border of the rect
         this.ctx.strokeStyle = rect.getBorderColor().toStringRGB();
         this.ctx.lineWidth = rect.getBorderWidth();
-        this.ctx.strokeRect((rect.position.x - rect.size.x/2 - origin.x)*zoom, (rect.position.y - rect.size.y/2 - origin.y)*zoom, rect.size.x*zoom, rect.size.y*zoom);
+        this.ctx.strokeRect((-rect.size.x/2)*zoom, (-rect.size.y/2)*zoom, rect.size.x*zoom, rect.size.y*zoom);
     }
 }

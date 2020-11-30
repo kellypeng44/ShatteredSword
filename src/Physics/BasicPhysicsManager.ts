@@ -9,6 +9,7 @@ import Shape from "../DataTypes/Shapes/Shape";
 import MathUtils from "../Utils/MathUtils";
 import OrthogonalTilemap from "../Nodes/Tilemaps/OrthogonalTilemap";
 import AABB from "../DataTypes/Shapes/AABB";
+import Debug from "../Debug/Debug";
 
 export default class BasicPhysicsManager extends PhysicsManager {
 

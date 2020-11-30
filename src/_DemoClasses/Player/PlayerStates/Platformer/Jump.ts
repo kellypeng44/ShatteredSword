@@ -1,5 +1,6 @@
 import Vec2 from "../../../../DataTypes/Vec2";
 import GameEvent from "../../../../Events/GameEvent";
+import AnimatedSprite from "../../../../Nodes/Sprites/AnimatedSprite";
 import MathUtils from "../../../../Utils/MathUtils";
 import { CustomGameEventType } from "../../../CustomGameEventType";
 import Level1, { MarioEvents } from "../../../Mario/Level1";
@@ -7,8 +8,11 @@ import { PlayerStates } from "./PlayerController";
 import PlayerState from "./PlayerState";
 
 export default class Jump extends PlayerState {
+	owner: AnimatedSprite;
 
-	onEnter(): void {}
+	onEnter(): void {
+		this.owner.animation.play("JUMP", true);
+	}
 
 	handleInput(event: GameEvent): void {}
 
@@ -27,8 +31,8 @@ export default class Jump extends PlayerState {
 			console.log("Hit tile: " + tile);
 
 			// If coin block, change to empty coin block
-			if(tile === 4){
-				this.parent.tilemap.setTileAtRowCol(pos, 12);
+			if(tile === 17){
+				this.parent.tilemap.setTileAtRowCol(pos, 18);
 				this.emitter.fireEvent(MarioEvents.PLAYER_HIT_COIN_BLOCK);
 			}
 		}
@@ -49,5 +53,7 @@ export default class Jump extends PlayerState {
 		this.owner.move(this.parent.velocity.scaled(deltaT));
 	}
 
-	onExit(): void {}
+	onExit(): void {
+		this.owner.animation.stop();
+	}
 }

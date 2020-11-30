@@ -21,7 +21,7 @@ export default class AnimatedSprite extends Sprite {
         // Set the size of the sprite to the sprite size specified by the spritesheet
         this.size.set(spritesheet.spriteWidth, spritesheet.spriteHeight);
 
-        this.animation = new AnimationManager();
+        this.animation = new AnimationManager(this);
 
         // Add the animations to the animated sprite
         for(let animation of spritesheet.animations){

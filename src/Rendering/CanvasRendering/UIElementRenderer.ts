@@ -21,15 +21,12 @@ export default class UIElementRenderer {
         this.scene = scene;
     }
 
-    renderLabel(label: Label): void {
+    renderLabel(label: Label, origin: Vec2, zoom: number): void {
         // If the size is unassigned (by the user or automatically) assign it
         label.handleInitialSizing(this.ctx);
 		
 		// Grab the global alpha so we can adjust it for this render
 		let previousAlpha = this.ctx.globalAlpha;
-
-        // Get the origin of the viewport according to this label
-		let origin = this.scene.getViewTranslation(label);
 
         // Get the font and text position in label
 		this.ctx.font = label.getFontString();
@@ -38,39 +35,37 @@ export default class UIElementRenderer {
 		// Stroke and fill a rounded rect and give it text
 		this.ctx.globalAlpha = label.backgroundColor.a;
 		this.ctx.fillStyle = label.calculateBackgroundColor();
-		this.ctx.fillRoundedRect(label.position.x - origin.x - label.size.x/2, label.position.y - origin.y - label.size.y/2,
+		this.ctx.fillRoundedRect(-label.size.x/2, -label.size.y/2,
 			label.size.x, label.size.y, label.borderRadius);
 		
 		this.ctx.strokeStyle = label.calculateBorderColor();
 		this.ctx.globalAlpha = label.borderColor.a;
 		this.ctx.lineWidth = label.borderWidth;
-		this.ctx.strokeRoundedRect(label.position.x - origin.x - label.size.x/2, label.position.y - origin.y - label.size.y/2,
+		this.ctx.strokeRoundedRect(-label.size.x/2, -label.size.y/2,
 			label.size.x, label.size.y, label.borderRadius);
 
 		this.ctx.fillStyle = label.calculateTextColor();
 		this.ctx.globalAlpha = label.textColor.a;
-		this.ctx.fillText(label.text, label.position.x + offset.x - origin.x - label.size.x/2, label.position.y + offset.y - origin.y - label.size.y/2);
+		this.ctx.fillText(label.text, offset.x - label.size.x/2, offset.y - label.size.y/2);
 	
 		this.ctx.globalAlpha = previousAlpha;
     }
 
-    renderButton(button: Button): void {
-        this.renderLabel(button);
+    renderButton(button: Button, origin: Vec2, zoom: number): void {
+        this.renderLabel(button, origin, zoom);
     }
 
-    renderSlider(slider: Slider): void {
+    renderSlider(slider: Slider, origin: Vec2, zoom: number): void {
 		// Grab the global alpha so we can adjust it for this render
 		let previousAlpha = this.ctx.globalAlpha;
 		this.ctx.globalAlpha = slider.getLayer().getAlpha();
-
-        let origin = this.scene.getViewTranslation(slider);
 
         // Calcualate the slider size
         let sliderSize = new Vec2(slider.size.x, 2);
 
         // Draw the slider
 		this.ctx.fillStyle = slider.sliderColor.toString();
-		this.ctx.fillRoundedRect(slider.position.x - origin.x - sliderSize.x/2, slider.position.y - origin.y - sliderSize.y/2,
+		this.ctx.fillRoundedRect(-sliderSize.x/2, -sliderSize.y/2,
             sliderSize.x, sliderSize.y, slider.borderRadius);
 
         // Calculate the nib size and position
@@ -80,20 +75,20 @@ export default class UIElementRenderer {
 
         // Draw the nib
 		this.ctx.fillStyle = slider.nibColor.toString();
-		this.ctx.fillRoundedRect(nibPosition.x - origin.x - nibSize.x/2, nibPosition.y - origin.y - nibSize.y/2,
+		this.ctx.fillRoundedRect(-nibSize.x/2, -nibSize.y/2,
             nibSize.x, nibSize.y, slider.borderRadius);
 
         // Reset the alpha
         this.ctx.globalAlpha = previousAlpha;
     }
 
-    renderTextInput(textInput: TextInput): void {
+    renderTextInput(textInput: TextInput, origin: Vec2, zoom: number): void {
         // Show a cursor sometimes
         if(textInput.focused && textInput.cursorCounter % 60 > 30){
             textInput.text += "|";
         }
 
-        this.renderLabel(textInput);
+        this.renderLabel(textInput, origin, zoom);
 
         if(textInput.focused){
             if(textInput.cursorCounter % 60 > 30){

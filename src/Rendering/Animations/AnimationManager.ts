@@ -40,7 +40,8 @@ export default class AnimationManager {
     /** The onEnd event of a pending animation */
     protected pendingOnEnd: string;
 
-    constructor(){
+    constructor(owner: CanvasNode){
+        this.owner = owner;
         this.animationState = AnimationState.STOPPED;
         this.currentAnimation = "";
         this.currentFrame = 0;

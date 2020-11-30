@@ -120,6 +120,10 @@ export default class Viewport {
 		}
     }
 
+    setZoomLevel(zoom: number): void {
+        this.view.halfSize.scale(1/zoom);
+    }
+
     getZoomLevel(): number {
         return this.canvasSize.x/this.view.hw/2
     }

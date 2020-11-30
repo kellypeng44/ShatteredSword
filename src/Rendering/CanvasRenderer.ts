@@ -18,6 +18,7 @@ import Button from "../Nodes/UIElements/Button";
 import Slider from "../Nodes/UIElements/Slider";
 import TextInput from "../Nodes/UIElements/TextInput";
 import AnimatedSprite from "../Nodes/Sprites/AnimatedSprite";
+import Vec2 from "../DataTypes/Vec2";
 
 export default class CanvasRenderer extends RenderingManager {
     protected ctx: CanvasRenderingContext2D;
@@ -25,8 +26,11 @@ export default class CanvasRenderer extends RenderingManager {
     protected tilemapRenderer: TilemapRenderer;
     protected uiElementRenderer: UIElementRenderer;
 
+    protected origin: Vec2;
+    protected zoom: number;
+
     constructor(){
-        super();;
+        super();
     }
 
     setScene(scene: Scene){
@@ -79,6 +83,24 @@ export default class CanvasRenderer extends RenderingManager {
     }
 
     protected renderNode(node: CanvasNode): void {
+        // Calculate the origin of the viewport according to this sprite
+        this.origin = this.scene.getViewTranslation(node);
+
+        // Get the zoom level of the scene
+        this.zoom = this.scene.getViewScale();
+        
+        // Move the canvas to the position of the node and rotate
+        let xScale = 1;
+        let yScale = 1;
+        
+        if(node instanceof Sprite){
+            xScale = node.invertX ? -1 : 1;
+            yScale = node.invertY ? -1 : 1;
+        }
+
+        this.ctx.setTransform(xScale, 0, 0, yScale, (node.position.x - this.origin.x)*this.zoom, (node.position.y - this.origin.y)*this.zoom);
+        this.ctx.rotate(node.rotation);
+        
         if(node instanceof AnimatedSprite){
             this.renderAnimatedSprite(<AnimatedSprite>node);
         } else if(node instanceof Sprite){
@@ -88,17 +110,13 @@ export default class CanvasRenderer extends RenderingManager {
         } else if(node instanceof UIElement){
             this.renderUIElement(<UIElement>node);
         }
+
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
     protected renderSprite(sprite: Sprite): void {
         // Get the image from the resource manager
         let image = this.resourceManager.getImage(sprite.imageId);
-
-        // Calculate the origin of the viewport according to this sprite
-        let origin = this.scene.getViewTranslation(sprite);
-
-        // Get the zoom level of the scene
-        let zoom = this.scene.getViewScale();
 
         /*
             Coordinates in the space of the image:
@@ -111,27 +129,21 @@ export default class CanvasRenderer extends RenderingManager {
         this.ctx.drawImage(image,
             sprite.imageOffset.x, sprite.imageOffset.y,
             sprite.size.x, sprite.size.y,
-            (sprite.position.x - origin.x - sprite.size.x*sprite.scale.x/2)*zoom, (sprite.position.y - origin.y - sprite.size.y*sprite.scale.y/2)*zoom,
-            sprite.size.x * sprite.scale.x*zoom, sprite.size.y * sprite.scale.y*zoom);
+            (-sprite.size.x*sprite.scale.x/2)*this.zoom, (-sprite.size.y*sprite.scale.y/2)*this.zoom,
+            sprite.size.x * sprite.scale.x*this.zoom, sprite.size.y * sprite.scale.y*this.zoom);
 
         // Debug mode
         if(this.debug){
             this.ctx.lineWidth = 4;
             this.ctx.strokeStyle = "#00FF00"
             let b = sprite.boundary;
-            this.ctx.strokeRect(b.x - b.hw - origin.x, b.y - b.hh - origin.y, b.hw*2*zoom, b.hh*2*zoom);
+            this.ctx.strokeRect(-b.hw*this.zoom, -b.hh*this.zoom, b.hw*2*this.zoom, b.hh*2*this.zoom);
         }
     }
 
     protected renderAnimatedSprite(sprite: AnimatedSprite): void {
         // Get the image from the resource manager
         let image = this.resourceManager.getImage(sprite.imageId);
-
-        // Calculate the origin of the viewport according to this sprite
-        let origin = this.scene.getViewTranslation(sprite);
-
-        // Get the zoom level of the scene
-        let zoom = this.scene.getViewScale();
 
         let animationIndex = sprite.animation.getIndexAndAdvanceAnimation();
 
@@ -141,30 +153,30 @@ export default class CanvasRenderer extends RenderingManager {
             Coordinates in the space of the image:
                 image crop start -> x, y
                 image crop size  -> w, h
-            Coordinates in the space of the world
-                image draw start -> x, y
+            Coordinates in the space of the world (given we moved)
+                image draw start -> -w/2, -h/2
                 image draw size  -> w, h
         */
         this.ctx.drawImage(image,
             sprite.imageOffset.x + animationOffset.x, sprite.imageOffset.y + animationOffset.y,
             sprite.size.x, sprite.size.y,
-            (sprite.position.x - origin.x - sprite.size.x*sprite.scale.x/2)*zoom, (sprite.position.y - origin.y - sprite.size.y*sprite.scale.y/2)*zoom,
-            sprite.size.x * sprite.scale.x*zoom, sprite.size.y * sprite.scale.y*zoom);
+            (-sprite.size.x*sprite.scale.x/2)*this.zoom, (-sprite.size.y*sprite.scale.y/2)*this.zoom,
+            sprite.size.x * sprite.scale.x*this.zoom, sprite.size.y * sprite.scale.y*this.zoom);
 
         // Debug mode
         if(this.debug){
             this.ctx.lineWidth = 4;
             this.ctx.strokeStyle = "#00FF00"
             let b = sprite.boundary;
-            this.ctx.strokeRect(b.x - b.hw - origin.x, b.y - b.hh - origin.y, b.hw*2*zoom, b.hh*2*zoom);
+            this.ctx.strokeRect(-b.hw*this.zoom, -b.hh*this.zoom, b.hw*2*this.zoom, b.hh*2*this.zoom);
         }
     }
 
     protected renderGraphic(graphic: Graphic): void {
         if(graphic instanceof Point){
-            this.graphicRenderer.renderPoint(<Point>graphic);
+            this.graphicRenderer.renderPoint(<Point>graphic, this.origin, this.zoom);
         } else if(graphic instanceof Rect){
-            this.graphicRenderer.renderRect(<Rect>graphic);
+            this.graphicRenderer.renderRect(<Rect>graphic, this.origin, this.zoom);
         }
     }
 
@@ -176,13 +188,13 @@ export default class CanvasRenderer extends RenderingManager {
 
     protected renderUIElement(uiElement: UIElement): void {
         if(uiElement instanceof Label){
-            this.uiElementRenderer.renderLabel(uiElement);
+            this.uiElementRenderer.renderLabel(uiElement, this.origin, this.zoom);
         } else if(uiElement instanceof Button){
-            this.uiElementRenderer.renderButton(uiElement);
+            this.uiElementRenderer.renderButton(uiElement, this.origin, this.zoom);
         } else if(uiElement instanceof Slider){
-            this.uiElementRenderer.renderSlider(uiElement);
+            this.uiElementRenderer.renderSlider(uiElement, this.origin, this.zoom);
         } else if(uiElement instanceof TextInput){
-            this.uiElementRenderer.renderTextInput(uiElement);
+            this.uiElementRenderer.renderTextInput(uiElement, this.origin, this.zoom);
         }
     }
 }

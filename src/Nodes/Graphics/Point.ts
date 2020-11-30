@@ -8,6 +8,4 @@ export default class Point extends Graphic {
         this.position = position;
         this.size.set(5, 5);
     }
-
-    update(deltaT: number): void {}
 }

@@ -27,9 +27,9 @@ export enum PlayerStates {
 export default class PlayerController extends StateMachineAI {
     protected owner: GameNode;
     velocity: Vec2 = Vec2.ZERO;
-	speed: number = 400;
-	MIN_SPEED: number = 400;
-    MAX_SPEED: number = 1000;
+	speed: number = 200;
+	MIN_SPEED: number = 200;
+    MAX_SPEED: number = 500;
     tilemap: OrthogonalTilemap;
 
     initializeAI(owner: GameNode, options: Record<string, any>){

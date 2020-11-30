@@ -38,6 +38,4 @@ export default class Rect extends Graphic {
     getBorderWidth(): number {
         return this.borderWidth;
     }
-
-    update(deltaT: number): void {}
 }

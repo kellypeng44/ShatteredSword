@@ -45,6 +45,14 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		this.scaleChanged();
 	}
 
+	set scaleX(value: number) {
+		this.scale.x = value;
+	}
+
+	set scaleY(value: number) {
+		this.scale.y = value;
+	}
+
 	protected positionChanged(): void {
 		super.positionChanged();
 		this.updateBoundary();

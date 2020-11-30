@@ -1,15 +1,19 @@
 import State from "../../../../DataTypes/State/State";
 import StateMachine from "../../../../DataTypes/State/StateMachine";
 import Vec2 from "../../../../DataTypes/Vec2";
+import Debug from "../../../../Debug/Debug";
 import InputReceiver from "../../../../Input/InputReceiver";
+import CanvasNode from "../../../../Nodes/CanvasNode";
 import GameNode from "../../../../Nodes/GameNode";
+import Sprite from "../../../../Nodes/Sprites/Sprite";
+import MathUtils from "../../../../Utils/MathUtils";
 import PlayerController from "../../PlayerController";
 
 
 export default abstract class PlayerState extends State {
 	input: InputReceiver = InputReceiver.getInstance();
 	owner: GameNode;
-	gravity: number = 7000;
+	gravity: number = 1000;
 	parent: PlayerController;
 
 	constructor(parent: StateMachine, owner: GameNode){
