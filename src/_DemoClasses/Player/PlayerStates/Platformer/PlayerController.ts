@@ -20,7 +20,7 @@ export default class PlayerController extends StateMachineAI {
 	velocity: Vec2 = Vec2.ZERO;
 	speed: number = 400;
 	MIN_SPEED: number = 400;
-	MAX_SPEED: number = 1000;
+	MAX_SPEED: number = 400;
 
     initializeAI(owner: GameNode, config: Record<string, any>): void {
 		this.owner = owner;

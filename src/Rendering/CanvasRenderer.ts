@@ -66,19 +66,41 @@ export default class CanvasRenderer extends RenderingManager {
             }
         });
 
-        // Render tilemaps
-        tilemaps.forEach(tilemap => {
-            this.renderTilemap(tilemap);
-        });
+        let tilemapIndex = 0;
+        let tilemapLength = tilemaps.length;
 
-        // Render visible set
-        visibleSet.forEach(node => {
-            if(node.visible){
-                this.renderNode(node);
+        let visibleSetIndex = 0;
+        let visibleSetLength = visibleSet.length;
+
+        while(tilemapIndex < tilemapLength || visibleSetIndex < visibleSetLength){
+            // Check conditions where we've already reached the edge of one list
+            if(tilemapIndex >= tilemapLength){
+                // Only render the remaining visible set
+                let node = visibleSet[visibleSetIndex++];
+                if(node.visible){
+                    this.renderNode(node);
+                }
+                continue;
             }
-        });
 
-        // Render the uiLayers
+            if(visibleSetIndex >= visibleSetLength){
+                // Only render tilemaps
+                this.renderTilemap(tilemaps[tilemapIndex++]);
+                continue;
+            }
+
+            // Render whichever is further down
+            if(tilemaps[tilemapIndex].getLayer().getDepth() <= visibleSet[visibleSetIndex].getLayer().getDepth()){
+                this.renderTilemap(tilemaps[tilemapIndex++]);
+            } else {
+                let node = visibleSet[visibleSetIndex++];
+                if(node.visible){
+                    this.renderNode(node);
+                }
+            }
+        }
+
+        // Render the uiLayers on top of everything else
         uiLayers.forEach(key => uiLayers.get(key).getItems().forEach(node => this.renderNode(<CanvasNode>node)));
     }
 
@@ -100,6 +122,8 @@ export default class CanvasRenderer extends RenderingManager {
 
         this.ctx.setTransform(xScale, 0, 0, yScale, (node.position.x - this.origin.x)*this.zoom, (node.position.y - this.origin.y)*this.zoom);
         this.ctx.rotate(node.rotation);
+        let globalAlpha = this.ctx.globalAlpha;
+        this.ctx.globalAlpha = node.alpha;
         
         if(node instanceof AnimatedSprite){
             this.renderAnimatedSprite(<AnimatedSprite>node);
@@ -111,6 +135,7 @@ export default class CanvasRenderer extends RenderingManager {
             this.renderUIElement(<UIElement>node);
         }
 
+        this.ctx.globalAlpha = globalAlpha;
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 

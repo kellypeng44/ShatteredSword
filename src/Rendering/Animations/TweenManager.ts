@@ -44,6 +44,13 @@ export default class TweenManager {
                 tween.loop = loop;
             }
 
+            // Set the initial values
+            for(let effect of tween.effects){
+                if(effect.resetOnComplete){
+                    effect.initialValue = this.owner[effect.property];
+                }
+            }
+
             // Start the tween running
             tween.animationState = AnimationState.PLAYING;
             tween.elapsedTime = 0;
@@ -80,7 +87,15 @@ export default class TweenManager {
      */
     stop(key: string): void {
         if(this.tweens.has(key)){
-            this.tweens.get(key).animationState = AnimationState.STOPPED;
+            let tween = this.tweens.get(key);
+            tween.animationState = AnimationState.STOPPED;
+
+            // Return to the initial values
+            for(let effect of tween.effects){
+                if(effect.resetOnComplete){
+                    this.owner[effect.property] = effect.initialValue;
+                }
+            }
         }
     }
 
@@ -103,7 +118,7 @@ export default class TweenManager {
                             tween.elapsedTime -= tween.duration;
                         } else {
                             // We aren't looping and can't reverse, so stop
-                            tween.animationState = AnimationState.STOPPED;
+                            this.stop(key);
                         }
                     }
 
@@ -113,7 +128,7 @@ export default class TweenManager {
                             tween.reversing = false;
                             tween.elapsedTime -= 2*tween.duration;
                         } else {
-                            tween.animationState = AnimationState.STOPPED;
+                            this.stop(key);
                         }
                     }
 

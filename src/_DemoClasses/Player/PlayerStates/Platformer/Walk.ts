@@ -7,7 +7,7 @@ export default class Walk extends OnGround {
 	owner: AnimatedSprite;
 
 	onEnter(): void {
-		this.parent.speed = this.parent.MAX_SPEED/2;
+		this.parent.speed = this.parent.MIN_SPEED;
 		this.owner.animation.play("WALK", true);
 	}
 

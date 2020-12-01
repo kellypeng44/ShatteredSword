@@ -11,6 +11,7 @@ import OrthogonalTilemap from "../../Nodes/Tilemaps/OrthogonalTilemap";
 import AnimatedSprite from "../../Nodes/Sprites/AnimatedSprite";
 import Debug from "../../Debug/Debug";
 import { EaseFunctionType } from "../../Utils/EaseFunctions";
+import Sprite from "../../Nodes/Sprites/Sprite";
 
 export enum MarioEvents {
     PLAYER_HIT_COIN = "PlayerHitCoin",
@@ -23,19 +24,33 @@ export default class Level1 extends Scene {
     coinCountLabel: Label;
     livesCount: number = 3;
     livesCountLabel: Label;
+    bg: Sprite;
 
     loadScene(): void {
+        this.load.image("background", "/assets/sprites/2bitbackground.png");
+        this.load.image("coin", "/assets/sprites/coin.png");
         this.load.tilemap("level1", "/assets/tilemaps/2bitlevel1.json");
-        this.load.image("goomba", "assets/sprites/Goomba.png");
-        this.load.image("koopa", "assets/sprites/Koopa.png");
         this.load.spritesheet("player", "assets/spritesheets/walking.json");
+        this.load.spritesheet("hopper", "assets/spritesheets/hopper.json");
+        this.load.spritesheet("bunny", "assets/spritesheets/ghostBunny.json");
     }
 
     startScene(): void {
+        // Add a background layer and set the background image on it
+        this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
+        let bg = this.add.sprite("background", "bg");
+        bg.scale.set(2, 2);
+        bg.position.set(bg.boundary.halfSize.x, 16);
+        this.bg = bg;
+        this.bg.toString = () => "BackgroundImage";
+
         let tilemap = <OrthogonalTilemap>this.add.tilemap("level1", new Vec2(2, 2))[0].getItems()[0];
         //tilemap.position.set(tilemap.size.x*tilemap.scale.x/2, tilemap.size.y*tilemap.scale.y/2);
         tilemap.position.set(0, 0);
         this.viewport.setBounds(0, 0, 128*32, 20*32);
+
+        // Add a layer behind the tilemap for coin animation
+        this.addLayer("coinLayer", -50);
 
         // Add the player (a rect for now)
         // this.player = this.add.graphic(GraphicType.RECT, "Main", {position: new Vec2(192, 1152), size: new Vec2(64, 64)});
@@ -70,23 +85,37 @@ export default class Level1 extends Scene {
         this.viewport.setZoomLevel(2);
 
         // Add enemies
-        // for(let pos of [{x: 21, y: 18}, {x: 30, y: 18}, {x: 37, y: 18}, {x: 41, y: 18}, {x: 105, y: 8}, {x: 107, y: 8}, {x: 125, y: 18}]){
-        //     let goomba = this.add.sprite("goomba", "Main");
-        //     goomba.position.set(pos.x*64, pos.y*64);
-        //     goomba.scale.set(2, 2);
-        //     goomba.addPhysics();
-        //     goomba.addAI(GoombaController, {jumpy: false});
-        //     goomba.setPhysicsLayer("enemy");
-        // }
+        for(let pos of [{x: 21, y: 18}]){//, {x: 30, y: 18}, {x: 37, y: 18}, {x: 41, y: 18}, {x: 105, y: 8}, {x: 107, y: 8}, {x: 125, y: 18}]){
+            let bunny = this.add.animatedSprite("bunny", "Main");
+            bunny.position.set(pos.x*32, pos.y*32);
+            bunny.scale.set(2, 2);
+            bunny.addPhysics();
+            bunny.addAI(GoombaController, {jumpy: false});
+            bunny.setPhysicsLayer("enemy");
+        }
 
-        // for(let pos of [{x: 67, y: 18}, {x: 86, y: 21}, {x: 128, y: 18}]){
-        //     let koopa = this.add.sprite("koopa", "Main");
-        //     koopa.position.set(pos.x*64, pos.y*64);
-        //     koopa.scale.set(2, 2);
-        //     koopa.addPhysics();
-        //     koopa.addAI(GoombaController, {jumpy: true});
-        //     koopa.setPhysicsLayer("enemy");
-        // }
+        for(let pos of [{x: 67, y: 18}]){//, {x: 86, y: 21}, {x: 128, y: 18}]){
+            let hopper = this.add.animatedSprite("hopper", "Main");
+            hopper.position.set(pos.x*32, pos.y*32);
+            hopper.scale.set(2, 2);
+            hopper.addPhysics();
+            hopper.addAI(GoombaController, {jumpy: true});
+            hopper.setPhysicsLayer("enemy");
+            hopper.tweens.add("jump", {
+                startDelay: 0,
+                duration: 300,
+                effects: [
+                    {
+                        property: "rotation",
+                        resetOnComplete: true,
+                        start: -3.14/8,
+                        end: 3.14/8,
+                        ease: EaseFunctionType.IN_OUT_SINE
+                    }
+                ],
+                reverseOnComplete: true,
+            });
+        }
 
         // Add UI
         this.addUILayer("UI");
@@ -96,6 +125,8 @@ export default class Level1 extends Scene {
     }
 
     updateScene(deltaT: number): void {
+        Debug.log("pos", this.bg.position);
+
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
             

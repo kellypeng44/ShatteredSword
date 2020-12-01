@@ -1,5 +1,6 @@
 import Vec2 from "../../DataTypes/Vec2";
 import GameEvent from "../../Events/GameEvent";
+import AnimatedSprite from "../../Nodes/Sprites/AnimatedSprite";
 import { CustomGameEventType } from "../CustomGameEventType";
 import { GoombaStates } from "./GoombaController";
 import OnGround from "./OnGround";
@@ -7,6 +8,11 @@ import OnGround from "./OnGround";
 export default class Idle extends OnGround {
 	onEnter(): void {
 		this.parent.speed = this.parent.speed;
+		(<AnimatedSprite>this.owner).animation.play("IDLE", true);
+	}
+
+	onExit(): void {
+		(<AnimatedSprite>this.owner).animation.stop();
 	}
 
 	handleInput(event: GameEvent) {

@@ -31,6 +31,7 @@ export default class GoombaController extends StateMachineAI {
 		this.receiver.subscribe("playerHitCoinBlock");
 		if(this.jumpy){
 			this.receiver.subscribe(CustomGameEventType.PLAYER_JUMP);
+			this.speed = 100;
 		}
 
 		let idle = new Idle(this, owner);

@@ -55,6 +55,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	protected layer: Layer;
 	tweens: TweenManager;
 	rotation: number;
+	alpha: number;
 
 	constructor(){
 		this.input = InputReceiver.getInstance();
@@ -64,6 +65,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.emitter = new Emitter();
 		this.tweens = new TweenManager(this);
 		this.rotation = 0;
+		this.alpha = 1;
 	}
 
 	/*---------- POSITIONED ----------*/
@@ -254,5 +256,6 @@ export enum TweenableProperties{
 	posY = "positionY",
 	scaleX = "scaleX",
 	scaleY = "scaleY",
-	rotation = "rotation"
+	rotation = "rotation",
+	alpha = "alpha"
 }

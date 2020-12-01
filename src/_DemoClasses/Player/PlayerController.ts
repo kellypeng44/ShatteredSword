@@ -2,7 +2,9 @@ import StateMachineAI from "../../AI/StateMachineAI";
 import Vec2 from "../../DataTypes/Vec2";
 import Debug from "../../Debug/Debug";
 import GameNode from "../../Nodes/GameNode";
+import Sprite from "../../Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Nodes/Tilemaps/OrthogonalTilemap";
+import { TweenData } from "../../Rendering/Animations/AnimationTypes";
 import IdleTopDown from "./PlayerStates/IdleTopDown";
 import MoveTopDown from "./PlayerStates/MoveTopDown";
 import Idle from "./PlayerStates/Platformer/Idle";
@@ -29,8 +31,9 @@ export default class PlayerController extends StateMachineAI {
     velocity: Vec2 = Vec2.ZERO;
 	speed: number = 200;
 	MIN_SPEED: number = 200;
-    MAX_SPEED: number = 500;
+    MAX_SPEED: number = 300;
     tilemap: OrthogonalTilemap;
+    coin: Sprite;
 
     initializeAI(owner: GameNode, options: Record<string, any>){
         this.owner = owner;
@@ -42,6 +45,8 @@ export default class PlayerController extends StateMachineAI {
         }
 
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
+        this.coin = this.owner.getScene().add.sprite("coin", "coinLayer");
+        this.coin.scale.set(2, 2);
     }
 
     /**

@@ -13,6 +13,8 @@ import Slider from "../../Nodes/UIElements/Slider";
 import TextInput from "../../Nodes/UIElements/TextInput";
 import Rect from "../../Nodes/Graphics/Rect";
 import ResourceManager from "../../ResourceManager/ResourceManager";
+import UILayer from "../Layers/UILayer";
+import ParallaxLayer from "../Layers/ParallaxLayer";
 
 export default class CanvasNodeFactory {
 	protected scene: Scene;
@@ -75,8 +77,11 @@ export default class CanvasNodeFactory {
 		// Add instance to scene
 		instance.setScene(this.scene);
 		instance.id = this.scene.generateId();
-		this.scene.getSceneGraph().addNode(instance);
 
+		if(!(this.scene.isParallaxLayer(layerName) || this.scene.isUILayer(layerName))){
+			this.scene.getSceneGraph().addNode(instance);
+		}
+		
 		// Add instance to layer
 		layer.addNode(instance);
 
@@ -91,7 +96,10 @@ export default class CanvasNodeFactory {
 		// Add instance fo scene
 		instance.setScene(this.scene);
 		instance.id = this.scene.generateId();
-		this.scene.getSceneGraph().addNode(instance);
+		
+		if(!(this.scene.isParallaxLayer(layerName) || this.scene.isUILayer(layerName))){
+			this.scene.getSceneGraph().addNode(instance);
+		}
 
 		// Add instance to layer
 		layer.addNode(instance);

@@ -180,7 +180,7 @@ export default class Scene implements Updateable, Renderable {
      * @param depth The depth of the layer
      */
     addLayer(name: string, depth?: number): Layer {
-        if(this.layers.has(name) || this.uiLayers.has(name)){
+        if(this.layers.has(name) || this.parallaxLayers.has(name) || this.uiLayers.has(name)){
             throw `Layer with name ${name} already exists`;
         }
 
@@ -202,13 +202,13 @@ export default class Scene implements Updateable, Renderable {
      * @param depth The depth of the layer
      */
     addParallaxLayer(name: string, parallax: Vec2, depth?: number): ParallaxLayer {
-        if(this.layers.has(name) || this.uiLayers.has(name)){
+        if(this.layers.has(name) || this.parallaxLayers.has(name) || this.uiLayers.has(name)){
             throw `Layer with name ${name} already exists`;
         }
 
         let layer = new ParallaxLayer(this, name, parallax);
 
-        this.layers.add(name, layer);
+        this.parallaxLayers.add(name, layer);
 
         if(depth){
             layer.setDepth(depth);
@@ -222,7 +222,7 @@ export default class Scene implements Updateable, Renderable {
      * @param name The name of the new UIlayer
      */
     addUILayer(name: string): UILayer {
-        if(this.layers.has(name) || this.uiLayers.has(name)){
+        if(this.layers.has(name) || this.parallaxLayers.has(name) || this.uiLayers.has(name)){
             throw `Layer with name ${name} already exists`;
         }
 

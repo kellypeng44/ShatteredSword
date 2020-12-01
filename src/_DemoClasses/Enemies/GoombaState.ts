@@ -6,7 +6,7 @@ import GoombaController, { GoombaStates } from "./GoombaController";
 
 export default abstract class GoombaState extends State {
 	owner: GameNode;
-	gravity: number = 7000;
+	gravity: number = 1000;
 	parent: GoombaController
 
 	constructor(parent: StateMachine, owner: GameNode){

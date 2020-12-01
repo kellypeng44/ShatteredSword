@@ -21,6 +21,8 @@ export class TweenData {
     /** An array of the effects on the properties of the object */
     effects: [{
         property: TweenableProperties;
+        resetOnComplete: boolean;
+        initialValue: number;
         start: any;
         end: any;
         ease: EaseFunctionType;

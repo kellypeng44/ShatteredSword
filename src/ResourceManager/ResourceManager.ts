@@ -107,7 +107,11 @@ export default class ResourceManager {
      * @param key The key of the loaded image
      */
     public getImage(key: string): HTMLImageElement {
-        return this.images.get(key);
+        let image = this.images.get(key);
+        if(image === undefined){
+            throw `There is no image associated with key "${key}"`
+        }
+        return image;
     }
 
     public spritesheet(key: string, path: string): void {

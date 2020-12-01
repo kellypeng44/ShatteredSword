@@ -82,7 +82,7 @@ export default class MathUtils {
             factor *= 16;
         }
         let hexStr = "";
-        while(num > 0){
+        while(factor >= 1){
             let digit = Math.floor(num/factor);
             hexStr += MathUtils.toHexDigit(digit);
             num -= digit * factor;
