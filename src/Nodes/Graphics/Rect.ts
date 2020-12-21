@@ -4,14 +4,14 @@ import Color from "../../Utils/Color";
 
 export default class Rect extends Graphic {
 
-    protected borderColor: Color;
+    borderColor: Color;
     protected borderWidth: number;
 
     constructor(position: Vec2, size: Vec2){
         super();
         this.position = position;
         this.size = size;
-        this.borderColor = this.color;
+        this.borderColor = Color.TRANSPARENT;
         this.borderWidth = 0;
     }
 

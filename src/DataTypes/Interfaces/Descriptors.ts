@@ -156,12 +156,7 @@ export interface Updateable {
     update: (deltaT: number) => void;
 }
 
-export interface Renderable {
-    /** Renders this object. */
-    render: (ctx: CanvasRenderingContext2D) => void;
-}
-
-export interface Debug_Renderable {
+export interface DebugRenderable {
     /** Renders the debugging infor for this object. */
-    debug_render: (ctx: CanvasRenderingContext2D, origin: Vec2, zoom: number) => void;
+    debugRender(): void;
 }

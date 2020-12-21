@@ -199,9 +199,9 @@ export default class CanvasRenderer extends RenderingManager {
 
     protected renderGraphic(graphic: Graphic): void {
         if(graphic instanceof Point){
-            this.graphicRenderer.renderPoint(<Point>graphic, this.origin, this.zoom);
+            this.graphicRenderer.renderPoint(<Point>graphic, this.zoom);
         } else if(graphic instanceof Rect){
-            this.graphicRenderer.renderRect(<Rect>graphic, this.origin, this.zoom);
+            this.graphicRenderer.renderRect(<Rect>graphic, this.zoom);
         }
     }
 
@@ -213,13 +213,13 @@ export default class CanvasRenderer extends RenderingManager {
 
     protected renderUIElement(uiElement: UIElement): void {
         if(uiElement instanceof Label){
-            this.uiElementRenderer.renderLabel(uiElement, this.origin, this.zoom);
+            this.uiElementRenderer.renderLabel(uiElement);
         } else if(uiElement instanceof Button){
-            this.uiElementRenderer.renderButton(uiElement, this.origin, this.zoom);
+            this.uiElementRenderer.renderButton(uiElement);
         } else if(uiElement instanceof Slider){
-            this.uiElementRenderer.renderSlider(uiElement, this.origin, this.zoom);
+            this.uiElementRenderer.renderSlider(uiElement);
         } else if(uiElement instanceof TextInput){
-            this.uiElementRenderer.renderTextInput(uiElement, this.origin, this.zoom);
+            this.uiElementRenderer.renderTextInput(uiElement);
         }
     }
 }

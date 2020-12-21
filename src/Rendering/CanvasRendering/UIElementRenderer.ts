@@ -21,7 +21,7 @@ export default class UIElementRenderer {
         this.scene = scene;
     }
 
-    renderLabel(label: Label, origin: Vec2, zoom: number): void {
+    renderLabel(label: Label): void {
         // If the size is unassigned (by the user or automatically) assign it
         label.handleInitialSizing(this.ctx);
 		
@@ -51,11 +51,11 @@ export default class UIElementRenderer {
 		this.ctx.globalAlpha = previousAlpha;
     }
 
-    renderButton(button: Button, origin: Vec2, zoom: number): void {
-        this.renderLabel(button, origin, zoom);
+    renderButton(button: Button): void {
+        this.renderLabel(button);
     }
 
-    renderSlider(slider: Slider, origin: Vec2, zoom: number): void {
+    renderSlider(slider: Slider): void {
 		// Grab the global alpha so we can adjust it for this render
 		let previousAlpha = this.ctx.globalAlpha;
 		this.ctx.globalAlpha = slider.getLayer().getAlpha();
@@ -82,13 +82,13 @@ export default class UIElementRenderer {
         this.ctx.globalAlpha = previousAlpha;
     }
 
-    renderTextInput(textInput: TextInput, origin: Vec2, zoom: number): void {
+    renderTextInput(textInput: TextInput): void {
         // Show a cursor sometimes
         if(textInput.focused && textInput.cursorCounter % 60 > 30){
             textInput.text += "|";
         }
 
-        this.renderLabel(textInput, origin, zoom);
+        this.renderLabel(textInput);
 
         if(textInput.focused){
             if(textInput.cursorCounter % 60 > 30){

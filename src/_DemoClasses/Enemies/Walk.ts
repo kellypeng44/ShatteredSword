@@ -27,7 +27,6 @@ export default class Walk extends OnGround {
 		}
 
 		if(this.parent.jumpy && (Date.now() - this.time > 500)){
-			console.log("Jump");
 			this.finished(GoombaStates.JUMP);
 			this.parent.velocity.y = -300;
 		}

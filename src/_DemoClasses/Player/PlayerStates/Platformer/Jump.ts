@@ -26,16 +26,45 @@ export default class Jump extends PlayerState {
 
 			// Go up plus some extra
 			pos.y -= (this.owner.collisionShape.halfSize.y + 10);
-			pos = this.parent.tilemap.getColRowAt(pos);
-			let tile = this.parent.tilemap.getTileAtRowCol(pos);
+			pos.x -= 16;
+			let rowCol = this.parent.tilemap.getColRowAt(pos);
+			let tile1 = this.parent.tilemap.getTileAtRowCol(rowCol);
+			pos.x += 16;
+			rowCol = this.parent.tilemap.getColRowAt(pos);
+			let tile2 = this.parent.tilemap.getTileAtRowCol(rowCol);
+			pos.x += 16;
+			rowCol = this.parent.tilemap.getColRowAt(pos);
+			let tile3 = this.parent.tilemap.getTileAtRowCol(rowCol);
 
+			let t1 = tile1 === 17;
+			let t2 = tile2 === 17;
+			let t3 = tile3 === 17;
+			let air1 = tile1 === 0;
+			let air2 = tile2 === 0;
+			let air3 = tile3 === 0;
+			let majority = (t1 && t2) || (t1 && t3) || (t2 && t3) || (t1 && t2 && t3);
+			let minorityButAir = (t1 && air2 && air3) || (air1 && t2 && air3) || (air1 && air2 && t3);
+			
 			// If coin block, change to empty coin block
-			if(tile === 17){
-				this.parent.tilemap.setTileAtRowCol(pos, 18);
+			if(majority || minorityButAir){
+				if(minorityButAir){
+					// Get the correct position
+					if(t1){
+						pos.x -= 32;
+					} else if(t2){
+						pos.x -= 16;
+					}
+					rowCol = this.parent.tilemap.getColRowAt(pos);
+				} else {
+					pos.x -= 16;
+					rowCol = this.parent.tilemap.getColRowAt(pos);
+				}
+
+				this.parent.tilemap.setTileAtRowCol(rowCol, 18);
 				this.emitter.fireEvent(MarioEvents.PLAYER_HIT_COIN_BLOCK);
 
 				let tileSize = this.parent.tilemap.getTileSize();
-				this.parent.coin.position.copy(pos.scale(tileSize.x, tileSize.y).add(tileSize.scaled(0.5)));
+				this.parent.coin.position.copy(rowCol.scale(tileSize.x, tileSize.y).add(tileSize.scaled(0.5)));
 
 				// Animate collision
 				this.parent.coin.tweens.add("coin", {

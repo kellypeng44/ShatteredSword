@@ -12,7 +12,7 @@ import GameLoop from "../Loop/GameLoop";
 import SceneManager from "./SceneManager";
 import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
-import { Renderable, Updateable } from "../DataTypes/Interfaces/Descriptors";
+import { Updateable } from "../DataTypes/Interfaces/Descriptors";
 import NavigationManager from "../Pathfinding/NavigationManager";
 import AIManager from "../AI/AIManager";
 import Map from "../DataTypes/Map";
@@ -22,8 +22,9 @@ import CanvasNode from "../Nodes/CanvasNode";
 import GameNode from "../Nodes/GameNode";
 import ArrayUtils from "../Utils/ArrayUtils";
 import RenderingManager from "../Rendering/RenderingManager";
+import Debug from "../Debug/Debug";
 
-export default class Scene implements Updateable, Renderable {
+export default class Scene implements Updateable {
     /** The size of the game world. */
     protected worldSize: Vec2;
 
@@ -164,6 +165,10 @@ export default class Scene implements Updateable, Renderable {
 
         // Send the visible set, tilemaps, and uiLayers to the renderer
         this.renderingManager.render(visibleSet, this.tilemaps, this.uiLayers);
+
+        let nodes = this.sceneGraph.getAllNodes();
+        this.tilemaps.forEach(tilemap => tilemap.visible && tilemap.debugRender());
+        Debug.setNodes(nodes);
     }
 
     setRunning(running: boolean): void {

@@ -1,7 +1,8 @@
 import Tilemap from "../Tilemap";
 import Vec2 from "../../DataTypes/Vec2";
 import { TiledTilemapData, TiledLayerData } from "../../DataTypes/Tilesets/TiledData";
-import Tileset from "../../DataTypes/Tilesets/Tileset";
+import Debug from "../../Debug/Debug";
+import Color from "../../Utils/Color";
 
 /**
  * The representation of an orthogonal tilemap - i.e. a top down or platformer tilemap
@@ -44,6 +45,10 @@ export default class OrthogonalTilemap extends Tilemap {
                 }
             }
         }
+    }
+
+    getDimensions(): Vec2 {
+        return new Vec2(this.numCols, this.numRows);
     }
 
     getTileAtWorldPosition(worldCoords: Vec2): number {
@@ -128,4 +133,20 @@ export default class OrthogonalTilemap extends Tilemap {
     }
 
     update(deltaT: number): void {}
+
+    debugRender(){
+        let tileSize = this.getTileSizeWithZoom();
+        let origin = this.relativePosition.sub(this.sizeWithZoom);
+
+        for(let col = 0; col < this.numCols; col++){
+            for(let row = 0; row < this.numRows; row++){
+                if(this.isCollidable && this.isTileCollidable(col, row)){
+                    // Draw a box for this tile
+                    let center = new Vec2(origin.x + (col + 0.5)*tileSize.x, origin.y + (row + 0.5)*tileSize.y);
+
+                    Debug.drawBox(center, tileSize.scaled(0.5), false, Color.BLUE);
+                }
+            }
+        }
+    }
 }

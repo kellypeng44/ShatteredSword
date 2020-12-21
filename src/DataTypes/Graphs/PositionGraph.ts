@@ -1,8 +1,8 @@
 import Graph, { MAX_V } from "./Graph";
 import Vec2 from "../Vec2";
-import { Debug_Renderable } from "../Interfaces/Descriptors";
+import { DebugRenderable } from "../Interfaces/Descriptors";
 
-export default class PositionGraph extends Graph implements Debug_Renderable{
+export default class PositionGraph extends Graph implements DebugRenderable{
 	positions: Array<Vec2>;
 
 	constructor(directed: boolean = false){
@@ -38,9 +38,9 @@ export default class PositionGraph extends Graph implements Debug_Renderable{
 		return "Node " + index + " - " + this.positions[index].toString();
 	}
 
-	debug_render(ctx: CanvasRenderingContext2D, origin: Vec2, zoom: number): void {
-		for(let point of this.positions){
-			ctx.fillRect((point.x - origin.x - 4)*zoom, (point.y - origin.y - 4)*zoom, 8, 8);
-		}
+	debugRender = (): void => {
+		// for(let point of this.positions){
+		// 	ctx.fillRect((point.x - origin.x - 4)*zoom, (point.y - origin.y - 4)*zoom, 8, 8);
+		// }
 	}
 }

@@ -2,6 +2,7 @@ import GameLoop from "./Loop/GameLoop";
 import {} from "./index";
 import MainMenu from "./_DemoClasses/Mario/MainMenu";
 import Level1 from "./_DemoClasses/Mario/Level1";
+import TestScene from "./_DemoClasses/PhysicsTesting/TestScene";
 
 function main(){
     // Create the game object

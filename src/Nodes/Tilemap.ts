@@ -49,6 +49,12 @@ export default abstract class Tilemap extends CanvasNode {
         return this.tileSize.scaled(this.scale.x, this.scale.y);
     }
 
+    getTileSizeWithZoom(): Vec2 {
+        let zoom = this.scene.getViewScale();
+
+        return this.getTileSize().scale(zoom);
+    }
+
     /** Adds this tilemap to the physics system */
     addPhysics = (): void => {
         this.scene.getPhysicsManager().registerTilemap(this);

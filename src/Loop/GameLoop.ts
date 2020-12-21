@@ -59,7 +59,8 @@ export default class GameLoop {
     private numUpdateSteps: number;
 
     // Game canvas and its width and height
-	readonly GAME_CANVAS: HTMLCanvasElement;
+    readonly GAME_CANVAS: HTMLCanvasElement;
+    readonly DEBUG_CANVAS: HTMLCanvasElement;
 	readonly WIDTH: number;
     readonly HEIGHT: number;
     private viewport: Viewport;
@@ -100,7 +101,7 @@ export default class GameLoop {
 
         // Get the game canvas and give it a background color
         this.GAME_CANVAS = <HTMLCanvasElement>document.getElementById("game-canvas");
-        this.GAME_CANVAS.style.setProperty("background-color", "whitesmoke");
+        this.DEBUG_CANVAS = <HTMLCanvasElement>document.getElementById("debug-canvas");
     
         // Give the canvas a size and get the rendering context
         this.WIDTH = this.gameOptions.viewportSize.x;
@@ -108,8 +109,13 @@ export default class GameLoop {
 
         // For now, just hard code a canvas renderer. We can do this with options later
         this.renderingManager = new CanvasRenderer();
+        this.initializeGameWindow();
         this.ctx = this.renderingManager.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
         this.clearColor = new Color(this.gameOptions.clearColor.r, this.gameOptions.clearColor.g, this.gameOptions.clearColor.b);
+
+        // Initialize debug canvas
+        
+        Debug.initializeDebugCanvas(this.DEBUG_CANVAS, this.WIDTH, this.HEIGHT);
 
         // Size the viewport to the game canvas
         this.viewport = new Viewport();
@@ -127,6 +133,17 @@ export default class GameLoop {
         this.audioManager = AudioManager.getInstance();
 
         Stats.initStats();
+    }
+
+    /**
+     * Set up the game window that holds the canvases
+     */
+    private initializeGameWindow(): void {
+        const gameWindow = document.getElementById("game-window");
+        
+        // Set the height of the game window
+        gameWindow.style.width = this.WIDTH + "px";
+        gameWindow.style.height = this.HEIGHT + "px";
     }
 
     /**
@@ -274,11 +291,17 @@ export default class GameLoop {
      * Clears the canvas and defers scene rendering to the sceneManager. Renders the debug
      */
     render(): void {
+        // Clear the canvases
         this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+        Debug.clearCanvas();
+
+        // Game Canvas
         this.ctx.fillStyle = this.clearColor.toString();
         this.ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
         this.sceneManager.render();
-        Debug.render(this.ctx);
+
+        // Debug render
+        Debug.render();
         Stats.render();
     }
 }

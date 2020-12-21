@@ -307,17 +307,24 @@ export default class Vec2 {
 	 * @param other The vector to check against
 	 */
 	equals(other: Vec2): boolean {
-		let xEq = Math.abs(this.x - other.x) < 0.00000001;
-		let yEq = Math.abs(this.y - other.y) < 0.00000001;
+		let xEq = Math.abs(this.x - other.x) < 0.0000001;
+		let yEq = Math.abs(this.y - other.y) < 0.0000001;
 
 		return xEq && yEq;
 	}
 
 	/**
-	 * Returns true if this vector is the zero vector
+	 * Returns true if this vector is the zero vector exactly (not assured to be safe for floats).
+	 */
+	strictIsZero(): boolean {
+		return this.x === 0 && this.y === 0;
+	}
+
+	/**
+	 * Returns true if this x and y for this vector are both zero.
 	 */
 	isZero(): boolean {
-		return this.x === 0 && this.y === 0;
+		return Math.abs(this.x) < 0.0000001 && Math.abs(this.y) < 0.0000001;
 	}
 	
 	/**

@@ -1,7 +1,9 @@
 import GameNode from "./GameNode";
 import Vec2 from "../DataTypes/Vec2";
-import { Region, Renderable } from "../DataTypes/Interfaces/Descriptors";
+import { Region } from "../DataTypes/Interfaces/Descriptors";
 import AABB from "../DataTypes/Shapes/AABB";
+import Debug from "../Debug/Debug";
+import Color from "../Utils/Color";
 
 /**
  * The representation of an object in the game world that can be drawn to the screen
@@ -75,6 +77,12 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		return this._boundary;
 	}
 
+	get sizeWithZoom(): Vec2 {
+		let zoom = this.scene.getViewScale();
+
+		return this.boundary.halfSize.clone().scaled(zoom, zoom);
+	}
+
 	/**
 	 * Returns true if the point (x, y) is inside of this canvas object
 	 * @param x 
@@ -82,5 +90,10 @@ export default abstract class CanvasNode extends GameNode implements Region {
 	 */
 	contains(x: number, y: number): boolean {
 		return this._boundary.containsPoint(new Vec2(x, y));
+	}
+
+	debugRender(): void {
+		super.debugRender();
+		Debug.drawBox(this.relativePosition, this.sizeWithZoom, false, Color.GREEN);
 	}
 }

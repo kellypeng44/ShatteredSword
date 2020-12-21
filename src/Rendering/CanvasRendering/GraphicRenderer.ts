@@ -18,22 +18,24 @@ export default class GraphicRenderer {
         this.scene = scene;
     }
 
-    renderPoint(point: Point, origin: Vec2, zoom: number): void {
+    renderPoint(point: Point, zoom: number): void {
 		this.ctx.fillStyle = point.color.toStringRGBA();
         this.ctx.fillRect((-point.size.x/2)*zoom, (-point.size.y/2)*zoom,
         point.size.x*zoom, point.size.y*zoom);
     }
 
-    renderRect(rect: Rect, origin: Vec2, zoom: number): void {
+    renderRect(rect: Rect, zoom: number): void {
         // Draw the interior of the rect
         if(rect.color.a !== 0){
             this.ctx.fillStyle = rect.color.toStringRGB();
             this.ctx.fillRect((-rect.size.x/2)*zoom, (-rect.size.y/2)*zoom, rect.size.x*zoom, rect.size.y*zoom);
         }
 
-        // Draw the border of the rect
-        this.ctx.strokeStyle = rect.getBorderColor().toStringRGB();
-        this.ctx.lineWidth = rect.getBorderWidth();
-        this.ctx.strokeRect((-rect.size.x/2)*zoom, (-rect.size.y/2)*zoom, rect.size.x*zoom, rect.size.y*zoom);
+        // Draw the border of the rect if it isn't transparent
+        if(rect.borderColor.a !== 0){
+            this.ctx.strokeStyle = rect.getBorderColor().toStringRGB();
+            this.ctx.lineWidth = rect.getBorderWidth();
+            this.ctx.strokeRect((-rect.size.x/2)*zoom, (-rect.size.y/2)*zoom, rect.size.x*zoom, rect.size.y*zoom);
+        }
     }
 }

@@ -4,17 +4,19 @@ import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
-import { Physical, Positioned, isRegion, Unique, Updateable, Actor, AI, Debug_Renderable } from "../DataTypes/Interfaces/Descriptors"
+import { Physical, Positioned, isRegion, Unique, Updateable, Actor, AI, DebugRenderable } from "../DataTypes/Interfaces/Descriptors"
 import Shape from "../DataTypes/Shapes/Shape";
 import Map from "../DataTypes/Map";
 import AABB from "../DataTypes/Shapes/AABB";
 import NavigationPath from "../Pathfinding/NavigationPath";
 import TweenManager from "../Rendering/Animations/TweenManager";
+import Debug from "../Debug/Debug";
+import Color from "../Utils/Color";
 
 /**
  * The representation of an object in the game world
  */
-export default abstract class GameNode implements Positioned, Unique, Updateable, Physical, Actor {
+export default abstract class GameNode implements Positioned, Unique, Updateable, Physical, Actor, DebugRenderable {
 	/*---------- POSITIONED ----------*/
 	private _position: Vec2;
 
@@ -77,6 +79,13 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this._position = pos;
 		this._position.setOnChange(() => this.positionChanged());
 		this.positionChanged();
+	}
+
+	get relativePosition(): Vec2 {
+		let origin = this.scene.getViewTranslation(this);
+		let zoom = this.scene.getViewScale();
+
+		return this.position.clone().sub(origin).scale(zoom);
 	}
 
 	/*---------- UNIQUE ----------*/
@@ -248,6 +257,15 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 
 	update(deltaT: number): void {
 		this.tweens.update(deltaT);
+	}
+
+	debugRender(): void {
+		Debug.drawPoint(this.relativePosition, Color.GREEN);
+
+		// If velocity is not zero, draw a vector for it
+		if(this._velocity && !this._velocity.isZero()){
+			Debug.drawRay(this.relativePosition, this._velocity.clone().scaleTo(20).add(this.relativePosition), Color.GREEN);
+		}
 	}
 }
 

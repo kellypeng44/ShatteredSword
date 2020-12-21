@@ -83,6 +83,12 @@ export default abstract class SceneGraph {
 
 	abstract getNodesInRegion(boundary: AABB): Array<CanvasNode>;
 	
+	getAllNodes(): Array<CanvasNode> {
+		let arr = new Array<CanvasNode>();
+		this.nodeMap.forEach(key => arr.push(this.nodeMap.get(key)));
+		return arr;
+	}
+
 	/**
 	 * The specific implementation of getting a node at certain coordinates
 	 * @param x 

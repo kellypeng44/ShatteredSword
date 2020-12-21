@@ -1,12 +1,12 @@
 import GameNode from "../Nodes/GameNode";
 import Vec2 from "../DataTypes/Vec2";
-import { Debug_Renderable, Updateable } from "../DataTypes/Interfaces/Descriptors";
+import { Updateable } from "../DataTypes/Interfaces/Descriptors";
 import Tilemap from "../Nodes/Tilemap";
 import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
 import Map from "../DataTypes/Map";
 
-export default abstract class PhysicsManager implements Updateable, Debug_Renderable {
+export default abstract class PhysicsManager implements Updateable {
 	protected receiver: Receiver;
 	protected emitter: Emitter;
 
@@ -42,12 +42,6 @@ export default abstract class PhysicsManager implements Updateable, Debug_Render
 	 * @param deltaT 
 	 */
 	abstract update(deltaT: number): void;
-
-	/**
-	 * Renders any debug shapes or graphics
-	 * @param ctx 
-	 */
-	abstract debug_render(ctx: CanvasRenderingContext2D): void;
 
 	setLayer(node: GameNode, layer: string): void {
 		node.physicsLayer = this.layerMap.get(layer);

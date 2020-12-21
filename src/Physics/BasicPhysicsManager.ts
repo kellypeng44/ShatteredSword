@@ -326,10 +326,6 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			}
 		}
 	}
-
-	debug_render(ctx: CanvasRenderingContext2D): void {
-		
-	}
 }
 
 // Collision data objects for tilemaps
