@@ -55,6 +55,9 @@ export interface Physical {
     /** The shape of the collider for this physics object. */
     collisionShape: Shape;
 
+    /** The offset of the collision shape from the center of the node */
+    colliderOffset: Vec2;
+
     /** Represents whether this object can move or not. */
     isStatic: boolean;
 
@@ -84,6 +87,8 @@ export interface Physical {
 
     isPlayer: boolean;
 
+    isColliding: boolean;
+
     /*---------- FUNCTIONS ----------*/
 
     /**
@@ -104,7 +109,7 @@ export interface Physical {
      * @param isCollidable Whether this object will be able to collide with other objects
      * @param isStatic Whether this object will be static or not
      */
-    addPhysics: (collisionShape?: Shape, isCollidable?: boolean, isStatic?: boolean) => void;
+    addPhysics: (collisionShape?: Shape, colliderOffset?: Vec2, isCollidable?: boolean, isStatic?: boolean) => void;
 
     /**
      * Adds a trigger to this object for a specific group
@@ -118,6 +123,11 @@ export interface Physical {
      * @param layer The name of the layer
      */
     setPhysicsLayer: (layer: String) => void;
+
+    /**
+     * If used before "move()", it will tell you the velocity of the node after its last movement
+     */
+    getLastVelocity(): Vec2;
 }
 
 /**

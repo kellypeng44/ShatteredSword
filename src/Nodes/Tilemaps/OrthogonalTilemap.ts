@@ -27,7 +27,7 @@ export default class OrthogonalTilemap extends Tilemap {
 
         // The size of the tilemap on the canvas
         this.size.set(this.numCols * this.tileSize.x, this.numRows * this.tileSize.y);
-        this.position.copy(this.size);
+        this.position.copy(this.size.scaled(0.5));
         this.data = layer.data;
         this.visible = layer.visible;
 

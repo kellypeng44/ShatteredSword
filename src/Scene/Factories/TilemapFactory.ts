@@ -187,7 +187,7 @@ export default class TilemapFactory {
 
                     // Now we have sprite. Associate it with our physics object if there is one
                     if(hasPhysics){
-                        sprite.addPhysics(sprite.boundary.clone(), isCollidable, isStatic);
+                        sprite.addPhysics(sprite.boundary.clone(), Vec2.ZERO, isCollidable, isStatic);
                         sprite.group = group;
                     }
                 }

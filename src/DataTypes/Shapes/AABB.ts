@@ -2,6 +2,7 @@ import Shape from "./Shape";
 import Vec2 from "../Vec2";
 import MathUtils from "../../Utils/MathUtils";
 import Circle from "./Circle";
+import Debug from "../../Debug/Debug";
 
 export default class AABB extends Shape {
 
@@ -109,25 +110,20 @@ export default class AABB extends Shape {
      * @param paddingX Pads the AABB in the x axis
      * @param paddingY Pads the AABB in the y axis
      */
-    intersectSegment(point: Vec2, direction: Vec2, distance?: number, paddingX?: number, paddingY?: number): Hit {
-        // Scale by the distance if it has been provided
-        if(distance){
-            direction = direction.scaled(distance);
-        }
+    intersectSegment(point: Vec2, delta: Vec2, padding?: Vec2): Hit {
+        let paddingX = padding ? padding.x : 0;
+        let paddingY = padding ? padding.y : 0;
 
-        let _paddingX = paddingX ? paddingX : 0;
-        let _paddingY = paddingY ? paddingY : 0;
-
-        let scaleX = 1/direction.x;
-        let scaleY = 1/direction.y;
+        let scaleX = 1/delta.x;
+        let scaleY = 1/delta.y;
 
         let signX = MathUtils.sign(scaleX);
         let signY = MathUtils.sign(scaleY);
 
-        let tnearx = scaleX*(this.x - signX*(this.hw + _paddingX) - point.x);
-        let tneary = scaleX*(this.y - signY*(this.hh + _paddingY) - point.y);
-        let tfarx = scaleY*(this.x + signX*(this.hw + _paddingX) - point.x);
-        let tfary = scaleY*(this.y + signY*(this.hh + _paddingY) - point.y);
+        let tnearx = scaleX*(this.x - signX*(this.hw + paddingX) - point.x);
+        let tneary = scaleY*(this.y - signY*(this.hh + paddingY) - point.y);
+        let tfarx = scaleX*(this.x + signX*(this.hw + paddingX) - point.x);
+        let tfary = scaleY*(this.y + signY*(this.hh + paddingY) - point.y);
         
         if(tnearx > tfary || tneary > tfarx){
             // We aren't colliding - we clear one axis before intersecting another
@@ -135,7 +131,19 @@ export default class AABB extends Shape {
         }
 
         let tnear = Math.max(tnearx, tneary);
+
+        // Double check for NaNs
+        if(tnearx !== tnearx){
+            tnear = tneary;
+        } else if (tneary !== tneary){
+            tnear = tnearx;
+        }
+
         let tfar = Math.min(tfarx, tfary);
+
+        if(tnear === -Infinity){
+            return null;
+        }
 
         if(tnear >= 1 || tfar <= 0){
             return null;
@@ -143,7 +151,9 @@ export default class AABB extends Shape {
 
         // We are colliding
         let hit = new Hit();
-        hit.t = MathUtils.clamp01(tnear);
+        hit.time = MathUtils.clamp01(tnear);
+        hit.nearTimes.x = tnearx;
+        hit.nearTimes.y = tneary;
 
         if(tnearx > tneary){
             // We hit on the left or right size
@@ -154,10 +164,10 @@ export default class AABB extends Shape {
             hit.normal.y = -signY;
         }
 
-        hit.delta.x = (1.0 - hit.t) * -direction.x;
-        hit.delta.y = (1.0 - hit.t) * -direction.y;
-        hit.pos.x = point.x + direction.x * hit.t;
-        hit.pos.y = point.y + direction.y * hit.t;
+        hit.delta.x = (1.0 - hit.time) * -delta.x;
+        hit.delta.y = (1.0 - hit.time) * -delta.y;
+        hit.pos.x = point.x + delta.x * hit.time;
+        hit.pos.y = point.y + delta.y * hit.time;
 
         return hit;
     }
@@ -241,7 +251,8 @@ export default class AABB extends Shape {
 }
 
 export class Hit {
-    t: number;
+    time: number;
+    nearTimes: Vec2 = Vec2.ZERO;
     pos: Vec2 = Vec2.ZERO;
     delta: Vec2 = Vec2.ZERO;
     normal: Vec2 = Vec2.ZERO;

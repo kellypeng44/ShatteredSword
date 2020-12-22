@@ -94,6 +94,7 @@ export default abstract class CanvasNode extends GameNode implements Region {
 
 	debugRender(): void {
 		super.debugRender();
-		Debug.drawBox(this.relativePosition, this.sizeWithZoom, false, Color.GREEN);
+		let color = this.isColliding ? Color.RED : Color.GREEN;
+		Debug.drawBox(this.relativePosition, this.sizeWithZoom, false, color);
 	}
 }

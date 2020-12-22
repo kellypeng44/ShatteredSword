@@ -31,6 +31,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	onCeiling: boolean;
 	active: boolean;
 	collisionShape: Shape;
+	colliderOffset: Vec2;
 	isStatic: boolean;
 	isCollidable: boolean;
 	isTrigger: boolean;
@@ -41,6 +42,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	collidedWithTilemap: boolean;
 	physicsLayer: number;
 	isPlayer: boolean;
+	isColliding: boolean = false;
 
 	/*---------- ACTOR ----------*/
 	_ai: AI;
@@ -128,7 +130,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	 * @param isCollidable Whether this is collidable or not. True by default.
 	 * @param isStatic Whether this is static or not. False by default
 	 */
-	addPhysics = (collisionShape?: Shape, isCollidable: boolean = true, isStatic: boolean = false): void => {
+	addPhysics = (collisionShape?: Shape, colliderOffset?: Vec2, isCollidable: boolean = true, isStatic: boolean = false): void => {
 		this.hasPhysics = true;
 		this.moving = false;
 		this.onGround = false;
@@ -154,6 +156,12 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 			throw "No collision shape specified for physics object."
 		}
 
+		if(colliderOffset){
+			this.colliderOffset = colliderOffset;
+		} else {
+			this.colliderOffset = Vec2.ZERO;
+		}
+
 		this.sweptRect = this.collisionShape.getBoundingRect();
 		this.scene.getPhysicsManager().registerObject(this);
 	}
@@ -169,6 +177,10 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 
 	setPhysicsLayer = (layer: string): void => {
 		this.scene.getPhysicsManager().setLayer(this, layer);
+	}
+
+	getLastVelocity(): Vec2 {
+		return this._velocity;
 	}
 
 	/*---------- ACTOR ----------*/
@@ -251,7 +263,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	 */
 	protected positionChanged(): void {
 		if(this.hasPhysics){
-			this.collisionShape.center = this.position;
+			this.collisionShape.center = this.position.clone().add(this.colliderOffset);
 		}
 	};
 
@@ -260,11 +272,17 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	}
 
 	debugRender(): void {
-		Debug.drawPoint(this.relativePosition, Color.GREEN);
+		let color = this.isColliding ? Color.RED : Color.GREEN;
+		Debug.drawPoint(this.relativePosition, color);
 
 		// If velocity is not zero, draw a vector for it
 		if(this._velocity && !this._velocity.isZero()){
-			Debug.drawRay(this.relativePosition, this._velocity.clone().scaleTo(20).add(this.relativePosition), Color.GREEN);
+			Debug.drawRay(this.relativePosition, this._velocity.clone().scaleTo(20).add(this.relativePosition), color);
+		}
+
+		// If this has a collider, draw it
+		if(this.isCollidable && this.collisionShape){
+			Debug.drawBox(this.collisionShape.center, this.collisionShape.halfSize, false, Color.RED);
 		}
 	}
 }

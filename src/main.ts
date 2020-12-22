@@ -15,7 +15,7 @@ function main(){
     game.start();
 
     let sm = game.getSceneManager();
-    sm.addScene(MainMenu, {});
+    sm.addScene(TestScene, {});
 }
 
 CanvasRenderingContext2D.prototype.roundedRect = function(x: number, y: number, w: number, h: number, r: number): void {

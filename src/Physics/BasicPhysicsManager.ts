@@ -91,6 +91,12 @@ export default class BasicPhysicsManager extends PhysicsManager {
 	resolveCollision(node1: Physical, node2: Physical, firstContact: Vec2, lastContact: Vec2, collidingX: boolean, collidingY: boolean): void {
 		// Handle collision
 		if( (firstContact.x < 1 || collidingX) && (firstContact.y < 1 || collidingY)){
+			if(node1.isPlayer){
+				node1.isColliding = true;
+			} else if(node2.isPlayer){
+				node2.isColliding = true;
+			}
+
 			// We are colliding. Check for any triggers
 			let group1 = node1.group;
 			let group2 = node2.group;
@@ -109,7 +115,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			}
 
 			if(collidingX && collidingY){
-				// If we're already intersecting, freak out I guess? Probably should handle this in some way for if nodes get spawned inside of tiles
+				// If we're already intersecting, resolve the current collision
 			} else if(node1.isCollidable && node2.isCollidable) {
 				// We aren't already colliding, and both nodes can collide, so this is a new collision.
 
@@ -264,6 +270,11 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			node.onCeiling = false;
 			node.onWall = false;
 			node.collidedWithTilemap = false;
+			node.isColliding = false;
+
+			if(node.isPlayer){
+				Debug.log("pvel", "Player Velocity:", node._velocity.toString());
+			}
 
 			// Update the swept shapes of each node
 			if(node.moving){
