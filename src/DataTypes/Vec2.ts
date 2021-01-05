@@ -6,6 +6,7 @@ import MathUtils from "../Utils/MathUtils";
 export default class Vec2 {
 
 	// Store x and y in an array
+	/** The array that stores the actual vector values */
 	private vec: Float32Array;
 
 	/**	
@@ -13,6 +14,11 @@ export default class Vec2 {
 	 */
 	private onChange: Function = () => {};
 
+	/**
+	 * Creates a new Vec2
+	 * @param x The x value of the vector
+	 * @param y The y value of the vector
+	 */
 	constructor(x: number = 0, y: number = 0) {
 		this.vec = new Float32Array(2);
 		this.vec[0] = x;
@@ -58,6 +64,18 @@ export default class Vec2 {
 		return new Vec2(0, -1);
 	}
 
+	static get DOWN() {
+		return new Vec2(0, 1);
+	}
+
+	static get LEFT() {
+		return new Vec2(-1, 0);
+	}
+
+	static get RIGHT() {
+		return new Vec2(1, 0);
+	}
+
 	/**
 	 * The squared magnitude of the vector
 	 */
@@ -86,7 +104,7 @@ export default class Vec2 {
 	/**
 	 * Returns a new vector that is the normalized version of this one
 	 */
-	normalized(){
+	normalized(): Vec2 {
 		let mag = this.mag();
 		return new Vec2(this.x/mag, this.y/mag);
 	}
@@ -94,7 +112,7 @@ export default class Vec2 {
 	/**
 	 * Sets the x and y elements of this vector to zero
 	 */
-	zero(){
+	zero(): Vec2 {
 		return this.set(0, 0);
 	}
 
@@ -335,10 +353,19 @@ export default class Vec2 {
 		this.onChange = f;
 	}
 	
+	/**
+	 * Gets the function that is called whenever this vector is changed
+	 */
 	getOnChange(): string {
 		return this.onChange.toString();
 	}
 
+	/**
+	 * Performs linear interpolation between two vectors
+	 * @param a The first vector
+	 * @param b The second vector
+	 * @param t The time of the lerp, with 0 being vector A, and 1 being vector B
+	 */
 	static lerp(a: Vec2, b: Vec2, t: number): Vec2 {
 		return new Vec2(MathUtils.lerp(a.x, b.x, t), MathUtils.lerp(a.y, b.y, t));
 	}

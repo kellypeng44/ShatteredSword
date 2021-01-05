@@ -7,10 +7,19 @@ import CanvasNode from "./CanvasNode";
  * The representation of a tilemap - this can consist of a combination of tilesets in one layer
  */
 export default abstract class Tilemap extends CanvasNode {
+    /** An array of the tilesets that this tilemap uses */
     protected tilesets: Array<Tileset>;
+
+    /** The size of a tile in this tilemap */
     protected tileSize: Vec2;
+
+    /** An array of tile data */
     protected data: Array<number>;
+
+    /** An array of tile collision data */
     protected collisionMap: Array<boolean>;
+
+    /** The name of the tilemap */
     name: string;
 
     // TODO: Make this no longer be specific to Tiled
@@ -37,6 +46,7 @@ export default abstract class Tilemap extends CanvasNode {
 
     /**
      * Returns an array of the tilesets associated with this tilemap
+     * @returns An array of all of the tilesets assocaited with this tilemap.
      */
     getTilesets(): Tileset[] {
         return this.tilesets;
@@ -44,18 +54,25 @@ export default abstract class Tilemap extends CanvasNode {
 
     /**
      * Returns the size of tiles in this tilemap as they appear in the game world after scaling
+     * @returns A vector containing the size of tiles in this tilemap as they appear in the game world after scaling.
      */
     getTileSize(): Vec2 {
         return this.tileSize.scaled(this.scale.x, this.scale.y);
     }
 
+    /**
+     * Gets the tile size taking zoom into account
+     * @returns The tile size with zoom
+    */
     getTileSizeWithZoom(): Vec2 {
         let zoom = this.scene.getViewScale();
 
         return this.getTileSize().scale(zoom);
     }
 
-    /** Adds this tilemap to the physics system */
+    /**
+     * Adds this tilemap to the physics system
+    */
     addPhysics = (): void => {
         this.scene.getPhysicsManager().registerTilemap(this);
     }
@@ -63,18 +80,21 @@ export default abstract class Tilemap extends CanvasNode {
     /**
      * Returns the value of the tile at the specified position
      * @param worldCoords The position in world coordinates
+     * @returns A number that represents the data value of the tile at the specified world position.
      */
     abstract getTileAtWorldPosition(worldCoords: Vec2): number;
 
     /**
      * Returns the world position of the top left corner of the tile at the specified index
-     * @param index 
+     * @param index The index of the tile in the tileData array
+     * @returns The world position of the tile at the specified index
      */
     abstract getTileWorldPosition(index: number): Vec2;
 
     /**
      * Returns the value of the tile at the specified index
-     * @param index
+     * @param index The index of the tile in the tileData array
+     * @returns The value of the tile in the tileData array
      */
     abstract getTile(index: number): number;
 
@@ -85,9 +105,11 @@ export default abstract class Tilemap extends CanvasNode {
      */
     abstract setTile(index: number, type: number): void;
 
+    // TODO: This shouldn't use tiled data specifically - it should be more general
     /**
      * Sets up the tileset using the data loaded from file
+     * @param tilemapData The tilemap data from file
+     * @param layer The layer data from file
      */
-    // TODO: This shouldn't use tiled data specifically - it should be more general
     protected abstract parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void;
 }

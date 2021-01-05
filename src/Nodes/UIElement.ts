@@ -6,24 +6,39 @@ import Vec2 from "../DataTypes/Vec2";
  * The representation of a UIElement - the parent class of things like buttons
  */
 export default abstract class UIElement extends CanvasNode {
-	// Style attributes
+	// Style attributes - TODO - abstract this into a style object/interface
+	/** The backgound color */
 	backgroundColor: Color;
+	/** The border color */
 	borderColor: Color;
+	/** The border radius */
 	borderRadius: number;
+	/** The border width */
 	borderWidth: number;
+	/** The padding */
 	padding: Vec2;
 
 	// EventAttributes
+	/** The reaction of this UIElement on a click */
 	onClick: Function;
+	/** The event propagated on click */
 	onClickEventId: string;
+	/** The reaction to the release of a click */
 	onRelease: Function;
+	/** The event propagated on the release of a click */
 	onReleaseEventId: string;
+	/** The reaction when a mouse enters this UIElement */
 	onEnter: Function;
+	/** The event propagated when a mouse enters this UIElement */
 	onEnterEventId: string;
+	/** The reaction when a mouse leaves this UIElement */
 	onLeave: Function;
+	/** The event propogated when a mouse leaves this UIElement */
 	onLeaveEventId: string;
 
+	/** Whether or not this UIElement is currently clicked on */
 	protected isClicked: boolean;
+	/** Whether or not this UIElement is currently hovered over */
 	protected isEntered: boolean;
 
 	constructor(position: Vec2){
@@ -50,10 +65,12 @@ export default abstract class UIElement extends CanvasNode {
 		this.isEntered = false;
 	}
 
+	// @deprecated
 	setBackgroundColor(color: Color): void {
 		this.backgroundColor = color;
 	}
 
+	// @deprecated
 	setPadding(padding: Vec2): void {
 		this.padding.copy(padding);
 	}
@@ -116,6 +133,7 @@ export default abstract class UIElement extends CanvasNode {
 
 	/**
 	 * Overridable method for calculating background color - useful for elements that want to be colored on different after certain events
+	 * @returns The background color of the UIElement
 	 */
 	calculateBackgroundColor(): string {
 		return this.backgroundColor.toStringRGBA();
@@ -123,6 +141,7 @@ export default abstract class UIElement extends CanvasNode {
 
 	/**
 	 * Overridable method for calculating border color - useful for elements that want to be colored on different after certain events
+	 * @returns The border color of the UIElement
 	 */
 	calculateBorderColor(): string {
 		return this.borderColor.toStringRGBA();

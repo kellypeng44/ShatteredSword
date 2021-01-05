@@ -13,8 +13,9 @@ export default abstract class CanvasNode extends GameNode implements Region {
 	private _scale: Vec2;
 	private _boundary: AABB;
 
-	visible = true;
-
+	/** A flag for whether or not the CanvasNode is visible */
+	visible: boolean = true;
+	
 	constructor(){
 		super();
 		this._size = new Vec2(0, 0);
@@ -55,19 +56,24 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		this.scale.y = value;
 	}
 
+	// @override
 	protected positionChanged(): void {
 		super.positionChanged();
 		this.updateBoundary();
 	}
 
+	/** Called if the size vector is changed or replaced. */
 	protected sizeChanged(): void {
 		this.updateBoundary();
 	}
 
+	/** Called if the scale vector is changed or replaced */
 	protected scaleChanged(): void {
 		this.updateBoundary();
 	}
 
+	// @docIgnore
+	/** Called if the position, size, or scale of the CanvasNode is changed. Updates the boundary. */
 	private updateBoundary(): void {
 		this._boundary.center.set(this.position.x, this.position.y);
 		this._boundary.halfSize.set(this.size.x*this.scale.x/2, this.size.y*this.scale.y/2);
@@ -85,13 +91,15 @@ export default abstract class CanvasNode extends GameNode implements Region {
 
 	/**
 	 * Returns true if the point (x, y) is inside of this canvas object
-	 * @param x 
-	 * @param y 
+	 * @param x The x position of the point
+	 * @param y The y position of the point
+	 * @returns A flag representing whether or not this node contains the point.
 	 */
 	contains(x: number, y: number): boolean {
 		return this._boundary.containsPoint(new Vec2(x, y));
 	}
 
+	// @implemented
 	debugRender(): void {
 		super.debugRender();
 		let color = this.isColliding ? Color.RED : Color.GREEN;

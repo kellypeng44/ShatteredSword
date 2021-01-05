@@ -3,6 +3,7 @@ import AnimationManager from "../../Rendering/Animations/AnimationManager";
 import Spritesheet from "../../DataTypes/Spritesheet";
 import Vec2 from "../../DataTypes/Vec2";
 
+/** An sprite with specified animation frames. */
 export default class AnimatedSprite extends Sprite {
     /** The number of columns in this sprite sheet */
     protected numCols: number;
@@ -29,6 +30,11 @@ export default class AnimatedSprite extends Sprite {
         }
     }
 
+    /**
+     * Gets the image offset for the current index of animation
+     * @param index The index we're at in the animation
+     * @returns A Vec2 containing the image offset
+     */
     getAnimationOffset(index: number): Vec2 {
         return new Vec2((index % this.numCols) * this.size.x, Math.floor(index / this.numCols) * this.size.y);
     }

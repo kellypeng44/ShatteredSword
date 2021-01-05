@@ -2,8 +2,11 @@ import Vec2 from "../../DataTypes/Vec2";
 import Color from "../../Utils/Color";
 import Label from "./Label";
 
+/** A text input UIElement */
 export default class TextInput extends Label {
+    /** A flag the represents whether the user can type in this TextInput */
     focused: boolean;
+    /** The position of the cursor in this TextInput */
     cursorCounter: number;
 
     constructor(position: Vec2){
@@ -39,7 +42,6 @@ export default class TextInput extends Label {
             let specialChars = "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
             let letters = "qwertyuiopasdfghjklzxcvbnm";
             let mask = nums + specialChars + letters;
-            // THIS ISN'T ACTUALLY AN ERROR, DISREGARD
             keys = keys.filter(key => mask.includes(key));
             let shiftPressed = this.input.isPressed("shift");
             let backspacePressed = this.input.isJustPressed("backspace");

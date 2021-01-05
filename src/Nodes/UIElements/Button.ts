@@ -2,6 +2,7 @@ import Label from "./Label";
 import Color from "../../Utils/Color";
 import Vec2 from "../../DataTypes/Vec2";
 
+/** A clickable button UIElement */
 export default class Button extends Label {
 
 	constructor(position: Vec2, text: string){
@@ -12,6 +13,7 @@ export default class Button extends Label {
 		this.textColor = new Color(255, 255, 255);
 	}
 
+	// @override
 	calculateBackgroundColor(): string {
 		// Change the background color if clicked or hovered
 		if(this.isEntered && !this.isClicked){

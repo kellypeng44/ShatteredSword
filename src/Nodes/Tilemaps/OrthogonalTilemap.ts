@@ -8,15 +8,12 @@ import Color from "../../Utils/Color";
  * The representation of an orthogonal tilemap - i.e. a top down or platformer tilemap
  */
 export default class OrthogonalTilemap extends Tilemap {
-
+    /** The number of columns in the tilemap */
     protected numCols: number;
+    /** The number of rows in the tilemap */
     protected numRows: number;
 
-    /**
-     * Parses the tilemap data loaded from the json file. DOES NOT process images automatically - the ResourceManager class does this while loading tilemaps
-     * @param tilemapData 
-     * @param layer 
-     */
+    // @override
     protected parseTilemapData(tilemapData: TiledTilemapData, layer: TiledLayerData): void {
         // The size of the tilemap in local space
         this.numCols = tilemapData.width;
@@ -47,10 +44,19 @@ export default class OrthogonalTilemap extends Tilemap {
         }
     }
 
+    /**
+     * Gets the dimensions of the tilemap
+     * @returns A Vec2 containing the number of columns and the number of rows in the tilemap.
+     */
     getDimensions(): Vec2 {
         return new Vec2(this.numCols, this.numRows);
     }
 
+    /**
+     * Gets the data value of the tile at the specified world position
+     * @param worldCoords The coordinates in world space
+     * @returns The data value of the tile
+     */
     getTileAtWorldPosition(worldCoords: Vec2): number {
         let localCoords = this.getColRowAt(worldCoords);
         return this.getTileAtRowCol(localCoords);
@@ -58,7 +64,8 @@ export default class OrthogonalTilemap extends Tilemap {
 
     /**
      * Get the tile at the specified row and column
-     * @param rowCol 
+     * @param rowCol The coordinates in tilemap space
+     * @returns The data value of the tile
      */
     getTileAtRowCol(rowCol: Vec2): number {
         if(rowCol.x < 0 || rowCol.x >= this.numCols || rowCol.y < 0 || rowCol.y >= this.numRows){
@@ -68,6 +75,11 @@ export default class OrthogonalTilemap extends Tilemap {
         return this.data[rowCol.y * this.numCols + rowCol.x];
     }
 
+    /**
+     * Gets the world position of the tile at the specified index
+     * @param index The index of the tile
+     * @returns A Vec2 containing the world position of the tile
+     */
     getTileWorldPosition(index: number): Vec2 {
         // Get the local position
         let col = index % this.numCols;
@@ -80,14 +92,29 @@ export default class OrthogonalTilemap extends Tilemap {
         return new Vec2(x, y);
     }
 
+    /**
+     * Gets the data value of the tile at the specified index
+     * @param index The index of the tile
+     * @returns The data value of the tile
+     */
     getTile(index: number): number {
         return this.data[index];
     }
 
+    /**
+     * Sets the tile at the specified index
+     * @param index The index of the tile
+     * @param type The new data value of the tile
+     */
     setTile(index: number, type: number): void {
         this.data[index] = type;
     }
 
+    /**
+     * Sets the tile at the specified row and column
+     * @param rowCol The position of the tile in tilemap space
+     * @param type The new data value of the tile
+     */
     setTileAtRowCol(rowCol: Vec2, type: number): void {
         let index = rowCol.y * this.numCols + rowCol.x;
         this.setTile(index, type);
@@ -95,8 +122,9 @@ export default class OrthogonalTilemap extends Tilemap {
 
     /**
      * Returns true if the tile at the specified row and column of the tilemap is collidable
-     * @param indexOrCol 
-     * @param row 
+     * @param indexOrCol The index of the tile or the column it is in
+     * @param row The row the tile is in
+     * @returns A flag representing whether or not the tile is collidable.
      */
     isTileCollidable(indexOrCol: number, row?: number): boolean {
         // The value of the tile
@@ -123,7 +151,8 @@ export default class OrthogonalTilemap extends Tilemap {
 
     /**
      * Takes in world coordinates and returns the row and column of the tile at that position
-     * @param worldCoords 
+     * @param worldCoords The coordinates of the potential tile in world space
+     * @returns A Vec2 containing the coordinates of the potential tile in tilemap space
      */
     getColRowAt(worldCoords: Vec2): Vec2 {
         let col = Math.floor(worldCoords.x / this.tileSize.x / this.scale.x);
@@ -132,8 +161,10 @@ export default class OrthogonalTilemap extends Tilemap {
         return new Vec2(col, row);
     }
 
+    // @override
     update(deltaT: number): void {}
 
+    // @override
     debugRender(){
         let tileSize = this.getTileSizeWithZoom();
         let origin = this.relativePosition.sub(this.sizeWithZoom);

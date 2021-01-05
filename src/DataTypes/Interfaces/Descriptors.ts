@@ -13,6 +13,9 @@ export interface Unique {
 export interface Positioned {
     /** The center of this object. */
     position: Vec2;
+
+    /** The center of this object relative to the viewport. */
+    readonly relativePosition: Vec2;
 }
 
 export interface Region {
@@ -21,6 +24,9 @@ export interface Region {
 
     /** The scale of this object. */
     scale: Vec2;
+
+    /** The size of the object taking into account the zoom and scale */
+    readonly sizeWithZoom: Vec2;
 
     /** The bounding box of this object. */
     boundary: AABB;
@@ -95,13 +101,13 @@ export interface Physical {
      * Tells the physics engine to handle a move by this object.
      * @param velocity The velocity with which to move the object.
      */
-    move: (velocity: Vec2) => void;
+    move(velocity: Vec2): void;
 
     /**
      * The move actually done by the physics engine after collision checks are done.
      * @param velocity The velocity with which the object will move.
      */
-    finishMove: () => void;
+    finishMove(): void;
     
     /**
      * Adds physics to this object
@@ -109,20 +115,20 @@ export interface Physical {
      * @param isCollidable Whether this object will be able to collide with other objects
      * @param isStatic Whether this object will be static or not
      */
-    addPhysics: (collisionShape?: Shape, colliderOffset?: Vec2, isCollidable?: boolean, isStatic?: boolean) => void;
+    addPhysics(collisionShape?: Shape, colliderOffset?: Vec2, isCollidable?: boolean, isStatic?: boolean): void;
 
     /**
      * Adds a trigger to this object for a specific group
      * @param group The name of the group that activates the trigger
      * @param eventType The name of the event to send when this trigger is activated
      */
-    addTrigger: (group: string, eventType: string) => void;
+    addTrigger(group: string, eventType: string): void;
     
     /**
      * Sets the physics layer of this node
      * @param layer The name of the layer
      */
-    setPhysicsLayer: (layer: String) => void;
+    setPhysicsLayer(layer: string): void;
 
     /**
      * If used before "move()", it will tell you the velocity of the node after its last movement
@@ -148,22 +154,41 @@ export interface Actor {
     /** The id of the actor according to the AIManager */
     actorId: number;
 
+    /** The path that navigation will follow */
     path: NavigationPath;
 
+    /** A flag representing whether or not the actor is currently pathfinding */
     pathfinding: boolean;
 
-    addAI: <T extends AI>(ai: string | (new () => T), options: Record<string, any>) => void;
+    /**
+     * Adds an AI to this Actor.
+     * @param ai The name of the AI, or the actual AI, to add to the Actor.
+     * @param options The options to give to the AI for initialization.
+     */
+    addAI<T extends AI>(ai: string | (new () => T), options: Record<string, any>): void;
 
-    setAIActive: (active: boolean) => void;
+    /**
+     * Sets the AI to start/stop for this Actor.
+     * @param active The new active status of the AI.
+     */
+    setAIActive(active: boolean): void;
 }
 
 export interface Navigable {
-    getNavigationPath: (fromPosition: Vec2, toPosition: Vec2) => NavigationPath;
+    /**
+     * Gets a new navigation path based on this Navigable object.
+     * @param fromPosition The position to start navigation from.
+     * @param toPosition The position to navigate to.
+     */
+    getNavigationPath(fromPosition: Vec2, toPosition: Vec2): NavigationPath;
 }
 
 export interface Updateable {
-    /** Updates this object. */
-    update: (deltaT: number) => void;
+    /**
+     * Updates this object.
+     * @param deltaT The timestep of the update.
+     */
+    update(deltaT: number): void;
 }
 
 export interface DebugRenderable {

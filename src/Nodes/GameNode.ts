@@ -14,7 +14,8 @@ import Debug from "../Debug/Debug";
 import Color from "../Utils/Color";
 
 /**
- * The representation of an object in the game world
+ * The representation of an object in the game world.
+ * To construct GameNodes, see the @reference[Scene] documentation.
  */
 export default abstract class GameNode implements Positioned, Unique, Updateable, Physical, Actor, DebugRenderable {
 	/*---------- POSITIONED ----------*/
@@ -52,15 +53,24 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	pathfinding: boolean = false;
 
 	/*---------- GENERAL ----------*/
+	/** An reference to the user input handler. This allows subclasses to easily access information about user input. */
 	protected input: InputReceiver;
+	/** An event receiver. */
 	protected receiver: Receiver;
+	/** An event emitter. */
 	protected emitter: Emitter;
+	/** A reference to the scene this GameNode is a part of. */
 	protected scene: Scene;
+	/** The visual layer this GameNode resides in. */
 	protected layer: Layer;
+	/** A utility that allows the use of tweens on this GameNode */
 	tweens: TweenManager;
+	/** A tweenable property for rotation. Does not affect the bounding box of this GameNode - Only rendering. */
 	rotation: number;
+	/** The opacity value of this GameNode */
 	alpha: number;
 
+	// Constructor docs are ignored, as the user should NOT create new GameNodes with a raw constructor
 	constructor(){
 		this.input = InputReceiver.getInstance();
 		this._position = new Vec2(0, 0);
@@ -105,18 +115,20 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	}
 
 	/*---------- PHYSICAL ----------*/
+	// @implemented
 	/**
      * @param velocity The velocity with which to move the object.
      */
-	move = (velocity: Vec2): void => {
+	move(velocity: Vec2): void {
 		this.moving = true;
 		this._velocity = velocity;
 	};
 
+	// @implemented
     /**
      * @param velocity The velocity with which the object will move.
      */
-	finishMove = (): void => {
+	finishMove(): void {
 		this.moving = false;
 		this.position.add(this._velocity);
 		if(this.pathfinding){
@@ -124,13 +136,15 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		}
 	}
 
+	// @implemented
 	/**
 	 * @param collisionShape The collider for this object. If this has a region (implements Region),
 	 * it will be used when no collision shape is specified (or if collision shape is null).
 	 * @param isCollidable Whether this is collidable or not. True by default.
 	 * @param isStatic Whether this is static or not. False by default
 	 */
-	addPhysics = (collisionShape?: Shape, colliderOffset?: Vec2, isCollidable: boolean = true, isStatic: boolean = false): void => {
+	addPhysics(collisionShape?: Shape, colliderOffset?: Vec2, isCollidable: boolean = true, isStatic: boolean = false): void {
+		// Initialize the physics variables
 		this.hasPhysics = true;
 		this.moving = false;
 		this.onGround = false;
@@ -147,6 +161,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.collidedWithTilemap = false;
 		this.physicsLayer = -1;
 
+		// Set the collision shape if provided, or simply use the the region if there is one.
 		if(collisionShape){
 			this.collisionShape = collisionShape;
 		} else if (isRegion(this)) {
@@ -156,29 +171,39 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 			throw "No collision shape specified for physics object."
 		}
 
+		// If we were provided with a collider offset, set it. Otherwise there is no offset, so use the zero vector
 		if(colliderOffset){
 			this.colliderOffset = colliderOffset;
 		} else {
 			this.colliderOffset = Vec2.ZERO;
 		}
 
+		// Initialize the swept rect
 		this.sweptRect = this.collisionShape.getBoundingRect();
+
+		// Register the object with physics
 		this.scene.getPhysicsManager().registerObject(this);
 	}
 
+	// @implemented
 	/**
 	 * @param group The name of the group that will activate the trigger
 	 * @param eventType The type of this event to send when this trigger is activated
 	 */
-    addTrigger = (group: string, eventType: string): void => {
+    addTrigger(group: string, eventType: string): void {
 		this.isTrigger = true;
 		this.triggers.add(group, eventType);
 	};
 
-	setPhysicsLayer = (layer: string): void => {
+	// @implemented
+	/**
+	 * @param layer The physics layer this node should belong to
+	 */
+	setPhysicsLayer(layer: string): void {
 		this.scene.getPhysicsManager().setLayer(this, layer);
 	}
 
+	// @implemened
 	getLastVelocity(): Vec2 {
 		return this._velocity;
 	}
@@ -198,6 +223,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.aiActive = true;
 	}
 
+	// @implemented
 	addAI<T extends AI>(ai: string | (new () => T), options?: Record<string, any>): void {
 		if(!this._ai){
 			this.scene.getAIManager().registerActor(this);
@@ -214,6 +240,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.aiActive = true;
 	}
 
+	// @implemented
 	setAIActive(active: boolean): void {
 		this.aiActive = active;
 	}
@@ -240,7 +267,10 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.scene = scene;
 	}
 
-	/** Gets the scene this object is in. */
+	/**
+	 * Gets the scene this object is in. 
+	 * @returns The scene this object belongs to
+	*/
 	getScene(): Scene {
 		return this.scene;
 	}
@@ -253,24 +283,30 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.layer = layer;
 	}
 
-	/** Returns the layer this object is on. */
+	/**
+	 * Returns the layer this object is on.
+	 * @returns This layer this object is on.
+	*/
 	getLayer(): Layer {
 		return this.layer;
 	}
 
-	/**
-	 * Called if the position vector is modified or replaced
-	 */
+	/** Called if the position vector is modified or replaced */
 	protected positionChanged(): void {
 		if(this.hasPhysics){
 			this.collisionShape.center = this.position.clone().add(this.colliderOffset);
 		}
 	};
 
+	/**
+	 * Updates this GameNode
+	 * @param deltaT The timestep of the update.
+	 */
 	update(deltaT: number): void {
 		this.tweens.update(deltaT);
 	}
 
+	// @implemented
 	debugRender(): void {
 		let color = this.isColliding ? Color.RED : Color.GREEN;
 		Debug.drawPoint(this.relativePosition, color);

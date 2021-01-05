@@ -3,12 +3,17 @@ import Color from "../../Utils/Color";
 import MathUtils from "../../Utils/MathUtils";
 import UIElement from "../UIElement";
 
+/** A slider UIElement */
 export default class Slider extends UIElement {
     /** The value of the slider from [0, 1] */
     protected value: number;
+    /** The color of the slider nib */
     public nibColor: Color;
+    /** The color of the slider track */
     public sliderColor: Color;
+    /** The reaction of this UIElement to a value change */
     public onValueChange: (value: number) => void;
+    /** The event propagated by this UIElement when value changes */
     public onValueChangeEventId: string;
 
     constructor(position: Vec2){
@@ -24,10 +29,15 @@ export default class Slider extends UIElement {
         this.size.set(200, 20);
     }
 
+    /**
+     * Retrieves the value of the slider
+     * @returns The value of the slider
+     */
     getValue(): number {
         return this.value;
     }
-    
+
+    /** A method called in response to the value changing */
     protected valueChanged(): void {
         if(this.onValueChange){
             this.onValueChange(this.value);
