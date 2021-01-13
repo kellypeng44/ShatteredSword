@@ -4,11 +4,24 @@ import { AnimationState, TweenData } from "./AnimationTypes";
 import EaseFunctions from "../../Utils/EaseFunctions";
 import MathUtils from "../../Utils/MathUtils";
 
+/**
+ * A manager for the tweens of a GameNode.
+ * Tweens are short animations played by interpolating between two properties using an easing function.
+ * For a good visual representation of easing functions, check out @link(https://easings.net/)(https://easings.net/).
+ * Multiple tween can be played at the same time, as long as they don't change the same property.
+ * This allows for some interesting polishes or animations that may be very difficult to do with sprite work alone
+ * - especially pixel art (such as rotations or scaling).
+ */
 export default class TweenManager {
+    /** The GameNode this TweenManager acts upon */
     protected owner: GameNode;
-
+    /** The list of created tweens */
     protected tweens: Map<TweenData>;
 
+    /**
+     * Creates a new TweenManager
+     * @param owner The owner of the TweenManager
+     */
     constructor(owner: GameNode){
         this.owner = owner;
         this.tweens = new Map();
@@ -83,7 +96,7 @@ export default class TweenManager {
 
     /**
      * Stops a currently playing tween
-     * @param key 
+     * @param key The key of the tween
      */
     stop(key: string): void {
         if(this.tweens.has(key)){

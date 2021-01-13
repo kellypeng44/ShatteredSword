@@ -20,6 +20,9 @@ import TextInput from "../Nodes/UIElements/TextInput";
 import AnimatedSprite from "../Nodes/Sprites/AnimatedSprite";
 import Vec2 from "../DataTypes/Vec2";
 
+/**
+ * An implementation of the RenderingManager class using CanvasRenderingContext2D.
+ */
 export default class CanvasRenderer extends RenderingManager {
     protected ctx: CanvasRenderingContext2D;
     protected graphicRenderer: GraphicRenderer;
@@ -33,6 +36,7 @@ export default class CanvasRenderer extends RenderingManager {
         super();
     }
 
+    // @override
     setScene(scene: Scene){
         this.scene = scene;
         this.graphicRenderer.setScene(scene);
@@ -40,6 +44,7 @@ export default class CanvasRenderer extends RenderingManager {
         this.uiElementRenderer.setScene(scene);
     }
 
+    // @override
     initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
         canvas.width = width;
         canvas.height = height;
@@ -56,6 +61,7 @@ export default class CanvasRenderer extends RenderingManager {
         return this.ctx;
     }
 
+    // @override
     render(visibleSet: CanvasNode[], tilemaps: Tilemap[], uiLayers: Map<UILayer>): void {
         // Sort by depth, then by visible set by y-value
         visibleSet.sort((a, b) => {
@@ -104,6 +110,10 @@ export default class CanvasRenderer extends RenderingManager {
         uiLayers.forEach(key => uiLayers.get(key).getItems().forEach(node => this.renderNode(<CanvasNode>node)));
     }
 
+    /**
+     * Renders a specified CanvasNode
+     * @param node The CanvasNode to render
+     */
     protected renderNode(node: CanvasNode): void {
         // Calculate the origin of the viewport according to this sprite
         this.origin = this.scene.getViewTranslation(node);
@@ -139,6 +149,7 @@ export default class CanvasRenderer extends RenderingManager {
         this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
 
+    // @override
     protected renderSprite(sprite: Sprite): void {
         // Get the image from the resource manager
         let image = this.resourceManager.getImage(sprite.imageId);
@@ -156,16 +167,9 @@ export default class CanvasRenderer extends RenderingManager {
             sprite.size.x, sprite.size.y,
             (-sprite.size.x*sprite.scale.x/2)*this.zoom, (-sprite.size.y*sprite.scale.y/2)*this.zoom,
             sprite.size.x * sprite.scale.x*this.zoom, sprite.size.y * sprite.scale.y*this.zoom);
-
-        // Debug mode
-        if(this.debug){
-            this.ctx.lineWidth = 4;
-            this.ctx.strokeStyle = "#00FF00"
-            let b = sprite.boundary;
-            this.ctx.strokeRect(-b.hw*this.zoom, -b.hh*this.zoom, b.hw*2*this.zoom, b.hh*2*this.zoom);
-        }
     }
 
+    // @override
     protected renderAnimatedSprite(sprite: AnimatedSprite): void {
         // Get the image from the resource manager
         let image = this.resourceManager.getImage(sprite.imageId);
@@ -187,16 +191,9 @@ export default class CanvasRenderer extends RenderingManager {
             sprite.size.x, sprite.size.y,
             (-sprite.size.x*sprite.scale.x/2)*this.zoom, (-sprite.size.y*sprite.scale.y/2)*this.zoom,
             sprite.size.x * sprite.scale.x*this.zoom, sprite.size.y * sprite.scale.y*this.zoom);
-
-        // Debug mode
-        if(this.debug){
-            this.ctx.lineWidth = 4;
-            this.ctx.strokeStyle = "#00FF00"
-            let b = sprite.boundary;
-            this.ctx.strokeRect(-b.hw*this.zoom, -b.hh*this.zoom, b.hw*2*this.zoom, b.hh*2*this.zoom);
-        }
     }
 
+    // @override
     protected renderGraphic(graphic: Graphic): void {
         if(graphic instanceof Point){
             this.graphicRenderer.renderPoint(<Point>graphic, this.zoom);
@@ -205,12 +202,14 @@ export default class CanvasRenderer extends RenderingManager {
         }
     }
 
+    // @override
     protected renderTilemap(tilemap: Tilemap): void {
         if(tilemap instanceof OrthogonalTilemap){
             this.tilemapRenderer.renderOrthogonalTilemap(<OrthogonalTilemap>tilemap);
         }
     }
 
+    // @override
     protected renderUIElement(uiElement: UIElement): void {
         if(uiElement instanceof Label){
             this.uiElementRenderer.renderLabel(uiElement);

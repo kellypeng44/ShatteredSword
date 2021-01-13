@@ -1,7 +1,8 @@
 import Color from "../Utils/Color";
 
+// @ignorePage
 export default class Stats extends Object {
-    /** The fps of the game. */
+    // The fps of the game.
     private static prevfps: Array<number>;
     private static readonly NUM_POINTS: number = 60;
     private static ctx: CanvasRenderingContext2D;

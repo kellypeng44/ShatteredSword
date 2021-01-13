@@ -3,9 +3,18 @@ import Receiver from "../Events/Receiver";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import { GameEventType } from "../Events/GameEventType";
 
+/**
+ * Manages any sounds or music needed for the game.
+ * Through the EventQueue, exposes interface to play sounds so GameNodes can activate sounds without
+ * needing direct references to the audio system
+ */
 export default class AudioManager {
     private static instance: AudioManager;
+
+    /** The event receiver of this AudioManager */
     private receiver: Receiver;
+
+    /** A Map of the names of currently playing (or paused) sounds to their AudioBuffers */
     private currentSounds: Map<AudioBufferSourceNode>;
 
     private audioCtx: AudioContext;
@@ -19,6 +28,7 @@ export default class AudioManager {
 
     /**
      * Get the instance of the AudioManager class or create a new one if none exists
+     * @returns The AudioManager
      */
     public static getInstance(): AudioManager {
         if(!this.instance){
@@ -42,15 +52,12 @@ export default class AudioManager {
 
     /**
      * Returns the current audio context
+     * @returns The AudioContext
      */
     public getAudioContext(): AudioContext {
         return this.audioCtx;
     }
 
-    /**
-     * Creates a new sound from the key of a loaded audio file
-     * @param key The key of the loaded audio file to create a new sound for
-     */
     /*
         According to the MDN, create a new sound for every call:
 
@@ -61,6 +68,11 @@ export default class AudioManager {
         hold a reference to it. It will automatically be garbage-collected at an appropriate time, which won't be
         until sometime after the sound has finished playing.
     */
+    /**
+     * Creates a new sound from the key of a loaded audio file
+     * @param key The key of the loaded audio file to create a new sound for
+     * @returns The newly created AudioBuffer
+     */
     protected createSound(key: string): AudioBufferSourceNode {
         // Get audio buffer
         let buffer = ResourceManager.getInstance().getAudio(key);
@@ -108,11 +120,7 @@ export default class AudioManager {
             this.currentSounds.delete(key);
         }
     }
-      
-    /**
-     * Updates the AudioManager
-     * @param deltaT 
-     */
+    
     update(deltaT: number): void {
         // Play each audio clip requested
         // TODO - Add logic to merge sounds if there are multiple of the same key

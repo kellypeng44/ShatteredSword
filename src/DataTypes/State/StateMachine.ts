@@ -8,18 +8,29 @@ import { Updateable } from "../Interfaces/Descriptors";
 
 /**
  * An implementation of a Push Down Automata State machine. States can also be hierarchical
- * for more flexibility, as described in Game Programming Principles.
+ * for more flexibility, as described in @link(Game Programming Patterns)(https://gameprogrammingpatterns.com/state.html).
  */
 export default class StateMachine implements Updateable {
+    /** A stack of the current states */
     protected stack: Stack<State>;
+    /** A mape of state keys to actual state instances */
     protected stateMap: Map<State>;
+    /** The current state */
     protected currentState: State;
+    /** An event receiver */
     protected receiver: Receiver;
+    /** An event emitter */
     protected emitter: Emitter;
+    /** A boolean representing whether or not this StateMachine is currently active */
     protected active: boolean;
+    /** A boolean representing whether or not this StateMachine should emit an event on state change */
     protected emitEventOnStateChange: boolean;
+    /** The name of the event to be emitted on state change */
     protected stateChangeEventName: string;
 
+    /**
+     * Creates a new StateMachine
+     */
     constructor(){
         this.stack = new Stack();
         this.stateMap = new Map();
@@ -56,7 +67,7 @@ export default class StateMachine implements Updateable {
      * Initializes this state machine with an initial state and sets it running
      * @param initialState The name of initial state of the state machine
      */
-    initialize(initialState: string){
+    initialize(initialState: string): void {
         this.stack.push(this.stateMap.get(initialState));
         this.currentState = this.stack.peek();
         this.setActive(true);
@@ -109,6 +120,7 @@ export default class StateMachine implements Updateable {
         this.currentState.handleInput(event);
     }
 
+    // @implemented
     update(deltaT: number): void {
         // If the state machine isn't currently active, ignore all events and don't update
         if(!this.active){

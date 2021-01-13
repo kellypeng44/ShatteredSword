@@ -1,7 +1,15 @@
-import Graph, { EdgeNode } from "../DataTypes/Graphs/Graph";
+import Graph from "../DataTypes/Graphs/Graph";
+import EdgeNode from "../DataTypes/Graphs/EdgeNode";
 
+/** A class to provides some utility functions for graphs */
 export default class GraphUtils {
 
+	/**
+	 * An implementation of Djikstra's shortest path algorithm based on the one described in The Algorithm Design Manual.
+	 * @param g The graph
+	 * @param start The number to start the shortest path from
+	 * @returns An array containing the parent of each node of the Graph in the shortest path.
+	 */
 	static djikstra(g: Graph, start: number): Array<number> {
 		let i: number;		// Counter
 		let p: EdgeNode;	// Pointer to edgenode

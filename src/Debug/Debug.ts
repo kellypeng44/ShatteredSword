@@ -1,11 +1,11 @@
 import Map from "../DataTypes/Map";
 import Vec2 from "../DataTypes/Vec2";
-import InputHandler from "../Input/InputHandler";
 import GameNode from "../Nodes/GameNode";
 import Color from "../Utils/Color";
 
-type DebugRenderFunction = (ctx: CanvasRenderingContext2D) => void;
-
+/**
+ * A util class for rendering Debug messages to the canvas.
+ */
 export default class Debug {
 
 	/** A map of log messages to display on the screen */ 
@@ -40,7 +40,7 @@ export default class Debug {
 
 	/**
 	 * Deletes a a key from the log and stops it from keeping up space on the screen
-	 * @param id 
+	 * @param id The id of the log item to clear
 	 */
 	static clearLogItem(id: string): void {
 		this.logMessages.delete(id);
@@ -59,6 +59,7 @@ export default class Debug {
 	 * @param center The center of the box
 	 * @param halfSize The dimensions of the box
 	 * @param filled A boolean for whether or not the box is filled
+	 * @param color The color of the box to draw
 	 */
 	static drawBox(center: Vec2, halfSize: Vec2, filled: boolean, color: Color): void {
 		if(filled){
@@ -72,6 +73,12 @@ export default class Debug {
 		}
 	}
 
+	/**
+	 * Draws a ray at the specified position
+	 * @param from The starting position of the ray
+	 * @param to The ending position of the ray
+	 * @param color The color of the ray
+	 */
 	static drawRay(from: Vec2, to: Vec2, color: Color): void {
 		this.debugRenderingContext.lineWidth = 2;
 		this.debugRenderingContext.strokeStyle = color.toString();
@@ -83,16 +90,32 @@ export default class Debug {
 		this.debugRenderingContext.stroke();
 	}
 
+	/**
+	 * Draws a point at the specified position
+	 * @param pos The position of the point
+	 * @param color The color of the point
+	 */
 	static drawPoint(pos: Vec2, color: Color): void {
 		let pointSize = 6;
 		this.debugRenderingContext.fillStyle = color.toString();
 		this.debugRenderingContext.fillRect(pos.x - pointSize/2, pos.y - pointSize/2, pointSize, pointSize);
 	}
 
+	/**
+	 * Sets the default rendering color for text for the debugger
+	 * @param color The color to render the text
+	 */
 	static setDefaultTextColor(color: Color): void {
 		this.defaultTextColor = color;
 	}
 
+	/**
+	 * Performs any necessary setup operations on the Debug canvas
+	 * @param canvas The debug canvas
+	 * @param width The desired width of the canvas
+	 * @param height The desired height of the canvas
+	 * @returns The rendering context extracted from the canvas
+	 */
 	static initializeDebugCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
         canvas.width = width;
 		canvas.height = height;
@@ -104,15 +127,18 @@ export default class Debug {
         return this.debugRenderingContext;
 	}
 
+	/** Clears the debug canvas */
 	static clearCanvas(): void {
 		this.debugRenderingContext.clearRect(0, 0, this.debugCanvasSize.x, this.debugCanvasSize.y);
 	}
 
+	/** Renders the text and nodes sent to the Debug system */
 	static render(): void {
 		this.renderText();
 		this.renderNodes();
 	}
 
+	/** Renders the text sent to the Debug canvas */
 	static renderText(): void {
 		let y = 20;
 		this.debugRenderingContext.font = "20px Arial";
@@ -125,6 +151,7 @@ export default class Debug {
 		});
 	}
 
+	/** Renders the nodes registered with the debug canvas */
 	static renderNodes(): void {
 		if(this.nodes){
 			this.nodes.forEach(node => {

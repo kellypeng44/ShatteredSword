@@ -10,6 +10,12 @@ import Sprite from "../../Nodes/Sprites/Sprite";
 import PositionGraph from "../../DataTypes/Graphs/PositionGraph";
 import Navmesh from "../../Pathfinding/Navmesh";
 
+// @ignorePage
+
+/**
+ * A factory that abstracts adding @reference[Tilemap]s to the @reference[Scene].
+ * Access methods in this factory through Scene.add.[methodName]().
+ */
 export default class TilemapFactory {
     private scene: Scene;
     private tilemaps: Array<Tilemap>;
@@ -30,6 +36,7 @@ export default class TilemapFactory {
      * @param key The key of the loaded tilemap to load
      * @param constr The constructor of the desired tilemap
      * @param args Additional arguments to send to the tilemap constructor
+     * @returns An array of Layers, each of which contains a layer of the tilemap as its own Tilemap instance.
      */
 	add = (key: string, scale: Vec2 = new Vec2(1, 1)): Array<Layer> => {
         // Get Tilemap Data

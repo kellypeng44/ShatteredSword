@@ -4,10 +4,19 @@ import Collection from "./Collection";
  * A LIFO stack with items of type T
  */
 export default class Stack<T> implements Collection {
-	readonly MAX_ELEMENTS: number;
-	private stack: Array<T>;
+    /** The maximum number of elements in the Stack */
+    private readonly MAX_ELEMENTS: number;
+    
+    /** The internal representation of the stack */
+    private stack: Array<T>;
+    
+    /** The head of the stack */
 	private head: number;
 
+    /**
+     * Constructs a new stack
+     * @param maxElements The maximum size of the stack
+     */
     constructor(maxElements: number = 100){
         this.MAX_ELEMENTS = maxElements;
         this.stack = new Array<T>(this.MAX_ELEMENTS);
@@ -28,6 +37,7 @@ export default class Stack<T> implements Collection {
 
     /**
      * Removes an item from the top of the stack
+     * @returns The item at the top of the stack
      */
     pop(): T {
         if(this.head === -1){
@@ -39,6 +49,7 @@ export default class Stack<T> implements Collection {
 
     /**
      * Returns the element currently at the top of the stack
+     * @returns The item at the top of the stack
      */
     peek(): T {
         if(this.head === -1){
@@ -47,11 +58,14 @@ export default class Stack<T> implements Collection {
         return this.stack[this.head];
     }
 
-    /** Returns true if this stack is empty  */
+    /** Returns true if this stack is empty
+     * @returns A boolean that represents whether or not the stack is empty
+    */
     isEmpty(): boolean {
         return this.head === -1;
     }
 
+    // @implemented
     clear(): void {
         this.forEach((item, index) => delete this.stack[index]);
         this.head = -1;
@@ -59,11 +73,13 @@ export default class Stack<T> implements Collection {
 
     /**
      * Returns the number of items currently in the stack
+     * @returns The number of items in the stack
      */
     size(): number {
         return this.head + 1;
     }
 
+    // @implemented
     forEach(func: (item: T, index?: number) => void): void{
         let i = 0;
         while(i <= this.head){
@@ -72,6 +88,10 @@ export default class Stack<T> implements Collection {
         }
     }
 
+    /**
+     * Converts this stack into a string format
+     * @returns A string representing this stack
+     */
     toString(): string {
         let retval = "";
 

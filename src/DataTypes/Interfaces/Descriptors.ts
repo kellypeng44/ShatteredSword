@@ -5,6 +5,8 @@ import Vec2 from "../Vec2";
 import NavigationPath from "../../Pathfinding/NavigationPath";
 import GameNode from "../../Nodes/GameNode";
 
+// @ignorePage
+
 export interface Unique {
     /** The unique id of this object. */
     id: number;

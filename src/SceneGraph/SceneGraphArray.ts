@@ -2,37 +2,41 @@ import SceneGraph from "./SceneGraph";
 import CanvasNode from "../Nodes/CanvasNode";
 import Viewport from "./Viewport";
 import Scene from "../Scene/Scene";
-import Stack from "../DataTypes/Stack";
-import Layer from "../Scene/Layer"
 import AABB from "../DataTypes/Shapes/AABB";
 import Stats from "../Debug/Stats";
 
-export default class SceneGraphArray extends SceneGraph{
-	private nodeList: Array<CanvasNode>;
-    private turnOffViewportCulling_demoTool: boolean;
+/**
+ * An implementation of a SceneGraph that simply stored CanvasNodes in an array.
+ */
+export default class SceneGraphArray extends SceneGraph {
+    /** The list of CanvasNodes in this SceneGraph */
+    private nodeList: Array<CanvasNode>;
 
+    /**
+     * Creates a new SceneGraphArray
+     * @param viewport The Viewport
+     * @param scene The Scene this SceneGraph belongs to
+     */
     constructor(viewport: Viewport, scene: Scene){
         super(viewport, scene);
 
         this.nodeList = new Array<CanvasNode>();
-        this.turnOffViewportCulling_demoTool = false;
     }
 
-    setViewportCulling_demoTool(bool: boolean): void {
-        this.turnOffViewportCulling_demoTool = bool;
-    }
-
-    addNodeSpecific(node: CanvasNode, id: string): void {
+    // @override
+    protected addNodeSpecific(node: CanvasNode, id: string): void {
         this.nodeList.push(node);
     }
 
-    removeNodeSpecific(node: CanvasNode, id: string): void {
+    // @override
+    protected removeNodeSpecific(node: CanvasNode, id: string): void {
         let index = this.nodeList.indexOf(node);
         if(index > -1){
             this.nodeList.splice(index, 1);
         }
     }
 
+    // @override
     getNodesAtCoords(x: number, y: number): Array<CanvasNode> {
         let results = [];
 
@@ -45,6 +49,7 @@ export default class SceneGraphArray extends SceneGraph{
         return results;
     }
 
+    // @override
     getNodesInRegion(boundary: AABB): Array<CanvasNode> {
         let t0 = performance.now();
         let results = [];
@@ -73,16 +78,8 @@ export default class SceneGraphArray extends SceneGraph{
 
     render(ctx: CanvasRenderingContext2D): void {}
 
+    // @override
     getVisibleSet(): Array<CanvasNode> {
-        // If viewport culling is turned off for demonstration
-        if(this.turnOffViewportCulling_demoTool){
-            let visibleSet = new Array<CanvasNode>();
-            for(let node of this.nodeList){
-                visibleSet.push(node);
-            }
-            return visibleSet;
-        }
-
         let visibleSet = new Array<CanvasNode>();
 
         for(let node of this.nodeList){

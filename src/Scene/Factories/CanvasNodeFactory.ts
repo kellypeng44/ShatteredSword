@@ -13,9 +13,13 @@ import Slider from "../../Nodes/UIElements/Slider";
 import TextInput from "../../Nodes/UIElements/TextInput";
 import Rect from "../../Nodes/Graphics/Rect";
 import ResourceManager from "../../ResourceManager/ResourceManager";
-import UILayer from "../Layers/UILayer";
-import ParallaxLayer from "../Layers/ParallaxLayer";
 
+// @ignorePage
+
+/**
+ * A factory that abstracts adding @reference[CanvasNode]s to the @reference[Scene].
+ * Access methods in this factory through Scene.add.[methodName]().
+ */
 export default class CanvasNodeFactory {
 	protected scene: Scene;
 	protected resourceManager: ResourceManager;
@@ -30,6 +34,7 @@ export default class CanvasNodeFactory {
 	 * @param type The type of UIElement to add
 	 * @param layerName The layer to add the UIElement to
 	 * @param options Any additional arguments to feed to the constructor
+	 * @returns A new UIElement
 	 */
 	addUIElement = (type: string | UIElementType, layerName: string, options?: Record<string, any>): UIElement => {
 		// Get the layer
@@ -68,6 +73,7 @@ export default class CanvasNodeFactory {
 	 * Adds a sprite to the current scene
 	 * @param key The key of the image the sprite will represent
 	 * @param layerName The layer on which to add the sprite
+	 * @returns A new Sprite
 	 */
 	addSprite = (key: string, layerName: string): Sprite => {
 		let layer = this.scene.getLayer(layerName);
@@ -88,6 +94,12 @@ export default class CanvasNodeFactory {
 		return instance;
 	}
 
+	/**
+	 * Adds an AnimatedSprite to the current scene
+	 * @param key The key of the image the sprite will represent
+	 * @param layerName The layer on which to add the sprite
+	 * @returns A new AnimatedSprite
+	 */
 	addAnimatedSprite = (key: string, layerName: string): AnimatedSprite => {
 		let layer = this.scene.getLayer(layerName);
 		let spritesheet = this.resourceManager.getSpritesheet(key);
@@ -112,6 +124,7 @@ export default class CanvasNodeFactory {
 	 * @param type The type of graphic to add
 	 * @param layerName The layer on which to add the graphic
 	 * @param options Any additional arguments to send to the graphic constructor
+	 * @returns A new Graphic
 	 */
 	addGraphic = (type: GraphicType | string, layerName: string, options?: Record<string, any>): Graphic => {
 		// Get the layer

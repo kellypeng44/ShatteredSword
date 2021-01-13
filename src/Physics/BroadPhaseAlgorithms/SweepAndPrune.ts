@@ -3,6 +3,8 @@ import PhysicsUtils from "../../Utils/PhysicsUtils";
 import SortingUtils from "../../Utils/SortingUtils";
 import BroadPhase from "./BroadPhase";
 
+// @ignorePage
+
 export default class SweepAndPrune extends BroadPhase {
 	protected xList: Array<Physical>;
 	protected yList: Array<Physical>;

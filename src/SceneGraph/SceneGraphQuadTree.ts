@@ -7,10 +7,21 @@ import Vec2 from "../DataTypes/Vec2";
 import AABB from "../DataTypes/Shapes/AABB";
 import Stats from "../Debug/Stats";
 
+/**
+ * An implementation of a SceneGraph that uses a @reference[RegionQuadTree] to store @reference[CanvasNode]s.
+ */
 export default class SceneGraphQuadTree extends SceneGraph {
+    /** The QuadTree used to store the CanvasNodes */
     private qt: RegionQuadTree<CanvasNode>;
+
+    /** A list of nodes to help out the QuadTree */
     private nodes: Array<CanvasNode>;
 
+    /**
+     * Creates a new SceneGraphQuadTree
+     * @param viewport The Viewport
+     * @param scene The Scene this SceneGraph belongs to
+     */
     constructor(viewport: Viewport, scene: Scene){
         super(viewport, scene);
 
@@ -19,21 +30,25 @@ export default class SceneGraphQuadTree extends SceneGraph {
         this.nodes = new Array();
     }
 
-    addNodeSpecific(node: CanvasNode, id: string): void {
+    // @override
+    protected addNodeSpecific(node: CanvasNode, id: string): void {
         this.nodes.push(node);
     }
 
-    removeNodeSpecific(node: CanvasNode, id: string): void {
+    // @override
+    protected removeNodeSpecific(node: CanvasNode, id: string): void {
         let index = this.nodes.indexOf(node);
         if(index >= 0){
             this.nodes.splice(index, 1);
         }
     }
 
+    // @override
     getNodesAtCoords(x: number, y: number): Array<CanvasNode> {
         return this.qt.queryPoint(new Vec2(x, y));
     }
 
+    // @override
     getNodesInRegion(boundary: AABB): Array<CanvasNode> {
         let t0 = performance.now();
         let res = this.qt.queryRegion(boundary);
@@ -72,6 +87,7 @@ export default class SceneGraphQuadTree extends SceneGraph {
         this.qt.render_demo(ctx, origin, zoom);
     }
 
+    // @override
     getVisibleSet(): Array<CanvasNode> {
         let visibleSet = this.qt.queryRegion(this.viewport.getView());
 

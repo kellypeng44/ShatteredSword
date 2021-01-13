@@ -12,7 +12,7 @@ export default class Slider extends UIElement {
     /** The color of the slider track */
     public sliderColor: Color;
     /** The reaction of this UIElement to a value change */
-    public onValueChange: (value: number) => void;
+    public onValueChange: Function;
     /** The event propagated by this UIElement when value changes */
     public onValueChangeEventId: string;
 

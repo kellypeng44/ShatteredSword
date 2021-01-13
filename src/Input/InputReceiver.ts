@@ -7,7 +7,7 @@ import GameEvent from "../Events/GameEvent";
 import { GameEventType } from "../Events/GameEventType";
 
 /**
- * Receives input events from the event queue and allows for easy access of information about input
+ * Receives input events from the @reference[EventQueue] and allows for easy access of information about input by other systems
  */
 export default class InputReceiver{
 	private static instance: InputReceiver = null;
@@ -45,6 +45,10 @@ export default class InputReceiver{
 			 GameEventType.KEY_DOWN, GameEventType.KEY_UP, GameEventType.CANVAS_BLUR, GameEventType.WHEEL_UP, GameEventType.WHEEL_DOWN]);
 	}
 
+	/**
+	 * Gets the statc instance of the Singleton InputReceiver
+	 * @returns The InputReceiver instance
+	 */
 	static getInstance(): InputReceiver{
 		if(this.instance === null){
 			this.instance = new InputReceiver();
@@ -117,6 +121,12 @@ export default class InputReceiver{
 		this.keyPressed.forEach((key: string) => this.keyPressed.set(key, false));
 	}
 
+	/**
+	 * Returns whether or not a key was newly pressed this frame.
+	 * If the key is still pressed from last frame and wasn't re-pressed, this will return false.
+	 * @param key The key
+	 * @returns True if the key was just pressed, false otherwise
+	 */
 	isJustPressed(key: string): boolean {
 		if(this.keyJustPressed.has(key)){
 			return this.keyJustPressed.get(key)
@@ -125,6 +135,11 @@ export default class InputReceiver{
 		}
 	}
 
+	/**
+	 * Returns an array of all of the keys that are newly pressed this frame.
+	 * If a key is still pressed from last frame and wasn't re-pressed, it will not be in this list.
+	 * @returns An array of all of the newly pressed keys.
+	 */
 	getKeysJustPressed(): Array<string> {
 		let keys = Array<string>();
 		this.keyJustPressed.forEach(key => {
@@ -135,6 +150,11 @@ export default class InputReceiver{
 		return keys;
 	}
 
+	/**
+	 * Returns whether or not a key is being pressed.
+	 * @param key The key
+	 * @returns True if the key is currently pressed, false otherwise
+	 */
 	isPressed(key: string): boolean {
 		if(this.keyPressed.has(key)){
 			return this.keyPressed.get(key)
@@ -143,38 +163,76 @@ export default class InputReceiver{
 		}
 	}
 
+	/**
+	 * Returns whether or not the mouse was newly pressed this frame
+	 * @returns True if the mouse was just pressed, false otherwise
+	 */
 	isMouseJustPressed(): boolean {
 		return this.mouseJustPressed;
 	}
 
+	/**
+	 * Returns whether or not the mouse is currently pressed
+	 * @returns True if the mouse is currently pressed, false otherwise
+	 */
 	isMousePressed(): boolean {
 		return this.mousePressed;
 	}
 
+	/**
+	 * Returns whether the user scrolled or not
+	 * @returns True if the user just scrolled this frame, false otherwise
+	 */
 	didJustScroll(): boolean {
 		return this.justScrolled;
 	}
 
+	/**
+	 * Gets the direction of the scroll
+	 * @returns -1 if the user scrolled up, 1 if they scrolled down
+	 */
 	getScrollDirection(): number {
 		return this.scrollDirection;
 	}
 
+	/**
+	 * Gets the position of the player's mouse
+	 * @returns The mouse position stored as a Vec2
+	 */
 	getMousePosition(): Vec2 {
 		return this.mousePosition;
 	}
 
+	/**
+	 * Gets the position of the player's mouse in the game world,
+	 * taking into consideration the scrolling of the viewport
+	 * @returns The mouse position stored as a Vec2
+	 */
 	getGlobalMousePosition(): Vec2 {
 		return this.mousePosition.clone().add(this.viewport.getOrigin());
 	}
 
+	/**
+	 * Gets the position of the last mouse press
+	 * @returns The mouse position stored as a Vec2
+	 */
 	getMousePressPosition(): Vec2 {
 		return this.mousePressPosition;
 	}
 
+	/**
+	 * Gets the position of the last mouse press in the game world,
+	 * taking into consideration the scrolling of the viewport
+	 * @returns The mouse position stored as a Vec2
+	 */
 	getGlobalMousePressPosition(): Vec2 {
 		return this.mousePressPosition.clone().add(this.viewport.getOrigin());
 	}
 
+	/**
+	 * Gives the input receiver a reference to the viewport
+	 * @param viewport The viewport
+	 */
 	setViewport(viewport: Viewport): void {
 		this.viewport = viewport;
 	}

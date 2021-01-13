@@ -1,3 +1,5 @@
+// @ignorePage
+
 export default class EaseFunctions {
 
     static easeInOutSine(x: number): number {

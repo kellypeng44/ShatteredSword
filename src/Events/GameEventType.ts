@@ -1,3 +1,5 @@
+// @ignorePage
+
 export enum GameEventType {
 	/**
 	 * Mouse Down event. Has data: {position: Vec2 - Mouse Position}

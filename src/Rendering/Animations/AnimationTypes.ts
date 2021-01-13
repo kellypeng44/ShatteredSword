@@ -1,6 +1,8 @@
 import { TweenableProperties } from "../../Nodes/GameNode";
 import { EaseFunctionType } from "../../Utils/EaseFunctions";
 
+// @ignorePage
+
 export enum AnimationState {
     STOPPED = 0,
     PAUSED = 1,

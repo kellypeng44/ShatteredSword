@@ -4,7 +4,9 @@ import GameEvent from "../Events/GameEvent";
 import EventQueue from "../Events/EventQueue";
 import { GameEventType } from "../Events/GameEventType";
 
-export default class Recorder{
+// @ignorePage
+
+export default class Recorder {
 	private receiver: Receiver;
 	private log: Queue<LogItem>;
 	private recording: boolean;

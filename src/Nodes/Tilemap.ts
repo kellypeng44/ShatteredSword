@@ -73,7 +73,7 @@ export default abstract class Tilemap extends CanvasNode {
     /**
      * Adds this tilemap to the physics system
     */
-    addPhysics = (): void => {
+    addPhysics(): void {
         this.scene.getPhysicsManager().registerTilemap(this);
     }
 
@@ -99,9 +99,9 @@ export default abstract class Tilemap extends CanvasNode {
     abstract getTile(index: number): number;
 
     /**
-     * Sets the value of the tile at the specified index
-     * @param index
-     * @param type
+     * Sets the tile at the specified index
+     * @param index The index of the tile
+     * @param type The new data value of the tile
      */
     abstract setTile(index: number, type: number): void;
 

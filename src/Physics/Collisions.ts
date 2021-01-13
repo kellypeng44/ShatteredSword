@@ -1,6 +1,8 @@
 import { Physical } from "../DataTypes/Interfaces/Descriptors";
 import Vec2 from "../DataTypes/Vec2";
 
+// @ignorePage
+
 export class Collision {
 	firstContact: Vec2;
 	lastContact: Vec2;

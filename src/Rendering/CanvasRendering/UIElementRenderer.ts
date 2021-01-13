@@ -7,6 +7,9 @@ import ResourceManager from "../../ResourceManager/ResourceManager";
 import Scene from "../../Scene/Scene";
 import MathUtils from "../../Utils/MathUtils";
 
+/**
+ * A utility class to help the @reference[CanvasRenderer] render @reference[UIElement]s
+ */
 export default class UIElementRenderer {
     protected resourceManager: ResourceManager;
     protected scene: Scene;
@@ -17,10 +20,18 @@ export default class UIElementRenderer {
         this.ctx = ctx;
     }
 
+    /**
+     * Sets the scene of this UIElementRenderer
+     * @param scene The current scene
+     */
     setScene(scene: Scene): void {
         this.scene = scene;
     }
 
+    /**
+     * Renders a label
+     * @param label The label to render
+     */
     renderLabel(label: Label): void {
         // If the size is unassigned (by the user or automatically) assign it
         label.handleInitialSizing(this.ctx);
@@ -51,10 +62,18 @@ export default class UIElementRenderer {
 		this.ctx.globalAlpha = previousAlpha;
     }
 
+    /**
+     * Renders a button
+     * @param button The button to render
+     */
     renderButton(button: Button): void {
         this.renderLabel(button);
     }
 
+    /**
+     * Renders a slider
+     * @param slider The slider to render
+     */
     renderSlider(slider: Slider): void {
 		// Grab the global alpha so we can adjust it for this render
 		let previousAlpha = this.ctx.globalAlpha;
@@ -82,6 +101,10 @@ export default class UIElementRenderer {
         this.ctx.globalAlpha = previousAlpha;
     }
 
+    /**
+     * Renders a textInput
+     * @param textInput The textInput to render
+     */
     renderTextInput(textInput: TextInput): void {
         // Show a cursor sometimes
         if(textInput.focused && textInput.cursorCounter % 60 > 30){

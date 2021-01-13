@@ -1,6 +1,7 @@
 import Vec2 from "./Vec2";
 
-export default class Vec4{
+// @ignorePage
+export default class Vec4 {
 
 	public vec: Float32Array;
 

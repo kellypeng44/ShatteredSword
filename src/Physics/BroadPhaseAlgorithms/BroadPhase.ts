@@ -1,6 +1,8 @@
 import { Physical } from "../../DataTypes/Interfaces/Descriptors";
 import GameNode from "../../Nodes/GameNode";
 
+// @ignorePage
+
 export default abstract class BroadPhase {
 	/**
 	 * Runs the algorithm and returns an array of possible collision pairs.

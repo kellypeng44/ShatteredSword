@@ -11,6 +11,8 @@ import OrthogonalTilemap from "../Nodes/Tilemaps/OrthogonalTilemap";
 import AABB from "../DataTypes/Shapes/AABB";
 import Debug from "../Debug/Debug";
 
+// @ignorePage
+
 export default class BasicPhysicsManager extends PhysicsManager {
 
 	/** The array of static nodes */

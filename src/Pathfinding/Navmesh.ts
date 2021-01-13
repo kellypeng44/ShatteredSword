@@ -5,13 +5,22 @@ import Vec2 from "../DataTypes/Vec2";
 import GraphUtils from "../Utils/GraphUtils";
 import NavigationPath from "./NavigationPath";
 
+/**
+ * An implementation of a Navmesh. Navmeshes are graphs in the game world along which nodes can move.
+ */
 export default class Navmesh implements Navigable {
+	/** The graph of points in the NavMesh */
 	protected graph: PositionGraph;
 
+	/**
+	 * Creates a new Navmesh from the points in the speecified graph
+	 * @param graph The graph to construct a navmesh from
+	 */
 	constructor(graph: PositionGraph){
 		this.graph = graph;
 	}
 
+	// @implemented
 	getNavigationPath(fromPosition: Vec2, toPosition: Vec2): NavigationPath {
 		let start = this.getClosestNode(fromPosition);
 		let end = this.getClosestNode(toPosition);
@@ -34,7 +43,12 @@ export default class Navmesh implements Navigable {
 		return new NavigationPath(pathStack);
 	}
 
-	getClosestNode(position: Vec2): number {
+	/**
+	 * Gets the closest node in this Navmesh to the specified position
+	 * @param position The position to query
+	 * @returns The index of the closest node in the Navmesh to the position
+	 */
+	protected getClosestNode(position: Vec2): number {
 		let n = this.graph.numVertices;
 		let i = 1;
 		let index = 0;

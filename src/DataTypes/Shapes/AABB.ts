@@ -2,77 +2,64 @@ import Shape from "./Shape";
 import Vec2 from "../Vec2";
 import MathUtils from "../../Utils/MathUtils";
 import Circle from "./Circle";
-import Debug from "../../Debug/Debug";
+import Hit from "../Physics/Hit";
 
+/**
+ * An Axis-Aligned Bounding Box. In other words, a rectangle that is always aligned to the x-y grid.
+ * Inspired by the helpful collision documentation @link(here)(https://noonat.github.io/intersect/).
+ */
 export default class AABB extends Shape {
-
     center: Vec2;
     halfSize: Vec2;
 
+    /**
+     * Creates a new AABB
+     * @param center The center of the AABB
+     * @param halfSize The half size of the AABB - The distance from the center to an edge in x and y
+     */
     constructor(center?: Vec2, halfSize?: Vec2){
         super();
         this.center = center ? center : new Vec2(0, 0);
         this.halfSize = halfSize ? halfSize : new Vec2(0, 0);
     }
 
-    get x(): number {
-        return this.center.x;
-    }
-
-    get y(): number {
-        return this.center.y;
-    }
-
-    get hw(): number {
-        return this.halfSize.x;
-    }
-
-    get hh(): number {
-        return this.halfSize.y;
-    }
-
-    get top(): number {
-        return this.y - this.hh;
-    }
-
-    get bottom(): number {
-        return this.y + this.hh;
-    }
-
-    get left(): number {
-        return this.x - this.hw;
-    }
-
-    get right(): number {
-        return this.x + this.hw;
-    }
-
+    // @override
     getBoundingRect(): AABB {
         return this.clone();
     }
 
+    // @override
     getBoundingCircle(): Circle {
         let r = Math.max(this.hw, this.hh)
         return new Circle(this.center.clone(), r);
     }
 
+    // @deprecated
     getHalfSize(): Vec2 {
         return this.halfSize;
     }
 
+    // @deprecated
     setHalfSize(halfSize: Vec2): void {
         this.halfSize = halfSize;
     }
 
+    // TODO - move these all to the Shape class
     /**
      * A simple boolean check of whether this AABB contains a point
-     * @param point 
+     * @param point The point to check
+     * @returns A boolean representing whether this AABB contains the specified point
      */
     containsPoint(point: Vec2): boolean {
         return point.x >= this.x - this.hw && point.x <= this.x + this.hw
             && point.y >= this.y - this.hh && point.y <= this.y + this.hh
     }
     
+    /**
+     * A simple boolean check of whether this AABB contains a point
+     * @param point The point to check
+     * @returns A boolean representing whether this AABB contains the specified point
+     */
     intersectPoint(point: Vec2): boolean {
         let dx = point.x - this.x;
         let px = this.hw - Math.abs(dx);
@@ -94,7 +81,8 @@ export default class AABB extends Shape {
     /**
      * A boolean check of whether this AABB contains a point with soft left and top boundaries.
      * In other words, if the top left is (0, 0), the point (0, 0) is not in the AABB
-     * @param point 
+     * @param point The point to check
+     * @returns A boolean representing whether this AABB contains the specified point
      */
     containsPointSoft(point: Vec2): boolean {
         return point.x > this.x - this.hw && point.x <= this.x + this.hw
@@ -105,10 +93,9 @@ export default class AABB extends Shape {
     /**
      * Returns the data from the intersection of this AABB with a line segment from a point in a direction
      * @param point The point that the line segment starts from
-     * @param direction The direction the point will go
-     * @param distance The length of the line segment, if the direction is a unit vector
-     * @param paddingX Pads the AABB in the x axis
-     * @param paddingY Pads the AABB in the y axis
+     * @param delta The direction and distance of the segment
+     * @param padding Pads the AABB to make it wider for the intersection test
+     * @returns The Hit object representing the intersection, or null if there was no intersection
      */
     intersectSegment(point: Vec2, delta: Vec2, padding?: Vec2): Hit {
         let paddingX = padding ? padding.x : 0;
@@ -172,6 +159,7 @@ export default class AABB extends Shape {
         return hit;
     }
 
+    // @override
     overlaps(other: Shape): boolean {
         if(other instanceof AABB){
             return this.overlapsAABB(other);
@@ -181,9 +169,10 @@ export default class AABB extends Shape {
 
     /**
      * A simple boolean check of whether this AABB overlaps another
-     * @param other 
+     * @param other The other AABB to check against
+     * @returns True if this AABB overlaps the other, false otherwise
      */
-    overlapsAABB(other: AABB): boolean {
+    protected overlapsAABB(other: AABB): boolean {
         let dx = other.x - this.x;
         let px = this.hw + other.hw - Math.abs(dx);
         
@@ -201,7 +190,11 @@ export default class AABB extends Shape {
         return true;
     }
 
-    // TODO - Implement this generally and use it in the tilemap
+    /**
+     * Calculates the area of the overlap between this AABB and another
+     * @param other The other AABB
+     * @returns The area of the overlap between the AABBs
+     */
     overlapArea(other: AABB): number {
         let leftx = Math.max(this.x - this.hw, other.x - other.hw);
         let rightx = Math.min(this.x + this.hw, other.x + other.hw);
@@ -241,19 +234,16 @@ export default class AABB extends Shape {
         this.halfSize.set(centerX - minX, centerY - minY);
     }
     
+    // @override
     clone(): AABB {
         return new AABB(this.center.clone(), this.halfSize.clone());
     }
 
+    /**
+     * Converts this AABB to a string format
+     * @returns (center: (x, y), halfSize: (x, y))
+     */
     toString(): string {
         return "(center: " + this.center.toString() + ", half-size: " + this.halfSize.toString() + ")"
     }
-}
-
-export class Hit {
-    time: number;
-    nearTimes: Vec2 = Vec2.ZERO;
-    pos: Vec2 = Vec2.ZERO;
-    delta: Vec2 = Vec2.ZERO;
-    normal: Vec2 = Vec2.ZERO;
 }

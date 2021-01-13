@@ -8,11 +8,16 @@ import Viewport from "../SceneGraph/Viewport";
 import SceneManager from "../Scene/SceneManager";
 import AudioManager from "../Sound/AudioManager";
 import Stats from "../Debug/Stats";
-import ArrayUtils from "../Utils/ArrayUtils";
 import RenderingManager from "../Rendering/RenderingManager";
 import CanvasRenderer from "../Rendering/CanvasRenderer";
 import Color from "../Utils/Color";
+import GameOptions from "./GameOptions";
 
+/**
+ * The main loop of the game engine.
+ * Handles the update order, and initializes all subsystems.
+ * The GameLoop manages the update cycle, and requests animation frames to render to the browser.
+ */
 export default class GameLoop {
     gameOptions: GameOptions;
 
@@ -77,6 +82,10 @@ export default class GameLoop {
     private audioManager: AudioManager;
     private renderingManager: RenderingManager;
 
+    /**
+     * Creates a new GameLoop
+     * @param options The options for GameLoop initialization
+     */
     constructor(options?: Record<string, any>){
         // Typecast the config object to a GameConfig object
         this.gameOptions = GameOptions.parse(options);
@@ -148,24 +157,32 @@ export default class GameLoop {
 
     /**
      * Changes the maximum allowed physics framerate of the game
-     * @param initMax 
+     * @param initMax The max framerate
      */
     setMaxUpdateFPS(initMax: number): void {
         this.maxUpdateFPS = initMax;
         this.simulationTimestep = Math.floor(1000/this.maxUpdateFPS);
     }
 
+    /**
+     * Sets the maximum rendering framerate
+     * @param maxFPS The max framerate
+     */
     setMaxFPS(maxFPS: number): void {
         this.minFrameDelay = 1000/maxFPS;
     }
 
+    /**
+     * Retreives the SceneManager from the GameLoop
+     * @returns The SceneManager
+     */
     getSceneManager(): SceneManager {
         return this.sceneManager;
     }
 
     /**
      * Updates the frame count and sum of time for the framerate of the game
-     * @param timestep 
+     * @param timestep The current time in ms
      */
     private updateFPS(timestamp: number): void {
         this.fps = 0.9 * this.framesSinceLastFpsUpdate * 1000 / (timestamp - this.lastFpsUpdate) +(1 - 0.9) * this.fps;
@@ -189,9 +206,9 @@ export default class GameLoop {
 
     /**
      * The first game frame - initializes the first frame time and begins the render
-     * @param timestamp 
+     * @param timestamp The current time in ms
      */
-    startFrame = (timestamp: number): void => {
+    startFrame(timestamp: number): void {
         this.running = true;
 
         this.render();
@@ -207,7 +224,7 @@ export default class GameLoop {
      * The main loop of the game. Updates and renders every frame
      * @param timestamp 
      */
-    doFrame = (timestamp: number): void => {
+    doFrame(timestamp: number): void {
         // Request animation frame to prepare for another update or render
         window.requestAnimationFrame(this.doFrame);
 
@@ -250,6 +267,9 @@ export default class GameLoop {
         this.panic = false;
     }
 
+    /**
+     * Ends the game loop
+     */
     end(){
         if(this.panic) {
             var discardedTime = Math.round(this.resetFrameDelta());
@@ -265,7 +285,7 @@ export default class GameLoop {
 
     /**
      * Updates all necessary subsystems of the game. Defers scene updates to the sceneManager
-     * @param deltaT 
+     * @param deltaT The time sine the last update
      */
     update(deltaT: number): void {
         // Handle all events that happened since the start of the last loop
@@ -288,7 +308,7 @@ export default class GameLoop {
     }
 
     /**
-     * Clears the canvas and defers scene rendering to the sceneManager. Renders the debug
+     * Clears the canvas and defers scene rendering to the sceneManager. Renders the debug canvas
      */
     render(): void {
         // Clear the canvases
@@ -303,19 +323,5 @@ export default class GameLoop {
         // Debug render
         Debug.render();
         Stats.render();
-    }
-}
-
-class GameOptions {
-    viewportSize: {x: number, y: number};
-    clearColor: {r: number, g: number, b: number}
-
-    static parse(options: Record<string, any>): GameOptions {
-        let gOpt = new GameOptions();
-
-        gOpt.viewportSize = options.viewportSize ? options.viewportSize : {x: 800, y: 600};
-        gOpt.clearColor  = options.clearColor ? options.clearColor : {r: 255, g: 255, b: 255};
-
-        return gOpt;
     }
 }

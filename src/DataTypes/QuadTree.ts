@@ -5,6 +5,8 @@ import { Positioned } from "./Interfaces/Descriptors";
 
 // TODO - Make max depth
 
+// @ignorePage
+
 /**
  * Primarily used to organize the scene graph
  */

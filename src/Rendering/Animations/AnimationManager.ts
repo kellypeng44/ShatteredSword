@@ -3,6 +3,12 @@ import Emitter from "../../Events/Emitter";
 import CanvasNode from "../../Nodes/CanvasNode";
 import { AnimationData, AnimationState } from "./AnimationTypes";
 
+/**
+ * An animation manager class for an animated CanvasNode.
+ * This class keeps track of the possible animations, as well as the current animation state,
+ * and abstracts all interactions with playing, pausing, and stopping animations as well as 
+ * creating new animations from the CanvasNode.
+ */
 export default class AnimationManager {
     /** The owner of this animation manager */
     protected owner: CanvasNode;
@@ -40,6 +46,10 @@ export default class AnimationManager {
     /** The onEnd event of a pending animation */
     protected pendingOnEnd: string;
 
+    /**
+     * Creates a new AnimationManager
+     * @param owner The owner of the AnimationManager
+     */
     constructor(owner: CanvasNode){
         this.owner = owner;
         this.animationState = AnimationState.STOPPED;
@@ -61,7 +71,10 @@ export default class AnimationManager {
         this.animations.add(key, animation);
     }
 
-    /** Gets the index specified by the current animation and current frame */
+    /**
+     * Gets the index specified by the current animation and current frame
+     * @returns The index in the current animation
+     */
     getIndex(): number {
         if(this.animations.has(this.currentAnimation)){
             return this.animations.get(this.currentAnimation).frames[this.currentFrame].index;
@@ -72,6 +85,10 @@ export default class AnimationManager {
         }
     }
 
+    /**
+     * Retrieves the current animation index and advances the animation frame
+     * @returns The index of the animation frame
+     */
     getIndexAndAdvanceAnimation(): number {
         // If we aren't playing, we won't be advancing the animation
         if(!(this.animationState === AnimationState.PLAYING)){
@@ -109,6 +126,7 @@ export default class AnimationManager {
         }
     }
 
+    /** Ends the current animation and fires any necessary events, as well as starting any new animations */
     protected endCurrentAnimation(): void {
         this.currentFrame = 0;
         this.animationState = AnimationState.STOPPED;
@@ -144,7 +162,13 @@ export default class AnimationManager {
         this.pendingAnimation = null;
     }
 
-    /** Queues a single animation to be played after the current one. Does NOT stack */
+    /**
+     * Queues a single animation to be played after the current one. Does NOT stack.
+     * Queueing additional animations past 1 will just replace the queued animation
+     * @param animation The animation to queue
+     * @param loop Whether or not the loop the queued animation
+     * @param onEnd The event to fire when the queued animation ends
+     */
     queue(animation: string, loop: boolean = false, onEnd?: string): void {
         this.pendingAnimation = animation;
         this.pendingLoop = loop;

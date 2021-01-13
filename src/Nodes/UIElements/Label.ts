@@ -46,7 +46,7 @@ export default class Label extends UIElement{
 	 * Gets a string containg the font details for rendering
 	 * @returns A string containing the font details
 	 */
-	protected getFontString(): string {
+	getFontString(): string {
 		return this.fontSize + "px " + this.font;
 	}
 

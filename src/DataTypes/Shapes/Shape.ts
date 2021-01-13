@@ -2,6 +2,9 @@ import Vec2 from "../Vec2";
 import AABB from "./AABB";
 import Circle from "./Circle";
 
+/**
+ * An abstract Shape class that acts as an interface for better interactions with subclasses.
+ */
 export default abstract class Shape {
     abstract get center(): Vec2;
 
@@ -9,16 +12,63 @@ export default abstract class Shape {
 
     abstract get halfSize(): Vec2;
 
-    /** Gets a bounding rectangle for this shape */
+    get x(): number {
+        return this.center.x;
+    }
+
+    get y(): number {
+        return this.center.y;
+    }
+
+    get hw(): number {
+        return this.halfSize.x;
+    }
+
+    get hh(): number {
+        return this.halfSize.y;
+    }
+
+    get top(): number {
+        return this.y - this.hh;
+    }
+
+    get bottom(): number {
+        return this.y + this.hh;
+    }
+
+    get left(): number {
+        return this.x - this.hw;
+    }
+
+    get right(): number {
+        return this.x + this.hw;
+    }
+
+    /**
+     * Gets a bounding rectangle for this shape. Warning - may be the same as this Shape.
+     * For instance, the bounding circle of an AABB is itself. Use clone() if you need a new shape.
+     * @returns An AABB that bounds this shape
+     */
     abstract getBoundingRect(): AABB;
 
-    /** Gets a bounding circle for this shape */
+    /**
+     * Gets a bounding circle for this shape. Warning - may be the same as this Shape.
+     * For instance, the bounding circle of a Circle is itself. Use clone() if you need a new shape.
+     * @returns A Circle that bounds this shape
+     */
     abstract getBoundingCircle(): Circle;
 
-    /** Returns a copy of this Shape */
+    /**
+     * Returns a copy of this Shape
+     * @returns A new copy of this shape
+     */
     abstract clone(): Shape;
 
-    /** Checks if this shape overlaps another */
+    /**
+     * Checks if this shape overlaps another
+     * @param other The other shape to check against
+     * @returns a boolean that represents whether this Shape overlaps the other one
+     */
     abstract overlaps(other: Shape): boolean;
 
     static getTimeOfCollision(A: Shape, velA: Vec2, B: Shape, velB: Vec2): [Vec2, Vec2, boolean, boolean] {

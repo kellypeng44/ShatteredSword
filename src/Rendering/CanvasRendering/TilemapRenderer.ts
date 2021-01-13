@@ -4,6 +4,9 @@ import OrthogonalTilemap from "../../Nodes/Tilemaps/OrthogonalTilemap";
 import Vec2 from "../../DataTypes/Vec2";
 import Tileset from "../../DataTypes/Tilesets/Tileset";
 
+/**
+ * A utility class for the @reference[CanvasRenderer] to render @reference[Tilemap]s
+ */
 export default class TilemapRenderer {
     protected resourceManager: ResourceManager;
     protected scene: Scene;
@@ -14,10 +17,18 @@ export default class TilemapRenderer {
         this.ctx = ctx;
     }
 
+    /**
+     * Sets the scene of this TilemapRenderer
+     * @param scene The current scene
+     */
     setScene(scene: Scene): void {
         this.scene = scene;
     }
 
+    /**
+     * Renders an orthogonal tilemap
+     * @param tilemap The tilemap to render
+     */
     renderOrthogonalTilemap(tilemap: OrthogonalTilemap): void {
         let previousAlpha = this.ctx.globalAlpha;
         this.ctx.globalAlpha = tilemap.getLayer().getAlpha();
@@ -49,6 +60,16 @@ export default class TilemapRenderer {
         this.ctx.globalAlpha = previousAlpha;
     }
 
+    /**
+     * Renders a tile
+     * @param tileset The tileset this tile belongs to 
+     * @param tileIndex The index of the tile
+     * @param tilemapRow The row of the tile in the tilemap
+     * @param tilemapCol The column of the tile in the tilemap
+     * @param origin The origin of the viewport
+     * @param scale The scale of the tilemap
+     * @param zoom The zoom level of the viewport
+     */
     protected renderTile(tileset: Tileset, tileIndex: number, tilemapRow: number, tilemapCol: number, origin: Vec2, scale: Vec2, zoom: number): void {
         let image = this.resourceManager.getImage(tileset.getImageKey());
 

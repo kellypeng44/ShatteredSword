@@ -20,10 +20,16 @@ import ParallaxLayer from "./Layers/ParallaxLayer";
 import UILayer from "./Layers/UILayer";
 import CanvasNode from "../Nodes/CanvasNode";
 import GameNode from "../Nodes/GameNode";
-import ArrayUtils from "../Utils/ArrayUtils";
+import SceneOptions from "./SceneOptions";
 import RenderingManager from "../Rendering/RenderingManager";
 import Debug from "../Debug/Debug";
 
+/**
+ * Scenes are the main container in the game engine.
+ * Your main scene is the current level or menu of the game, and will contain all of the GameNodes needed.
+ * Scenes provide an easy way to load assets, add assets to the game world, and unload assets,
+ * and have lifecycle methods exposed for these functions.
+ */
 export default class Scene implements Updateable {
     /** The size of the game world. */
     protected worldSize: Vec2;
@@ -82,6 +88,14 @@ export default class Scene implements Updateable {
     /** The configuration options for this scene */
     public sceneOptions: SceneOptions;
 
+    /**
+     * Creates a new Scene. To add a new Scene in your game, use addScene() in @reference[SceneManager]
+     * @param viewport The viewport of the game
+     * @param sceneManager The SceneManager that owns this Scene
+     * @param renderingManager The RenderingManager that will handle this Scene's rendering
+     * @param game The instance of the GameLoop
+     * @param options The options for Scene initialization
+     */
     constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, game: GameLoop, options: Record<string, any>){
         this.sceneOptions = SceneOptions.parse(options);
 
@@ -122,7 +136,7 @@ export default class Scene implements Updateable {
 
     /**
      * A lifecycle method called every frame of the game. This is where you can dynamically do things like add in new enemies
-     * @param delta 
+     * @param delta The time this frame represents
      */
     updateScene(deltaT: number): void {}
 
@@ -149,6 +163,9 @@ export default class Scene implements Updateable {
         this.viewport.update(deltaT);
     }
 
+    /**
+     * Collects renderable sets and coordinates with the RenderingManager to draw the Scene
+     */
     render(): void {
         // Get the visible set of nodes
         let visibleSet = this.sceneGraph.getVisibleSet();
@@ -171,10 +188,18 @@ export default class Scene implements Updateable {
         Debug.setNodes(nodes);
     }
 
+    /**
+     * Sets the scene as running or not
+     * @param running True if the Scene should be running, false if not
+     */
     setRunning(running: boolean): void {
         this.running = running;
     }
 
+    /**
+     * Returns whether or not the Scene is running
+     * @returns True if the scene is running, false otherwise
+     */
     isRunning(): boolean {
         return this.running;
     }
@@ -183,6 +208,7 @@ export default class Scene implements Updateable {
      * Adds a new layer to the scene and returns it
      * @param name The name of the new layer
      * @param depth The depth of the layer
+     * @returns The newly created Layer
      */
     addLayer(name: string, depth?: number): Layer {
         if(this.layers.has(name) || this.parallaxLayers.has(name) || this.uiLayers.has(name)){
@@ -205,6 +231,7 @@ export default class Scene implements Updateable {
      * @param name The name of the parallax layer
      * @param parallax The parallax level
      * @param depth The depth of the layer
+     * @returns The newly created ParallaxLayer
      */
     addParallaxLayer(name: string, parallax: Vec2, depth?: number): ParallaxLayer {
         if(this.layers.has(name) || this.parallaxLayers.has(name) || this.uiLayers.has(name)){
@@ -225,6 +252,7 @@ export default class Scene implements Updateable {
     /**
      * Adds a new UILayer to the scene
      * @param name The name of the new UIlayer
+     * @returns The newly created UILayer
      */
     addUILayer(name: string): UILayer {
         if(this.layers.has(name) || this.parallaxLayers.has(name) || this.uiLayers.has(name)){
@@ -239,8 +267,10 @@ export default class Scene implements Updateable {
     }
 
     /**
-     * Gets a layer from the scene by name if it exists
+     * Gets a layer from the scene by name if it exists.
+     * This can be a Layer or any of its subclasses
      * @param name The name of the layer
+     * @returns The Layer found with that name
      */
     getLayer(name: string): Layer {
         if(this.layers.has(name)){
@@ -256,7 +286,8 @@ export default class Scene implements Updateable {
 
     /**
      * Returns true if this layer is a ParallaxLayer
-     * @param name 
+     * @param name The name of the layer
+     * @returns True if this layer is a ParallaxLayer
      */
     isParallaxLayer(name: string): boolean {
         return this.parallaxLayers.has(name);
@@ -264,15 +295,18 @@ export default class Scene implements Updateable {
 
     /**
      * Returns true if this layer is a UILayer
-     * @param name 
+     * @param name The name of the layer
+     * @returns True if this layer is ParallaxLayer
      */
     isUILayer(name: string): boolean {
         return this.uiLayers.has(name);
     }    
 
     /**
-     * Returns the translation of this node with respect to camera space (due to the viewport moving);
-     * @param node 
+     * Returns the translation of this node with respect to camera space (due to the viewport moving).
+     * This value is affected by the parallax level of the @reference[Layer] the node is on.
+     * @param node The node to check the viewport with respect to
+     * @returns A Vec2 containing the translation of viewport with respect to this node.
      */
     getViewTranslation(node: GameNode): Vec2 {
         let layer = node.getLayer();
@@ -284,40 +318,75 @@ export default class Scene implements Updateable {
         }
 	}
 
-    /** Returns the scale level of the view */
+    /**
+     * Returns the scale level of the view
+     * @returns The zoom level of the viewport
+    */
 	getViewScale(): number {
 		return this.viewport.getZoomLevel();
 	}
 
-    /** Returns the viewport associated with this scene */
+    /**
+     * Returns the Viewport associated with this scene
+     * @returns The current Viewport
+     */
     getViewport(): Viewport {
         return this.viewport;
     }
 
+    /**
+     * Gets the world size of this Scene
+     * @returns The world size in a Vec2
+     */
     getWorldSize(): Vec2 {
         return this.worldSize;
     }
 
+    /**
+     * Gets the SceneGraph associated with this Scene
+     * @returns The SceneGraph
+     */
     getSceneGraph(): SceneGraph {
         return this.sceneGraph;
     }
 
+    /**
+     * Gets the PhysicsManager associated with this Scene
+     * @returns The PhysicsManager
+     */
     getPhysicsManager(): PhysicsManager {
         return this.physicsManager;
     }
 
+    /**
+     * Gets the NavigationManager associated with this Scene
+     * @returns The NavigationManager
+     */
     getNavigationManager(): NavigationManager {
         return this.navManager;
     }
 
+    /**
+     * Gets the AIManager associated with this Scene
+     * @returns The AIManager
+     */
     getAIManager(): AIManager {
         return this.aiManager;
     }
 
+    /**
+     * Generates an ID for a GameNode
+     * @returns The new ID
+     */
     generateId(): number {
         return this.sceneManager.generateId();
     }
 
+    /**
+     * Retrieves a Tilemap in this Scene
+     * @param name The name of the Tilemap
+     * @returns The Tilemap, if one this name exists, otherwise null
+     */
     getTilemap(name: string): Tilemap {
         for(let tilemap of this .tilemaps){
             if(tilemap.name === name){
@@ -326,31 +395,5 @@ export default class Scene implements Updateable {
         }
 
         return null;
-    }
-}
-
-class SceneOptions {
-    physics: {
-        numPhysicsLayers: number,
-        physicsLayerNames: Array<string>,
-        physicsLayerCollisions: Array<Array<number>>;
-    }
-
-    static parse(options: Record<string, any>): SceneOptions{
-        let sOpt = new SceneOptions();
-
-        sOpt.physics = {
-            numPhysicsLayers: 10,
-            physicsLayerNames: null,
-            physicsLayerCollisions: ArrayUtils.ones2d(10, 10)
-        };
-
-        if(options.physics){
-            if(options.physics.numPhysicsLayers)        sOpt.physics.numPhysicsLayers = options.physics.numPhysicsLayers;
-            if(options.physics.physicsLayerNames)       sOpt.physics.physicsLayerNames = options.physics.physicsLayerNames;
-            if(options.physics.physicsLayerCollisions)  sOpt.physics.physicsLayerCollisions = options.physics.physicsLayerCollisions;
-        }
-
-        return sOpt;
     }
 }

@@ -3,10 +3,21 @@ import GameEvent from "../../Events/GameEvent";
 import { Updateable } from "../Interfaces/Descriptors";
 import StateMachine from "./StateMachine";
 
+/**
+ * An abstract implementation of a state for a @reference[StateMachine].
+ * This class should be extended to allow for custom state behaviors.
+ */
 export default abstract class State implements Updateable {
+    /** The StateMachine that uses this State */
     protected parent: StateMachine;
+
+    /** An event emitter */
     protected emitter: Emitter;
 
+    /**
+     * Constructs a new State
+     * @param parent The parent StateMachine of this state
+     */
     constructor(parent: StateMachine) {
         this.parent = parent;
         this.emitter = new Emitter();
@@ -18,11 +29,12 @@ export default abstract class State implements Updateable {
     abstract onEnter(): void;
 
     /**
-     * Handles an input event, such as taking damage.
-     * @param event 
+     * A lifecycle method that handles an input event, such as taking damage.
+     * @param event The GameEvent to process
      */
     abstract handleInput(event: GameEvent): void;
 
+    // @implemented
     abstract update(deltaT: number): void;
 
     /**
@@ -34,7 +46,7 @@ export default abstract class State implements Updateable {
     }
 
     /**
-     * This is called when the state is ending.
+     * A lifecycle method is called when the state is ending.
      */
     abstract onExit(): void;
 }

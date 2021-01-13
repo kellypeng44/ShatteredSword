@@ -101,11 +101,7 @@ export default class OrthogonalTilemap extends Tilemap {
         return this.data[index];
     }
 
-    /**
-     * Sets the tile at the specified index
-     * @param index The index of the tile
-     * @param type The new data value of the tile
-     */
+    // @override
     setTile(index: number, type: number): void {
         this.data[index] = type;
     }

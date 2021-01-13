@@ -5,16 +5,27 @@ import StringUtils from "../Utils/StringUtils";
 import AudioManager from "../Sound/AudioManager";
 import Spritesheet from "../DataTypes/Spritesheet";
 
+/**
+ * The resource manager for the game engine.
+ * The resource manager interfaces with the loadable assets of a game such as images, data files,
+ * and sounds, which are all found in the dist folder.
+ * This class controls loading and updates the @reference[Scene] with the loading progress, so that the scene does 
+ * not start before all necessary assets are loaded.
+ */
 export default class ResourceManager {
     // Instance for the singleton class
     private static instance: ResourceManager;
     
     // Booleans to keep track of whether or not the ResourceManager is currently loading something
+    /** Whether or not any resources are loading */
     private loading: boolean;
+    /** A boolean to indicate that the assets just finished loading */
     private justLoaded: boolean;
 
     // Functions to do something when loading progresses or is completed such as render a loading screen
+    /** A function that is called when loading progresses */
     public onLoadProgress: Function;
+    /** A function that is called when loading completes */
     public onLoadComplete: Function;
 
 
@@ -23,7 +34,7 @@ export default class ResourceManager {
     /** Number to keep track of how many images are loaded */
     private loadonly_imagesToLoad: number;
     /** The queue of images we must load */
-    private loadonly_imageLoadingQueue: Queue<{key: string, path: string}>;
+    private loadonly_imageLoadingQueue: Queue<KeyPathPair>;
     /** A map of the images that are currently loaded and (presumably) being used by the scene */
     private images: Map<HTMLImageElement>;
 
@@ -32,7 +43,7 @@ export default class ResourceManager {
     /** Number to keep track of how many tilemaps are loaded */
     private loadonly_spritesheetsToLoad: number;
     /** The queue of tilemaps we must load */
-    private loadonly_spritesheetLoadingQueue: Queue<{key: string, path: string}>;
+    private loadonly_spritesheetLoadingQueue: Queue<KeyPathPair>;
     /** A map of the tilemaps that are currently loaded and (presumably) being used by the scene */
     private spritesheets: Map<Spritesheet>;
 
@@ -41,7 +52,7 @@ export default class ResourceManager {
     /** Number to keep track of how many tilemaps are loaded */
     private loadonly_tilemapsToLoad: number;
     /** The queue of tilemaps we must load */
-    private loadonly_tilemapLoadingQueue: Queue<{key: string, path: string}>;
+    private loadonly_tilemapLoadingQueue: Queue<KeyPathPair>;
     /** A map of the tilemaps that are currently loaded and (presumably) being used by the scene */
     private tilemaps: Map<TiledTilemapData>;
 
@@ -50,7 +61,7 @@ export default class ResourceManager {
     /** Number to keep track of how many sounds are loaded */
     private loadonly_audioToLoad: number;
     /** The queue of sounds we must load */
-    private loadonly_audioLoadingQueue: Queue<{key: string, path: string}>;
+    private loadonly_audioLoadingQueue: Queue<KeyPathPair>;
     /** A map of the sounds that are currently loaded and (presumably) being used by the scene */
     private audioBuffers: Map<AudioBuffer>;
 
@@ -84,6 +95,7 @@ export default class ResourceManager {
 
     /**
      * Returns the current instance of this class or a new instance if none exist
+     * @returns The resource manager
      */
     static getInstance(): ResourceManager {
         if(!this.instance){
@@ -105,6 +117,7 @@ export default class ResourceManager {
     /**
      * Retrieves a loaded image
      * @param key The key of the loaded image
+     * @returns The image element associated with this key
      */
     public getImage(key: string): HTMLImageElement {
         let image = this.images.get(key);
@@ -114,18 +127,28 @@ export default class ResourceManager {
         return image;
     }
 
+    /**
+     * Loads a spritesheet from file
+     * @param key The key to associate the loaded spritesheet with
+     * @param path The path to the spritesheet to load
+     */
     public spritesheet(key: string, path: string): void {
         this.loadonly_spritesheetLoadingQueue.enqueue({key: key, path: path});
     }
 
+    /**
+     * Retrieves a loaded spritesheet
+     * @param key The key of the spritesheet to load
+     * @returns The loaded Spritesheet
+     */
     public getSpritesheet(key: string): Spritesheet {
         return this.spritesheets.get(key);
     }
 
     /**
-     * Load an audio file
-     * @param key 
-     * @param path 
+     * Loads an audio file
+     * @param key The key to associate with the loaded audio file
+     * @param path The path to the audio file to load
      */
     public audio(key: string, path: string): void {
         this.loadonly_audioLoadingQueue.enqueue({key: key, path: path});
@@ -133,7 +156,8 @@ export default class ResourceManager {
 
     /**
      * Retrieves a loaded audio file
-     * @param key 
+     * @param key The key of the audio file to load
+     * @returns The AudioBuffer created from the loaded audio fle
      */
     public getAudio(key: string): AudioBuffer {
         return this.audioBuffers.get(key);
@@ -141,8 +165,8 @@ export default class ResourceManager {
 
     /**
      * Load a tilemap from a json file. Automatically loads related images
-     * @param key 
-     * @param path 
+     * @param key The key to associate with the loaded tilemap
+     * @param path The path to the tilemap to load
      */
     public tilemap(key: string, path: string): void {
         this.loadonly_tilemapLoadingQueue.enqueue({key: key, path: path});
@@ -150,7 +174,8 @@ export default class ResourceManager {
 
     /**
      * Retreives a loaded tilemap
-     * @param key 
+     * @param key The key of the loaded tilemap
+     * @returns The tilemap data associated with the key
      */
     public getTilemap(key: string): TiledTilemapData {
         return this.tilemaps.get(key);
@@ -158,7 +183,7 @@ export default class ResourceManager {
 
     /**
      * Loads all resources currently in the queue
-     * @param callback 
+     * @param callback The function to cal when the resources are finished loading
      */
     loadResourcesFromQueue(callback: Function): void {
         this.loadonly_typesToLoad = 3;
@@ -211,7 +236,7 @@ export default class ResourceManager {
 
     /**
      * Loads all tilemaps currently in the tilemap loading queue
-     * @param onFinishLoading 
+     * @param onFinishLoading The function to call when loading is complete
      */
     private loadTilemapsFromQueue(onFinishLoading: Function): void {
         this.loadonly_tilemapsToLoad = this.loadonly_tilemapLoadingQueue.getSize();
@@ -230,9 +255,9 @@ export default class ResourceManager {
 
     /**
      * Loads a singular tilemap 
-     * @param key 
-     * @param pathToTilemapJSON 
-     * @param callbackIfLast 
+     * @param key The key of the tilemap
+     * @param pathToTilemapJSON The path to the tilemap JSON file
+     * @param callbackIfLast The function to call if this is the last tilemap to load
      */
     private loadTilemap(key: string, pathToTilemapJSON: string, callbackIfLast: Function): void {
         this.loadTextFile(pathToTilemapJSON, (fileText: string) => {
@@ -263,7 +288,7 @@ export default class ResourceManager {
 
     /**
      * Finish loading a tilemap. Calls the callback function if this is the last tilemap being loaded
-     * @param callback 
+     * @param callback The function to call if this is the last tilemap to load
      */
     private finishLoadingTilemap(callback: Function): void {
         this.loadonly_tilemapsLoaded += 1;
@@ -274,9 +299,9 @@ export default class ResourceManager {
         }
     }
 
-        /**
+    /**
      * Loads all spritesheets currently in the spritesheet loading queue
-     * @param onFinishLoading 
+     * @param onFinishLoading The function to call when the spritesheets are done loading
      */
     private loadSpritesheetsFromQueue(onFinishLoading: Function): void {
         this.loadonly_spritesheetsToLoad = this.loadonly_spritesheetLoadingQueue.getSize();
@@ -295,9 +320,9 @@ export default class ResourceManager {
 
     /**
      * Loads a singular spritesheet 
-     * @param key 
-     * @param pathToSpritesheetJSON 
-     * @param callbackIfLast 
+     * @param key The key of the spritesheet to load
+     * @param pathToSpritesheetJSON The path to the spritesheet JSON file
+     * @param callbackIfLast The function to call if this is the last spritesheet
      */
     private loadSpritesheet(key: string, pathToSpritesheetJSON: string, callbackIfLast: Function): void {
         this.loadTextFile(pathToSpritesheetJSON, (fileText: string) => {
@@ -317,7 +342,7 @@ export default class ResourceManager {
 
     /**
      * Finish loading a spritesheet. Calls the callback function if this is the last spritesheet being loaded
-     * @param callback 
+     * @param callback The function to call if this is the last spritesheet to load
      */
     private finishLoadingSpritesheet(callback: Function): void {
         this.loadonly_spritesheetsLoaded += 1;
@@ -330,7 +355,7 @@ export default class ResourceManager {
 
     /**
      * Loads all images currently in the image loading queue
-     * @param onFinishLoading 
+     * @param onFinishLoading The function to call when there are no more images to load
      */
     private loadImagesFromQueue(onFinishLoading: Function): void {
         this.loadonly_imagesToLoad = this.loadonly_imageLoadingQueue.getSize();
@@ -349,9 +374,9 @@ export default class ResourceManager {
 
     /**
      * Loads a singular image
-     * @param key 
-     * @param path 
-     * @param callbackIfLast 
+     * @param key The key of the image to load
+     * @param path The path to the image to load
+     * @param callbackIfLast The function to call if this is the last image
      */
     public loadImage(key: string, path: string, callbackIfLast: Function): void {
         var image = new Image();
@@ -369,7 +394,7 @@ export default class ResourceManager {
 
     /**
      * Finish loading an image. If this is the last image, it calls the callback function
-     * @param callback 
+     * @param callback The function to call if this is the last image
      */
     private finishLoadingImage(callback: Function): void {
         this.loadonly_imagesLoaded += 1;
@@ -382,7 +407,7 @@ export default class ResourceManager {
 
     /**
      * Loads all audio currently in the tilemap loading queue
-     * @param onFinishLoading 
+     * @param onFinishLoading The function to call when tilemaps are done loading
      */
     private loadAudioFromQueue(onFinishLoading: Function){
         this.loadonly_audioToLoad = this.loadonly_audioLoadingQueue.getSize();
@@ -401,9 +426,9 @@ export default class ResourceManager {
 
     /**
      * Load a singular audio file
-     * @param key 
-     * @param path 
-     * @param callbackIfLast 
+     * @param key The key to the audio file to load
+     * @param path The path to the audio file to load
+     * @param callbackIfLast The function to call if this is the last audio file to load
      */
     private loadAudio(key: string, path: string, callbackIfLast: Function): void {
         let audioCtx = AudioManager.getInstance().getAudioContext();
@@ -428,7 +453,7 @@ export default class ResourceManager {
 
     /**
      * Finish loading an audio file. Calls the callback functon if this is the last audio sample being loaded.
-     * @param callback 
+     * @param callback The function to call if this is the last audio file to load
      */
     private finishLoadingAudio(callback: Function): void {
         this.loadonly_audioLoaded += 1;
@@ -459,7 +484,7 @@ export default class ResourceManager {
             / this.loadonly_typesToLoad;
     }
 
-    public update(deltaT: number): void {
+    update(deltaT: number): void {
         if(this.loading){
             if(this.onLoadProgress){
                 this.onLoadProgress(this.getLoadPercent());
@@ -471,4 +496,9 @@ export default class ResourceManager {
             }
         }
     }
+}
+
+class KeyPathPair {
+    key: string
+    path: string
 }

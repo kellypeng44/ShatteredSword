@@ -7,12 +7,19 @@ import { TiledTilesetData } from "./TiledData";
  * with a startIndex if required (as it is with Tiled using two images in one tilset).
  */
 export default class Tileset {
+    /** The key of the image used by this tileset */
     protected imageKey: string;
+    /** The size of the tileset image */
     protected imageSize: Vec2;
+    /** The index of 0th image of this tileset */
     protected startIndex: number;
+    /** The index of the last image of this tilset */
     protected endIndex: number;
+    /** The size of the tiles in this tileset */
     protected tileSize: Vec2;
+    /** The number of rows in this tileset */
     protected numRows: number;
+    /** The number of columns in this tileset */
     protected numCols: number;
 
     // TODO: Change this to be more general and work with other tileset formats
@@ -35,6 +42,10 @@ export default class Tileset {
         this.imageSize = new Vec2(tiledData.imagewidth, tiledData.imageheight);
     }
 
+    /** 
+     * Gets the image key associated with this tilemap
+     * @returns The image key of this tilemap
+     */
     getImageKey(): string {
         return this.imageKey;
     }
@@ -42,6 +53,7 @@ export default class Tileset {
     /**
      * Returns a Vec2 containing the left and top offset from the image origin for this tile.
      * @param tileIndex The index of the tile from startIndex to endIndex of this tileset
+     * @returns A Vec2 containing the offset for the specified tile.
      */
     getImageOffsetForTile(tileIndex: number): Vec2 {
         // Get the true index
@@ -58,18 +70,34 @@ export default class Tileset {
         return new Vec2(left, top);
     }
 
+    /**
+     * Gets the start index
+     * @returns The start index
+     */
     getStartIndex(): number {
         return this.startIndex;
     }
 
+    /**
+     * Gets the tile set
+     * @returns A Vec2 containing the tile size
+     */
     getTileSize(): Vec2 {
         return this.tileSize;
     }
 
+    /**
+     * Gets the number of rows in the tileset
+     * @returns The number of rows
+     */
     getNumRows(): number {
         return this.numRows;
     }
 
+    /**
+     * Gets the number of columns in the tilset
+     * @returns The number of columns
+     */
     getNumCols(): number {
         return this.numCols;
     }
@@ -78,6 +106,11 @@ export default class Tileset {
         return this.endIndex - this.startIndex + 1;
     }
 
+    /**
+     * Checks whether or not this tilset contains the specified tile index. This is used for rendering.
+     * @param tileIndex The index of the tile to check
+     * @returns A boolean representing whether or not this tilset uses the specified index
+     */
     hasTile(tileIndex: number): boolean {
         return tileIndex >= this.startIndex && tileIndex <= this.endIndex;
     }

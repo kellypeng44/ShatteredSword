@@ -15,6 +15,9 @@ const permutation = [ 151,160,137,91,90,15,
 	138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180
 ];
 
+/**
+ * A noise generator
+ */
 export default class Perlin {
 
     private p: Int16Array;
@@ -30,11 +33,12 @@ export default class Perlin {
 
     /**
      * Returns a random perlin noise value
-     * @param x 
-     * @param y 
-     * @param z 
+     * @param x An input value
+     * @param y An input value
+     * @param z An input value
+	 * @returns A noise value
      */
-	perlin(x: number, y: number, z: number = 0){
+	perlin(x: number, y: number, z: number = 0): number {
 		if(this.repeat > 0) {
 			x = x%this.repeat;
 			y = y%this.repeat;

@@ -4,11 +4,15 @@ import GameEvent from "../Events/GameEvent";
 import { GameEventType } from "../Events/GameEventType";
 
 /**
- * Handles communication with the web browser to receive asynchronous events and send them to the event queue
+ * Handles communication with the web browser to receive asynchronous events and send them to the @reference[EventQueue]
  */
-export default class InputHandler{
+export default class InputHandler {
 	private eventQueue: EventQueue;
-	 
+     
+    /**
+     * Creates a new InputHandler
+     * @param canvas The game canvas
+     */
     constructor(canvas: HTMLCanvasElement){
 		this.eventQueue = EventQueue.getInstance();
 		

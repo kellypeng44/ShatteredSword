@@ -1,10 +1,15 @@
 import { Actor, AI, Updateable } from "../DataTypes/Interfaces/Descriptors";
 import Map from "../DataTypes/Map";
 
+/**
+ * A manager class for all of the AI in a scene.
+ * Keeps a list of registered actors and handles AI generation for actors.
+ */
 export default class AIManager implements Updateable {
+	/** The array of registered actors */
 	actors: Array<Actor>;
-
-	registeredAI: Map<new <T extends AI>() => T>;
+	/** Maps AI names to their constructors */
+	registeredAI: Map<AIConstructor>;
 
 	constructor(){
 		this.actors = new Array();
@@ -20,10 +25,20 @@ export default class AIManager implements Updateable {
 		this.actors.push(actor);
 	}
 
+	/**
+	 * Registers an AI with the AIManager for use later on
+	 * @param name The name of the AI to register
+	 * @param constr The constructor for the AI
+	 */
 	registerAI(name: string, constr: new <T extends AI>() => T ): void {
 		this.registeredAI.add(name, constr);
 	}
 
+	/**
+	 * Generates an AI instance from its name
+	 * @param name The name of the AI to add
+	 * @returns A new AI instance
+	 */
 	generateAI(name: string): AI {
 		if(this.registeredAI.has(name)){
 			return new (this.registeredAI.get(name))();
@@ -37,3 +52,5 @@ export default class AIManager implements Updateable {
 		this.actors.forEach(actor => { if(actor.aiActive) actor.ai.update(deltaT) });
 	}
 }
+
+type AIConstructor = new <T extends AI>() => T;

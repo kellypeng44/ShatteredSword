@@ -1,13 +1,46 @@
 import GameNode from "../Nodes/GameNode";
-import { Physical, Updateable } from "../DataTypes/Interfaces/Descriptors";
+import { Physical } from "../DataTypes/Interfaces/Descriptors";
 import Tilemap from "../Nodes/Tilemap";
 import PhysicsManager from "./PhysicsManager";
 import Vec2 from "../DataTypes/Vec2";
-import Debug from "../Debug/Debug";
-import Color from "../Utils/Color";
 import AABB from "../DataTypes/Shapes/AABB";
 import OrthogonalTilemap from "../Nodes/Tilemaps/OrthogonalTilemap";
+import AreaCollision from "../DataTypes/Physics/AreaCollision";
 
+/**
+ * ALGORITHM:
+ * 	In an effort to keep things simple and working effectively, each dynamic node will resolve its
+ * 	collisions considering the rest of the world as static.
+ * 
+ * 	Collision detecting will happen first. This can be considered a broad phase, but it is not especially
+ * 	efficient, as it does not need to be for this game engine. Every dynamic node is checked against every
+ * 	other node for collision area. If collision area is non-zero (meaning the current node sweeps into another),
+ * 	it is added to a list of hits.
+ * 
+ * 	INITIALIZATION:
+ * 		- Physics constants are reset
+ * 		- Swept shapes are recalculated. If a node isn't moving, it is skipped.
+ * 
+ * 	COLLISION DETECTION:
+ * 		- For a node, collision area will be calculated using the swept AABB of the node against every other AABB in a static state
+ * 		- These collisions will be sorted by area in descending order
+ * 	
+ * 	COLLISION RESOLUTION:
+ * 		- For each hit, time of collision is calculated using a swept line through the AABB of the static node expanded
+ * 			with minkowski sums (discretely, but the concept is there)
+ * 		- The collision is resolved based on the near time of the collision (from method of separated axes)
+ * 			- X is resolved by near x, Y by near y.
+ * 			- There is some fudging to allow for sliding along walls of separate colliders. Sorting by area also helps with this.
+ * 			- Corner to corner collisions are resolve to favor x-movement. This is in consideration of platformers, to give
+ * 				the player some help with jumps
+ * 
+ * 	Pros:
+ * 		- Everything happens with a consistent time. There is a distinct before and after for each resolution.
+ * 		- No back-tracking needs to be done. Once we resolve a node, it is definitively resolved.
+ * 	
+ * 	Cons:
+ * 		- Nodes that are processed early have movement priority over other nodes. This can lead to some undesirable interactions.
+ */
 export default class TestPhysicsManager extends PhysicsManager {
 
 	/** The array of static nodes */
@@ -26,10 +59,7 @@ export default class TestPhysicsManager extends PhysicsManager {
 		this.tilemaps = new Array();
 	}
 
-	/**
-	 * Add a new physics object to be updated with the physics system
-	 * @param node The node to be added to the physics system
-	 */
+	// @override
 	registerObject(node: GameNode): void {
 		if(node.isStatic){
 			// Static and not collidable
@@ -40,56 +70,18 @@ export default class TestPhysicsManager extends PhysicsManager {
 		}
 	}
 
-	/**
-	 * Registers a tilemap with this physics manager
-	 * @param tilemap 
-	 */
+	// @override
 	registerTilemap(tilemap: Tilemap): void {
 		this.tilemaps.push(tilemap);
 	}
 
+	// @override
 	setLayer(node: GameNode, layer: string): void {
 		node.physicsLayer = this.layerMap.get(layer);
 	}
 
-	/**
-	 * Updates the physics
-	 * @param deltaT 
-	 */
+	// @override
 	update(deltaT: number): void {
-		/*	ALGORITHM:
-				In an effort to keep things simple and working effectively, each dynamic node will resolve its
-				collisions considering the rest of the world as static.
-
-				Collision detecting will happen first. This can be considered a broad phase, but it is not especially
-				efficient, as it does not need to be for this game engine. Every dynamic node is checked against every
-				other node for collision area. If collision area is non-zero (meaning the current node sweeps into another),
-				it is added to a list of hits.
-
-				INITIALIZATION:
-					- Physics constants are reset
-					- Swept shapes are recalculated. If a node isn't moving, it is skipped.
-
-				COLLISION DETECTION:
-					- For a node, collision area will be calculated using the swept AABB of the node against every other AABB in a static state
-					- These collisions will be sorted by area in descending order
-				
-				COLLISION RESOLUTION:
-					- For each hit, time of collision is calculated using a swept line through the AABB of the static node expanded
-					  with minkowski sums (discretely, but the concept is there)
-					- The collision is resolved based on the near time of the collision (from method of separated axes)
-						- X is resolved by near x, Y by near y.
-						- There is some fudging to allow for sliding along walls of separate colliders. Sorting by area also helps with this.
-						- Corner to corner collisions are resolve to favor x-movement. This is in consideration of platformers, to give
-						  the player some help with jumps
-
-				Pros:
-					- Everything happens with a consistent time. There is a distinct before and after for each resolution.
-					- No back-tracking needs to be done. Once we resolve a node, it is definitively resolved.
-				
-				Cons:
-					- Nodes that are processed early have movement priority over other nodes. This can lead to some undesirable interactions.
-		*/
 		for(let node of this.dynamicNodes){
 			/*---------- INITIALIZATION PHASE ----------*/
 			// Clear frame dependent boolean values for each node
@@ -186,7 +178,13 @@ export default class TestPhysicsManager extends PhysicsManager {
 		}
 	}
 
-	collideWithOrthogonalTilemap(node: Physical, tilemap: OrthogonalTilemap, overlaps: Array<AreaCollision>): void {
+	/**
+	 * Handles a collision between this node and an orthogonal tilemap
+	 * @param node The node
+	 * @param tilemap The tilemap the node may be colliding with
+	 * @param overlaps The list of overlaps
+	 */
+	protected collideWithOrthogonalTilemap(node: Physical, tilemap: OrthogonalTilemap, overlaps: Array<AreaCollision>): void {
 		// Get the min and max x and y coordinates of the moving node
 		let min = new Vec2(node.sweptRect.left, node.sweptRect.top);
 		let max = new Vec2(node.sweptRect.right, node.sweptRect.bottom);
@@ -216,14 +214,5 @@ export default class TestPhysicsManager extends PhysicsManager {
 				}
 			}
 		}
-	}
-}
-
-class AreaCollision {
-	area: number;
-	collider: AABB;
-	constructor(area: number, collider: AABB){
-		this.area = area;
-		this.collider = collider;
 	}
 }

@@ -6,38 +6,34 @@ import Map from "./Map";
 import Stats from "../Debug/Stats";
 
 /**
- * Primarily used to organize the scene graph
+ * A quadtree data structure implemented to work with regions rather than points.
+ * Elements in this quadtree have a position and an area, and thus can span multiple
+ * quadtree branches.
  */
 export default class QuadTree<T extends Region & Unique> implements Collection {
-    /**
-     * The center of this quadtree
-     */
+    /** The center of this quadtree */
     protected boundary: AABB;
 
-    /**
-     * The number of elements this quadtree root can hold before splitting
-     */
+    /** The number of elements this quadtree root can hold before splitting */
     protected capacity: number;
 
-    /**
-     * The maximum height of the quadtree from this root
-     */
+    /** The maximum height of the quadtree from this root */
     protected maxDepth: number;
 
-    /**
-     * Represents whether the quadtree is a root or a leaf
-     */
+    /** Represents whether the quadtree is a root or a leaf */
     protected divided: boolean;
 
-    /**
-     * The array of the items in this quadtree
-     */
+    /** The array of the items in this quadtree */
     protected items: Array<T>;
 
     // The child quadtrees of this one
+    /** The top left child */
     protected nw: QuadTree<T>;
+    /** The top right child */
     protected ne: QuadTree<T>;
+    /** The bottom left child */
     protected sw: QuadTree<T>;
+    /** The bottom right child */
     protected se: QuadTree<T>;
 
     constructor(center: Vec2, size: Vec2, maxDepth?: number, capacity?: number){
@@ -92,6 +88,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
     /**
      * Returns all items at this point.
      * @param point The point to query at
+     * @returns A list of all elements in the quadtree that contain the specified point
      */
     queryPoint(point: Vec2): Array<T> {
         // A matrix to keep track of our results
@@ -105,6 +102,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         return results;
     }
 
+    // @ignoreFunction
     /**
      * A recursive function called by queryPoint
      * @param point The point being queried
@@ -135,10 +133,11 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         }
     }
 
-/**
+    /**
      * Returns all items in this region
      * @param boundary The region to check
      * @param inclusionCheck Allows for additional inclusion checks to further refine searches
+     * @returns A list of all elements in the specified region
      */
     queryRegion(boundary: AABB): Array<T> {
         // A matrix to keep track of our results
@@ -152,6 +151,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         return results;
     }
 
+    // @ignoreFunction
     /**
      * A recursive function called by queryPoint
      * @param point The point being queried
@@ -213,7 +213,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
 
     /**
      * Defers this insertion to the children of this quadtree 
-     * @param item 
+     * @param item The item to insert
      */
     protected deferInsert(item: T): void {
         this.nw.insert(item);
@@ -222,10 +222,6 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         this.se.insert(item);
     }
 
-    /**
-     * Renders the quadtree for demo purposes.
-     * @param ctx 
-     */
     public render_demo(ctx: CanvasRenderingContext2D, origin: Vec2, zoom: number): void {
         ctx.strokeStyle = "#0000FF";
         ctx.strokeRect((this.boundary.x - this.boundary.hw - origin.x)*zoom, (this.boundary.y - this.boundary.hh - origin.y)*zoom, 2*this.boundary.hw*zoom, 2*this.boundary.hh*zoom);
@@ -238,6 +234,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         }
     }
 
+    // @implemented
     forEach(func: Function): void {
         // If divided, send the call down
         if(this.divided){
@@ -253,9 +250,7 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         }
     }
 
-    /**
-     * Clear the items in this quadtree
-     */
+    // @implemented
     clear(): void {
         if(this.nw){
             this.nw.clear();
@@ -271,7 +266,6 @@ export default class QuadTree<T extends Region & Unique> implements Collection {
         this.items.length = 0;
 
         this.divided = false;
-
     }
 
 }
