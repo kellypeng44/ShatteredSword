@@ -1,4 +1,6 @@
-import { Actor, AI, Updateable } from "../DataTypes/Interfaces/Descriptors";
+import Actor from "../DataTypes/Interfaces/Actor";
+import Updateable from "../DataTypes/Interfaces/Updateable";
+import AI from "../DataTypes/Interfaces/AI";
 import Map from "../DataTypes/Map";
 
 /**

@@ -1,6 +1,5 @@
 import GameNode from "../Nodes/GameNode";
-import Vec2 from "../DataTypes/Vec2";
-import { Updateable } from "../DataTypes/Interfaces/Descriptors";
+import Updateable from "../DataTypes/Interfaces/Updateable";
 import Tilemap from "../Nodes/Tilemap";
 import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";

@@ -1,9 +1,9 @@
 import Vec2 from "./Vec2";
 import Collection from "./Collection";
-import AABB from "./Shapes/AABB"
-import { Region, Unique } from "./Interfaces/Descriptors";
+import AABB from "./Shapes/AABB";
+import Region from "./Interfaces/Region";
+import Unique from "./Interfaces/Unique";
 import Map from "./Map";
-import Stats from "../Debug/Stats";
 
 /**
  * A quadtree data structure implemented to work with regions rather than points.

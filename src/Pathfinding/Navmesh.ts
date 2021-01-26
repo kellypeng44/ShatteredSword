@@ -1,5 +1,5 @@
 import PositionGraph from "../DataTypes/Graphs/PositionGraph";
-import { Navigable } from "../DataTypes/Interfaces/Descriptors";
+import Navigable from "../DataTypes/Interfaces/Navigable";
 import Stack from "../DataTypes/Stack";
 import Vec2 from "../DataTypes/Vec2";
 import GraphUtils from "../Utils/GraphUtils";

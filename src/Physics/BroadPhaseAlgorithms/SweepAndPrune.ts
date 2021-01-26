@@ -1,5 +1,4 @@
-import { Physical } from "../../DataTypes/Interfaces/Descriptors";
-import PhysicsUtils from "../../Utils/PhysicsUtils";
+import Physical from "../../DataTypes/Interfaces/Physical";
 import SortingUtils from "../../Utils/SortingUtils";
 import BroadPhase from "./BroadPhase";
 

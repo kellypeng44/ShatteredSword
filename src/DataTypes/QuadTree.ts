@@ -1,7 +1,7 @@
 import Vec2 from "./Vec2";
 import Collection from "./Collection";
-import AABB from "./AABB"
-import { Positioned } from "./Interfaces/Descriptors";
+import AABB from "./Shapes/AABB"
+import Positioned from "./Interfaces/Positioned";
 
 // TODO - Make max depth
 
@@ -63,7 +63,7 @@ export default class QuadTree<T extends Positioned> implements Collection {
      */
     insert(item: T){
         // If the item is inside of the bounds of this quadtree
-        if(this.boundary.containsPointSoft(item.getPosition())){
+        if(this.boundary.containsPointSoft(item.position)){
             if(this.divided){
                 // Defer to the children
                 this.deferInsert(item);

@@ -12,7 +12,7 @@ import GameLoop from "../Loop/GameLoop";
 import SceneManager from "./SceneManager";
 import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
-import { Updateable } from "../DataTypes/Interfaces/Descriptors";
+import Updateable from "../DataTypes/Interfaces/Updateable";
 import NavigationManager from "../Pathfinding/NavigationManager";
 import AIManager from "../AI/AIManager";
 import Map from "../DataTypes/Map";

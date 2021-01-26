@@ -1,6 +1,6 @@
 import Graph, { MAX_V } from "./Graph";
 import Vec2 from "../Vec2";
-import { DebugRenderable } from "../Interfaces/Descriptors";
+import DebugRenderable from "../Interfaces/DebugRenderable";
 
 /**
  * An extension of Graph that has nodes with positions in 2D space.

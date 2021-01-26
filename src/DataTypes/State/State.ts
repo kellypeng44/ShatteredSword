@@ -1,6 +1,6 @@
 import Emitter from "../../Events/Emitter";
 import GameEvent from "../../Events/GameEvent";
-import { Updateable } from "../Interfaces/Descriptors";
+import Updateable from "../Interfaces/Updateable";
 import StateMachine from "./StateMachine";
 
 /**

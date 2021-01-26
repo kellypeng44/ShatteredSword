@@ -1,4 +1,4 @@
-import { AI } from "../DataTypes/Interfaces/Descriptors";
+import AI from "../DataTypes/Interfaces/AI";
 import StateMachine from "../DataTypes/State/StateMachine";
 import GameNode from "../Nodes/GameNode";
 

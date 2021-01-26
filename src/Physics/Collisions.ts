@@ -1,4 +1,4 @@
-import { Physical } from "../DataTypes/Interfaces/Descriptors";
+import Physical from "../DataTypes/Interfaces/Physical";
 import Vec2 from "../DataTypes/Vec2";
 
 // @ignorePage

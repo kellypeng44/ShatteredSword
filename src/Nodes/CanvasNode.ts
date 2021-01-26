@@ -1,6 +1,6 @@
 import GameNode from "./GameNode";
 import Vec2 from "../DataTypes/Vec2";
-import { Region } from "../DataTypes/Interfaces/Descriptors";
+import Region from "../DataTypes/Interfaces/Region";
 import AABB from "../DataTypes/Shapes/AABB";
 import Debug from "../Debug/Debug";
 import Color from "../Utils/Color";

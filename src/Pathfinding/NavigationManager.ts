@@ -1,4 +1,4 @@
-import { Navigable } from "../DataTypes/Interfaces/Descriptors"
+import Navigable from "../DataTypes/Interfaces/Navigable";
 import Map from "../DataTypes/Map";
 import Vec2 from "../DataTypes/Vec2";
 import NavigationPath from "./NavigationPath";

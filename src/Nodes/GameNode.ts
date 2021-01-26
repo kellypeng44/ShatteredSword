@@ -4,7 +4,14 @@ import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
 import Scene from "../Scene/Scene";
 import Layer from "../Scene/Layer";
-import { Physical, Positioned, isRegion, Unique, Updateable, Actor, AI, DebugRenderable } from "../DataTypes/Interfaces/Descriptors"
+import AI from "../DataTypes/Interfaces/AI";
+import Physical from "../DataTypes/Interfaces/Physical";
+import Positioned from "../DataTypes/Interfaces/Positioned";
+import { isRegion } from "../DataTypes/Interfaces/Region";
+import Unique from "../DataTypes/Interfaces/Unique";
+import Updateable from "../DataTypes/Interfaces/Updateable";
+import DebugRenderable from "../DataTypes/Interfaces/DebugRenderable";
+import Actor from "../DataTypes/Interfaces/Actor";
 import Shape from "../DataTypes/Shapes/Shape";
 import Map from "../DataTypes/Map";
 import AABB from "../DataTypes/Shapes/AABB";

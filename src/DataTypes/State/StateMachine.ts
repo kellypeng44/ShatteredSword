@@ -4,7 +4,7 @@ import Map from "../Map";
 import GameEvent from "../../Events/GameEvent";
 import Receiver from "../../Events/Receiver";
 import Emitter from "../../Events/Emitter";
-import { Updateable } from "../Interfaces/Descriptors";
+import Updateable from "../Interfaces/Updateable";
 
 /**
  * An implementation of a Push Down Automata State machine. States can also be hierarchical

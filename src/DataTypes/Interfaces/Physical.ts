@@ -1,47 +1,12 @@
-import Map from "../Map";
-import AABB from "../Shapes/AABB";
 import Shape from "../Shapes/Shape";
+import AABB from "../Shapes/AABB";
 import Vec2 from "../Vec2";
-import NavigationPath from "../../Pathfinding/NavigationPath";
-import GameNode from "../../Nodes/GameNode";
-
-// @ignorePage
-
-export interface Unique {
-    /** The unique id of this object. */
-    id: number;
-}
-
-export interface Positioned {
-    /** The center of this object. */
-    position: Vec2;
-
-    /** The center of this object relative to the viewport. */
-    readonly relativePosition: Vec2;
-}
-
-export interface Region {
-    /** The size of this object. */
-    size: Vec2;
-
-    /** The scale of this object. */
-    scale: Vec2;
-
-    /** The size of the object taking into account the zoom and scale */
-    readonly sizeWithZoom: Vec2;
-
-    /** The bounding box of this object. */
-    boundary: AABB;
-}
-
-export function isRegion(arg: any): boolean {
-    return arg && arg.size && arg.scale && arg.boundary;
-}
+import Map from "../Map";
 
 /**
  * Describes an object that can opt into physics.
  */
-export interface Physical {
+export default interface Physical {
     /** A flag for whether or not this object has initialized game physics. */
     hasPhysics: boolean;
 
@@ -136,64 +101,4 @@ export interface Physical {
      * If used before "move()", it will tell you the velocity of the node after its last movement
      */
     getLastVelocity(): Vec2;
-}
-
-/**
- * Defines a controller for a bot or a human. Must be able to update
- */
-export interface AI extends Updateable {
-    /** Initializes the AI with the actor and any additional config */
-    initializeAI: (owner: GameNode, options: Record<string, any>) => void;
-}
-
-export interface Actor {
-    /** The AI of the actor */
-    ai: AI;
-
-    /** The activity status of the actor */
-    aiActive: boolean;
-
-    /** The id of the actor according to the AIManager */
-    actorId: number;
-
-    /** The path that navigation will follow */
-    path: NavigationPath;
-
-    /** A flag representing whether or not the actor is currently pathfinding */
-    pathfinding: boolean;
-
-    /**
-     * Adds an AI to this Actor.
-     * @param ai The name of the AI, or the actual AI, to add to the Actor.
-     * @param options The options to give to the AI for initialization.
-     */
-    addAI<T extends AI>(ai: string | (new () => T), options: Record<string, any>): void;
-
-    /**
-     * Sets the AI to start/stop for this Actor.
-     * @param active The new active status of the AI.
-     */
-    setAIActive(active: boolean): void;
-}
-
-export interface Navigable {
-    /**
-     * Gets a new navigation path based on this Navigable object.
-     * @param fromPosition The position to start navigation from.
-     * @param toPosition The position to navigate to.
-     */
-    getNavigationPath(fromPosition: Vec2, toPosition: Vec2): NavigationPath;
-}
-
-export interface Updateable {
-    /**
-     * Updates this object.
-     * @param deltaT The timestep of the update.
-     */
-    update(deltaT: number): void;
-}
-
-export interface DebugRenderable {
-    /** Renders the debugging infor for this object. */
-    debugRender(): void;
 }

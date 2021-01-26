@@ -1,5 +1,5 @@
 import GameNode from "../Nodes/GameNode";
-import { Physical } from "../DataTypes/Interfaces/Descriptors";
+import Physical from "../DataTypes/Interfaces/Physical";
 import Tilemap from "../Nodes/Tilemap";
 import PhysicsManager from "./PhysicsManager";
 import Vec2 from "../DataTypes/Vec2";
