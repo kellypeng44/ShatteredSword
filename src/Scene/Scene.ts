@@ -8,7 +8,7 @@ import SceneGraphArray from "../SceneGraph/SceneGraphArray";
 import FactoryManager from "./Factories/FactoryManager";
 import Tilemap from "../Nodes/Tilemap";
 import ResourceManager from "../ResourceManager/ResourceManager";
-import GameLoop from "../Loop/GameLoop";
+import Game from "../Loop/Game";
 import SceneManager from "./SceneManager";
 import Receiver from "../Events/Receiver";
 import Emitter from "../Events/Emitter";
@@ -39,9 +39,6 @@ export default class Scene implements Updateable {
 
     /** A flag that represents whether this scene is running or not. */
     protected running: boolean;
-
-    /** The overall game loop. */
-    protected game: GameLoop;
 
     /** The manager of this scene. */
     protected sceneManager: SceneManager;
@@ -93,17 +90,16 @@ export default class Scene implements Updateable {
      * @param viewport The viewport of the game
      * @param sceneManager The SceneManager that owns this Scene
      * @param renderingManager The RenderingManager that will handle this Scene's rendering
-     * @param game The instance of the GameLoop
+     * @param game The instance of the Game
      * @param options The options for Scene initialization
      */
-    constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, game: GameLoop, options: Record<string, any>){
+    constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>){
         this.sceneOptions = SceneOptions.parse(options);
 
         this.worldSize = new Vec2(500, 500);
         this.viewport = viewport;
         this.viewport.setBounds(0, 0, 2560, 1280);
         this.running = false;
-        this.game = game;
         this.sceneManager = sceneManager;
         this.receiver = new Receiver();
         this.emitter = new Emitter();

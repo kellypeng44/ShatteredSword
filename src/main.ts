@@ -1,4 +1,4 @@
-import GameLoop from "./Loop/GameLoop";
+import Game from "./Loop/Game";
 import {} from "./index";
 import MainMenu from "./_DemoClasses/Mario/MainMenu";
 import Level1 from "./_DemoClasses/Mario/Level1";
@@ -11,7 +11,7 @@ function main(){
         clearColor: {r: 34, g: 32, b: 52}
     }
 
-    let game = new GameLoop(options);
+    let game = new Game(options);
     game.start();
 
     let sm = game.getSceneManager();
@@ -54,6 +54,6 @@ CanvasRenderingContext2D.prototype.strokeRoundedRect = function(x, y, w, h, r){
 CanvasRenderingContext2D.prototype.fillRoundedRect = function(x, y, w, h, r){
     this.roundedRect(x, y, w, h, r);
     this.fill();
-}  
+}
 
 main();

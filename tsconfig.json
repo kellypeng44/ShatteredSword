@@ -27,7 +27,7 @@
         "src/Input/InputHandler.ts",
         "src/Input/InputReceiver.ts",
         
-        "src/Loop/GameLoop.ts",
+        "src/Loop/Game.ts",
 
         "src/Nodes/Tilemaps/OrthogonalTilemap.ts",
         "src/Nodes/UIElements/Button.ts",

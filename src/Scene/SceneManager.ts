@@ -1,38 +1,38 @@
 import Scene from "./Scene";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import Viewport from "../SceneGraph/Viewport";
-import GameLoop from "../Loop/GameLoop";
+import Game from "../Loop/Game";
 import RenderingManager from "../Rendering/RenderingManager";
 
 /**
- * The SceneManager of the game engine. There is only one of theses.
  * The SceneManager acts as an interface to create Scenes, and handles the lifecycle methods of Scenes.
- * The Scene manager keeps track of systems that are constant across scene, such as the @reference[ResourceManager]
+ * It gives Scenes access to information they need from the @reference[Game] class while keeping a layer of separation.
  */
 export default class SceneManager {
 	/** The current Scene of the game */
 	protected currentScene: Scene;
+
 	/** The Viewport of the game */
 	protected viewport: Viewport;
+
 	/** A reference to the ResourceManager */
 	protected resourceManager: ResourceManager;
-	/** The GameLoop this SceneManager belongs to */
-	protected game: GameLoop;
+
 	/** A counter to keep track of game ids */
 	protected idCounter: number;
+
 	/** The RenderingManager of the game */
 	protected renderingManager: RenderingManager;
 
 	/**
 	 * Creates a new SceneManager
 	 * @param viewport The Viewport of the game
-	 * @param game The GameLoop instance
+	 * @param game The Game instance
 	 * @param renderingManager The RenderingManager of the game
 	 */
-	constructor(viewport: Viewport, game: GameLoop, renderingManager: RenderingManager){
+	constructor(viewport: Viewport, renderingManager: RenderingManager){
 		this.resourceManager = ResourceManager.getInstance();
 		this.viewport = viewport;
-		this.game = game;
 		this.renderingManager = renderingManager;
 		this.idCounter = 0;
 	}
@@ -43,7 +43,7 @@ export default class SceneManager {
 	 * @param constr The constructor of the scene to add
 	 */
 	public addScene<T extends Scene>(constr: new (...args: any) => T, options: Record<string, any>): void {
-		let scene = new constr(this.viewport, this, this.renderingManager, this.game, options);
+		let scene = new constr(this.viewport, this, this.renderingManager, options);
 		this.currentScene = scene;
 
 		// Enqueue all scene asset loads

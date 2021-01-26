@@ -35,7 +35,7 @@ export default class ResourceManager {
     private loadonly_imagesToLoad: number;
     /** The queue of images we must load */
     private loadonly_imageLoadingQueue: Queue<KeyPathPair>;
-    /** A map of the images that are currently loaded and (presumably) being used by the scene */
+    /** A map of the images that are currently loaded and being used by the scene. The reference to these images only exist here for easy cleanup. */
     private images: Map<HTMLImageElement>;
 
     /** Number to keep track of how many tilemaps need to be loaded */
