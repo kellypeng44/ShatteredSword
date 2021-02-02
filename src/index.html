@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <title>Game</title>
     <style>
+      #main {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+
       #game-window {
         position: relative;
       }
@@ -27,7 +33,7 @@
     </style>
   </head>
   <body>
-    <div style="display: flex; flex-direction: row;">
+    <div id="main">
       <!-- The main window of the game. This contains the rendered game and any debug text -->
       <div id="game-window">
         <!-- This is the canvas where the actual game is rendered -->
@@ -37,7 +43,7 @@
       </div>
 
       <!-- This contains stats about the game for development purposes, such as the average update time -->
-      <div>
+      <div id="stats" hidden>
         <canvas id="stats-canvas"></canvas>
         <select name="Display" id="chart-option">
         </select>

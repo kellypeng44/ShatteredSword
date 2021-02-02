@@ -1,59 +1,24 @@
-import Game from "./Loop/Game";
-import {} from "./index";
-import MainMenu from "./_DemoClasses/Mario/MainMenu";
-import Level1 from "./_DemoClasses/Mario/Level1";
-import TestScene from "./_DemoClasses/PhysicsTesting/TestScene";
+import Game from "./Wolfie2D/Loop/Game";
+import default_scene from "./default_scene";
 
-function main(){
-    // Create the game object
+// The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
+(function main(){
+    // These are options for initializing the game
+    // Here, we'll simply set the size of the viewport, and make the background of the game black
     let options = {
         viewportSize: {x: 800, y: 600},
-        clearColor: {r: 34, g: 32, b: 52}
+        clearColor: {r: 0, g: 0, b: 0},
     }
 
-    let game = new Game(options);
-    game.start();
+    // Create our game. This will create all of the systems.
+    const demoGame = new Game(options);
 
-    let sm = game.getSceneManager();
-    sm.addScene(TestScene, {});
-}
+    // Run our game. This will start the game loop and get the updates and renders running.
+    demoGame.start();
 
-CanvasRenderingContext2D.prototype.roundedRect = function(x: number, y: number, w: number, h: number, r: number): void {
-    // Clamp the radius between 0 and the min of the width or height
-    if(r < 0) r = 0;
-    if(r > Math.min(w, h)) r = Math.min(w, h);
+    // For now, we won't specify any scene options.
+    let sceneOptions = {};
 
-    // Draw the rounded rect
-    this.beginPath();
-
-    // Top
-    this.moveTo(x + r, y);
-    this.lineTo(x + w - r, y);
-    this.arcTo(x + w, y, x + w, y + r, r);
-
-    // Right
-    this.lineTo(x + w, y + h - r);
-    this.arcTo(x + w, y + h, x + w - r, y + h, r);
-
-    // Bottom
-    this.lineTo(x + r, y + h);
-    this.arcTo(x, y + h, x, y + h - r, r);
-
-    // Left
-    this.lineTo(x, y + r);
-    this.arcTo(x, y, x + r, y, r)
-
-    this.closePath();
-}
-
-CanvasRenderingContext2D.prototype.strokeRoundedRect = function(x, y, w, h, r){
-    this.roundedRect(x, y, w, h, r);
-    this.stroke();
-}
-
-CanvasRenderingContext2D.prototype.fillRoundedRect = function(x, y, w, h, r){
-    this.roundedRect(x, y, w, h, r);
-    this.fill();
-}
-
-main();
+    // Add our first scene. This will load this scene into the game world.
+    demoGame.getSceneManager().addScene(default_scene, sceneOptions);
+})();

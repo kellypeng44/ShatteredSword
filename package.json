@@ -1,5 +1,5 @@
 {
-  "name": "gameengine",
+  "name": "wolfie2d",
   "version": "1.0.0",
   "description": "A game engine written in TypeScript",
   "main": "./dist/main.js",

@@ -1,61 +1,7 @@
 {
-    "files": [
-        "src/main.ts",
-        "src/Player.ts",
-
-        "src/DataTypes/Tilesets/TiledData.ts",
-        "src/DataTypes/Tilesets/Tileset.ts",
-        "src/DataTypes/Collection.ts",
-        "src/DataTypes/Map.ts",
-        "src/DataTypes/Queue.ts",
-        "src/DataTypes/Stack.ts",
-        "src/DataTypes/Vec2.ts",
-        "src/DataTypes/Vec4.ts",
-
-        "src/Debug/Debug.ts",
-
-        "src/Events/EventQueue.ts",
-        "src/Events/GameEvent.ts",
-        "src/Events/Receiver.ts",
-
-        "src/Scene/Factories/CanvasNodeFactory.ts",
-        "src/Scene/Factories/PhysicsNodeFactory.ts",
-        "src/Scene/Factories/TilemapFactory.ts",
-        "src/Scene/Scene.ts",
-        "src/Scene/Layer.ts",
-
-        "src/Input/InputHandler.ts",
-        "src/Input/InputReceiver.ts",
-        
-        "src/Loop/Game.ts",
-
-        "src/Nodes/Tilemaps/OrthogonalTilemap.ts",
-        "src/Nodes/UIElements/Button.ts",
-        "src/Nodes/UIElements/Label.ts",
-        "src/Nodes/CanvasNode.ts",
-        "src/Nodes/GameNode.ts",
-        "src/Nodes/Tilemap.ts",
-        "src/Nodes/UIElement.ts",
-
-        "src/Physics/Colliders/AABB.ts",
-        "src/Physics/Colliders/Collider.ts",
-        "src/Physics/PhysicsManager_Old.ts",
-        "src/Physics/PhysicsNode.ts",
-
-        "src/Playback/Recorder.ts",
-
-        "src/ResourceManager/ResourceManager.ts",
-
-        "src/SceneGraph/SceneGraph.ts",
-        "src/SceneGraph/SceneGraphArray.ts",
-        "src/SceneGraph/Viewport.ts",
-
-        "src/Sound/AudioManager.ts",
-        
-        "src/Utils/Color.ts",
-        "src/Utils/MathUtils.ts",
-        "src/Utils/RandUtils.ts",
-        "src/Utils/StringUtils.ts"
+    "include": [
+        "src/**/*",
+        "src/*"
     ],
     "compilerOptions": {
         "noImplicitAny": true,
