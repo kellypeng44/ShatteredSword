@@ -1,7 +1,6 @@
 /* #################### IMPORTS #################### */
 // Import from Wolfie2D or your own files here
 import Vec2 from "./Wolfie2D/DataTypes/Vec2";
-import Debug from "./Wolfie2D/Debug/Debug";
 import Input from "./Wolfie2D/Input/Input";
 import Graphic from "./Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "./Wolfie2D/Nodes/Graphics/GraphicTypes";
@@ -32,7 +31,7 @@ export default class default_scene extends Scene {
         // The first argument is the key of the sprite (you get to decide what it is).
         // The second argument is the path to the actual image.
         // Paths start in the "dist/" folder, so start building your path from there
-        this.load.image("logo", "assets/wolfie2d_text.png");
+        this.load.image("logo", "demo_assets/wolfie2d_text.png");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,

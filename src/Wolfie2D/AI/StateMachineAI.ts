@@ -1,5 +1,6 @@
 import AI from "../DataTypes/Interfaces/AI";
 import StateMachine from "../DataTypes/State/StateMachine";
+import GameEvent from "../Events/GameEvent";
 import GameNode from "../Nodes/GameNode";
 
 /**

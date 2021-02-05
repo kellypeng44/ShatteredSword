@@ -70,8 +70,8 @@ export default class Game {
         this.DEBUG_CANVAS = <HTMLCanvasElement>document.getElementById("debug-canvas");
     
         // Give the canvas a size and get the rendering context
-        this.WIDTH = this.gameOptions.viewportSize.x;
-        this.HEIGHT = this.gameOptions.viewportSize.y;
+        this.WIDTH = this.gameOptions.canvasSize.x;
+        this.HEIGHT = this.gameOptions.canvasSize.y;
 
         // For now, just hard code a canvas renderer. We can do this with options later
         this.renderingManager = new CanvasRenderer();
@@ -89,8 +89,8 @@ export default class Game {
         }
 
         // Size the viewport to the game canvas
-        const viewportSize = new Vec2(this.WIDTH, this.HEIGHT);
-        this.viewport = new Viewport(viewportSize.scaled(0.5), viewportSize);
+        const canvasSize = new Vec2(this.WIDTH, this.HEIGHT);
+        this.viewport = new Viewport(canvasSize, this.gameOptions.zoomLevel);
 
         // Initialize all necessary game subsystems
         this.eventQueue = EventQueue.getInstance();

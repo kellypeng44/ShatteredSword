@@ -12,6 +12,22 @@ export default class MathUtils {
     }
 
     /**
+     * Returns whether or not x is between a and b
+     * @param a The min bound
+     * @param b The max bound
+     * @param x The value to check
+     * @param exclusive Whether or not a and b are exclusive bounds
+     * @returns True if x is between a and b, false otherwise
+     */
+    static between(a: number, b: number, x: number, exclusive?: boolean): boolean {
+        if(exclusive){
+            return (a < x) && (x < b);
+        } else {
+            return (a <= x) && (x <= b);
+        }
+    }
+
+    /**
      * Clamps the value x to the range [min, max], rounding up or down if needed
      * @param x The value to be clamped
      * @param min The min of the range

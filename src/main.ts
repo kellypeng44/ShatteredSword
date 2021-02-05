@@ -1,13 +1,19 @@
 import Game from "./Wolfie2D/Loop/Game";
-import default_scene from "./default_scene";
+import Platformer from "./Platformer";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
     // These are options for initializing the game
-    // Here, we'll simply set the size of the viewport, and make the background of the game black
+    // Here, we'll set the size of the viewport, color the background, and set up key bindings.
     let options = {
-        viewportSize: {x: 800, y: 600},
-        clearColor: {r: 0, g: 0, b: 0},
+        canvasSize: {x: 800, y: 600},
+        zoomLevel: 4,
+        clearColor: {r: 34, g: 32, b: 52},
+        inputs: [
+            { name: "left", keys: ["a"] },
+            { name: "right", keys: ["d"] },
+            { name: "jump", keys: ["space", "w"]}
+        ]
     }
 
     // Create our game. This will create all of the systems.
@@ -20,5 +26,5 @@ import default_scene from "./default_scene";
     let sceneOptions = {};
 
     // Add our first scene. This will load this scene into the game world.
-    demoGame.getSceneManager().addScene(default_scene, sceneOptions);
+    demoGame.getSceneManager().addScene(Platformer, sceneOptions);
 })();

@@ -116,24 +116,14 @@ export default class StateMachine implements Updateable {
      * Handles input. This happens at the very beginning of this state machine's update cycle.
      * @param event The game event to process
      */
-    handleInput(event: GameEvent): void {
-        this.currentState.handleInput(event);
+    handleEvent(event: GameEvent): void {
+        if(this.active){
+            this.currentState.handleInput(event);
+        }
     }
 
     // @implemented
     update(deltaT: number): void {
-        // If the state machine isn't currently active, ignore all events and don't update
-        if(!this.active){
-            this.receiver.ignoreEvents();
-            return;
-        }
-
-        // Handle input from all events
-        while(this.receiver.hasNextEvent()){
-            let event = this.receiver.getNextEvent();
-            this.handleInput(event);
-        }
-
         // Delegate the update to the current state
         this.currentState.update(deltaT);
     }

@@ -180,7 +180,7 @@ export default class Scene implements Updateable {
         this.renderingManager.render(visibleSet, this.tilemaps, this.uiLayers);
 
         let nodes = this.sceneGraph.getAllNodes();
-        this.tilemaps.forEach(tilemap => tilemap.visible && tilemap.debugRender());
+        this.tilemaps.forEach(tilemap => tilemap.visible ? nodes.push(tilemap) : 0);
         Debug.setNodes(nodes);
     }
 

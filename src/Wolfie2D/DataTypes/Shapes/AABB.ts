@@ -146,7 +146,13 @@ export default class AABB extends Shape {
             // We hit on the left or right size
             hit.normal.x = -signX;
             hit.normal.y = 0;
+        } else if(Math.abs(tnearx - tneary) < 0.0001){
+            // We hit on the corner
+            hit.normal.x = -signX;
+            hit.normal.y = -signY;
+            hit.normal.normalize();
         } else {
+            // We hit on the top or bottom
             hit.normal.x = 0;
             hit.normal.y = -signY;
         }
@@ -188,6 +194,70 @@ export default class AABB extends Shape {
         }
 
         return true;
+    }
+
+    /**
+     * Determines whether these AABBs are JUST touching - not overlapping.
+     * Vec2.x is -1 if the other is to the left, 1 if to the right.
+     * Likewise, Vec2.y is -1 if the other is on top, 1 if on bottom.
+     * @param other The other AABB to check
+     * @returns The collision sides stored in a Vec2 if the AABBs are touching, null otherwise
+     */
+    touchesAABB(other: AABB): Vec2 {
+        let dx = other.x - this.x;
+        let px = this.hw + other.hw - Math.abs(dx);
+
+        let dy = other.y - this.y;
+        let py = this.hh + other.hh - Math.abs(dy);
+
+        // If one axis is just touching and the other is overlapping, true
+        if((px === 0 && py >= 0) || (py === 0 && px >= 0)){
+            let ret = new Vec2();
+
+            if(px === 0){
+                ret.x = other.x < this.x ? -1 : 1;
+            }
+            
+            if(py === 0){
+                ret.y = other.y < this.y ? -1 : 1;
+            }
+
+            return ret;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Determines whether these AABBs are JUST touching - not overlapping.
+     * Also, if they are only touching corners, they are considered not touching.
+     * Vec2.x is -1 if the other is to the left, 1 if to the right.
+     * Likewise, Vec2.y is -1 if the other is on top, 1 if on bottom.
+     * @param other The other AABB to check
+     * @returns The side of the touch, stored as a Vec2, or null if there is no touch
+     */
+    touchesAABBWithoutCorners(other: AABB): Vec2 {
+        let dx = other.x - this.x;
+        let px = this.hw + other.hw - Math.abs(dx);
+
+        let dy = other.y - this.y;
+        let py = this.hh + other.hh - Math.abs(dy);
+
+        // If one axis is touching, and the other is strictly overlapping
+        if((px === 0 && py > 0) || (py === 0 && px > 0)){
+            let ret = new Vec2();
+
+            if(px === 0){
+                ret.x = other.x < this.x ? -1 : 1;
+            } else {
+                ret.y = other.y < this.y ? -1 : 1;
+            }
+
+            return ret;
+
+        } else {
+            return null;
+        }
     }
 
     /**

@@ -37,7 +37,7 @@ export default class Viewport {
     /** The size of the canvas */
     private canvasSize: Vec2;
 
-    constructor(initialPosition: Vec2, canvasSize: Vec2){
+    constructor(canvasSize: Vec2, zoomLevel: number){
         this.view = new AABB(Vec2.ZERO, Vec2.ZERO);
         this.boundary = new AABB(Vec2.ZERO, Vec2.ZERO);
         this.lastPositions = new Queue();
@@ -46,13 +46,20 @@ export default class Viewport {
         this.canvasSize = Vec2.ZERO;
         this.focus = Vec2.ZERO;
 
-        // Set the center (and make the viewport stay there)
-        this.setCenter(initialPosition);
-        this.setFocus(initialPosition);
+        // Set the size of the canvas
+        this.setCanvasSize(canvasSize);
+
+        console.log(canvasSize, zoomLevel);
 
         // Set the size of the viewport
         this.setSize(canvasSize);
-        this.setCanvasSize(canvasSize);
+        this.setZoomLevel(zoomLevel);
+
+        console.log(this.getHalfSize().toString());
+
+        // Set the center (and make the viewport stay there)
+        this.setCenter(this.view.halfSize.clone());
+        this.setFocus(this.view.halfSize.clone());
     }
 
     /** Enables the viewport to zoom in and out */

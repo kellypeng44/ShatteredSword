@@ -77,20 +77,23 @@ export default class TilemapFactory {
 
             let sceneLayer;
             let isParallaxLayer = false;
+            let depth = 0;
             
             if(layer.properties){
                 for(let prop of layer.properties){
                     if(prop.name === "Parallax"){
                         isParallaxLayer = prop.value;
+                    } else if(prop.name === "Depth") {
+                        depth = prop.value;
                     }
                 }
             }
 
             if(isParallaxLayer){
                 console.log("Adding parallax layer: " + layer.name)
-                sceneLayer = this.scene.addParallaxLayer(layer.name, new Vec2(1, 1));
+                sceneLayer = this.scene.addParallaxLayer(layer.name, new Vec2(1, 1), depth);
             } else {
-                sceneLayer = this.scene.addLayer(layer.name);
+                sceneLayer = this.scene.addLayer(layer.name, depth);
             }
             
             if(layer.type === "tilelayer"){
@@ -144,19 +147,19 @@ export default class TilemapFactory {
                 // Layer is an object layer, so add each object as a sprite to a new layer
                 for(let obj of layer.objects){
                     // Check if obj is collidable
-                    let isCollidable = false;
                     let hasPhysics = false;
-                    let isStatic = true;
+                    let isCollidable = false;
+                    let isTrigger = false;
                     let group = "";
 
                     if(obj.properties){
                         for(let prop of obj.properties){
-                            if(prop.name === "Collidable"){
-                                isCollidable = prop.value;
-                            } else if(prop.name === "Static"){
-                                isStatic = prop.value;
-                            } else if(prop.name === "hasPhysics"){
+                            if(prop.name === "HasPhysics"){
                                 hasPhysics = prop.value;
+                            } else if(prop.name === "Collidable"){
+                                isCollidable = prop.value;
+                            } else if(prop.name === "IsTrigger"){
+                                isTrigger = prop.value;
                             } else if(prop.name === "Group"){
                                 group = prop.value;
                             }
@@ -194,8 +197,10 @@ export default class TilemapFactory {
 
                     // Now we have sprite. Associate it with our physics object if there is one
                     if(hasPhysics){
-                        sprite.addPhysics(sprite.boundary.clone(), Vec2.ZERO, isCollidable, isStatic);
+                        // Make the sprite a static physics object
+                        sprite.addPhysics(sprite.boundary.clone(), Vec2.ZERO, isCollidable, true);
                         sprite.group = group;
+                        sprite.isTrigger = isTrigger;
                     }
                 }
             }

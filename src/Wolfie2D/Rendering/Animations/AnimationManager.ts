@@ -142,6 +142,18 @@ export default class AnimationManager {
     }
 
     /**
+     * Plays the specified animation. Does not restart it if it is already playing
+     * @param animation The name of the animation to play
+     * @param loop Whether or not to loop the animation. False by default
+     * @param onEnd The name of an event to send when this animation naturally stops playing. This only matters if loop is false.
+     */
+    playIfNotAlready(animation: string, loop: boolean = false, onEnd?: string): void {
+        if(this.currentAnimation !== animation){
+            this.play(animation, loop, onEnd);
+        }
+    }
+
+    /**
      * Plays the specified animation
      * @param animation The name of the animation to play
      * @param loop Whether or not to loop the animation. False by default

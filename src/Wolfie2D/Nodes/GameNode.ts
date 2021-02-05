@@ -31,12 +31,12 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	private _id: number;
 
 	/*---------- PHYSICAL ----------*/
-	hasPhysics: boolean;
-	moving: boolean;
-	onGround: boolean;
-	onWall: boolean;
-	onCeiling: boolean;
-	active: boolean;
+	hasPhysics: boolean = false;
+	moving: boolean = false;
+	onGround: boolean = false;
+	onWall: boolean = false;
+	onCeiling: boolean = false;
+	active: boolean = false;
 	collisionShape: Shape;
 	colliderOffset: Vec2;
 	isStatic: boolean;
@@ -97,10 +97,19 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	}
 
 	get relativePosition(): Vec2 {
+		return this.inRelativeCoordinates(this.position);
+	}
+
+	/**
+	 * Converts a point to coordinates relative to the zoom and origin of this node
+	 * @param point The point to conver
+	 * @returns A new Vec2 representing the point in relative coordinates
+	 */
+	inRelativeCoordinates(point: Vec2): Vec2 {
 		let origin = this.scene.getViewTranslation(this);
 		let zoom = this.scene.getViewScale();
 
-		return this.position.clone().sub(origin).scale(zoom);
+		return point.clone().sub(origin).scale(zoom);
 	}
 
 	/*---------- UNIQUE ----------*/
@@ -132,7 +141,6 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
      * @param velocity The velocity with which the object will move.
      */
 	finishMove(): void {
-		console.log("finish");
 		this.moving = false;
 		this.position.add(this._velocity);
 		if(this.pathfinding){
@@ -307,22 +315,35 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	 * @param deltaT The timestep of the update.
 	 */
 	update(deltaT: number): void {
+		// Defer event handling to AI.
+		while(this.receiver.hasNextEvent()){
+			this._ai.handleEvent(this.receiver.getNextEvent());
+		}
+		
+		// Update our tweens
 		this.tweens.update(deltaT);
 	}
 
 	// @implemented
 	debugRender(): void {
-		let color = this.isColliding ? Color.RED : Color.GREEN;
-		Debug.drawPoint(this.relativePosition, color);
+		// Draw the position of this GameNode
+		Debug.drawPoint(this.relativePosition, Color.BLUE);
 
 		// If velocity is not zero, draw a vector for it
 		if(this._velocity && !this._velocity.isZero()){
-			Debug.drawRay(this.relativePosition, this._velocity.clone().scaleTo(20).add(this.relativePosition), color);
+			Debug.drawRay(this.relativePosition, this._velocity.clone().scaleTo(20).add(this.relativePosition), Color.BLUE);
 		}
 
 		// If this has a collider, draw it
-		if(this.isCollidable && this.collisionShape){
-			Debug.drawBox(this.collisionShape.center, this.collisionShape.halfSize, false, Color.RED);
+		if(this.hasPhysics && this.collisionShape){
+			let color = this.isColliding ? Color.RED : Color.GREEN;
+
+			if(this.isTrigger){
+				color = Color.PURPLE;
+			}
+			
+			color.a = 0.2;
+			Debug.drawBox(this.inRelativeCoordinates(this.collisionShape.center), this.collisionShape.halfSize.scaled(this.scene.getViewScale()), true, color);
 		}
 	}
 }

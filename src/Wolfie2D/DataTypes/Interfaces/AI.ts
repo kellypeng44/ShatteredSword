@@ -1,4 +1,6 @@
+import GameEvent from "../../Events/GameEvent";
 import GameNode from "../../Nodes/GameNode";
+import Actor from "./Actor";
 import Updateable from "./Updateable";
 
 /**
@@ -7,4 +9,7 @@ import Updateable from "./Updateable";
 export default interface AI extends Updateable {
     /** Initializes the AI with the actor and any additional config */
     initializeAI(owner: GameNode, options: Record<string, any>): void;
+
+    /** Handles events from the Actor */
+    handleEvent(event: GameEvent): void;
 }

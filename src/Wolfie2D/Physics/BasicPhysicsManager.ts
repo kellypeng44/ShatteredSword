@@ -89,6 +89,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			node.onCeiling = false;
 			node.onWall = false;
 			node.collidedWithTilemap = false;
+			node.isColliding = false;
 
 			// Update the swept shapes of each node
 			if(node.moving){
@@ -110,7 +111,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 				let area = node.sweptRect.overlapArea(collider);
 				if(area > 0){
 					// We had a collision
-					overlaps.push(new AreaCollision(area, collider));
+					overlaps.push(new AreaCollision(area, collider, other, "GameNode", null));
 				}
 			}
 
@@ -120,7 +121,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 				let area = node.sweptRect.overlapArea(collider);
 				if(area > 0){
 					// We had a collision
-					overlaps.push(new AreaCollision(area, collider));
+					overlaps.push(new AreaCollision(area, collider, other, "GameNode", null));
 				}
 			}
 
@@ -135,21 +136,27 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			// Sort the overlaps by area
 			overlaps = overlaps.sort((a, b) => b.area - a.area);
 
+			// Keep track of hits to use later
+			let hits = [];
 
 			/*---------- RESOLUTION PHASE ----------*/
 			// For every overlap, determine if we need to collide with it and when
-			for(let other of overlaps){
+			for(let overlap of overlaps){
 				// Do a swept line test on the static AABB with this AABB size as padding (this is basically using a minkowski sum!)
 				// Start the sweep at the position of this node with a delta of _velocity
 				const point = node.collisionShape.center;
 				const delta = node._velocity;
 				const padding = node.collisionShape.halfSize;
-				const otherAABB = other.collider;
+				const otherAABB = overlap.collider;
 
 
 				const hit = otherAABB.intersectSegment(node.collisionShape.center, node._velocity, node.collisionShape.halfSize);
 
+				overlap.hit = hit;
+
 				if(hit !== null){
+					hits.push(hit);
+
 					// We got a hit, resolve with the time inside of the hit
 					let tnearx = hit.nearTimes.x;
 					let tneary = hit.nearTimes.y;
@@ -164,11 +171,39 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
 
 					if(hit.nearTimes.x >= 0 && hit.nearTimes.x < 1){
-						node._velocity.x = node._velocity.x * tnearx;
+						// Any tilemap objects that made it here are collidable
+						if(overlap.type === "Tilemap" || overlap.other.isCollidable){
+							node._velocity.x = node._velocity.x * tnearx;
+							node.isColliding = true;
+						}
 					}
 
 					if(hit.nearTimes.y >= 0 && hit.nearTimes.y < 1){
-						node._velocity.y = node._velocity.y * tneary;
+						// Any tilemap objects that made it here are collidable
+						if(overlap.type === "Tilemap" || overlap.other.isCollidable){
+							node._velocity.y = node._velocity.y * tneary;
+							node.isColliding = true;
+						}
+					}
+				}
+			}
+			
+			// Check if we ended up on the ground, ceiling or wall
+			for(let overlap of overlaps){
+				let collisionSide = overlap.collider.touchesAABBWithoutCorners(node.collisionShape.getBoundingRect());
+				if(collisionSide !== null){
+					// If we touch, not including corner cases, check the collision normal
+					if(overlap.hit !== null){
+						if(collisionSide.y === -1){
+							// Node is on top of overlap, so onGround
+							node.onGround = true;
+						} else if(collisionSide.y === 1){
+							// Node is on bottom of overlap, so onCeiling
+							node.onCeiling = true;
+						} else {
+							// Node wasn't touching on y, so it is touching on x
+							node.onWall = true;
+						}
 					}
 				}
 			}
@@ -209,7 +244,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 					let area = node.sweptRect.overlapArea(collider);
 					if(area > 0){
 						// We had a collision
-						overlaps.push(new AreaCollision(area, collider));
+						overlaps.push(new AreaCollision(area, collider, tilemap, "Tilemap", new Vec2(col, row)));
 					}
 				}
 			}

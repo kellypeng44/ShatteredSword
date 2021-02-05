@@ -62,6 +62,9 @@ export default class Debug {
 	 * @param color The color of the box to draw
 	 */
 	static drawBox(center: Vec2, halfSize: Vec2, filled: boolean, color: Color): void {
+		let alpha = this.debugRenderingContext.globalAlpha;
+		this.debugRenderingContext.globalAlpha = color.a;
+
 		if(filled){
 			this.debugRenderingContext.fillStyle = color.toString();
 			this.debugRenderingContext.fillRect(center.x - halfSize.x, center.y - halfSize.y, halfSize.x*2, halfSize.y*2);
@@ -71,6 +74,8 @@ export default class Debug {
 			this.debugRenderingContext.strokeStyle = color.toString();
 			this.debugRenderingContext.strokeRect(center.x - halfSize.x, center.y - halfSize.y, halfSize.x*2, halfSize.y*2);
 		}
+
+		this.debugRenderingContext.globalAlpha = alpha;
 	}
 
 	/**
