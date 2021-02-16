@@ -57,6 +57,10 @@ export default class MathUtils {
         }
     }
 
+    static changeRange(x: number, min: number, max: number, newMin: number, newMax: number): number {
+        return this.lerp(newMin, newMax, this.invLerp(min, max, x));
+    }
+
     /**
 	 * Linear Interpolation
 	 * @param a The first value for the interpolation bound

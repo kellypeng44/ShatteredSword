@@ -139,6 +139,14 @@ export default class Color {
 	}
 	
 	/**
+	 * Returns this color as an array
+	 * @returns [r, g, b, a]
+	 */
+	toArray(): [number, number, number, number] {
+		return [this.r, this.g, this.b, this.a];
+	}
+	
+	/**
 	 * Returns the color as a string of the form #RRGGBB
 	 * @returns #RRGGBB
 	 */
@@ -163,5 +171,18 @@ export default class Color {
 			return this.toStringRGB();
 		}
 		return "rgba(" + this.r.toString() + ", " + this.g.toString() + ", " + this.b.toString() + ", " + this.a.toString() +")"
+	}
+
+	/**
+	 * Turns this color into a float32Array and changes color range to [0.0, 1.0]
+	 * @returns a Float32Array containing the color
+	 */
+	toWebGL(): Float32Array {
+		return new Float32Array([
+			this.r/255,
+			this.g/255,
+			this.b/255,
+			this.a
+		]);
 	}
 }

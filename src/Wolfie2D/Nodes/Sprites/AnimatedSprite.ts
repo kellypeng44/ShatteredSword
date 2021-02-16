@@ -8,8 +8,16 @@ export default class AnimatedSprite extends Sprite {
     /** The number of columns in this sprite sheet */
     protected numCols: number;
 
+    get cols(): number {
+        return this.numCols;
+    }
+
     /** The number of rows in this sprite sheet */
     protected numRows: number;
+
+    get rows(): number {
+        return this.numRows;
+    }
 
     /** The animationManager for this sprite */
     animation: AnimationManager;

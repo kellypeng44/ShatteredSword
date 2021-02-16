@@ -86,6 +86,15 @@ export default class AnimationManager {
     }
 
     /**
+     * Determines whether the specified animation is currently playing
+     * @param key The key of the animation to check
+     * @returns true if the specified animation is playing, false otherwise
+     */
+    isPlaying(key: string): boolean {
+        return this.currentAnimation === key && this.animationState === AnimationState.PLAYING;
+    }
+
+    /**
      * Retrieves the current animation index and advances the animation frame
      * @returns The index of the animation frame
      */
@@ -147,7 +156,7 @@ export default class AnimationManager {
      * @param loop Whether or not to loop the animation. False by default
      * @param onEnd The name of an event to send when this animation naturally stops playing. This only matters if loop is false.
      */
-    playIfNotAlready(animation: string, loop: boolean = false, onEnd?: string): void {
+    playIfNotAlready(animation: string, loop?: boolean, onEnd?: string): void {
         if(this.currentAnimation !== animation){
             this.play(animation, loop, onEnd);
         }
@@ -159,18 +168,27 @@ export default class AnimationManager {
      * @param loop Whether or not to loop the animation. False by default
      * @param onEnd The name of an event to send when this animation naturally stops playing. This only matters if loop is false.
      */
-    play(animation: string, loop: boolean = false, onEnd?: string): void {
+    play(animation: string, loop?: boolean, onEnd?: string): void {
         this.currentAnimation = animation;
         this.currentFrame = 0;
         this.frameProgress = 0;
-        this.loop = loop;
         this.animationState = AnimationState.PLAYING;
+
+        // If loop arg was provided, use that
+        if(loop !== undefined){
+            this.loop = loop;
+        } else {
+            // Otherwise, use what the json file specified
+            this.loop = this.animations.get(animation).repeat;
+        }
+
         if(onEnd !== undefined){
             this.onEndEvent = onEnd;
         } else {
             this.onEndEvent = null;
         }
 
+        // Reset pending animation
         this.pendingAnimation = null;
     }
 

@@ -176,6 +176,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		// Set the collision shape if provided, or simply use the the region if there is one.
 		if(collisionShape){
 			this.collisionShape = collisionShape;
+			this.collisionShape.center = this.position;
 		} else if (isRegion(this)) {
 			// If the gamenode has a region and no other is specified, use that
 			this.collisionShape = (<any>this).boundary.clone();

@@ -131,7 +131,7 @@ export default class CanvasRenderer extends RenderingManager {
         }
 
         this.ctx.setTransform(xScale, 0, 0, yScale, (node.position.x - this.origin.x)*this.zoom, (node.position.y - this.origin.y)*this.zoom);
-        this.ctx.rotate(node.rotation);
+        this.ctx.rotate(-node.rotation);
         let globalAlpha = this.ctx.globalAlpha;
         this.ctx.globalAlpha = node.alpha;
         

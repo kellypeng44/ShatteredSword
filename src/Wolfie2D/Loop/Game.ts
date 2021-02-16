@@ -16,6 +16,8 @@ import GameLoop from "./GameLoop";
 import FixedUpdateGameLoop from "./FixedUpdateGameLoop";
 import EnvironmentInitializer from "./EnvironmentInitializer";
 import Vec2 from "../DataTypes/Vec2";
+import Registry from "../Registry/Registry";
+import WebGLRenderer from "../Rendering/WebGLRenderer";
 
 /**
  * The main loop of the game engine.
@@ -36,7 +38,7 @@ export default class Game {
 	readonly WIDTH: number;
     readonly HEIGHT: number;
     private viewport: Viewport;
-    private ctx: CanvasRenderingContext2D;
+    private ctx: CanvasRenderingContext2D | WebGLRenderingContext;
     private clearColor: Color;
     
     // All of the necessary subsystems that need to run here
@@ -73,8 +75,12 @@ export default class Game {
         this.WIDTH = this.gameOptions.canvasSize.x;
         this.HEIGHT = this.gameOptions.canvasSize.y;
 
-        // For now, just hard code a canvas renderer. We can do this with options later
-        this.renderingManager = new CanvasRenderer();
+        // This step MUST happen before the resource manager does anything
+        if(this.gameOptions.useWebGL){
+            this.renderingManager = new WebGLRenderer();
+        } else {
+            this.renderingManager = new CanvasRenderer();
+        }
         this.initializeGameWindow();
         this.ctx = this.renderingManager.initializeCanvas(this.GAME_CANVAS, this.WIDTH, this.HEIGHT);
         this.clearColor = new Color(this.gameOptions.clearColor.r, this.gameOptions.clearColor.g, this.gameOptions.clearColor.b);
@@ -131,8 +137,14 @@ export default class Game {
         // Set the render function of the loop
         this.loop.doRender = () => this.render();
 
-        // Start the loop
-        this.loop.start();
+        // Preload registry items
+        Registry.preload();
+
+        // Load the items with the resource manager
+        this.resourceManager.loadResourcesFromQueue(() => {
+            // When we're dont loading, start the loop
+            this.loop.start();
+        });
     }
 
     /**
@@ -164,12 +176,17 @@ export default class Game {
      */
     render(): void {
         // Clear the canvases
-        this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         Debug.clearCanvas();
 
-        // Game Canvas
-        this.ctx.fillStyle = this.clearColor.toString();
-        this.ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+        if(this.gameOptions.useWebGL){
+            (<WebGLRenderingContext>this.ctx).clearColor(this.clearColor.r, this.clearColor.g, this.clearColor.b, this.clearColor.a);
+            (<WebGLRenderingContext>this.ctx).clear((<WebGLRenderingContext>this.ctx).COLOR_BUFFER_BIT | (<WebGLRenderingContext>this.ctx).DEPTH_BUFFER_BIT);
+        } else {
+            (<CanvasRenderingContext2D>this.ctx).clearRect(0, 0, this.WIDTH, this.HEIGHT);
+            (<CanvasRenderingContext2D>this.ctx).fillStyle = this.clearColor.toString();
+            (<CanvasRenderingContext2D>this.ctx).fillRect(0, 0, this.WIDTH, this.HEIGHT);
+        }
+
         this.sceneManager.render();
 
         // Debug render

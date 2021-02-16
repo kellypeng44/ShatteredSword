@@ -20,6 +20,9 @@ export default class GameOptions {
     /* Whether or not the stats rendering should occur */
     showStats: boolean;
 
+    /* Whether or not to use webGL */
+    useWebGL: boolean;
+
     /**
      * Parses the data in the raw options object
      * @param options The game options as a Record
@@ -34,6 +37,7 @@ export default class GameOptions {
         gOpt.inputs = options.inputs ? options.inputs : [];
         gOpt.showDebug = !!options.showDebug;
         gOpt.showStats = !!options.showStats;
+        gOpt.useWebGL = !!options.useWebGL;
 
         return gOpt;
     }

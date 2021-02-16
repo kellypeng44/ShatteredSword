@@ -383,6 +383,10 @@ export default class Vec2 {
 		this.onChange = f;
 	}
 
+	toArray(): Float32Array {
+		return this.vec;
+	}
+
 	/**
 	 * Performs linear interpolation between two vectors
 	 * @param a The first vector

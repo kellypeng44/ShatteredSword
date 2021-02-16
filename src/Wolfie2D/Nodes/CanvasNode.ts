@@ -12,6 +12,8 @@ export default abstract class CanvasNode extends GameNode implements Region {
 	private _size: Vec2;
 	private _scale: Vec2;
 	private _boundary: AABB;
+	private _hasCustomShader: boolean;
+	private _customShaderKey: string;
 
 	/** A flag for whether or not the CanvasNode is visible */
 	visible: boolean = true;
@@ -24,6 +26,8 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		this._scale.setOnChange(() => this.scaleChanged());
 		this._boundary = new AABB();
 		this.updateBoundary();
+
+		this._hasCustomShader = false;
 	}
 
 	get size(): Vec2 {
@@ -54,6 +58,14 @@ export default abstract class CanvasNode extends GameNode implements Region {
 
 	set scaleY(value: number) {
 		this.scale.y = value;
+	}
+
+	get hasCustomShader(): boolean {
+		return this._hasCustomShader;
+	}
+
+	get customShaderKey(): string {
+		return this._customShaderKey;
 	}
 
 	// @override
@@ -87,6 +99,15 @@ export default abstract class CanvasNode extends GameNode implements Region {
 		let zoom = this.scene.getViewScale();
 
 		return this.boundary.halfSize.clone().scaled(zoom, zoom);
+	}
+
+	/**
+	 * Adds a custom shader to this CanvasNode
+	 * @param key The registry key of the ShaderType
+	 */
+	useCustomShader(key: string): void {
+		this._hasCustomShader = true;
+		this._customShaderKey = key;
 	}
 
 	/**

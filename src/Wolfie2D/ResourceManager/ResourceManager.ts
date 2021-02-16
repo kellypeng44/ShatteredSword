@@ -4,6 +4,8 @@ import { TiledTilemapData } from "../DataTypes/Tilesets/TiledData";
 import StringUtils from "../Utils/StringUtils";
 import AudioManager from "../Sound/AudioManager";
 import Spritesheet from "../DataTypes/Spritesheet";
+import WebGLProgramType from "../DataTypes/Rendering/WebGLProgramType";
+import PhysicsManager from "../Physics/PhysicsManager";
 
 /**
  * The resource manager for the game engine.
@@ -68,6 +70,21 @@ export default class ResourceManager {
     /** The total number of "types" of things that need to be loaded (i.e. images and tilemaps) */
     private loadonly_typesToLoad: number;
 
+    /* ########## INFORMATION SPECIAL TO WEBGL ########## */
+    private gl_WebGLActive: boolean;
+
+    private loadonly_gl_ShaderProgramsLoaded: number;
+    private loadonly_gl_ShaderProgramsToLoad: number;
+    private loadonly_gl_ShaderLoadingQueue: Queue<KeyPath_Shader>;
+
+    private gl_DefaultShaderPrograms: Map<WebGLProgramType>;
+    private gl_ShaderPrograms: Map<WebGLProgramType>;
+
+    private gl_Textures: Map<WebGLTexture>;
+    private gl_Buffers: Map<WebGLBuffer>; 
+
+    private gl: WebGLRenderingContext;
+
     private constructor(){
         this.loading = false;
         this.justLoaded = false;
@@ -91,6 +108,16 @@ export default class ResourceManager {
         this.loadonly_audioToLoad = 0;
         this.loadonly_audioLoadingQueue = new Queue();
         this.audioBuffers = new Map();
+
+        this.loadonly_gl_ShaderProgramsLoaded = 0;
+        this.loadonly_gl_ShaderProgramsToLoad = 0;
+        this.loadonly_gl_ShaderLoadingQueue = new Queue();
+
+        this.gl_DefaultShaderPrograms = new Map();
+        this.gl_ShaderPrograms = new Map();
+
+        this.gl_Textures = new Map();
+        this.gl_Buffers = new Map();
     };
 
     /**
@@ -103,6 +130,19 @@ export default class ResourceManager {
         }
 
         return this.instance;
+    }
+
+    /**
+     * Activates or deactivates the use of WebGL
+     * @param flag True if WebGL should be used, false otherwise
+     * @param gl The instance of the graphics context, if applicable
+     */
+    public useWebGL(flag: boolean, gl: WebGLRenderingContext): void {
+        this.gl_WebGLActive = flag;
+
+        if(this.gl_WebGLActive){
+            this.gl = gl;
+        }
     }
 
     /**
@@ -199,15 +239,26 @@ export default class ResourceManager {
                     console.log("Loaded Images");
                     this.loadAudioFromQueue(() => {
                         console.log("Loaded Audio");
-                        // Done loading
-                        this.loading = false;
-                        this.justLoaded = true;
-                        callback();
+
+                        if(this.gl_WebGLActive){
+                            this.gl_LoadShadersFromQueue(() => {
+                                console.log("Loaded Shaders");
+                                this.finishLoading(callback);
+                            });
+                        } else {
+                            this.finishLoading(callback);
+                        }
                     });
                 });
             });
         });
+    }
 
+    private finishLoading(callback: Function): void {
+        // Done loading
+        this.loading = false;
+        this.justLoaded = true;
+        callback();
     }
 
     /**
@@ -232,6 +283,12 @@ export default class ResourceManager {
         this.loadonly_audioLoaded = 0;
         this.loadonly_audioToLoad = 0;
         this.audioBuffers.clear();
+
+        // WebGL
+        // Delete all programs through webGL
+        this.gl_ShaderPrograms.forEach(key => this.gl_ShaderPrograms.get(key).delete(this.gl));
+        this.gl_ShaderPrograms.clear();
+        this.gl_Textures.clear();
     }
 
     /**
@@ -385,6 +442,9 @@ export default class ResourceManager {
             // Add to loaded images
             this.images.add(key, image);
 
+            // If WebGL is active, create a texture
+            this.createWebGLTexture(key);
+
             // Finish image load
             this.finishLoadingImage(callbackIfLast);
         }
@@ -464,6 +524,192 @@ export default class ResourceManager {
         }
     }
 
+    /* ########## WEBGL SPECIFIC FUNCTIONS ########## */
+
+    public getTexture(key: string): WebGLTexture {
+        return this.gl_Textures.get(key);
+    }
+
+    public getShaderProgram(key: string): WebGLProgram {
+        return this.gl_ShaderPrograms.get(key).program;
+    }
+
+    public getBuffer(key: string): WebGLBuffer {
+        return this.gl_Buffers.get(key);
+    }
+
+    private createWebGLTexture(key:string): void {
+        if(this.gl_WebGLActive){
+            const texture = this.gl.createTexture();
+            this.gl_Textures.add(key, texture);
+        }
+    }
+
+    public createBuffer(key: string): void {
+        if(this.gl_WebGLActive){
+            let buffer = this.gl.createBuffer();
+
+            this.gl_Buffers.add(key, buffer);
+        }
+    }
+
+    /**
+     * Enqueues loading of a new shader program
+     * @param key The key of the shader program
+     * @param vShaderFilepath 
+     * @param fShaderFilepath 
+     */
+    public shader(key: string, vShaderFilepath: string, fShaderFilepath: string): void {
+        let splitPath = vShaderFilepath.split(".");
+        let end = splitPath[splitPath.length - 1];
+
+        if(end !== "vshader"){
+            throw `${vShaderFilepath} is not a valid vertex shader - must end in ".vshader`;
+        }
+
+        splitPath = fShaderFilepath.split(".");
+        end = splitPath[splitPath.length - 1];
+
+        if(end !== "fshader"){
+            throw `${fShaderFilepath} is not a valid vertex shader - must end in ".fshader`;
+        }
+
+        let paths = new KeyPath_Shader();
+        paths.key = key;
+        paths.vpath = vShaderFilepath;
+        paths.fpath = fShaderFilepath;
+
+        this.loadonly_gl_ShaderLoadingQueue.enqueue(paths);
+    }
+
+    private gl_LoadShadersFromQueue(onFinishLoading: Function): void {
+        this.loadonly_gl_ShaderProgramsToLoad = this.loadonly_gl_ShaderLoadingQueue.getSize();
+        this.loadonly_gl_ShaderProgramsLoaded = 0;
+
+        // If webGL isn'active or there are no items to load, we're finished
+        if(!this.gl_WebGLActive || this.loadonly_gl_ShaderProgramsToLoad === 0){
+            onFinishLoading();
+        }
+
+        while(this.loadonly_gl_ShaderLoadingQueue.hasItems()){
+            let shader = this.loadonly_gl_ShaderLoadingQueue.dequeue();
+            this.gl_LoadShader(shader.key, shader.vpath, shader.fpath, onFinishLoading);
+        }
+    }
+
+    private gl_LoadShader(key: string, vpath: string, fpath: string, callbackIfLast: Function): void {
+        this.loadTextFile(vpath, (vFileText: string) => {
+            const vShader = vFileText;
+
+            this.loadTextFile(fpath, (fFileText: string) => {
+                const fShader = fFileText
+
+                // Extract the program and shaders
+                const [shaderProgram, vertexShader, fragmentShader] = this.createShaderProgram(vShader, fShader);
+
+                // Create a wrapper type
+                const programWrapper = new WebGLProgramType();
+                programWrapper.program = shaderProgram;
+                programWrapper.vertexShader = vertexShader;
+                programWrapper.fragmentShader = fragmentShader;
+
+                // Add to our map
+                this.gl_ShaderPrograms.add(key, programWrapper);
+
+                // Finish loading
+                this.gl_FinishLoadingShader(callbackIfLast);
+            });
+        });
+    }
+
+    private gl_FinishLoadingShader(callback: Function): void {
+        this.loadonly_gl_ShaderProgramsLoaded += 1;
+
+        if(this.loadonly_gl_ShaderProgramsLoaded === this.loadonly_gl_ShaderProgramsToLoad){
+            // We're done loading shaders
+            callback();
+        }
+    }
+
+    private createShaderProgram(vShaderSource: string, fShaderSource: string){
+        const vertexShader = this.loadVertexShader(vShaderSource);
+        const fragmentShader = this.loadFragmentShader(fShaderSource);
+    
+        if(vertexShader === null || fragmentShader === null){
+            // We had a problem intializing - error
+            return null;
+        }
+    
+        // Create a shader program
+        const program = this.gl.createProgram();
+        if(!program) {
+            // Error creating
+            console.log("Failed to create program");
+            return null;
+        }
+    
+        // Attach our vertex and fragment shader
+        this.gl.attachShader(program, vertexShader);
+        this.gl.attachShader(program, fragmentShader);
+    
+        // Link
+        this.gl.linkProgram(program);
+        if(!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)){
+            // Error linking
+            const error = this.gl.getProgramInfoLog(program);
+            console.log("Failed to link program: " + error);
+    
+            // Clean up
+            this.gl.deleteProgram(program);
+            this.gl.deleteShader(vertexShader);
+            this.gl.deleteShader(fragmentShader);
+            return null;
+        }
+    
+        // We successfully create a program
+        return [program, vertexShader, fragmentShader];
+    }
+    
+    private loadVertexShader(shaderSource: string): WebGLShader{
+        // Create a new vertex shader
+        return this.loadShader(this.gl.VERTEX_SHADER, shaderSource);
+    }
+    
+    private loadFragmentShader(shaderSource: string): WebGLShader{
+        // Create a new fragment shader
+        return this.loadShader(this.gl.FRAGMENT_SHADER, shaderSource);	
+    }
+    
+    private loadShader(type: number, shaderSource: string): WebGLShader{
+        const shader = this.gl.createShader(type);
+    
+        // If we couldn't create the shader, error
+        if(shader === null){
+            console.log("Unable to create shader");
+            return null;
+        }
+    
+        // Add the source to the shader and compile
+        this.gl.shaderSource(shader, shaderSource);
+        this.gl.compileShader(shader);
+    
+        // Make sure there were no errors during this process
+        if(!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)){
+            // Not compiled - error
+            const error = this.gl.getShaderInfoLog(shader);
+            console.log("Failed to compile shader: " + error);
+    
+            // Clean up
+            this.gl.deleteShader(shader);
+            return null;
+        }
+    
+        // Sucess, so return the shader
+        return shader;
+    }
+
+    /* ########## GENERAL LOADING FUNCTIONS ########## */
+
     private loadTextFile(textFilePath: string, callback: Function): void {
         let xobj: XMLHttpRequest = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
@@ -475,6 +721,8 @@ export default class ResourceManager {
         };
         xobj.send(null);
     }
+
+    /* ########## LOADING BAR INFO ########## */
 
     private getLoadPercent(): number {
         return (this.loadonly_tilemapsLoaded/this.loadonly_tilemapsToLoad
@@ -499,6 +747,12 @@ export default class ResourceManager {
 }
 
 class KeyPathPair {
-    key: string
-    path: string
+    key: string;
+    path: string;
+}
+
+class KeyPath_Shader {
+    key: string;
+    vpath: string;
+    fpath: string;
 }

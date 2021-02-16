@@ -88,7 +88,9 @@ export default class SceneManager {
 	 * Renders the current Scene
 	 */
 	public render(): void {
-		this.currentScene.render();
+		if(this.currentScene.isRunning()){
+			this.currentScene.render();
+		}
 	}
 
 	/**
