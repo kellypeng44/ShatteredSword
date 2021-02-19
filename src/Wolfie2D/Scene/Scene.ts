@@ -94,7 +94,7 @@ export default class Scene implements Updateable {
      * @param options The options for Scene initialization
      */
     constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>){
-        this.sceneOptions = SceneOptions.parse(options);
+        this.sceneOptions = SceneOptions.parse(options? options : {});
 
         this.worldSize = new Vec2(500, 500);
         this.viewport = viewport;
@@ -120,6 +120,9 @@ export default class Scene implements Updateable {
 
         this.load = ResourceManager.getInstance();
     }
+
+    /** A lifecycle method that gets called immediately after a new scene is created, before anything else. */
+    initScene(init: Record<string, any>): void {}
 
     /** A lifecycle method that gets called when a new scene is created. Load all files you wish to access in the scene here. */
     loadScene(): void {}

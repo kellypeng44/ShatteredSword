@@ -82,7 +82,7 @@ export default abstract class UIElement extends CanvasNode {
 		// See of this object was just clicked
 		if(Input.isMouseJustPressed()){
 			let clickPos = Input.getMousePressPosition();
-			if(this.contains(clickPos.x, clickPos.y)){
+			if(this.contains(clickPos.x, clickPos.y) && this.visible && !this.layer.isHidden()){
 				this.isClicked = true;
 
 				if(this.onClick !== null){
@@ -136,15 +136,15 @@ export default abstract class UIElement extends CanvasNode {
 	 * Overridable method for calculating background color - useful for elements that want to be colored on different after certain events
 	 * @returns The background color of the UIElement
 	 */
-	calculateBackgroundColor(): string {
-		return this.backgroundColor.toStringRGBA();
+	calculateBackgroundColor(): Color {
+		return this.backgroundColor;
 	}
 
 	/**
 	 * Overridable method for calculating border color - useful for elements that want to be colored on different after certain events
 	 * @returns The border color of the UIElement
 	 */
-	calculateBorderColor(): string {
-		return this.borderColor.toStringRGBA();
+	calculateBorderColor(): Color {
+		return this.borderColor;
 	}
 }

@@ -69,10 +69,10 @@ export default class Color {
 	}
 
 	/**	
-	 * Purple color
+	 * Magenta color
 	 * @returns rgb(255, 0, 255)
 	 */
-	static get PURPLE(): Color {
+	static get MAGENTA(): Color {
 		return new Color(255, 0, 255, 1);
 	}
 
@@ -127,7 +127,7 @@ export default class Color {
 	 * @returns A new lighter Color
 	 */
 	lighten(): Color {
-		return new Color(MathUtils.clamp(this.r + 40, 0, 255), MathUtils.clamp(this.g + 40, 0, 255), MathUtils.clamp(this.b + 40, 0, 255), this.a);
+		return new Color(MathUtils.clamp(this.r + 40, 0, 255), MathUtils.clamp(this.g + 40, 0, 255), MathUtils.clamp(this.b + 40, 0, 255), MathUtils.clamp(this.a + 10, 0, 255));
 	}
 
 	/**
@@ -135,7 +135,7 @@ export default class Color {
 	 * @returns A new darker Color
 	 */
 	darken(): Color {
-		return new Color(MathUtils.clamp(this.r - 40, 0, 255), MathUtils.clamp(this.g - 40, 0, 255), MathUtils.clamp(this.b - 40, 0, 255), this.a);
+		return new Color(MathUtils.clamp(this.r - 40, 0, 255), MathUtils.clamp(this.g - 40, 0, 255), MathUtils.clamp(this.b - 40, 0, 255), MathUtils.clamp(this.a + 10, 0, 255));
 	}
 	
 	/**

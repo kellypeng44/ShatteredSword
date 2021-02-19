@@ -8,6 +8,7 @@ import UIElement from "../Nodes/UIElement";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import UILayer from "../Scene/Layers/UILayer";
 import Scene from "../Scene/Scene";
+import Color from "../Utils/Color";
 
 /**
  * An abstract framework to put all rendering in once place in the application
@@ -47,6 +48,9 @@ export default abstract class RenderingManager {
      * @param uiLayers The user interface layers
      */
     abstract render(visibleSet: Array<CanvasNode>, tilemaps: Array<Tilemap>, uiLayers: Map<UILayer>): void;
+
+    /** Clears the canvas */
+    abstract clear(color: Color): void;
 
     /**
      * Renders a sprite

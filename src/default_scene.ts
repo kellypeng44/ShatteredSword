@@ -31,7 +31,7 @@ export default class default_scene extends Scene {
         // The first argument is the key of the sprite (you get to decide what it is).
         // The second argument is the path to the actual image.
         // Paths start in the "dist/" folder, so start building your path from there
-        this.load.image("logo", "demo_assets/wolfie2d_text.png");
+        this.load.image("logo", "demo_assets/images/wolfie2d_text.png");
     }
 
     // startScene() is where you should build any game objects you wish to have in your scene,

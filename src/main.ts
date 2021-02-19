@@ -1,36 +1,24 @@
 import Game from "./Wolfie2D/Loop/Game";
-import Homework1_Scene from "./hw1/HW1_Scene";
-import Registry from "./Wolfie2D/Registry/Registry";
-import { Homework1Shaders } from "./hw1/HW1_Enums";
-import GradientCircleShaderType from "./hw1/GradientCircleShaderType";
+import default_scene from "./default_scene";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
-    // Set up options
-    let options = {
-        canvasSize: {x: 1200, y: 800},
-        clearColor: {r: 0.1, g: 0.1, b: 0.1},
-        inputs: [
-            { name: "forward", keys: ["w"] },
-            { name: "backward", keys: ["s"] },
-            { name: "turn_ccw", keys: ["a"] },
-            { name: "turn_cw", keys: ["d"] },
-        ],
-        useWebGL: true,
-        showDebug: false
-    }
+    // Run any tests
+    runTests();
 
-    // We have a custom shader, so lets add it to the registry and preload it
-    Registry.shaders.registerAndPreloadItem(
-        Homework1Shaders.GRADIENT_CIRCLE,   // The key of the shader program
-        GradientCircleShaderType,           // The constructor of the shader program
-        "hw1_assets/shaders/gradient_circle.vshader",   // The path to the vertex shader
-        "hw1_assets/shaders/gradient_circle.fshader");  // the path to the fragment shader
+    // Set up options for our game
+    let options = {
+        canvasSize: {x: 1200, y: 800},          // The size of the game
+        clearColor: {r: 0.1, g: 0.1, b: 0.1},   // The color the game clears to
+        useWebGL: true,                        // Tell the game we want to use webgl
+        showDebug: false                       // Whether to show debug messages. You can change this to true if you want
+    }
 
     // Create a game with the options specified
     const game = new Game(options);
 
     // Start our game
-    game.start();
-    game.getSceneManager().addScene(Homework1_Scene, {});
+    game.start(default_scene, {});
 })();
+
+function runTests(){};

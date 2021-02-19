@@ -1,5 +1,6 @@
 import Map from "../../DataTypes/Map";
 import ShaderType from "../../Rendering/WebGLRendering/ShaderType";
+import LabelShaderType from "../../Rendering/WebGLRendering/ShaderTypes/LabelShaderType";
 import PointShaderType from "../../Rendering/WebGLRendering/ShaderTypes/PointShaderType";
 import RectShaderType from "../../Rendering/WebGLRendering/ShaderTypes/RectShaderType";
 import SpriteShaderType from "../../Rendering/WebGLRendering/ShaderTypes/SpriteShaderType";
@@ -14,6 +15,7 @@ export default class ShaderRegistry extends Map<ShaderType> {
 	public static POINT_SHADER = "point";
 	public static RECT_SHADER = "rect";
 	public static SPRITE_SHADER = "sprite";
+	public static LABEL_SHADER = "label";
 
 	private registryItems: Array<ShaderRegistryItem> = new Array();
 
@@ -21,8 +23,6 @@ export default class ShaderRegistry extends Map<ShaderType> {
 	 * Preloads all built-in shaders
 	 */
 	public preload(){
-		console.log("Preloading");
-
 		// Get the resourceManager and queue all built-in shaders for preloading
 		const rm = ResourceManager.getInstance();
 
@@ -35,17 +35,17 @@ export default class ShaderRegistry extends Map<ShaderType> {
 		// Queue a load for the sprite shader
 		this.registerAndPreloadItem(ShaderRegistry.SPRITE_SHADER, SpriteShaderType, "builtin/shaders/sprite.vshader", "builtin/shaders/sprite.fshader");
 	
+		// Queue a load for the label shader
+		this.registerAndPreloadItem(ShaderRegistry.LABEL_SHADER, LabelShaderType, "builtin/shaders/label.vshader", "builtin/shaders/label.fshader");
+
 		// Queue a load for any preloaded items
 		for(let item of this.registryItems){
 			const shader = new item.constr(item.key);
 			shader.initBufferObject();
 			this.add(item.key, shader);
 
-			console.log("Added", item.key);
-
 			// Load if desired
 			if(item.preload !== undefined){
-				console.log("Preloading", item.key);
 				rm.shader(item.key, item.preload.vshaderLocation, item.preload.fshaderLocation);
 			}
 		}

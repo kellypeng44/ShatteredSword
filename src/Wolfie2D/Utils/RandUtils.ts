@@ -1,6 +1,7 @@
 import MathUtils from "./MathUtils";
 import Color from "./Color";
 import Perlin from "./Rand/Perlin";
+import Vec2 from "../DataTypes/Vec2";
 
 class Noise {
     p: Perlin = new Perlin();
@@ -20,6 +21,16 @@ export default class RandUtils {
      */
 	static randInt(min: number, max: number): number {
         return Math.floor(Math.random()*(max - min) + min);
+    }
+
+    /**
+     * Generates a random float in the specified range
+     * @param min The min of the range (inclusive)
+     * @param max The max of the range (exclusive)
+     * @returns A random float in the range [min, max)
+     */
+	static randFloat(min: number, max: number): number {
+        return Math.random()*(max - min) + min;
     }
     
     /**
@@ -41,6 +52,10 @@ export default class RandUtils {
         let g = RandUtils.randInt(0, 256);
         let b = RandUtils.randInt(0, 256);
         return new Color(r, g, b);
+    }
+
+    static randVec(minX: number, maxX: number, minY: number, maxY: number): Vec2 {
+        return new Vec2(this.randFloat(minX, maxX), this.randFloat(minY, maxY));
     }
 
     /** A noise generator */

@@ -18,6 +18,7 @@ import NavigationPath from "../Pathfinding/NavigationPath";
 import TweenManager from "../Rendering/Animations/TweenManager";
 import Debug from "../Debug/Debug";
 import Color from "../Utils/Color";
+import Circle from "../DataTypes/Shapes/Circle";
 
 /**
  * The representation of an object in the game world.
@@ -198,6 +199,15 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.scene.getPhysicsManager().registerObject(this);
 	}
 
+	/**
+	 * Sets the collider for this GameNode
+	 * @param collider The new collider to use
+	 */
+	setCollisionShape(collider: Shape): void {
+		this.collisionShape = collider;
+		this.collisionShape.center.copy(this.position);
+	}
+
 	// @implemented
 	/**
 	 * @param group The name of the group that will activate the trigger
@@ -254,8 +264,9 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	}
 
 	// @implemented
-	setAIActive(active: boolean): void {
+	setAIActive(active: boolean, options: Record<string, any>): void {
 		this.aiActive = active;
+		this.ai.activate(options);
 	}
 
 	/*---------- TWEENABLE PROPERTIES ----------*/
@@ -306,8 +317,13 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 
 	/** Called if the position vector is modified or replaced */
 	protected positionChanged(): void {
-		if(this.hasPhysics){
-			this.collisionShape.center = this.position.clone().add(this.colliderOffset);
+		if(this.collisionShape){
+			if(this.colliderOffset){
+				this.collisionShape.center = this.position.clone().add(this.colliderOffset);
+			} else {
+				this.collisionShape.center = this.position.clone();
+			}
+			
 		}
 	};
 
@@ -336,15 +352,20 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		}
 
 		// If this has a collider, draw it
-		if(this.hasPhysics && this.collisionShape){
+		if(this.collisionShape){
 			let color = this.isColliding ? Color.RED : Color.GREEN;
 
 			if(this.isTrigger){
-				color = Color.PURPLE;
+				color = Color.MAGENTA;
 			}
 			
 			color.a = 0.2;
-			Debug.drawBox(this.inRelativeCoordinates(this.collisionShape.center), this.collisionShape.halfSize.scaled(this.scene.getViewScale()), true, color);
+
+			if(this.collisionShape instanceof AABB){
+				Debug.drawBox(this.inRelativeCoordinates(this.collisionShape.center), this.collisionShape.halfSize.scaled(this.scene.getViewScale()), true, color);
+			} else if(this.collisionShape instanceof Circle){
+				Debug.drawCircle(this.inRelativeCoordinates(this.collisionShape.center), this.collisionShape.hw*this.scene.getViewScale(), true, color);
+			}
 		}
 	}
 }

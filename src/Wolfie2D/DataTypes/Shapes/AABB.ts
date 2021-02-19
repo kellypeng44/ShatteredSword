@@ -23,6 +23,26 @@ export default class AABB extends Shape {
         this.halfSize = halfSize ? halfSize : new Vec2(0, 0);
     }
 
+    /** Returns a point representing the top left corner of the AABB */
+    get topLeft(): Vec2 {
+        return new Vec2(this.left, this.top)
+    }
+
+    /** Returns a point representing the top right corner of the AABB */
+    get topRight(): Vec2 {
+        return new Vec2(this.right, this.top)
+    }
+
+    /** Returns a point representing the bottom left corner of the AABB */
+    get bottomLeft(): Vec2 {
+        return new Vec2(this.left, this.bottom)
+    }
+
+    /** Returns a point representing the bottom right corner of the AABB */
+    get bottomRight(): Vec2 {
+        return new Vec2(this.right, this.bottom)
+    }
+
     // @override
     getBoundingRect(): AABB {
         return this.clone();

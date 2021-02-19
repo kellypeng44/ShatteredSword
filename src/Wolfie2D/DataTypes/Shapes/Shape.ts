@@ -71,6 +71,13 @@ export default abstract class Shape {
      */
     abstract overlaps(other: Shape): boolean;
 
+     /**
+     * A simple boolean check of whether this Shape contains a point
+     * @param point The point to check
+     * @returns A boolean representing whether this Shape contains the specified point
+     */
+    abstract containsPoint(point: Vec2): boolean;
+
     static getTimeOfCollision(A: Shape, velA: Vec2, B: Shape, velB: Vec2): [Vec2, Vec2, boolean, boolean] {
 		if(A instanceof AABB && B instanceof AABB){
 			return Shape.getTimeOfCollision_AABB_AABB(A, velA, B, velB);

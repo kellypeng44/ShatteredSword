@@ -45,11 +45,11 @@ export default class UIElementRenderer {
 
 		// Stroke and fill a rounded rect and give it text
 		this.ctx.globalAlpha = label.backgroundColor.a;
-		this.ctx.fillStyle = label.calculateBackgroundColor();
+		this.ctx.fillStyle = label.calculateBackgroundColor().toStringRGBA();
 		this.ctx.fillRoundedRect(-label.size.x/2, -label.size.y/2,
 			label.size.x, label.size.y, label.borderRadius);
 		
-		this.ctx.strokeStyle = label.calculateBorderColor();
+		this.ctx.strokeStyle = label.calculateBorderColor().toStringRGBA();
 		this.ctx.globalAlpha = label.borderColor.a;
 		this.ctx.lineWidth = label.borderWidth;
 		this.ctx.strokeRoundedRect(-label.size.x/2, -label.size.y/2,

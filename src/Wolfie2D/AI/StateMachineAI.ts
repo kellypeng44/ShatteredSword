@@ -12,4 +12,6 @@ export default class StateMachineAI extends StateMachine implements AI {
 
 	// @implemented
 	initializeAI(owner: GameNode, config: Record<string, any>): void {}
+
+	activate(options: Record<string, any>): void {}
 }

@@ -19,6 +19,7 @@ import Slider from "../Nodes/UIElements/Slider";
 import TextInput from "../Nodes/UIElements/TextInput";
 import AnimatedSprite from "../Nodes/Sprites/AnimatedSprite";
 import Vec2 from "../DataTypes/Vec2";
+import Color from "../Utils/Color";
 
 /**
  * An implementation of the RenderingManager class using CanvasRenderingContext2D.
@@ -31,6 +32,8 @@ export default class CanvasRenderer extends RenderingManager {
 
     protected origin: Vec2;
     protected zoom: number;
+
+    protected worldSize: Vec2;
 
     constructor(){
         super();
@@ -48,6 +51,8 @@ export default class CanvasRenderer extends RenderingManager {
     initializeCanvas(canvas: HTMLCanvasElement, width: number, height: number): CanvasRenderingContext2D {
         canvas.width = width;
         canvas.height = height;
+
+        this.worldSize = new Vec2(width, height);
 
         this.ctx = canvas.getContext("2d");
 
@@ -107,7 +112,10 @@ export default class CanvasRenderer extends RenderingManager {
         }
 
         // Render the uiLayers on top of everything else
-        uiLayers.forEach(key => uiLayers.get(key).getItems().forEach(node => this.renderNode(<CanvasNode>node)));
+        uiLayers.forEach(key => {
+			if(!uiLayers.get(key).isHidden())
+				uiLayers.get(key).getItems().forEach(node => this.renderNode(<CanvasNode>node))
+		});
     }
 
     /**
@@ -220,5 +228,11 @@ export default class CanvasRenderer extends RenderingManager {
         } else if(uiElement instanceof TextInput){
             this.uiElementRenderer.renderTextInput(uiElement);
         }
+    }
+
+    clear(clearColor: Color): void {
+        this.ctx.clearRect(0, 0, this.worldSize.x, this.worldSize.y);
+        this.ctx.fillStyle = clearColor.toString();
+        this.ctx.fillRect(0, 0, this.worldSize.x, this.worldSize.y);
     }
 }

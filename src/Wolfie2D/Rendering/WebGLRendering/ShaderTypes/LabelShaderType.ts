@@ -1,31 +1,33 @@
 import Mat4x4 from "../../../DataTypes/Mat4x4";
 import Vec2 from "../../../DataTypes/Vec2";
 import Debug from "../../../Debug/Debug";
-import AnimatedSprite from "../../../Nodes/Sprites/AnimatedSprite";
-import Sprite from "../../../Nodes/Sprites/Sprite";
+import Rect from "../../../Nodes/Graphics/Rect";
+import Label from "../../../Nodes/UIElements/Label";
 import ResourceManager from "../../../ResourceManager/ResourceManager";
 import QuadShaderType from "./QuadShaderType";
 
-/** A shader for sprites and animated sprites */
-export default class SpriteShaderType extends QuadShaderType {
+export default class LabelShaderType extends QuadShaderType {
+
 	constructor(programKey: string){
 		super(programKey);
 		this.resourceManager = ResourceManager.getInstance();
 	}
 
 	initBufferObject(): void {
-		this.bufferObjectKey = "sprite";
+		this.bufferObjectKey = "label";
 		this.resourceManager.createBuffer(this.bufferObjectKey);
 	}
 
 	render(gl: WebGLRenderingContext, options: Record<string, any>): void {
+		const backgroundColor = options.backgroundColor.toWebGL();
+		const borderColor = options.borderColor.toWebGL();
+
 		const program = this.resourceManager.getShaderProgram(this.programKey);
 		const buffer = this.resourceManager.getBuffer(this.bufferObjectKey);
-		const texture = this.resourceManager.getTexture(options.imageKey);
 
 		gl.useProgram(program);
 
-		const vertexData = this.getVertices(options.size.x, options.size.y, options.scale);
+		const vertexData = this.getVertices(options.size.x, options.size.y);
 
 		const FSIZE = vertexData.BYTES_PER_ELEMENT;
 
@@ -35,17 +37,28 @@ export default class SpriteShaderType extends QuadShaderType {
 
 		// Attributes
 		const a_Position = gl.getAttribLocation(program, "a_Position");
-		gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 4 * FSIZE, 0 * FSIZE);
+		gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 2 * FSIZE, 0 * FSIZE);
 		gl.enableVertexAttribArray(a_Position);
 
-		const a_TexCoord = gl.getAttribLocation(program, "a_TexCoord");
-		gl.vertexAttribPointer(a_TexCoord, 2, gl.FLOAT, false, 4 * FSIZE, 2*FSIZE);
-		gl.enableVertexAttribArray(a_TexCoord);
-
 		// Uniforms
+		const u_BackgroundColor = gl.getUniformLocation(program, "u_BackgroundColor");
+		gl.uniform4fv(u_BackgroundColor, backgroundColor);
+
+        const u_BorderColor = gl.getUniformLocation(program, "u_BorderColor");
+		gl.uniform4fv(u_BorderColor, borderColor);
+
+        const u_MaxSize = gl.getUniformLocation(program, "u_MaxSize");
+        gl.uniform2f(u_MaxSize, -vertexData[0], vertexData[1]);
+
 		// Get transformation matrix
 		// We want a square for our rendering space, so get the maximum dimension of our quad
 		let maxDimension = Math.max(options.size.x, options.size.y);
+
+        const u_BorderWidth = gl.getUniformLocation(program, "u_BorderWidth");
+		gl.uniform1f(u_BorderWidth, options.borderWidth/maxDimension);
+
+        const u_BorderRadius = gl.getUniformLocation(program, "u_BorderRadius");
+		gl.uniform1f(u_BorderRadius, options.borderRadius/maxDimension);
 
 		// The size of the rendering space will be a square with this maximum dimension
 		let size = new Vec2(maxDimension, maxDimension).scale(2/options.worldSize.x, 2/options.worldSize.y);
@@ -64,18 +77,6 @@ export default class SpriteShaderType extends QuadShaderType {
 		const u_Transform = gl.getUniformLocation(program, "u_Transform");
 		gl.uniformMatrix4fv(u_Transform, false, transformation.toArray());
 
-		// Set up our sampler with our assigned texture unit
-		const u_Sampler = gl.getUniformLocation(program, "u_Sampler");
-		gl.uniform1i(u_Sampler, texture);
-
-		// Pass in texShift
-		const u_texShift = gl.getUniformLocation(program, "u_texShift");
-		gl.uniform2fv(u_texShift, options.texShift);
-
-		// Pass in texScale
-		const u_texScale = gl.getUniformLocation(program, "u_texScale");
-		gl.uniform2fv(u_texScale, options.texScale);
-
 		// Draw the quad
 		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 	}
@@ -86,7 +87,7 @@ export default class SpriteShaderType extends QuadShaderType {
 	 * @param h The height of the quad in pixels
 	 * @returns An array of the vertices of the quad
 	 */
-	getVertices(w: number, h: number, scale: Float32Array): Float32Array {
+	getVertices(w: number, h: number): Float32Array {
 		let x, y;
 
 		if(h > w){
@@ -97,40 +98,23 @@ export default class SpriteShaderType extends QuadShaderType {
 			y = h/(2*w);
 		}
 
-		// Scale the rendering space if needed
-		x *= scale[0];
-		y *= scale[1];
-
 		return new Float32Array([
-			-x,  y, 0.0, 0.0,
-			-x, -y, 0.0, 1.0,
-			 x,  y, 1.0, 0.0,
-			 x, -y, 1.0, 1.0
+			-x,  y,
+			-x, -y,
+			 x,  y,
+			 x, -y
 		]);
 	}
 
-	getOptions(sprite: Sprite): Record<string, any> {
-		let texShift;
-		let texScale;
-
-		if(sprite instanceof AnimatedSprite){
-			let animationIndex = sprite.animation.getIndexAndAdvanceAnimation();
-			let offset = sprite.getAnimationOffset(animationIndex);
-			texShift = new Float32Array([offset.x / (sprite.cols * sprite.size.x), offset.y / (sprite.rows * sprite.size.y)]);
-			texScale = new Float32Array([1/(sprite.cols), 1/(sprite.rows)]);
-		} else {
-			texShift = new Float32Array([0, 0]);
-			texScale = new Float32Array([1, 1]);
-		}
-
+	getOptions(rect: Label): Record<string, any> {
 		let options: Record<string, any> = {
-			position: sprite.position,
-			rotation: sprite.rotation,
-			size: sprite.size,
-			scale: sprite.scale.toArray(),
-			imageKey: sprite.imageId,
-			texShift,
-			texScale
+			position: rect.position,
+			backgroundColor: rect.calculateBackgroundColor(),
+            borderColor: rect.calculateBorderColor(),
+            borderWidth: rect.borderWidth,
+            borderRadius: rect.borderRadius,
+			size: rect.size,
+			rotation: rect.rotation
 		}
 
 		return options;

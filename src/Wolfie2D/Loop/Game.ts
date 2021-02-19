@@ -18,6 +18,7 @@ import EnvironmentInitializer from "./EnvironmentInitializer";
 import Vec2 from "../DataTypes/Vec2";
 import Registry from "../Registry/Registry";
 import WebGLRenderer from "../Rendering/WebGLRenderer";
+import Scene from "../Scene/Scene";
 
 /**
  * The main loop of the game engine.
@@ -130,7 +131,7 @@ export default class Game {
     /**
      * Starts the game
      */
-    start(): void {
+    start(InitialScene: new (...args: any) => Scene, options: Record<string, any>): void {
         // Set the update function of the loop
         this.loop.doUpdate = (deltaT: number) => this.update(deltaT);
 
@@ -142,7 +143,9 @@ export default class Game {
 
         // Load the items with the resource manager
         this.resourceManager.loadResourcesFromQueue(() => {
-            // When we're dont loading, start the loop
+            // When we're done loading, start the loop
+            console.log("Finished Preload - loading first scene");
+            this.sceneManager.addScene(InitialScene, options);
             this.loop.start();
         });
     }
@@ -178,14 +181,7 @@ export default class Game {
         // Clear the canvases
         Debug.clearCanvas();
 
-        if(this.gameOptions.useWebGL){
-            (<WebGLRenderingContext>this.ctx).clearColor(this.clearColor.r, this.clearColor.g, this.clearColor.b, this.clearColor.a);
-            (<WebGLRenderingContext>this.ctx).clear((<WebGLRenderingContext>this.ctx).COLOR_BUFFER_BIT | (<WebGLRenderingContext>this.ctx).DEPTH_BUFFER_BIT);
-        } else {
-            (<CanvasRenderingContext2D>this.ctx).clearRect(0, 0, this.WIDTH, this.HEIGHT);
-            (<CanvasRenderingContext2D>this.ctx).fillStyle = this.clearColor.toString();
-            (<CanvasRenderingContext2D>this.ctx).fillRect(0, 0, this.WIDTH, this.HEIGHT);
-        }
+        this.renderingManager.clear(this.clearColor);
 
         this.sceneManager.render();
 

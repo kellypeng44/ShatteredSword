@@ -30,6 +30,7 @@ export default interface Actor {
     /**
      * Sets the AI to start/stop for this Actor.
      * @param active The new active status of the AI.
+     * @param options An object that allows options to be pased to the activated AI
      */
-    setAIActive(active: boolean): void;
+    setAIActive(active: boolean, options: Record<string, any>): void;
 }

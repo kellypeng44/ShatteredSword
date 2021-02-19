@@ -7,7 +7,7 @@ import Shape from "./Shape";
  */
 export default class Circle extends Shape {
 	private _center: Vec2;
-	private radius: number;
+	radius: number;
 	
 	/**
 	 * Creates a new Circle
@@ -32,6 +32,24 @@ export default class Circle extends Shape {
 		return new Vec2(this.radius, this.radius);
 	}
 
+	get r(): number {
+		return this.radius;
+	}
+
+	set r(radius: number) {
+		this.radius = radius;
+	}
+
+	// @override
+	/**
+     * A simple boolean check of whether this AABB contains a point
+     * @param point The point to check
+     * @returns A boolean representing whether this AABB contains the specified point
+     */
+    containsPoint(point: Vec2): boolean {
+        return this.center.distanceSqTo(point) <= this.radius*this.radius;
+    }
+
 	// @override
 	getBoundingRect(): AABB {
 		return new AABB(this._center.clone(), new Vec2(this.radius, this.radius));
@@ -50,5 +68,9 @@ export default class Circle extends Shape {
 	// @override
 	clone(): Circle {
 		return new Circle(this._center.clone(), this.radius);
+	}
+
+	toString(): string {
+		return "(center: " + this.center.toString() + ", radius: " + this.radius + ")";
 	}
 }

@@ -14,14 +14,14 @@ export default class Button extends Label {
 	}
 
 	// @override
-	calculateBackgroundColor(): string {
+	calculateBackgroundColor(): Color {
 		// Change the background color if clicked or hovered
 		if(this.isEntered && !this.isClicked){
-			return this.backgroundColor.lighten().toStringRGBA();
+			return this.backgroundColor.lighten();
 		} else if(this.isClicked){
-			return this.backgroundColor.darken().toStringRGBA();
+			return this.backgroundColor.darken();
 		} else {
-			return this.backgroundColor.toStringRGBA();
+			return this.backgroundColor;
 		}
 	}
 }

@@ -79,6 +79,36 @@ export default class Debug {
 	}
 
 	/**
+	 * Draws a circle at the specified position
+	 * @param center The center of the circle
+	 * @param radius The dimensions of the box
+	 * @param filled A boolean for whether or not the circle is filled
+	 * @param color The color of the circle
+	 */
+	static drawCircle(center: Vec2, radius: number, filled: boolean, color: Color): void {
+		let alpha = this.debugRenderingContext.globalAlpha;
+		this.debugRenderingContext.globalAlpha = color.a;
+
+		if(filled){
+			this.debugRenderingContext.fillStyle = color.toString();
+			this.debugRenderingContext.beginPath();
+			this.debugRenderingContext.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+			this.debugRenderingContext.closePath();
+			this.debugRenderingContext.fill();
+		} else {
+			let lineWidth = 2;
+			this.debugRenderingContext.lineWidth = lineWidth;
+			this.debugRenderingContext.strokeStyle = color.toString();
+			this.debugRenderingContext.beginPath();
+			this.debugRenderingContext.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+			this.debugRenderingContext.closePath();
+			this.debugRenderingContext.stroke();
+		}
+
+		this.debugRenderingContext.globalAlpha = alpha;
+	}
+
+	/**
 	 * Draws a ray at the specified position
 	 * @param from The starting position of the ray
 	 * @param to The ending position of the ray

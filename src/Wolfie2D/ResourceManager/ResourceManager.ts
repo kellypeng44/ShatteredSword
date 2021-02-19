@@ -5,7 +5,6 @@ import StringUtils from "../Utils/StringUtils";
 import AudioManager from "../Sound/AudioManager";
 import Spritesheet from "../DataTypes/Spritesheet";
 import WebGLProgramType from "../DataTypes/Rendering/WebGLProgramType";
-import PhysicsManager from "../Physics/PhysicsManager";
 
 /**
  * The resource manager for the game engine.
@@ -80,7 +79,8 @@ export default class ResourceManager {
     private gl_DefaultShaderPrograms: Map<WebGLProgramType>;
     private gl_ShaderPrograms: Map<WebGLProgramType>;
 
-    private gl_Textures: Map<WebGLTexture>;
+    private gl_Textures: Map<number>;
+    private gl_NextTextureID: number;
     private gl_Buffers: Map<WebGLBuffer>; 
 
     private gl: WebGLRenderingContext;
@@ -117,6 +117,7 @@ export default class ResourceManager {
         this.gl_ShaderPrograms = new Map();
 
         this.gl_Textures = new Map();
+        this.gl_NextTextureID = 0;
         this.gl_Buffers = new Map();
     };
 
@@ -226,7 +227,7 @@ export default class ResourceManager {
      * @param callback The function to cal when the resources are finished loading
      */
     loadResourcesFromQueue(callback: Function): void {
-        this.loadonly_typesToLoad = 3;
+        this.loadonly_typesToLoad = 5;
 
         this.loading = true;
 
@@ -443,7 +444,9 @@ export default class ResourceManager {
             this.images.add(key, image);
 
             // If WebGL is active, create a texture
-            this.createWebGLTexture(key);
+            if(this.gl_WebGLActive){
+                this.createWebGLTexture(key, image);
+            }
 
             // Finish image load
             this.finishLoadingImage(callbackIfLast);
@@ -526,7 +529,7 @@ export default class ResourceManager {
 
     /* ########## WEBGL SPECIFIC FUNCTIONS ########## */
 
-    public getTexture(key: string): WebGLTexture {
+    public getTexture(key: string): number {
         return this.gl_Textures.get(key);
     }
 
@@ -538,10 +541,49 @@ export default class ResourceManager {
         return this.gl_Buffers.get(key);
     }
 
-    private createWebGLTexture(key:string): void {
-        if(this.gl_WebGLActive){
-            const texture = this.gl.createTexture();
-            this.gl_Textures.add(key, texture);
+    private createWebGLTexture(imageKey: string, image: HTMLImageElement): void {
+        // Get the texture ID
+        const textureID = this.getTextureID(this.gl_NextTextureID);
+
+        // Create the texture
+        const texture = this.gl.createTexture();
+
+        // Set up the texture
+        // Enable texture0
+        this.gl.activeTexture(textureID);
+
+        // Bind our texture to texture 0
+        this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+
+        // Set the texture parameters
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+
+        // Set the texture image
+        this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
+
+        // Add the texture to our map with the same key as the image
+        this.gl_Textures.add(imageKey, this.gl_NextTextureID);
+
+        // Increment the key
+        this.gl_NextTextureID += 1;
+    }
+
+    private getTextureID(id: number): number {
+        // Start with 9 cases - this can be expanded if needed, but for the best performance,
+        // Textures should be stitched into an atlas
+        switch(id){
+            case 0: return this.gl.TEXTURE0;
+            case 1: return this.gl.TEXTURE1;
+            case 2: return this.gl.TEXTURE2;
+            case 3: return this.gl.TEXTURE3;
+            case 4: return this.gl.TEXTURE4;
+            case 5: return this.gl.TEXTURE5;
+            case 6: return this.gl.TEXTURE6;
+            case 7: return this.gl.TEXTURE7;
+            case 8: return this.gl.TEXTURE8;
+            default: return this.gl.TEXTURE9;
         }
     }
 

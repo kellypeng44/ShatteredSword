@@ -68,6 +68,10 @@ export default class Label extends UIElement{
 		return ctx.measureText(this.text).width;
 	}
 
+	setHAlign(align: string): void {
+		this.hAlign = align;
+	}
+
 	/**
 	 * Calculate the offset of the text - this is used for rendering text with different alignments
 	 * @param ctx The rendering context

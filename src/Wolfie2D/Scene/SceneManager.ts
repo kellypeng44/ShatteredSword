@@ -1,7 +1,6 @@
 import Scene from "./Scene";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import Viewport from "../SceneGraph/Viewport";
-import Game from "../Loop/Game";
 import RenderingManager from "../Rendering/RenderingManager";
 
 /**
@@ -41,10 +40,13 @@ export default class SceneManager {
 	 * Add a scene as the main scene.
 	 * Use this method if you've created a subclass of Scene, and you want to add it as the main Scene.
 	 * @param constr The constructor of the scene to add
+	 * @param init An object to pass to the init function of the new scene
 	 */
-	public addScene<T extends Scene>(constr: new (...args: any) => T, options: Record<string, any>): void {
+	public addScene<T extends Scene>(constr: new (...args: any) => T, init?: Record<string, any>, options?: Record<string, any>): void {
 		let scene = new constr(this.viewport, this, this.renderingManager, options);
 		this.currentScene = scene;
+
+		scene.initScene(init);
 
 		// Enqueue all scene asset loads
 		scene.loadScene();
@@ -64,16 +66,12 @@ export default class SceneManager {
 	 * Change from the current scene to this new scene.
 	 * Use this method if you've created a subclass of Scene, and you want to add it as the main Scene.
 	 * @param constr The constructor of the scene to change to
+	 * @param init An object to pass to the init function of the new scene
 	 */
-	public changeScene<T extends Scene>(constr: new (...args: any) => T, options: Record<string, any>): void {
-		// unload current scene
-		this.currentScene.unloadScene();
+	public changeScene<T extends Scene>(constr: new (...args: any) => T, init?: Record<string, any>, options?: Record<string, any>): void {
+		this.viewport.setCenter(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y);
 
-		this.resourceManager.unloadAllResources();
-
-		this.viewport.setCenter(0, 0);
-
-		this.addScene(constr, options);
+		this.addScene(constr, init, options);
 	}
 
 	/**
@@ -88,9 +86,7 @@ export default class SceneManager {
 	 * Renders the current Scene
 	 */
 	public render(): void {
-		if(this.currentScene.isRunning()){
-			this.currentScene.render();
-		}
+		this.currentScene.render();
 	}
 
 	/**

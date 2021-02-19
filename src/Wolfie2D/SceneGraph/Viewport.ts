@@ -49,13 +49,9 @@ export default class Viewport {
         // Set the size of the canvas
         this.setCanvasSize(canvasSize);
 
-        console.log(canvasSize, zoomLevel);
-
         // Set the size of the viewport
         this.setSize(canvasSize);
         this.setZoomLevel(zoomLevel);
-
-        console.log(this.getHalfSize().toString());
 
         // Set the center (and make the viewport stay there)
         this.setCenter(this.view.halfSize.clone());

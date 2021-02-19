@@ -270,6 +270,17 @@ export default class Vec2 {
 	}
 
 	/**
+	 * Does an element wise remainder operation on this vector. this.x %= other.x and this.y %= other.y
+	 * @param other The other vector
+	 * @returns this vector
+	 */
+	remainder(other: Vec2): Vec2 {
+		this.x = this.x % other.x;
+		this.y = this.y % other.y;
+		return this;
+	}
+
+	/**
 	 * Returns the squared distance between this vector and another vector
 	 * @param other The vector to compute distance squared to
 	 * @returns The squared distance between this vector and the one provided
