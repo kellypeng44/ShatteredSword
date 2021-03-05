@@ -16,7 +16,7 @@ import GameLoop from "./GameLoop";
 import FixedUpdateGameLoop from "./FixedUpdateGameLoop";
 import EnvironmentInitializer from "./EnvironmentInitializer";
 import Vec2 from "../DataTypes/Vec2";
-import Registry from "../Registry/Registry";
+import RegistryManager from "../Registry/RegistryManager";
 import WebGLRenderer from "../Rendering/WebGLRenderer";
 import Scene from "../Scene/Scene";
 
@@ -139,7 +139,7 @@ export default class Game {
         this.loop.doRender = () => this.render();
 
         // Preload registry items
-        Registry.preload();
+        RegistryManager.preload();
 
         // Load the items with the resource manager
         this.resourceManager.loadResourcesFromQueue(() => {
@@ -184,6 +184,11 @@ export default class Game {
         this.renderingManager.clear(this.clearColor);
 
         this.sceneManager.render();
+
+        // Hacky debug mode
+        if(Input.isKeyJustPressed("g")){
+            this.showDebug = !this.showDebug;
+        }
 
         // Debug render
         if(this.showDebug){

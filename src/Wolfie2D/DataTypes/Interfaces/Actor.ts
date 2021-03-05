@@ -33,4 +33,11 @@ export default interface Actor {
      * @param options An object that allows options to be pased to the activated AI
      */
     setAIActive(active: boolean, options: Record<string, any>): void;
+
+    /**
+     * Moves this GameNode along a path
+     * @param speed The speed to move with
+     * @param path The path we're moving along
+     */
+    moveOnPath(speed: number, path: NavigationPath): void;
 }

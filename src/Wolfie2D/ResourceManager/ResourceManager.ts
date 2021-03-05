@@ -69,6 +69,11 @@ export default class ResourceManager {
     /** The total number of "types" of things that need to be loaded (i.e. images and tilemaps) */
     private loadonly_typesToLoad: number;
 
+    private loadonly_jsonLoaded: number;
+    private loadonly_jsonToLoad: number;
+    private loadonly_jsonLoadingQueue: Queue<KeyPathPair>;
+    private jsonObjects: Map<Record<string, any>>;
+
     /* ########## INFORMATION SPECIAL TO WEBGL ########## */
     private gl_WebGLActive: boolean;
 
@@ -108,6 +113,11 @@ export default class ResourceManager {
         this.loadonly_audioToLoad = 0;
         this.loadonly_audioLoadingQueue = new Queue();
         this.audioBuffers = new Map();
+
+        this.loadonly_jsonLoaded = 0;
+        this.loadonly_jsonToLoad = 0;
+        this.loadonly_jsonLoadingQueue = new Queue();
+        this.jsonObjects = new Map();
 
         this.loadonly_gl_ShaderProgramsLoaded = 0;
         this.loadonly_gl_ShaderProgramsToLoad = 0;
@@ -223,6 +233,24 @@ export default class ResourceManager {
     }
 
     /**
+     * Loads an object from a json file.
+     * @param key The key to associate with the loaded object
+     * @param path The path to the json file to load
+     */
+    public object(key: string, path: string){
+        this.loadonly_jsonLoadingQueue.enqueue({key: key, path: path});
+    }
+
+    /**
+     * Retreives a loaded object
+     * @param key The key of the loaded object
+     * @returns The object data associated with the key
+     */
+    public getObject(key: string){
+        return this.jsonObjects.get(key);
+    }
+
+    /**
      * Loads all resources currently in the queue
      * @param callback The function to cal when the resources are finished loading
      */
@@ -240,15 +268,18 @@ export default class ResourceManager {
                     console.log("Loaded Images");
                     this.loadAudioFromQueue(() => {
                         console.log("Loaded Audio");
-
-                        if(this.gl_WebGLActive){
-                            this.gl_LoadShadersFromQueue(() => {
-                                console.log("Loaded Shaders");
+                        this.loadObjectsFromQueue(() => {
+                            console.log("Loaded Objects");
+                            
+                            if(this.gl_WebGLActive){
+                                this.gl_LoadShadersFromQueue(() => {
+                                    console.log("Loaded Shaders");
+                                    this.finishLoading(callback);
+                                });
+                            } else {
                                 this.finishLoading(callback);
-                            });
-                        } else {
-                            this.finishLoading(callback);
-                        }
+                            }
+                        })
                     });
                 });
             });
@@ -303,6 +334,7 @@ export default class ResourceManager {
         // If no items to load, we're finished
         if(this.loadonly_tilemapsToLoad === 0){
             onFinishLoading();
+            return;
         }
 
         while(this.loadonly_tilemapLoadingQueue.hasItems()){
@@ -368,6 +400,7 @@ export default class ResourceManager {
         // If no items to load, we're finished
         if(this.loadonly_spritesheetsToLoad === 0){
             onFinishLoading();
+            return;
         }
 
         while(this.loadonly_spritesheetLoadingQueue.hasItems()){
@@ -422,6 +455,7 @@ export default class ResourceManager {
         // If no items to load, we're finished
         if(this.loadonly_imagesToLoad === 0){
             onFinishLoading();
+            return;
         }
 
         while(this.loadonly_imageLoadingQueue.hasItems()){
@@ -479,6 +513,7 @@ export default class ResourceManager {
         // If no items to load, we're finished
         if(this.loadonly_audioToLoad === 0){
             onFinishLoading();
+            return;
         }
 
         while(this.loadonly_audioLoadingQueue.hasItems()){
@@ -523,6 +558,53 @@ export default class ResourceManager {
 
         if(this.loadonly_audioLoaded === this.loadonly_audioToLoad){
             // We're done loading audio
+            callback();
+        }
+    }
+
+    /**
+     * Loads all objects currently in the object loading queue
+     * @param onFinishLoading The function to call when there are no more objects to load
+     */
+    private loadObjectsFromQueue(onFinishLoading: Function): void {
+        this.loadonly_jsonToLoad = this.loadonly_jsonLoadingQueue.getSize();
+        this.loadonly_jsonLoaded = 0;
+
+        // If no items to load, we're finished
+        if(this.loadonly_jsonToLoad === 0){
+            onFinishLoading();
+            return;
+        }
+
+        while(this.loadonly_jsonLoadingQueue.hasItems()){
+            let obj = this.loadonly_jsonLoadingQueue.dequeue();
+            this.loadObject(obj.key, obj.path, onFinishLoading);
+        }
+    }
+
+    /**
+     * Loads a singular object
+     * @param key The key of the object to load
+     * @param path The path to the object to load
+     * @param callbackIfLast The function to call if this is the last object
+     */
+    public loadObject(key: string, path: string, callbackIfLast: Function): void {
+        this.loadTextFile(path, (fileText: string) => {
+            let obj = JSON.parse(fileText);
+            this.jsonObjects.add(key, obj);
+            this.finishLoadingObject(callbackIfLast);
+        });
+    }
+
+    /**
+     * Finish loading an object. If this is the last object, it calls the callback function
+     * @param callback The function to call if this is the last object
+     */
+    private finishLoadingObject(callback: Function): void {
+        this.loadonly_jsonLoaded += 1;
+
+        if(this.loadonly_jsonLoaded === this.loadonly_jsonToLoad){
+            // We're done loading objects
             callback();
         }
     }
@@ -631,6 +713,7 @@ export default class ResourceManager {
         // If webGL isn'active or there are no items to load, we're finished
         if(!this.gl_WebGLActive || this.loadonly_gl_ShaderProgramsToLoad === 0){
             onFinishLoading();
+            return;
         }
 
         while(this.loadonly_gl_ShaderLoadingQueue.hasItems()){

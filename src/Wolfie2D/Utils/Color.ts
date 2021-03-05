@@ -185,4 +185,13 @@ export default class Color {
 			this.a
 		]);
 	}
+
+	static fromStringHex(str: string): Color {
+		let i = 0;
+		if(str.charAt(0) == "#") i+= 1;
+		let r = MathUtils.fromHex(str.substring(i, i+2));
+		let g = MathUtils.fromHex(str.substring(i+2, i+4));
+		let b = MathUtils.fromHex(str.substring(i+4, i+6));
+		return new Color(r, g, b);
+	}
 }

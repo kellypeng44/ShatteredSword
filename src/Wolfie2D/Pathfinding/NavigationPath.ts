@@ -19,9 +19,8 @@ export default class NavigationPath {
 	 */
 	constructor(path: Stack<Vec2>){
 		this.path = path;
-		console.log(path.toString())
 		this.currentMoveDirection = Vec2.ZERO;
-		this.distanceThreshold = 20;
+		this.distanceThreshold = 4;
 	}
 
 	/**
@@ -51,5 +50,9 @@ export default class NavigationPath {
 			// We've reached our node, move on to the next destination
 			this.path.pop();
 		}
+	}
+
+	toString(): string {
+		return this.path.toString()
 	}
 }

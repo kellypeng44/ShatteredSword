@@ -50,6 +50,8 @@ export default class Graph {
 	addEdge(x: number, y: number, weight?: number): void {
 		let edge = new EdgeNode(y, weight);
 
+
+
 		if(this.edges[x]){
 			edge.next = this.edges[x];
 		}
@@ -67,6 +69,24 @@ export default class Graph {
 		}
 
 		this.numEdges += 1;
+	}
+
+	/**
+	 * Checks whether or not an edge exists between two nodes.
+	 * This check is directional if this is a directed graph.
+	 * @param x The first node
+	 * @param y The second node
+	 * @returns true if an edge exists, false otherwise
+	 */
+	edgeExists(x: number, y: number): boolean {
+		let edge = this.edges[x];
+
+		while(edge !== null){
+			if(edge.y === y){
+				return true;
+			}
+			edge = edge.next;
+		}
 	}
 
 	/**

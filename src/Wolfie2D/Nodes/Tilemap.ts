@@ -31,7 +31,7 @@ export default abstract class Tilemap extends CanvasNode {
 
         let tilecount = 0;
         for(let tileset of tilesets){
-            tilecount += tileset.getTileCount();
+            tilecount += tileset.getTileCount() + 1;
         }
 
         this.collisionMap = new Array(tilecount);

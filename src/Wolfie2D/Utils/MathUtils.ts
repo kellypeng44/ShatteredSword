@@ -49,6 +49,25 @@ export default class MathUtils {
         return MathUtils.clamp(x, 0, 1);
     }
 
+    /**
+     * Clamps the lower end of the value of x to the range to min
+     * @param x The value to be clamped
+     * @param min The minimum allowed value of x
+     * @returns x, if it is greater than min, otherwise min
+     */
+    static clampLow(x: number, min: number): number {
+        return x < min ? min : x;
+    }
+
+    /**
+     * Clamps the lower end of the value of x to zero
+     * @param x The value to be clamped
+     * @returns x, if it is greater than 0, otherwise 0
+     */
+    static clampLow0(x: number): number {
+        return MathUtils.clampLow(x, 0);
+    }
+
     static clampMagnitude(v: Vec2, m: number): Vec2 {
         if(v.magSq() > m*m){
             return v.scaleTo(m);
@@ -102,6 +121,15 @@ export default class MathUtils {
 
         return Math.floor(num*factor)/factor;
 
+    }
+
+    /**
+     * Returns a number from a hex string
+     * @param str the string containing the hex number
+     * @returns the number in decimal represented by the hex string
+     */
+    static fromHex(str: string): number {
+        return parseInt(str, 16);
     }
 
     /**

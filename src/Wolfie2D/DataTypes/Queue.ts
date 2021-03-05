@@ -109,4 +109,22 @@ export default class Queue<T> implements Collection {
             i = (i + 1) % this.MAX_ELEMENTS;
         }
     }
+
+    /**
+     * Converts this queue into a string format
+     * @returns A string representing this queue
+     */
+    toString(): string {
+        let retval = "";
+
+        this.forEach( (item, index) => {
+            let str = item.toString()
+            if(index !== 0){
+                str += " -> "
+            }
+            retval = str + retval;
+        });
+
+        return "Top -> " + retval;
+    }
 }

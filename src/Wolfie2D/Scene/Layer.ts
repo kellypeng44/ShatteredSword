@@ -160,6 +160,24 @@ export default class Layer {
     }
 
     /**
+     * Removes a node from this layer
+     * @param node The node to remove
+     * @returns true if the node was removed, false otherwise
+     */
+    removeNode(node: GameNode): boolean {
+        // Find and remove the node
+        for(let i = 0; i < this.items.length; i++){
+            if(this.items[i].id === node.id){
+                this.items.splice(i, 1);
+                node.setLayer(null);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Retreives all GameNodes from this layer
      * @returns an Array that contains all of the GameNodes in this layer.
      */

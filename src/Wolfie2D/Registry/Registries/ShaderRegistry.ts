@@ -5,11 +5,12 @@ import PointShaderType from "../../Rendering/WebGLRendering/ShaderTypes/PointSha
 import RectShaderType from "../../Rendering/WebGLRendering/ShaderTypes/RectShaderType";
 import SpriteShaderType from "../../Rendering/WebGLRendering/ShaderTypes/SpriteShaderType";
 import ResourceManager from "../../ResourceManager/ResourceManager";
+import Registry from "./Registry";
 
 /**
  * A registry that handles shaders
  */
-export default class ShaderRegistry extends Map<ShaderType> {
+export default class ShaderRegistry extends Registry<ShaderType> {
 
 	// Shader names
 	public static POINT_SHADER = "point";

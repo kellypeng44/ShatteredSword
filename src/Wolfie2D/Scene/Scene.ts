@@ -23,6 +23,7 @@ import GameNode from "../Nodes/GameNode";
 import SceneOptions from "./SceneOptions";
 import RenderingManager from "../Rendering/RenderingManager";
 import Debug from "../Debug/Debug";
+import TimerManager from "../Timing/TimerManager";
 
 /**
  * Scenes are the main container in the game engine.
@@ -119,6 +120,9 @@ export default class Scene implements Updateable {
         this.add = new FactoryManager(this, this.tilemaps);
 
         this.load = ResourceManager.getInstance();
+
+        // Get the timer manager and clear any existing timers
+        TimerManager.getInstance().clearTimers();
     }
 
     /** A lifecycle method that gets called immediately after a new scene is created, before anything else. */
@@ -141,6 +145,9 @@ export default class Scene implements Updateable {
 
     update(deltaT: number): void {
         this.updateScene(deltaT);
+
+        // Do time updates
+        TimerManager.getInstance().update(deltaT);
 
         // Do all AI updates
         this.aiManager.update(deltaT);

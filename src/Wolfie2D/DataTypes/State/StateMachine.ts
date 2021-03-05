@@ -67,9 +67,10 @@ export default class StateMachine implements Updateable {
      * Initializes this state machine with an initial state and sets it running
      * @param initialState The name of initial state of the state machine
      */
-    initialize(initialState: string): void {
+    initialize(initialState: string, options: Record<string, any> = {}): void {
         this.stack.push(this.stateMap.get(initialState));
         this.currentState = this.stack.peek();
+        this.currentState.onEnter(options);
         this.setActive(true);
     }
 
@@ -88,7 +89,7 @@ export default class StateMachine implements Updateable {
      */
     changeState(state: string): void {
         // Exit the current state
-        this.currentState.onExit();
+        let options = this.currentState.onExit();
 
         // Make sure the correct state is at the top of the stack
         if(state === "previous"){
@@ -109,7 +110,7 @@ export default class StateMachine implements Updateable {
         }
 
         // Enter the new state
-        this.currentState.onEnter();
+        this.currentState.onEnter(options);
     }
 
     /**
@@ -124,6 +125,12 @@ export default class StateMachine implements Updateable {
 
     // @implemented
     update(deltaT: number): void {
+        // Distribute events
+        while(this.receiver.hasNextEvent()){
+            let event = this.receiver.getNextEvent();
+            this.handleEvent(event);
+        }
+
         // Delegate the update to the current state
         this.currentState.update(deltaT);
     }

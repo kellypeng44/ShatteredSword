@@ -109,7 +109,6 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	inRelativeCoordinates(point: Vec2): Vec2 {
 		let origin = this.scene.getViewTranslation(this);
 		let zoom = this.scene.getViewScale();
-
 		return point.clone().sub(origin).scale(zoom);
 	}
 
@@ -137,6 +136,14 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this._velocity = velocity;
 	};
 
+	moveOnPath(speed: number, path: NavigationPath): void {
+		this.path = path;
+		let dir = path.getMoveDirection(this);
+		this.moving = true;
+		this.pathfinding = true;
+		this._velocity = dir.scale(speed);
+	}
+
 	// @implemented
     /**
      * @param velocity The velocity with which the object will move.
@@ -146,6 +153,8 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 		this.position.add(this._velocity);
 		if(this.pathfinding){
 			this.path.handlePathProgress(this);
+			this.path = null;
+			this.pathfinding = false;
 		}
 	}
 
@@ -266,7 +275,9 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	// @implemented
 	setAIActive(active: boolean, options: Record<string, any>): void {
 		this.aiActive = active;
-		this.ai.activate(options);
+		if(this.aiActive){
+			this.ai.activate(options);
+		}
 	}
 
 	/*---------- TWEENABLE PROPERTIES ----------*/

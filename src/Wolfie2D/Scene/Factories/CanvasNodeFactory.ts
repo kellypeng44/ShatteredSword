@@ -13,6 +13,7 @@ import Slider from "../../Nodes/UIElements/Slider";
 import TextInput from "../../Nodes/UIElements/TextInput";
 import Rect from "../../Nodes/Graphics/Rect";
 import ResourceManager from "../../ResourceManager/ResourceManager";
+import Line from "../../Nodes/Graphics/Line";
 
 // @ignorePage
 
@@ -135,10 +136,13 @@ export default class CanvasNodeFactory {
 		switch(type){
 			case GraphicType.POINT:
 				instance = this.buildPoint(options);
-			break;
+				break;
+			case GraphicType.LINE:
+				instance = this.buildLine(options);
+				break;
 			case GraphicType.RECT:
 				instance = this.buildRect(options);
-			break;
+				break;
 			default:
 				throw `GraphicType '${type}' does not exist, or is registered incorrectly.`
 		}
@@ -189,6 +193,13 @@ export default class CanvasNodeFactory {
 		this.checkIfPropExists("Point", options, "position", Vec2, "Vec2");
 
 		return new Point(options.position);
+	}
+
+	buildLine(options?: Record<string, any>): Point {
+		this.checkIfPropExists("Line", options, "start", Vec2, "Vec2");
+		this.checkIfPropExists("Line", options, "end", Vec2, "Vec2");
+
+		return new Line(options.start, options.end);
 	}
 
 	buildRect(options?: Record<string, any>): Rect {

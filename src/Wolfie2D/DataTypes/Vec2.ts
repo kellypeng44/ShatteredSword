@@ -110,6 +110,10 @@ export default class Vec2 {
 	 * @returns A new vector that is the unit vector for this one
 	 */
 	normalized(): Vec2 {
+		if(this.isZero()){
+			return this;
+		}
+		
 		let mag = this.mag();
 		return new Vec2(this.x/mag, this.y/mag);
 	}
@@ -232,6 +236,23 @@ export default class Vec2 {
 	add(other: Vec2): Vec2 {
 		this.x += other.x;
 		this.y += other.y;
+		return this;
+	}
+
+	/**
+	 * Increments the fields of this vector. Both are incremented with a, if only a is provided.
+	 * @param a The first number to increment by
+	 * @param b The second number to increment by
+	 * @returnss This vector after incrementing
+	 */
+	inc(a: number, b?: number): Vec2 {
+		if(b === undefined){
+			this.x += a;
+			this.y += a;
+		} else {
+			this.x += a;
+			this.y += b;
+		}
 		return this;
 	}
 

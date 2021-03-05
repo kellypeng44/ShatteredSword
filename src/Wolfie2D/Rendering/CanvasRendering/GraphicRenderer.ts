@@ -1,3 +1,5 @@
+import Vec2 from "../../DataTypes/Vec2";
+import Line from "../../Nodes/Graphics/Line";
 import Point from "../../Nodes/Graphics/Point";
 import Rect from "../../Nodes/Graphics/Rect";
 import ResourceManager from "../../ResourceManager/ResourceManager";
@@ -36,6 +38,16 @@ export default class GraphicRenderer {
 		this.ctx.fillStyle = point.color.toStringRGBA();
         this.ctx.fillRect((-point.size.x/2)*zoom, (-point.size.y/2)*zoom,
         point.size.x*zoom, point.size.y*zoom);
+    }
+
+    renderLine(line: Line, origin: Vec2, zoom: number): void {
+        this.ctx.strokeStyle = line.color.toStringRGBA();
+        this.ctx.lineWidth = line.thickness;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, 0);
+        this.ctx.lineTo((line.end.x - line.start.x)*zoom, (line.end.y - line.start.y)*zoom);
+        this.ctx.closePath();
+        this.ctx.stroke();
     }
 
     /**

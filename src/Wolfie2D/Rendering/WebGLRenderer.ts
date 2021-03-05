@@ -13,7 +13,7 @@ import Tilemap from "../Nodes/Tilemap";
 import UIElement from "../Nodes/UIElement";
 import Label from "../Nodes/UIElements/Label";
 import ShaderRegistry from "../Registry/Registries/ShaderRegistry";
-import Registry from "../Registry/Registry";
+import RegistryManager from "../Registry/RegistryManager";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import ParallaxLayer from "../Scene/Layers/ParallaxLayer";
 import UILayer from "../Scene/Layers/UILayer";
@@ -106,13 +106,13 @@ export default class WebGLRenderer extends RenderingManager {
 	}
 
 	protected renderSprite(sprite: Sprite): void {
-		let shader = Registry.shaders.get(ShaderRegistry.SPRITE_SHADER);
+		let shader = RegistryManager.shaders.get(ShaderRegistry.SPRITE_SHADER);
 		let options = this.addOptions(shader.getOptions(sprite), sprite);
 		shader.render(this.gl, options);
 	}
 
 	protected renderAnimatedSprite(sprite: AnimatedSprite): void {
-		let shader = Registry.shaders.get(ShaderRegistry.SPRITE_SHADER);
+		let shader = RegistryManager.shaders.get(ShaderRegistry.SPRITE_SHADER);
 		let options = this.addOptions(shader.getOptions(sprite), sprite);
 		shader.render(this.gl, options);
 	}
@@ -120,11 +120,11 @@ export default class WebGLRenderer extends RenderingManager {
 	protected renderGraphic(graphic: Graphic): void {
 
 		if(graphic instanceof Point){
-			let shader = Registry.shaders.get(ShaderRegistry.POINT_SHADER);
+			let shader = RegistryManager.shaders.get(ShaderRegistry.POINT_SHADER);
 			let options = this.addOptions(shader.getOptions(graphic), graphic);
 			shader.render(this.gl, options);
 		} else if(graphic instanceof Rect) {
-			let shader = Registry.shaders.get(ShaderRegistry.RECT_SHADER);
+			let shader = RegistryManager.shaders.get(ShaderRegistry.RECT_SHADER);
 			let options = this.addOptions(shader.getOptions(graphic), graphic);
 			shader.render(this.gl, options);
 		} 
@@ -136,7 +136,7 @@ export default class WebGLRenderer extends RenderingManager {
 
 	protected renderUIElement(uiElement: UIElement): void {
 		if(uiElement instanceof Label){
-			let shader = Registry.shaders.get(ShaderRegistry.LABEL_SHADER);
+			let shader = RegistryManager.shaders.get(ShaderRegistry.LABEL_SHADER);
 			let options = this.addOptions(shader.getOptions(uiElement), uiElement);
 			shader.render(this.gl, options);
 
@@ -158,7 +158,7 @@ export default class WebGLRenderer extends RenderingManager {
 	}
 
 	protected renderCustom(node: CanvasNode): void {
-		let shader = Registry.shaders.get(node.customShaderKey);
+		let shader = RegistryManager.shaders.get(node.customShaderKey);
 		let options = this.addOptions(shader.getOptions(node), node);
 		shader.render(this.gl, options);
 	}
