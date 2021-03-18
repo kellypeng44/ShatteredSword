@@ -24,6 +24,7 @@ import SceneOptions from "./SceneOptions";
 import RenderingManager from "../Rendering/RenderingManager";
 import Debug from "../Debug/Debug";
 import TimerManager from "../Timing/TimerManager";
+import TweenManager from "../Rendering/Animations/TweenManager";
 
 /**
  * Scenes are the main container in the game engine.
@@ -87,7 +88,7 @@ export default class Scene implements Updateable {
     public sceneOptions: SceneOptions;
 
     /**
-     * Creates a new Scene. To add a new Scene in your game, use addScene() in @reference[SceneManager]
+     * Creates a new Scene. To add a new Scene in your game, use changeToScene() in @reference[SceneManager]
      * @param viewport The viewport of the game
      * @param sceneManager The SceneManager that owns this Scene
      * @param renderingManager The RenderingManager that will handle this Scene's rendering
@@ -95,7 +96,7 @@ export default class Scene implements Updateable {
      * @param options The options for Scene initialization
      */
     constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>){
-        this.sceneOptions = SceneOptions.parse(options? options : {});
+        this.sceneOptions = SceneOptions.parse(options === undefined ? {} : options);
 
         this.worldSize = new Vec2(500, 500);
         this.viewport = viewport;
@@ -164,6 +165,9 @@ export default class Scene implements Updateable {
                 tilemap.update(deltaT);
             } 
         });
+        
+        // Update all tweens
+        TweenManager.getInstance().update(deltaT);
 
         // Update viewport
         this.viewport.update(deltaT);
@@ -208,6 +212,31 @@ export default class Scene implements Updateable {
      */
     isRunning(): boolean {
         return this.running;
+    }
+
+    /**
+     * Removes a node from this Scene
+     * @param node The node to remove
+     */
+    remove(node: GameNode): void {
+        // Remove from the scene graph
+        if(node instanceof CanvasNode){
+            this.sceneGraph.removeNode(node);
+        }
+
+    }
+
+    /** Destroys this scene and all nodes in it */
+    destroy(): void {
+        for(let node of this.sceneGraph.getAllNodes()){
+            node.destroy();
+        }
+
+        delete this.sceneGraph;
+        delete this.physicsManager;
+        delete this.navManager;
+        delete this.aiManager;
+        delete this.receiver;
     }
 
     /**

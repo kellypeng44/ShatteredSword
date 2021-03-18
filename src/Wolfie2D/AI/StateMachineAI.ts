@@ -13,5 +13,12 @@ export default class StateMachineAI extends StateMachine implements AI {
 	// @implemented
 	initializeAI(owner: GameNode, config: Record<string, any>): void {}
 
+	// @implemented
+	destroy(){
+		// Get rid of our reference to the owner
+		delete this.owner;
+	}
+
+	// @implemented
 	activate(options: Record<string, any>): void {}
 }

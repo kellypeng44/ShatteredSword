@@ -17,6 +17,10 @@ export default class Receiver {
 		this.MAX_SIZE = 100;
         this.q = new Queue(this.MAX_SIZE);
 	}
+
+	destroy(){
+		EventQueue.getInstance().unsubscribe(this);
+	}
 	
 	/**
 	 * Adds these types of events to this receiver's queue every update.
@@ -24,6 +28,7 @@ export default class Receiver {
 	 */
 	subscribe(eventTypes: string | Array<string>): void {
 		EventQueue.getInstance().subscribe(this, eventTypes);
+		this.q.clear();
 	}
 
 	/**

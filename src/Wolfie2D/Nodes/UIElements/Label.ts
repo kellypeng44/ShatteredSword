@@ -9,9 +9,9 @@ export default class Label extends UIElement{
 	/** The value of the text of this UIElement */
 	text: string;
 	/** The name of the font */
-	protected font: string;
+	font: string;
 	/** The size of the font */
-	protected fontSize: number;
+	fontSize: number;
 	/** The horizontal alignment of the text within the label */
 	protected hAlign: string;
 	/** The vertical alignment of text within the label */

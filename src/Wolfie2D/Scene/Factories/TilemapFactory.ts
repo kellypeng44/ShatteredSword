@@ -110,6 +110,14 @@ export default class TilemapFactory {
                 // Register tilemap with physics if it's collidable
                 if(tilemap.isCollidable){
                     tilemap.addPhysics();
+
+                    if(layer.properties){
+                        for(let item of layer.properties){
+                            if(item.name === "Group"){
+                                tilemap.setGroup(item.value);
+                            }
+                        }
+                    }
                 }
             } else {
 
@@ -150,6 +158,9 @@ export default class TilemapFactory {
                     let hasPhysics = false;
                     let isCollidable = false;
                     let isTrigger = false;
+                    let onEnter = null;
+                    let onExit = null;
+                    let triggerGroup = null;
                     let group = "";
 
                     if(obj.properties){
@@ -158,10 +169,16 @@ export default class TilemapFactory {
                                 hasPhysics = prop.value;
                             } else if(prop.name === "Collidable"){
                                 isCollidable = prop.value;
-                            } else if(prop.name === "IsTrigger"){
-                                isTrigger = prop.value;
                             } else if(prop.name === "Group"){
                                 group = prop.value;
+                            } else if(prop.name === "IsTrigger"){
+                                isTrigger = prop.value;
+                            } else if(prop.name === "TriggerGroup"){
+                                triggerGroup = prop.value;
+                            } else if(prop.name === "TriggerOnEnter"){
+                                onEnter = prop.value;
+                            } else if(prop.name === "TriggerOnExit"){
+                                onExit = prop.value;
                             }
                         }
                     }
@@ -199,8 +216,10 @@ export default class TilemapFactory {
                     if(hasPhysics){
                         // Make the sprite a static physics object
                         sprite.addPhysics(sprite.boundary.clone(), Vec2.ZERO, isCollidable, true);
-                        sprite.group = group;
-                        sprite.isTrigger = isTrigger;
+                        sprite.setGroup(group);
+                        if(isTrigger && triggerGroup !== null){
+                            sprite.setTrigger(triggerGroup, onEnter, onExit);
+                        }
                     }
                 }
             }

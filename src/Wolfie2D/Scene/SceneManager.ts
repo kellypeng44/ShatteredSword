@@ -23,6 +23,9 @@ export default class SceneManager {
 	/** The RenderingManager of the game */
 	protected renderingManager: RenderingManager;
 
+	/** For consistency, only change scenes at the beginning of the update cycle */
+	protected pendingScene: Scene;
+
 	/**
 	 * Creates a new SceneManager
 	 * @param viewport The Viewport of the game
@@ -42,8 +45,16 @@ export default class SceneManager {
 	 * @param constr The constructor of the scene to add
 	 * @param init An object to pass to the init function of the new scene
 	 */
-	public addScene<T extends Scene>(constr: new (...args: any) => T, init?: Record<string, any>, options?: Record<string, any>): void {
+	public changeToScene<T extends Scene>(constr: new (...args: any) => T, init?: Record<string, any>, options?: Record<string, any>): void {
+		this.viewport.setCenter(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y);
+
 		let scene = new constr(this.viewport, this, this.renderingManager, options);
+		
+		if(this.currentScene){
+			console.log("Destroying Old Scene");
+			this.currentScene.destroy();
+		}
+
 		this.currentScene = scene;
 
 		scene.initScene(init);
@@ -61,19 +72,7 @@ export default class SceneManager {
 
 		this.renderingManager.setScene(scene);
 	}
-
-	/**
-	 * Change from the current scene to this new scene.
-	 * Use this method if you've created a subclass of Scene, and you want to add it as the main Scene.
-	 * @param constr The constructor of the scene to change to
-	 * @param init An object to pass to the init function of the new scene
-	 */
-	public changeScene<T extends Scene>(constr: new (...args: any) => T, init?: Record<string, any>, options?: Record<string, any>): void {
-		this.viewport.setCenter(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y);
-
-		this.addScene(constr, init, options);
-	}
-
+	
 	/**
 	 * Generates a unique ID
 	 * @returns A new ID
