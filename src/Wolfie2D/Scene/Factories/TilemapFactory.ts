@@ -90,7 +90,6 @@ export default class TilemapFactory {
             }
 
             if(isParallaxLayer){
-                console.log("Adding parallax layer: " + layer.name)
                 sceneLayer = this.scene.addParallaxLayer(layer.name, new Vec2(1, 1), depth);
             } else {
                 sceneLayer = this.scene.addLayer(layer.name, depth);

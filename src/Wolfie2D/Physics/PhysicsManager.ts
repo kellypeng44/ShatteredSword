@@ -33,6 +33,10 @@ export default abstract class PhysicsManager implements Updateable {
 		this.groupNames = new Array();
 	}
 
+	destroy(): void {
+		this.receiver.destroy();
+	}
+
 	/**
 	 * Registers a gamenode with this physics manager
 	 * @param object The object to register

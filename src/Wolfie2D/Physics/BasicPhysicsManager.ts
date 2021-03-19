@@ -72,7 +72,6 @@ export default class BasicPhysicsManager extends PhysicsManager {
 	 * @param options A record of options
 	 */
 	protected parseOptions(options: Record<string, any>): void {
-		console.log("Parsing physics options: ", options);
 		if(options.groupNames !== undefined && options.collisions !== undefined){
 			for(let i = 0; i < options.groupNames.length; i++){
 				let group = options.groupNames[i];
@@ -108,6 +107,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
 	// @override
 	deregisterObject(node: Physical): void {
+		console.log("Deregistering physics object");
 		if(node.isStatic){
 			// Remove the node from the static list
 			const index = this.staticNodes.indexOf(node);

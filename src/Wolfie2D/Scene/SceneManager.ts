@@ -2,6 +2,7 @@ import Scene from "./Scene";
 import ResourceManager from "../ResourceManager/ResourceManager";
 import Viewport from "../SceneGraph/Viewport";
 import RenderingManager from "../Rendering/RenderingManager";
+import MemoryUtils from "../Utils/MemoryUtils";
 
 /**
  * The SceneManager acts as an interface to create Scenes, and handles the lifecycle methods of Scenes.
@@ -25,6 +26,7 @@ export default class SceneManager {
 
 	/** For consistency, only change scenes at the beginning of the update cycle */
 	protected pendingScene: Scene;
+	protected pendingSceneInit: Record<string, any>;
 
 	/**
 	 * Creates a new SceneManager
@@ -37,6 +39,7 @@ export default class SceneManager {
 		this.viewport = viewport;
 		this.renderingManager = renderingManager;
 		this.idCounter = 0;
+		this.pendingScene = null;
 	}
 
 	/**
@@ -46,31 +49,47 @@ export default class SceneManager {
 	 * @param init An object to pass to the init function of the new scene
 	 */
 	public changeToScene<T extends Scene>(constr: new (...args: any) => T, init?: Record<string, any>, options?: Record<string, any>): void {
-		this.viewport.setCenter(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y);
+		console.log("Creating the new scene - change is pending until next update");
+		this.pendingScene = new constr(this.viewport, this, this.renderingManager, options);
+		this.pendingSceneInit = init;
+	}
 
-		let scene = new constr(this.viewport, this, this.renderingManager, options);
+	protected doSceneChange(){
+		console.log("Performing scene change");
+		this.viewport.setCenter(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y);
 		
 		if(this.currentScene){
-			console.log("Destroying Old Scene");
+			console.log("Unloading old scene")
+			this.currentScene.unloadScene();
+
+			console.log("Destroying old scene");
 			this.currentScene.destroy();
 		}
 
-		this.currentScene = scene;
+		console.log("Unloading old resources...");
+		this.resourceManager.unloadAllResources();
 
-		scene.initScene(init);
+		// Make the pending scene the current one
+		this.currentScene = this.pendingScene;
+
+		// Make the pending scene null
+		this.pendingScene = null;
+
+		// Init the scene
+		this.currentScene.initScene(this.pendingSceneInit);
 
 		// Enqueue all scene asset loads
-		scene.loadScene();
+		this.currentScene.loadScene();
 
 		// Load all assets
 		console.log("Starting Scene Load");
 		this.resourceManager.loadResourcesFromQueue(() => {
 			console.log("Starting Scene");
-			scene.startScene();
-			scene.setRunning(true);
+			this.currentScene.startScene();
+			this.currentScene.setRunning(true);
 		});
 
-		this.renderingManager.setScene(scene);
+		this.renderingManager.setScene(this.currentScene);
 	}
 	
 	/**
@@ -85,7 +104,9 @@ export default class SceneManager {
 	 * Renders the current Scene
 	 */
 	public render(): void {
-		this.currentScene.render();
+		if(this.currentScene){
+			this.currentScene.render();
+		}
 	}
 
 	/**
@@ -93,7 +114,11 @@ export default class SceneManager {
 	 * @param deltaT The timestep of the Scene
 	 */
 	public update(deltaT: number){
-		if(this.currentScene.isRunning()){
+		if(this.pendingScene !== null){
+			this.doSceneChange();
+		}
+
+		if(this.currentScene && this.currentScene.isRunning()){
 			this.currentScene.update(deltaT);
 		}
 	}

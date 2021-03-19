@@ -81,7 +81,7 @@ export default class EventQueue {
     unsubscribe(receiver: Receiver, ...events: Array<string>): void {
         this.receivers.forEach(eventName => {
             // If keys were provided, only continue if this key is one of them
-            if(events !== undefined && events.indexOf(eventName) === -1) return;
+            if(events.length > 0 && events.indexOf(eventName) === -1) return;
 
             // Find the index of our receiver for this key
             let index = this.receivers.get(eventName).indexOf(receiver);

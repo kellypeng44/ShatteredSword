@@ -46,7 +46,7 @@ export default class AudioManager {
             this.audioCtx = new AudioContext(); 
             console.log('Web Audio API successfully loaded');
         } catch(e) {
-            console.log('Web Audio API is not supported in this browser'); 
+            console.warn('Web Audio API is not supported in this browser'); 
         }
     }
 

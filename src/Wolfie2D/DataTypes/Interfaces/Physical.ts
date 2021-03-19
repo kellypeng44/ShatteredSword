@@ -13,6 +13,9 @@ export default interface Physical {
     /** Represents whether the object is moving or not. */
     moving: boolean;
 
+    /** Represent whether the object is frozen from moving or not. */
+    frozen: boolean;
+
     /** Represents whether the object is on the ground or not. */
     onGround: boolean;
 

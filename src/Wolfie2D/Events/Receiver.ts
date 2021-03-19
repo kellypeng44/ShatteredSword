@@ -36,7 +36,12 @@ export default class Receiver {
 	 * @param event The event to receive
 	 */
 	receive(event: GameEvent): void {
+		try{
 		this.q.enqueue(event);
+		} catch(e){
+			console.warn("Receiver overflow for event " + event.toString());
+			throw e;
+		}
 	}
 
 	/**
