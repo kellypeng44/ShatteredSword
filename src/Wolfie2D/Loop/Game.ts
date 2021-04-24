@@ -145,7 +145,7 @@ export default class Game {
         this.resourceManager.loadResourcesFromQueue(() => {
             // When we're done loading, start the loop
             console.log("Finished Preload - loading first scene");
-            this.sceneManager.changeToScene(InitialScene, options);
+            this.sceneManager.changeToScene(InitialScene, {}, options);
             this.loop.start();
         });
     }

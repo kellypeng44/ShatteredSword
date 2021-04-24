@@ -107,7 +107,6 @@ export default class BasicPhysicsManager extends PhysicsManager {
 
 	// @override
 	deregisterObject(node: Physical): void {
-		console.log("Deregistering physics object");
 		if(node.isStatic){
 			// Remove the node from the static list
 			const index = this.staticNodes.indexOf(node);
@@ -160,7 +159,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			// Gather a set of overlaps
 			let overlaps = new Array<AreaCollision>();
 
-			let groupIndex = Math.log2(node.group);
+			let groupIndex = node.group === -1 ? -1 : Math.log2(node.group);
 
 			// First, check this node against every static node (order doesn't actually matter here, since we sort anyways)
 			for(let other of this.staticNodes){
@@ -212,7 +211,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			// For every overlap, determine if we need to collide with it and when
 			for(let overlap of overlaps){
 				// Ignore nodes we don't interact with
-				if((this.collisionMasks[groupIndex] & overlap.other.group) === 0) continue;
+				if( groupIndex !== -1 && overlap.other.group !== -1 && ((this.collisionMasks[groupIndex] & overlap.other.group) === 0) ) continue;
 
 				// Do a swept line test on the static AABB with this AABB size as padding (this is basically using a minkowski sum!)
 				// Start the sweep at the position of this node with a delta of _velocity
@@ -277,7 +276,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 				}
 
 				// Ignore collision sides for nodes we don't interact with
-				if((this.collisionMasks[groupIndex] & overlap.other.group) === 0) continue;
+				if( groupIndex !== -1 && overlap.other.group !== -1 && ((this.collisionMasks[groupIndex] & overlap.other.group) === 0)) continue;
 
 				// Only check for direction if the overlap was collidable
 				if(overlap.type === "Tilemap" || overlap.other.isCollidable){
