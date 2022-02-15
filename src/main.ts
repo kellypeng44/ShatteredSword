@@ -1,3 +1,4 @@
+
 import Game from "./Wolfie2D/Loop/Game";
 import default_scene from "./default_scene";
 
