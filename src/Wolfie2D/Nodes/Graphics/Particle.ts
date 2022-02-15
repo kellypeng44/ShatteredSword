@@ -24,7 +24,7 @@ export default class Particle extends Point {
 
     constructor(position: Vec2, size: Vec2, mass: number) {
         // Are we making this a circle?
-        super(position, size);
+        super(position);
         this.inUse = false;
         this.mass = mass;
     }
