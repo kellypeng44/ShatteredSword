@@ -393,10 +393,10 @@ export default class ResourceManager {
             case ResourceType.JSON:
                 this.jsonObjects.delete(resource.key);
                 break;
-            case ResourceType.SHADER:
+            /*case ResourceType.SHADER:
                 this.gl_ShaderPrograms.get(resource.key).delete(this.gl);
                 this.gl_ShaderPrograms.delete(resource.key);
-                break;
+                break;*/
         }
 
         // Delete any dependencies
