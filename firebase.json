@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [{
+      "source": "/benchmark1",
+      "destination": "/ShatteredSwordGameDesignDocument.html",
+      "type": 301
+    }]
+  }
+}
