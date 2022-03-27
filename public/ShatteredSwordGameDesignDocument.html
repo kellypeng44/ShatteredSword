@@ -24,47 +24,60 @@
     </head>
 
     <body>
-        <h2 style="width:750px" align="center">
+        <h2 align="center">
             Shattered Sword<br />
             Game Design Document
         </h2>
           
-        <h4 style="width:750px" align="center">
+        <h4 align="center">
         by Henry Chen, Kelly Peng, Xinyu Xu
         </h4>
 
         <div id="content">
             <h3>INTRODUCTION</h3>
             <p>
-                This document describes a game called “Shattered Sword, ” which is designed to be a simple, 2D platformer, roguelike game. The game will employ sprite-based animation, tiled backgrounds, collision detection, physics, AI, gravity, efficient memory management, render threading, and more basic 2D game techniques.
+            This document describes a game called “Shattered Sword, ” which is designed to be a simple, 2D platformer, roguelike game. The game will employ sprite-based animation, tiled backgrounds, collision detection, physics, AI, gravity, efficient memory management, render threading, and more basic 2D game techniques.
             </p>
             <br />
             <h3>TECHNOLOGY</h3>
             <p>
-                Shattered Sword will be developed for the Windows Platform using the McKilla's Gorilla <a href="https://github.com/TheMcKillaGorilla/Wolfie2D">game engine</a>, which is a bare-bones engine developed by <a href="http://www.cs.sunysb.edu/~richard">Richard McKenna</a> for rapid prototyping 2D games. DirectX will be used as the underlying rendering technology.
+            Shattered Sword will be developed for the Windows Platform using the McKilla's Gorilla <a href="https://github.com/TheMcKillaGorilla/Wolfie2D">game engine</a>, which is a bare-bones engine developed by <a href="http://www.cs.sunysb.edu/~richard">Richard McKenna</a> for rapid prototyping 2D games. DirectX will be used as the underlying rendering technology.
             </p>
             <br />
             <h3>BACK STORY</h3>
             <p>
-                Hiro (hero) is the prince of a fallen kingdom that was destroyed by an evil monster. The monster has shattered the legendary royal greatsword, the only weapon powerful enough to slay the monster. The first piece of the greatsword was given to Hiro as the weapon. Hiro must go on a journey to retrieve the five pieces of the greatsword to slay the evil monster and bring prosperity back to his kingdom. 
+            Hiro (hero) is the prince of a fallen kingdom that was destroyed by an evil monster. The monster has shattered the legendary royal greatsword, the only weapon powerful enough to slay the monster. The first piece of the greatsword was given to Hiro as the weapon. Hiro must go on a journey to retrieve the five pieces of the greatsword to slay the evil monster and bring prosperity back to his kingdom. 
             </p>
             <br />
             <h3>OBJECTIVE</h3>
             <p>
-                Hiro must travel the five regions in which the sword shards are scattered to collect the pieces to reassemble the sword. Each shard is guarded by enemies, and a boss that will seek to stop Hiro. Enemies have the chance to drop buffs or amulets that will strengthen Hiro on his journey. Once Hiro has obtained a shard, the enemies in the other regions will become stronger since they have had more time to absorb the energy of the sword shard they are guarding. Once Hiro has reassembled all six pieces of the sword, he will finally be able to face the final boss.
+            Hiro must travel the five regions in which the sword shards are scattered to collect the pieces to reassemble the sword. Each shard is guarded by enemies, and a boss that will seek to stop Hiro. Enemies have the chance to drop buffs or amulets that will strengthen Hiro on his journey. Once Hiro has obtained a shard, the enemies in the other regions will become stronger since they have had more time to absorb the energy of the sword shard they are guarding. Once Hiro has reassembled all six pieces of the sword, he will finally be able to face the final boss.
             </p>
             <br />
-            <!-- <h3>GAMEPLAY</h3>
+            <h3>GAMEPLAY</h3>
             <p>
                 
             </p>
             <br />
             <h3>CONTROLS</h3>
             <p>
-                
+            This game will be played using either a keyboard or a xbox controller. Once started, use the following: <strong>Keybord</strong> (xbox controller) - function
             </p>
+            <ul>
+                <li><strong>A</strong> (Left stick) - Move Left</li>
+                <li><strong>D</strong> (Left stick) - Move Right</li>
+                <li><strong>W</strong> (Left stick) - Look Up</li>
+                <li><strong>S</strong> (Left stick) - Look Down</li>
+                <li><strong>J/Z/Enter</strong> (A) - Confirm attack</li>
+                <li><strong>SPACE/X</strong> (Y) - Jump</li>
+                <li><strong>K/C</strong> (B) - Dash</li>
+                <li><strong>L/V</strong> (X) - Use skill</li>
+                <li><strong>I/B</strong> (Right Bumper) - Open backpack</li>
+                <li><strong>ESC</strong> (Menu) - This pauses the game and opens setting</li>
+                <li><strong>Tab</strong> (Left Bumper) - This shows the map of the current level</li>
+               </ul>
             <br />
-            <h3>GRAPHICAL USER INTERFACE</h3>
+            <!-- <h3>GRAPHICAL USER INTERFACE</h3>
             <p>
                 
             </p>
