@@ -10,6 +10,9 @@ dist/*
 # Include the built-in asset folder
 !dist/builtin/
 
+# Include the shattered_sword_assets
+!dist/shattered_sword_assets
+
 ### IF YOU ARE MAKING A PROJECT, YOU MAY WANT TO UNCOMMENT THIS LINE ###
 # !dist/assets/
 
