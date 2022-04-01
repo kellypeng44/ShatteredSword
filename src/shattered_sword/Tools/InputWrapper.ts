@@ -1,4 +1,4 @@
-import Input from "./../Wolfie2D/Input/Input";
+import Input from "../../Wolfie2D/Input/Input";
 
 export default class InputWrapper {
     private static isInStoryMode: boolean;

@@ -17,5 +17,8 @@
     "typescript": "^3.9.7",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1"
+  },
+  "dependencies": {
+    "typescript-require": "^0.3.0"
   }
 }
