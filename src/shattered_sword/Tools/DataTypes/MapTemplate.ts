@@ -11,5 +11,5 @@ export class RoomTemplate {
     height: number;
     bottomLayer: Array<number>;
     topLayer: Array<number>;
-    entrances: Array<[x: number, y: number]>
+    entrances: Array<[x: number, y: number, width: number]>
 }
