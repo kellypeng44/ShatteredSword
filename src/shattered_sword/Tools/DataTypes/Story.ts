@@ -1,5 +1,4 @@
-export class Resource {
-    type: string;
+export class BGM {
     key: string;
     path: string;
 }
@@ -11,13 +10,14 @@ export class Text {
 }
 
 export class Action {
-    type: "loadSprite" | "loadAnimatedSprite" | "move" | "show" | "hide";
+    type: "loadSprite" | "loadAnimatedSprite" | "moveSprite" | "showSprite" | "hideSprite";
     key: string;
+    path?: string;
     positon?: [number, number];
     scale?: [number, number];
 }
 
 export default class Story {
-    resources: Array<Resource>;
+    bgm?: Array<BGM>;
     texts: Array<Text>;
 }

@@ -7,15 +7,23 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Color from "../../Wolfie2D/Utils/Color";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import MapTemplate from "../Tools/DataTypes/MapTemplate";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
+enum Mode {
+    GAME_MODE = "GameMode",
+    STORY_MODE = "StoryMode",
+    PAUSE_MODE = "PauseMode",
+}
 export default class StorySceneTester extends Scene {
-    private isInStoryMode: boolean = false;
+    private currentMode: Mode = Mode.GAME_MODE;
     private storytextLabel: Label;
     private storyLayer: Layer;
     private primary: Layer;
     private story: Story;
     private storyProgress: number;
     private storySprites: Array<Sprite>;
+    private storyBGMs: Array<string>;
     private currentSpeaker: string;
     private currentContent: string;
 
@@ -40,61 +48,120 @@ export default class StorySceneTester extends Scene {
     async storyLoader(storyPath: string) {
         const response = await (await fetch(storyPath)).json();
         this.story = <Story>response;
-        this.story.resources.forEach((resource) => {
-            switch (resource.type) {
-                case "image":
-                    this.load.image(resource.key, resource.path);
-                    break;
-                case "spritesheet":
-                    this.load.spritesheet(resource.key, resource.path);
-                    break;
-                case "audio":
-                    this.load.audio(resource.key, resource.path);
-                    break;
-                default:
-                    break;
-            }
-        });
+        if (this.story.bgm) {
+            this.storyBGMs = new Array;
+            this.story.bgm.forEach((bgm) => {
+                this.load.audio(bgm.key, bgm.path);
+                console.log("audio:", bgm.key, "path:", bgm.path);
+                this.load.loadResourcesFromQueue(() => {
+                    console.log("finished loading audio");
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
+                });
+                this.storyBGMs.push(bgm.key);
+            })
+        }
         this.currentSpeaker = this.story.texts[0].speaker;
         this.currentContent = this.story.texts[0].content;
 
-        this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y + 240), text: (this.currentSpeaker + ': \n\n' + this.currentContent) });
+        this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y + 240), text: "" });
         this.storytextLabel.textColor = Color.WHITE;
         this.storytextLabel.font = "PixelSimple";
         this.storytextLabel.fontSize = 20;
         this.storytextLabel.setHAlign(HAlign.LEFT);
-        this.storyProgress = 0;
-        this.isInStoryMode = true;
+        this.storyProgress = -1;
+        this.storySprites = new Array;
+        this.currentMode = Mode.STORY_MODE;
+        this.updateStory();
     }
 
     hasNextStory(): boolean {
-        return this.isInStoryMode && this.storyProgress + 1 < this.story.texts.length;
+        return this.currentMode === Mode.STORY_MODE && this.storyProgress + 1 < this.story.texts.length;
     }
 
     updateStory() {
-        if (this.isInStoryMode && this.hasNextStory()) {
-            this.storyProgress ++;
+        if (this.currentMode === Mode.STORY_MODE && this.hasNextStory()) {
+            this.storyProgress++;
+            let tmp = undefined;
+            if (this.story.texts[this.storyProgress].actions) {
+                this.story.texts[this.storyProgress].actions.forEach(action => {
+                    switch (action.type) {
+                        case "loadSprite":
+                            this.load.image(action.key, action.path);
+                            this.load.loadResourcesFromQueue(() => {
+                                tmp = this.add.sprite(action.key, "story");
+                                tmp.position.set(action.positon[0], action.positon[1]);
+                                tmp.scale.set(action.scale[0], action.scale[1]);
+                                this.storySprites.push(tmp);
+                            });
+                            break;
+                        case "loadAnimatedSprite":
+                            this.load.spritesheet(action.key, action.path);
+                            this.load.loadResourcesFromQueue(() => {
+                                tmp = this.add.animatedSprite(action.key, "story");
+                                tmp.position.set(action.positon[0], action.positon[1]);
+                                tmp.scale.set(action.scale[0], action.scale[1]);
+                                this.storySprites.push(tmp);
+                            });
+                            break;
+                        case "moveSprite":
+                            tmp = this.storySprites.find(function (sprite) {
+                                return sprite.imageId === action.key;
+                            });
+                            tmp.position.set(action.positon[0], action.positon[1]);
+                            tmp.scale.set(action.scale[0], action.scale[1]);
+                            break;
+                        case "showSprite":
+                            tmp = this.storySprites.find(function (sprite) {
+                                return sprite.imageId === action.key;
+                            });
+                            tmp.visible = true;
+                            break;
+                        case "hideSprite":
+                            tmp = this.storySprites.find(function (sprite) {
+                                return sprite.imageId === action.key;
+                            });
+                            tmp.visible = false;
+                            break;
+                        default:
+                            break;
+                    }
+                })
+            }
             this.currentSpeaker = this.story.texts[this.storyProgress].speaker;
             this.currentContent = this.story.texts[this.storyProgress].content;
-            this.storytextLabel.text = this.currentSpeaker+':\n\n'+this.currentContent;
+            this.storytextLabel.text = this.currentSpeaker + ':\n\n' + this.currentContent;
         }
         else {
-            this.isInStoryMode = false;
+            this.currentMode = Mode.GAME_MODE;
             this.storyProgress = Infinity;
             this.storytextLabel.destroy();
+            if (this.storySprites) {
+                this.storySprites.forEach((sprite) => {
+                    sprite.visible = false;
+                    sprite.destroy();
+                });
+            }
+            if (this.storyBGMs) {
+                this.storyBGMs.forEach((bgm) => {
+                    this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: bgm });
+                    console.log("sound stopped:", bgm);
+                });
+            }
+            this.storyBGMs = undefined;
+            this.storySprites = undefined;
             this.story = undefined;
+            this.storytextLabel = undefined;
         }
     }
 
     updateScene(deltaT: number): void {
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-            if (event.type === "loadStory" && !this.isInStoryMode) {
+            if (event.type === "loadStory" && this.currentMode === Mode.GAME_MODE) {
                 this.storyLoader("shattered_sword_assets/jsons/samplestory.json");
-                console.log("loading story");
             }
         }
-        if (Input.isMouseJustPressed() && this.isInStoryMode) {
+        if (Input.isMouseJustPressed() && this.currentMode === Mode.STORY_MODE) {
             this.updateStory();
         }
     }

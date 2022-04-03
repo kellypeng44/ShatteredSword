@@ -1,19 +1,67 @@
 {
-    "resources": [
+    "bgm": [
         {
-            "type": "image",
-            "key": "hiro",
-            "path": "shattered_sword_assets/images/Logo.png"
+            "key": "test",
+            "path": "shattered_sword_assets/sounds/test.mp3"
         }
     ],
     "texts": [
         {
             "speaker": "Hiro",
-            "content": "Hello world!"
+            "content": "Hello\r\n\nworld!",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "hiro",
+                    "path": "shattered_sword_assets/images/Logo.png",
+                    "positon": [
+                        500,
+                        500
+                    ],
+                    "scale": [
+                        1,
+                        1
+                    ]
+                }
+            ]
         },
         {
             "speaker": "world",
-            "content": "Hello Hiro!"
+            "content": "Hello Hiro!",
+            "actions": [
+                {
+                    "type": "moveSprite",
+                    "key": "hiro",
+                    "positon": [
+                        100,
+                        100
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "world",
+            "content": "this should hide the image",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "hiro"
+                }
+            ]
+        },
+        {
+            "speaker": "world",
+            "content": "this should show it again",
+            "actions": [
+                {
+                    "type": "showSprite",
+                    "key": "hiro"
+                }
+            ]
         }
     ]
 }
