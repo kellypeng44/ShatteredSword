@@ -11,7 +11,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import MainMenu from "./MainMenu";
-import StorySceneTester from "./StorySceneTester";
+import SceneWithStory from "./SceneWithStory";
 
 
 export default class Levels extends Scene {
@@ -110,7 +110,7 @@ export default class Levels extends Scene {
             }
 
             if(event.type === "StorySceneTester"){
-                this.sceneManager.changeToScene(StorySceneTester, {});
+                this.sceneManager.changeToScene(SceneWithStory, {});
             }
 
             if(event.type === "back"){

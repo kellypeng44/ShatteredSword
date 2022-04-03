@@ -1,4 +1,3 @@
-import Input from "../../Wolfie2D/Input/Input";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Label, { HAlign } from "../../Wolfie2D/Nodes/UIElements/Label";
 import Story from "../Tools/DataTypes/Story";
@@ -7,7 +6,6 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Color from "../../Wolfie2D/Utils/Color";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import MapTemplate from "../Tools/DataTypes/MapTemplate";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 enum Mode {
@@ -15,11 +13,12 @@ enum Mode {
     STORY_MODE = "StoryMode",
     PAUSE_MODE = "PauseMode",
 }
-export default class StorySceneTester extends Scene {
+
+export default class SceneWithStory extends Scene {
     private currentMode: Mode = Mode.GAME_MODE;
     private storytextLabel: Label;
     private storyLayer: Layer;
-    private primary: Layer;
+    // private primary: Layer;
     private story: Story;
     private storyProgress: number;
     private storySprites: Array<Sprite>;
@@ -28,24 +27,32 @@ export default class StorySceneTester extends Scene {
     private currentContent: string;
 
     startScene(): void {
-        this.primary = this.addUILayer("primary");
-        this.storyLayer = this.addUILayer("story");
-
-        const center = this.viewport.getCenter();
-        const loadStory = this.add.uiElement(UIElementType.BUTTON, "primary", { position: new Vec2(center.x, center.y), text: "LoadStory" });
-        loadStory.size.set(200, 50);
-        loadStory.borderWidth = 2;
-        loadStory.borderColor = Color.WHITE;
-        loadStory.backgroundColor = Color.TRANSPARENT;
-        loadStory.onClickEventId = "loadStory";
+        
 
 
-        this.receiver.subscribe("loadStory");
+        // The code below are for testing only. Please comment them when submit
+
+        // this.primary = this.addUILayer("primary");
+        // const center = this.viewport.getCenter();
+        // const loadStory = this.add.uiElement(UIElementType.BUTTON, "primary", { position: new Vec2(center.x, center.y), text: "LoadStory" });
+        // loadStory.size.set(200, 50);
+        // loadStory.borderWidth = 2;
+        // loadStory.borderColor = Color.WHITE;
+        // loadStory.backgroundColor = Color.TRANSPARENT;
+        // loadStory.onClickEventId = "loadStory";
+
+
+        // this.receiver.subscribe("loadStory");
 
 
     }
 
+    /**
+     * This function load a story JSON from storyPath and auto display it to storyLayer
+     * @param storyPath The path to the story JSON
+     */
     async storyLoader(storyPath: string) {
+        this.storyLayer = this.addUILayer("story");
         const response = await (await fetch(storyPath)).json();
         this.story = <Story>response;
         if (this.story.bgm) {
@@ -74,10 +81,16 @@ export default class StorySceneTester extends Scene {
         this.updateStory();
     }
 
+    /**
+     * @returns True if the story has next sentence False otherwise
+     */
     hasNextStory(): boolean {
         return this.currentMode === Mode.STORY_MODE && this.storyProgress + 1 < this.story.texts.length;
     }
 
+    /**
+     * Go to the next sentence of current story if there is one or clear the storyLayer and exit storyMode
+     */
     updateStory() {
         if (this.currentMode === Mode.STORY_MODE && this.hasNextStory()) {
             this.storyProgress++;
@@ -147,22 +160,26 @@ export default class StorySceneTester extends Scene {
                     console.log("sound stopped:", bgm);
                 });
             }
+            this.storyLayer.disable();
             this.storyBGMs = undefined;
             this.storySprites = undefined;
             this.story = undefined;
             this.storytextLabel = undefined;
+            this.storyLayer = undefined;
         }
     }
 
     updateScene(deltaT: number): void {
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
-            if (event.type === "loadStory" && this.currentMode === Mode.GAME_MODE) {
-                this.storyLoader("shattered_sword_assets/jsons/samplestory.json");
-            }
+            // Testing code            
+            // if (event.type === "loadStory" && this.currentMode === Mode.GAME_MODE) {
+            //     this.storyLoader("shattered_sword_assets/jsons/samplestory.json");
+            // }
         }
-        if (Input.isMouseJustPressed() && this.currentMode === Mode.STORY_MODE) {
-            this.updateStory();
-        }
+        // Testing code
+        // if (Input.isMouseJustPressed() && this.currentMode === Mode.STORY_MODE) {
+        //     this.updateStory();
+        // }
     }
 }
