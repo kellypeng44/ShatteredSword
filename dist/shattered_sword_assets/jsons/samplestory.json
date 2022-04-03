@@ -1,0 +1,19 @@
+{
+    "resources": [
+        {
+            "type": "image",
+            "key": "hiro",
+            "path": "shattered_sword_assets/images/Logo.png"
+        }
+    ],
+    "texts": [
+        {
+            "speaker": "Hiro",
+            "content": "Hello world!"
+        },
+        {
+            "speaker": "world",
+            "content": "Hello Hiro!"
+        }
+    ]
+}

@@ -11,6 +11,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import MainMenu from "./MainMenu";
+import StorySceneTester from "./StorySceneTester";
 
 
 export default class Levels extends Scene {
@@ -59,12 +60,12 @@ export default class Levels extends Scene {
         level5.backgroundColor = Color.TRANSPARENT;
         level5.onClickEventId = "level5";
 
-        const level6 = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 100), text: "level 6"});
-        level6.size.set(200, 50);
-        level6.borderWidth = 2;
-        level6.borderColor = Color.WHITE;
-        level6.backgroundColor = Color.TRANSPARENT;
-        level6.onClickEventId = "level6";
+        const StorySceneTester = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 100), text: "StorySceneTester"});
+        StorySceneTester.size.set(200, 50);
+        StorySceneTester.borderWidth = 2;
+        StorySceneTester.borderColor = Color.WHITE;
+        StorySceneTester.backgroundColor = Color.TRANSPARENT;
+        StorySceneTester.onClickEventId = "StorySceneTester";
 
         const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 250), text: "Back"});
         back.size.set(200, 50);
@@ -78,7 +79,7 @@ export default class Levels extends Scene {
         this.receiver.subscribe("level3");
         this.receiver.subscribe("level4");
         this.receiver.subscribe("level5");
-        this.receiver.subscribe("level6");
+        this.receiver.subscribe("StorySceneTester");
         this.receiver.subscribe("back");
     }
 
@@ -108,8 +109,8 @@ export default class Levels extends Scene {
                 this.sceneManager.changeToScene(MainMenu, {});
             }
 
-            if(event.type === "level6"){
-                this.sceneManager.changeToScene(MainMenu, {});
+            if(event.type === "StorySceneTester"){
+                this.sceneManager.changeToScene(StorySceneTester, {});
             }
 
             if(event.type === "back"){
