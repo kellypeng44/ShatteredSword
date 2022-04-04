@@ -11,7 +11,10 @@ import Jump from "./PlayerStates/Jump";
 import Walk from "./PlayerStates/Walk";
 import Debug from "../../Wolfie2D/Debug/Debug";
 
-
+export enum PlayerType {
+    PLATFORMER = "platformer",
+    TOPDOWN = "topdown"
+}
 
 export enum PlayerStates {
     IDLE = "idle",

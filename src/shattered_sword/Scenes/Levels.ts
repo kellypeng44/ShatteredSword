@@ -12,6 +12,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import MainMenu from "./MainMenu";
 import SceneWithStory from "./SceneWithStory";
+import Tutorial from "./Tutorial";
 
 
 export default class Levels extends Scene {
@@ -25,6 +26,13 @@ export default class Levels extends Scene {
         this.primary = this.addUILayer("primary");
 
         
+        const tutorial = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 200), text: "tutorial "});
+        tutorial.size.set(200, 50);
+        tutorial.borderWidth = 2;
+        tutorial.borderColor = Color.WHITE;
+        tutorial.backgroundColor = Color.TRANSPARENT;
+        tutorial.onClickEventId = "tutorial";
+
         const level1 = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 150), text: "level 1"});
         level1.size.set(200, 50);
         level1.borderWidth = 2;
@@ -74,6 +82,7 @@ export default class Levels extends Scene {
         back.backgroundColor = Color.TRANSPARENT;
         back.onClickEventId = "back";
         
+        this.receiver.subscribe("tutorial");
         this.receiver.subscribe("level1");
         this.receiver.subscribe("level2");
         this.receiver.subscribe("level3");
@@ -88,6 +97,11 @@ export default class Levels extends Scene {
             let event = this.receiver.getNextEvent();
 
             console.log(event);
+
+
+            if(event.type === "tutorial"){
+                this.sceneManager.changeToScene(Tutorial, {});
+            }
 
             if(event.type === "level1"){
                 this.sceneManager.changeToScene(MainMenu, {});
