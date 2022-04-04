@@ -13,9 +13,15 @@ export default class MapTemplate {
     // Replace with the relative path to the dist/
     image: string;
     
+    // The start room
     entrance: RoomTemplate;
+    // The final room 
     exit: RoomTemplate;
     rooms: Array<RoomTemplate>;
+    // Tiles that will be used to fill four layers
+    corners?: [Corner, Corner, Corner, Corner];
+    // Tile to fill all empty spaces between rooms
+    background: number;
 }
 
 export class Entrance {
@@ -38,8 +44,17 @@ export class Enemy {
 export class RoomTemplate {
     width: number;
     height: number;
+    weight: number;
     bottomLayer: Array<number>;
     topLayer: Array<number>;
     entrances: Array<Entrance>;
     enemies?: Array<Enemy>;
+}
+
+export class Corner {
+    height: number;
+    width: number;
+    bottomLayer: Array<number>;
+    topLayer: Array<number>;
+    filler: Array<number>; 
 }
