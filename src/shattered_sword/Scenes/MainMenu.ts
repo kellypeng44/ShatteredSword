@@ -25,7 +25,7 @@ export default class MainMenu extends Scene {
 
     loadScene(): void {
         // Load the menu song
-        //this.load.audio("menu", "hw5_assets/music/menu.mp3");
+        //this.load.audio("menu", "shattered_sword_assets/music/menu.mp3");
     }
 
     //TODO 

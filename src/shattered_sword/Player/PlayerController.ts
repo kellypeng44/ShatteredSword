@@ -12,10 +12,10 @@ import Walk from "./PlayerStates/Walk";
 import Debug from "../../Wolfie2D/Debug/Debug";
 
 
+
 export enum PlayerStates {
     IDLE = "idle",
     WALK = "walk",
-	RUN = "run",
 	JUMP = "jump",
     FALL = "fall",
 	PREVIOUS = "previous"
