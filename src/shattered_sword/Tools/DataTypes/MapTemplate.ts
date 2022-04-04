@@ -33,7 +33,7 @@ export class Entrance {
     alt_tile: [number, number];
 }
 
-export class Enemy {
+export class Sprite {
     // Position of the enemy and chance to spawn (0, 1]
     x: number;
     y: number;
@@ -48,7 +48,7 @@ export class RoomTemplate {
     bottomLayer: Array<number>;
     topLayer: Array<number>;
     entrances: Array<Entrance>;
-    enemies?: Array<Enemy>;
+    sprites?: Array<Sprite>;
 }
 
 export class Corner {
