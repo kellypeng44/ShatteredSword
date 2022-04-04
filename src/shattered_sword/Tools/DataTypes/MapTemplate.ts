@@ -44,6 +44,7 @@ export class Enemy {
 export class RoomTemplate {
     width: number;
     height: number;
+    weight: number;
     bottomLayer: Array<number>;
     topLayer: Array<number>;
     entrances: Array<Entrance>;
