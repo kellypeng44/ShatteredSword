@@ -10,6 +10,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Levels from "./Levels";
+import RandomMapGenerator from "../Tools/RandomMapGenerator";
 
 export default class MainMenu extends Scene {
     protected config: ConfigManager;
@@ -33,6 +34,17 @@ export default class MainMenu extends Scene {
     startScene(): void{
         this.config = new ConfigManager();
         this.save = new SaveManager();
+        console.log(this.config.getVolume());
+        this.config.setVolume(100);
+        console.log(this.config.getVolume());
+        console.log(this.save.getLevel());
+        this.save.setLevel(10);
+
+        console.log(this.save.getLevel());
+    
+
+        
+        new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json");
 
 
         // Scene has started, so start playing music
