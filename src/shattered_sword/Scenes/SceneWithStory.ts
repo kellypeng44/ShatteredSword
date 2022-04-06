@@ -171,7 +171,7 @@ export default class SceneWithStory extends Scene {
             }
             this.currentSpeaker = this.story.texts[this.storyProgress].speaker;
             this.currentContent = this.story.texts[this.storyProgress].content;
-            this.storytextLabel.text = this.currentSpeaker?(this.currentSpeaker+":"):"" + '\n' + this.currentContent;
+            this.storytextLabel.text = (this.currentSpeaker?(this.currentSpeaker+":"):("")) + '\n' + this.currentContent;
         }
         else {
             this.currentMode = Mode.GAME_MODE;
