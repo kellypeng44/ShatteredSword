@@ -10,7 +10,7 @@ export class Text {
 }
 
 export class Action {
-    type: "loadSprite" | "loadAnimatedSprite" | "moveSprite" | "showSprite" | "hideSprite";
+    type: "loadSprite" /*| "loadAnimatedSprite"*/ | "moveSprite" | "showSprite" | "hideSprite";
     key: string;
     path?: string;
     positon?: [number, number];

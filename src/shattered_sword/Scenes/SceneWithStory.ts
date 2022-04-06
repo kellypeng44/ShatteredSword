@@ -136,15 +136,15 @@ export default class SceneWithStory extends Scene {
                                 })
                             }
                             break;
-                        case "loadAnimatedSprite":
-                            this.load.spritesheet(action.key, action.path);
-                            this.load.loadResourcesFromQueue(() => {
-                                tmp = this.add.animatedSprite(action.key, "story");
-                                tmp.position.set(action.positon[0], action.positon[1]);
-                                tmp.scale.set(action.scale[0], action.scale[1]);
-                                this.storySprites.push(tmp);
-                            });
-                            break;
+                        // case "loadAnimatedSprite":
+                        //     this.load.spritesheet(action.key, action.path);
+                        //     this.load.loadResourcesFromQueue(() => {
+                        //         tmp = this.add.animatedSprite(action.key, "story");
+                        //         tmp.position.set(action.positon[0], action.positon[1]);
+                        //         tmp.scale.set(action.scale[0], action.scale[1]);
+                        //         this.storySprites.push(tmp);
+                        //     });
+                        //     break;
                         case "moveSprite":
                             tmp = this.storySprites.find(function (sprite) {
                                 return sprite.imageId === action.key;
