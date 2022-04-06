@@ -22,6 +22,7 @@ export default class MapTemplate {
     corners?: [Corner, Corner, Corner, Corner];
     // Tile to fill all empty spaces between rooms
     background: number;
+    minroom: number;
 }
 
 export class Entrance {
