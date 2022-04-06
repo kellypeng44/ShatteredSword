@@ -1044,7 +1044,7 @@ export default class ResourceManager {
         }
     }
 
-    public loadSingleImage(key: string, path: string, isDependency: boolean, callbackIfLast: Function): void {
+    public singleImage(key: string, path: string, callbackIfLast: Function): void {
         var image = new Image();
 
         image.onload = () => {
@@ -1064,7 +1064,7 @@ export default class ResourceManager {
         image.src = path;
     }
 
-    public loadSingleAudio(key: string, path: string, callbackIfLast: Function): void {
+    public singleAudio(key: string, path: string, callbackIfLast: Function): void {
         let audioCtx = AudioManager.getInstance().getAudioContext();
 
         let request = new XMLHttpRequest();

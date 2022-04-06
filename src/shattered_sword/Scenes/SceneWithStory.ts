@@ -7,6 +7,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import Input from "../../Wolfie2D/Input/Input";
 
 enum Mode {
     GAME_MODE = "GameMode",
@@ -18,7 +19,7 @@ export default class SceneWithStory extends Scene {
     private currentMode: Mode = Mode.GAME_MODE;
     private storytextLabel: Label;
     private storyLayer: Layer;
-    // private primary: Layer;
+    private primary: Layer;
     private story: Story;
     private storyProgress: number;
     private storySprites: Array<Sprite>;
@@ -27,22 +28,22 @@ export default class SceneWithStory extends Scene {
     private currentContent: string;
 
     startScene(): void {
-        
+
 
 
         // The code below are for testing only. Please comment them when submit
 
-        // this.primary = this.addUILayer("primary");
-        // const center = this.viewport.getCenter();
-        // const loadStory = this.add.uiElement(UIElementType.BUTTON, "primary", { position: new Vec2(center.x, center.y), text: "LoadStory" });
-        // loadStory.size.set(200, 50);
-        // loadStory.borderWidth = 2;
-        // loadStory.borderColor = Color.WHITE;
-        // loadStory.backgroundColor = Color.TRANSPARENT;
-        // loadStory.onClickEventId = "loadStory";
+        this.primary = this.addUILayer("primary");
+        const center = this.viewport.getCenter();
+        const loadStory = this.add.uiElement(UIElementType.BUTTON, "primary", { position: new Vec2(center.x, center.y), text: "LoadStory" });
+        loadStory.size.set(200, 50);
+        loadStory.borderWidth = 2;
+        loadStory.borderColor = Color.WHITE;
+        loadStory.backgroundColor = Color.TRANSPARENT;
+        loadStory.onClickEventId = "loadStory";
 
 
-        // this.receiver.subscribe("loadStory");
+        this.receiver.subscribe("loadStory");
 
 
     }
@@ -58,12 +59,15 @@ export default class SceneWithStory extends Scene {
         if (this.story.bgm) {
             this.storyBGMs = new Array;
             this.story.bgm.forEach((bgm) => {
-                this.load.audio(bgm.key, bgm.path);
-                console.log("audio:", bgm.key, "path:", bgm.path);
-                this.load.loadResourcesFromQueue(() => {
-                    console.log("finished loading audio");
+                // this.load.audio(bgm.key, bgm.path);
+                // console.log("audio:", bgm.key, "path:", bgm.path);
+                // this.load.loadResourcesFromQueue(() => {
+                //     console.log("finished loading audio");
+                //     this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
+                // });
+                this.load.singleAudio(bgm.key, bgm.path, () => {
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
-                });
+                })
                 this.storyBGMs.push(bgm.key);
             })
         }
@@ -99,13 +103,19 @@ export default class SceneWithStory extends Scene {
                 this.story.texts[this.storyProgress].actions.forEach(action => {
                     switch (action.type) {
                         case "loadSprite":
-                            this.load.image(action.key, action.path);
-                            this.load.loadResourcesFromQueue(() => {
+                            // this.load.image(action.key, action.path);
+                            // this.load.loadResourcesFromQueue(() => {
+                            //     tmp = this.add.sprite(action.key, "story");
+                            //     tmp.position.set(action.positon[0], action.positon[1]);
+                            //     tmp.scale.set(action.scale[0], action.scale[1]);
+                            //     this.storySprites.push(tmp);
+                            // });
+                            this.load.singleImage(action.key, action.path, () => {
                                 tmp = this.add.sprite(action.key, "story");
                                 tmp.position.set(action.positon[0], action.positon[1]);
                                 tmp.scale.set(action.scale[0], action.scale[1]);
                                 this.storySprites.push(tmp);
-                            });
+                            })
                             break;
                         case "loadAnimatedSprite":
                             this.load.spritesheet(action.key, action.path);
@@ -173,13 +183,13 @@ export default class SceneWithStory extends Scene {
         while (this.receiver.hasNextEvent()) {
             let event = this.receiver.getNextEvent();
             // Testing code            
-            // if (event.type === "loadStory" && this.currentMode === Mode.GAME_MODE) {
-            //     this.storyLoader("shattered_sword_assets/jsons/samplestory.json");
-            // }
+            if (event.type === "loadStory" && this.currentMode === Mode.GAME_MODE) {
+                this.storyLoader("shattered_sword_assets/jsons/samplestory.json");
+            }
         }
         // Testing code
-        // if (Input.isMouseJustPressed() && this.currentMode === Mode.STORY_MODE) {
-        //     this.updateStory();
-        // }
+        if (Input.isMouseJustPressed() && this.currentMode === Mode.STORY_MODE) {
+            this.updateStory();
+        }
     }
 }
