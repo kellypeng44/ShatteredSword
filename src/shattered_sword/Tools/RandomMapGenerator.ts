@@ -1,4 +1,4 @@
-import { TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
+import { TiledLayerData, TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import MapTemplate, { Entrance, RoomTemplate } from "./DataTypes/MapTemplate";
 
@@ -89,15 +89,70 @@ export default class RandomMapGenerator {
         this.rooms.push(room);
 
 
-        if (!this.hasExit) 
-            throw new Error("Fail to generate a room with exit!");
-
+        // if (!this.hasExit) 
+        //     throw new Error("Fail to generate a map with exit!");
+        this.fillData();
         return this.map;
     }
 
     private putNextRoom(): boolean {
 
         return true;
+    }
+
+    private fillData() {
+        let width = this.maxX - this.minX + 1;
+        let height = this.maxY - this.minY + 1;
+        this.map.layers = new Array(2);
+        this.map.layers[0] = new TiledLayerData;
+        this.map.layers[1] = new TiledLayerData;
+        this.map.width = this.map.layers[0].width = this.map.layers[1].width = width;
+        this.map.height = this.map.layers[0].height = this.map.layers[1].height = height;
+        this.map.tileheight = this.template.tileheight;
+        this.map.tilewidth = this.template.tilewidth;
+        this.map.orientation = "orthogonal";
+        this.map.layers[0].x = this.map.layers[0].y = this.map.layers[1].x = this.map.layers[1].y = 0;
+        this.map.layers[0].opacity = this.map.layers[1].opacity = 1;
+        this.map.layers[0].visible = this.map.layers[1].visible = true;
+        this.map.layers[0].type = this.map.layers[1].type = "tilelayer";
+        this.map.layers[0].name = "Floor";
+        this.map.layers[1].name = "Wall";
+        this.map.layers[0].properties = [{
+            name: "Collidable",
+            type: "bool",
+            value: false
+        }]
+        this.map.layers[1].properties = [{
+            name: "Collidable",
+            type: "bool",
+            value: true
+        }]
+        this.map.tilesets = [{
+            columns: this.template.columns,
+            tilewidth: this.template.tilewidth,
+            tileheight: this.template.tileheight,
+            tilecount: this.template.tilecount,
+            firstgid: this.template.firstgid,
+            imageheight: this.template.imageheight,
+            imagewidth: this.template.imagewidth,
+            margin: this.template.margin,
+            spacing: this.template.spacing,
+            name: this.template.name,
+            image: this.template.image
+        }]
+
+        this.map.layers[0].data = new Array(width * height).fill(this.template.background);
+        this.map.layers[1].data = new Array(width * height);
+
+        this.rooms.forEach((room) => {
+            let roomWidth = room.bottomRight.x - room.topLeft.x + 1;
+            let roomHeight = room.bottomRight.y - room.topLeft.y + 1;
+            for (let i = 0; i < roomHeight; i++)
+                for (let j = 0; j < roomWidth; j++) {
+                    this.map.layers[0].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.bottomLayer[i * roomWidth + j];
+                    this.map.layers[1].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.topLayer[i * roomWidth + j];
+                }
+        })
     }
 
     private isValidRoom(topLeft: Vec2, bottomRight: Vec2): boolean {

@@ -20,7 +20,7 @@ export default class MainMenu extends Scene {
     private mainMenu: Layer;
     private about: Layer;
     private control: Layer;
-    private rmg: RandomMapGenerator;
+    // private rmg: RandomMapGenerator;
     
 
     animatedSprite: AnimatedSprite;
@@ -33,18 +33,18 @@ export default class MainMenu extends Scene {
     //TODO 
     
     startScene(): void{
-        this.config = new ConfigManager();
-        this.save = new SaveManager();
-        console.log(this.config.getVolume());
-        this.config.setVolume(100);
-        console.log(this.config.getVolume());
-        console.log(this.save.getLevel());
-        this.save.setLevel(10);
+        // this.config = new ConfigManager();
+        // this.save = new SaveManager();
+        // console.log(this.config.getVolume());
+        // this.config.setVolume(100);
+        // console.log(this.config.getVolume());
+        // console.log(this.save.getLevel());
+        // this.save.setLevel(10);
 
-        console.log(this.save.getLevel());
+        // console.log(this.save.getLevel());
         
-        this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", 114514);
-        this.rmg.getMap();
+        // this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", 114514);
+        // this.rmg.getMap();
 
 
 
