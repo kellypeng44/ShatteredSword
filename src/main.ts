@@ -9,11 +9,11 @@ import MainMenu from "./shattered_sword/Scenes/MainMenu";
 
     // Set up options for our game
     let options = {
-        canvasSize: {x: 1200, y: 800},          // The size of the game
+        canvasSize: {x: window.innerWidth, y: window.innerHeight},          // The size of the game
         clearColor: {r: 0, g: 0, b: 0},   // The color the game clears to
         inputs: [
-            {name: "left", keys: ["a"]},    //TODO - add arrow keys
-            {name: "right", keys: ["d"]},
+            {name: "left", keys: ["a", "arrowleft"]},    //TODO - add arrow keys
+            {name: "right", keys: ["d", "arrowright"]},
             {name: "up", keys: ["w"]},
             {name: "down", keys: ["s"]},
             {name: "jump", keys: ["x","space"]},
