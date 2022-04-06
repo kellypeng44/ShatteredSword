@@ -19,6 +19,7 @@
     "watchify": "^3.11.1"
   },
   "dependencies": {
+    "random-seed": "^0.3.0",
     "typescript-require": "^0.3.0"
   }
 }

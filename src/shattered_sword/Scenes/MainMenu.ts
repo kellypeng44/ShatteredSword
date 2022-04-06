@@ -20,6 +20,7 @@ export default class MainMenu extends Scene {
     private mainMenu: Layer;
     private about: Layer;
     private control: Layer;
+    private rmg: RandomMapGenerator;
     
 
     animatedSprite: AnimatedSprite;
@@ -41,10 +42,10 @@ export default class MainMenu extends Scene {
         this.save.setLevel(10);
 
         console.log(this.save.getLevel());
-    
-
         
-        new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json");
+        this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", 114514);
+        this.rmg.getMap();
+
 
 
         // Scene has started, so start playing music
