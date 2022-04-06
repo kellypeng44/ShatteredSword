@@ -41,6 +41,8 @@ export default class SceneWithStory extends Scene {
         loadStory.borderColor = Color.WHITE;
         loadStory.backgroundColor = Color.TRANSPARENT;
         loadStory.onClickEventId = "loadStory";
+        this.storyLayer = this.addUILayer("story");
+        this.storyLayer.disable();
 
 
         this.receiver.subscribe("loadStory");
@@ -53,9 +55,12 @@ export default class SceneWithStory extends Scene {
      * @param storyPath The path to the story JSON
      */
     async storyLoader(storyPath: string) {
-        this.storyLayer = this.addUILayer("story");
+        // I may want to load multiple stories in a single scene, but this 
+        // Layer with name story already exists
+        // so can i detect whether this layer exists?
         const response = await (await fetch(storyPath)).json();
         this.story = <Story>response;
+        console.log("story:", this.story);
         if (this.story.bgm) {
             this.storyBGMs = new Array;
             this.story.bgm.forEach((bgm) => {
@@ -65,15 +70,21 @@ export default class SceneWithStory extends Scene {
                 //     console.log("finished loading audio");
                 //     this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
                 // });
-                this.load.singleAudio(bgm.key, bgm.path, () => {
+
+                if (this.load.getAudio(bgm.key)) {
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
-                })
+                }
+                else {
+                    this.load.singleAudio(bgm.key, bgm.path, () => {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
+                    })
+                }
                 this.storyBGMs.push(bgm.key);
             })
         }
         this.currentSpeaker = this.story.texts[0].speaker;
         this.currentContent = this.story.texts[0].content;
-
+        this.storyLayer.enable();
         this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y + 240), text: "" });
         this.storytextLabel.textColor = Color.WHITE;
         this.storytextLabel.font = "PixelSimple";
@@ -110,12 +121,20 @@ export default class SceneWithStory extends Scene {
                             //     tmp.scale.set(action.scale[0], action.scale[1]);
                             //     this.storySprites.push(tmp);
                             // });
-                            this.load.singleImage(action.key, action.path, () => {
+                            if (this.load.getImage(action.key)) {
                                 tmp = this.add.sprite(action.key, "story");
                                 tmp.position.set(action.positon[0], action.positon[1]);
                                 tmp.scale.set(action.scale[0], action.scale[1]);
                                 this.storySprites.push(tmp);
-                            })
+                            }
+                            else {
+                                this.load.singleImage(action.key, action.path, () => {
+                                    tmp = this.add.sprite(action.key, "story");
+                                    tmp.position.set(action.positon[0], action.positon[1]);
+                                    tmp.scale.set(action.scale[0], action.scale[1]);
+                                    this.storySprites.push(tmp);
+                                })
+                            }
                             break;
                         case "loadAnimatedSprite":
                             this.load.spritesheet(action.key, action.path);
@@ -152,7 +171,7 @@ export default class SceneWithStory extends Scene {
             }
             this.currentSpeaker = this.story.texts[this.storyProgress].speaker;
             this.currentContent = this.story.texts[this.storyProgress].content;
-            this.storytextLabel.text = this.currentSpeaker + ':\n\n' + this.currentContent;
+            this.storytextLabel.text = this.currentSpeaker?(this.currentSpeaker+":"):"" + '\n' + this.currentContent;
         }
         else {
             this.currentMode = Mode.GAME_MODE;
@@ -175,7 +194,7 @@ export default class SceneWithStory extends Scene {
             this.storySprites = undefined;
             this.story = undefined;
             this.storytextLabel = undefined;
-            this.storyLayer = undefined;
+            // this.storyLayer = undefined;
         }
     }
 

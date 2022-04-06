@@ -198,9 +198,9 @@ export default class ResourceManager {
      */
     public getImage(key: string): HTMLImageElement {
         let image = this.images.get(key);
-        if (image === undefined) {
-            throw `There is no image associated with key "${key}"`
-        }
+        // if (image === undefined) {
+        //     throw `There is no image associated with key "${key}"`
+        // }
         return image;
     }
 

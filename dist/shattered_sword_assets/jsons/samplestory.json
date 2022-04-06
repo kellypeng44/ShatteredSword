@@ -44,7 +44,7 @@
             ]
         },
         {
-            "speaker": "world",
+            "speaker": "",
             "content": "this should hide the image",
             "actions": [
                 {
@@ -54,7 +54,7 @@
             ]
         },
         {
-            "speaker": "world",
+            "speaker": "",
             "content": "this should show it again",
             "actions": [
                 {
