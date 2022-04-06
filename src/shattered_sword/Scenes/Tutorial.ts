@@ -9,7 +9,10 @@ export default class Tutorial extends GameLevel{
 
     loadScene(): void {
         // Load resources
-        this.load.tilemap("forest1", "shattered_sword_assets/tilemaps/Tutorial.json");
+        // this.load.tilemap("forest1", "shattered_sword_assets/tilemaps/Tutorial.json");
+        let map = localStorage.getItem("map");
+        this.load.tilemapFromObject("forest1", JSON.parse(map));
+        
         this.load.spritesheet("player", "shattered_sword_assets/spritesheets/Hiro.json")
         //load music here
     }

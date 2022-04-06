@@ -81,6 +81,10 @@ export default class ResourceManager {
     private loadonly_gl_ShaderProgramsToLoad: number;
     private loadonly_gl_ShaderLoadingQueue: Queue<KeyPath_Shader>;
 
+    private loadonly_tilemapObjectToLoad: number;
+    private loadonly_tilemapObjectLoaded: number;
+    private loadonly_tilemapObjectLoadingQueue: Queue<KeyMapPair>;
+
     private gl_ShaderPrograms: Map<WebGLProgramType>;
 
     private gl_Textures: Map<number>;
@@ -137,6 +141,10 @@ export default class ResourceManager {
 
         this.resourcesToUnload = new Array();
         this.resourcesToKeep = new Array();
+
+        this.loadonly_tilemapObjectToLoad = 0;
+        this.loadonly_tilemapObjectToLoad = 0;
+        this.loadonly_tilemapObjectLoadingQueue = new Queue();
     };
 
     /* ######################################## SINGLETON ########################################*/
@@ -311,26 +319,30 @@ export default class ResourceManager {
         this.loading = true;
 
         // Load everything in the queues. Tilemaps have to come before images because they will add new images to the queue
-        this.loadTilemapsFromQueue(() => {
-            console.log("Loaded Tilemaps");
-            this.loadSpritesheetsFromQueue(() => {
-                console.log("Loaded Spritesheets");
-                this.loadImagesFromQueue(() => {
-                    console.log("Loaded Images");
-                    this.loadAudioFromQueue(() => {
-                        console.log("Loaded Audio");
-                        this.loadObjectsFromQueue(() => {
-                            console.log("Loaded Objects");
 
-                            if (this.gl_WebGLActive) {
-                                this.gl_LoadShadersFromQueue(() => {
-                                    console.log("Loaded Shaders");
+        this.loadTilemapObjectFromQueue(() => {
+            console.log("Loaded TilemapObjects");
+            this.loadTilemapsFromQueue(() => {
+                console.log("Loaded Tilemaps");
+                this.loadSpritesheetsFromQueue(() => {
+                    console.log("Loaded Spritesheets");
+                    this.loadImagesFromQueue(() => {
+                        console.log("Loaded Images");
+                        this.loadAudioFromQueue(() => {
+                            console.log("Loaded Audio");
+                            this.loadObjectsFromQueue(() => {
+                                console.log("Loaded Objects");
+
+                                if (this.gl_WebGLActive) {
+                                    this.gl_LoadShadersFromQueue(() => {
+                                        console.log("Loaded Shaders");
+                                        this.finishLoading(callback);
+                                    });
+                                } else {
                                     this.finishLoading(callback);
-                                });
-                            } else {
-                                this.finishLoading(callback);
-                            }
-                        })
+                                }
+                            })
+                        });
                     });
                 });
             });
@@ -976,11 +988,32 @@ export default class ResourceManager {
 
     // Customized funtions below
     // These funtions are NOT well tested!!!
-    // Only used for shatted sword specific purpose!!!
+    // Only used for shattered sword specific purpose!!!
     // Use them carefully!!!
 
-    public loadSingleTilemap(key: string, tiledMap: TiledTilemapData, callbackIfLast: Function): void {
+    public tilemapFromObject(key: string, tilemap: TiledTilemapData): void {
+        this.loadonly_tilemapObjectLoadingQueue.enqueue({ key: key, map: tilemap });
+    }
+
+    private loadTilemapObjectFromQueue(onFinishLoading: Function) {
+        this.loadonly_tilemapObjectToLoad = this.loadonly_tilemapObjectLoadingQueue.getSize();
+        this.loadonly_tilemapObjectLoaded = 0;
+
+        // If no items to load, we're finished
+        if (this.loadonly_tilemapObjectToLoad === 0) {
+            onFinishLoading();
+            return;
+        }
+
+        while (this.loadonly_tilemapObjectLoadingQueue.hasItems()) {
+            let map = this.loadonly_tilemapObjectLoadingQueue.dequeue();
+            this.loadTilemapFromObject(map.key, map.map, onFinishLoading);
+        }
+    }
+
+    private loadTilemapFromObject(key: string, tiledMap: TiledTilemapData, callbackIfLast: Function): void {
         // We can parse the object later - it's much faster than loading
+
         this.tilemaps.add(key, tiledMap);
         let resource = new ResourceReference(key, ResourceType.TILEMAP);
 
@@ -989,7 +1022,7 @@ export default class ResourceManager {
             if (tileset.image) {
                 let key = tileset.image;
                 let path = key;
-                this.loadSingleImage(key, path, true , callbackIfLast);
+                this.loadonly_imageLoadingQueue.enqueue({ key: key, path: path, isDependency: true });
 
                 // Add this image as a dependency to the tilemap
                 resource.addDependency(new ResourceReference(key, ResourceType.IMAGE));
@@ -998,24 +1031,17 @@ export default class ResourceManager {
 
         // Add the resource reference to the list of resource to unload
         this.resourcesToUnload.push(resource);
+
+        this.finishLoadingTilemapObject(callbackIfLast);
     }
 
-    private loadSingleSpritesheet(key: string, pathToSpritesheetJSON: string, callbackIfLast: Function): void {
-        this.loadTextFile(pathToSpritesheetJSON, (fileText: string) => {
-            let spritesheet = <Spritesheet>JSON.parse(fileText);
+    private finishLoadingTilemapObject(callback: Function): void {
+        this.loadonly_tilemapObjectLoaded += 1;
 
-            // We can parse the object later - it's much faster than loading
-            this.spritesheets.add(key, spritesheet);
-
-            let resource = new ResourceReference(key, ResourceType.SPRITESHEET);
-
-            // Grab the image we need to load and add it to the imageloading queue
-            let path = StringUtils.getPathFromFilePath(pathToSpritesheetJSON) + spritesheet.spriteSheetImage;
-            this.loadSingleImage(spritesheet.name, path, true, callbackIfLast);
-
-            resource.addDependency(new ResourceReference(spritesheet.name, ResourceType.IMAGE));
-            this.resourcesToUnload.push(resource);
-        });
+        if (this.loadonly_tilemapObjectLoaded === this.loadonly_tilemapObjectToLoad) {
+            // We're done loading tilemaps
+            callback();
+        }
     }
 
     public loadSingleImage(key: string, path: string, isDependency: boolean, callbackIfLast: Function): void {
@@ -1025,10 +1051,7 @@ export default class ResourceManager {
             // Add to loaded images
             this.images.add(key, image);
 
-            // If not a dependency, push it to the unload list. Otherwise it's managed by something else
-            if (!isDependency) {
-                this.resourcesToUnload.push(new ResourceReference(key, ResourceType.IMAGE));
-            }
+            this.resourcesToUnload.push(new ResourceReference(key, ResourceType.IMAGE));
 
             // If WebGL is active, create a texture
             if (this.gl_WebGLActive) {
@@ -1038,11 +1061,10 @@ export default class ResourceManager {
             // Finish image load
             this.finishLoadingSingleObject(callbackIfLast);
         }
-
         image.src = path;
     }
 
-    private loadSingleAudio(key: string, path: string, callbackIfLast: Function): void {
+    public loadSingleAudio(key: string, path: string, callbackIfLast: Function): void {
         let audioCtx = AudioManager.getInstance().getAudioContext();
 
         let request = new XMLHttpRequest();
@@ -1120,6 +1142,11 @@ class KeyPathPair {
     key: string;
     path: string;
     isDependency?: boolean = false;
+}
+
+class KeyMapPair {
+    key: string;
+    map: TiledTilemapData;
 }
 
 class KeyPath_Shader {
