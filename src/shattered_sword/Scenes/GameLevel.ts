@@ -95,6 +95,22 @@ export default class GameLevel extends Scene {
             }
         }
 
+
+
+        //handle collisions
+
+
+        //move background
+
+
+        // Get the viewport center and padded size
+		const viewportCenter = this.viewport.getCenter().clone();
+		const baseViewportSize = this.viewport.getHalfSize().scaled(2);
+        //check position of player
+        this.playerFalloff(viewportCenter, baseViewportSize);
+
+
+
     }
 
     /**
@@ -268,5 +284,21 @@ export default class GameLevel extends Scene {
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
         this.sceneManager.changeToScene(MainMenu, {});
         Input.enableInput();
+    }
+
+
+
+    /**
+     * 
+     * handles the player falling off the map
+     * 
+     * @param viewportCenter The center of the viewport
+     * @param viewportSize The size of the viewport
+     */
+    playerFalloff(viewportCenter: Vec2, viewportSize: Vec2):void{
+         if(this.player.position.y >= viewportCenter.y +viewportSize.y/2.0){
+			
+			this.player.position.set(this.playerSpawn.x,this.playerSpawn.y);
+		}
     }
 }
