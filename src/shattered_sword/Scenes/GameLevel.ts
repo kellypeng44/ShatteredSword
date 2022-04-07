@@ -43,6 +43,12 @@ export default class GameLevel extends Scene {
     protected levelTransitionTimer: Timer;
     protected levelTransitionScreen: Rect;
     
+
+    // Health UI
+    protected healthLabel: Label;
+    
+
+
     startScene(): void {
 
         // Do the game level standard initializations
@@ -128,6 +134,10 @@ export default class GameLevel extends Scene {
      */
     protected addUI(){
         // In-game labels
+        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(80, 30), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
+        this.healthLabel.textColor = Color.WHITE;
+        this.healthLabel.font = "PixelSimple";
+
 
         // End of level label (start off screen)
         this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(-300, 200), text: "Level Complete"});
