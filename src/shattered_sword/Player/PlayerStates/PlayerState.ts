@@ -11,7 +11,7 @@ import PlayerController from "../PlayerController";
 
 export default abstract class PlayerState extends State {
 	owner: GameNode;
-	gravity: number = 1000; //TODO - can change later
+	gravity: number = 1500; //TODO - can change later
 	parent: PlayerController;
 	positionTimer: Timer;
 

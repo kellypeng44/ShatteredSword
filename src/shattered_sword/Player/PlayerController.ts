@@ -131,6 +131,6 @@ export default class PlayerController extends StateMachineAI {
 		} else if(this.currentState instanceof Fall){
             Debug.log("playerstate", "Player State: Fall");
         }
-        
+        Debug.log("playerspeed", "x: " + this.velocity.x + ", y:" + this.velocity.y);
 	}
 }
