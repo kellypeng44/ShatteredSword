@@ -176,6 +176,19 @@ export default class RandomMapGenerator {
         return Facing.DOWN;
     }
 
+    private getOppositeFacing(facing: Facing): Facing {
+        switch (facing) {
+            case Facing.LEFT:
+                return Facing.RIGHT;
+            case Facing.RIGHT:
+                return Facing.LEFT;
+            case Facing.UP:
+                return Facing.DOWN;
+            case Facing.DOWN:
+                return Facing.UP;
+        }
+    }
+
     private getRandomRoom(value: number, facing: Facing): RoomTemplate {
         let array = this.getRoomArray(facing), weight = this.getRoomWeight(facing);
 
