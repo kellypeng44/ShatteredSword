@@ -21,6 +21,8 @@ export default class RandomMapGenerator {
     private gen: any;
     private hasExit: boolean;
     private minRoom: number;
+    private roomPlaced: number;
+    private exitFacing: Facing;
 
     constructor(JSONFilePath: string, seed: any) {
         let xhr = new XMLHttpRequest();
@@ -42,6 +44,8 @@ export default class RandomMapGenerator {
         this.gen = new gen(seed);
         this.hasExit = false;
         this.minRoom = this.template.minroom;
+        this.roomPlaced = 0;
+        this.exitFacing = this.getEntranceFacing(this.template.exit.entrances[0], this.template.exit.width);
 
 
         this.template.rooms.forEach((room) => {
@@ -88,16 +92,104 @@ export default class RandomMapGenerator {
         let room = this.copyRoom(this.template.entrance, 0, 0);
         this.rooms.push(room);
 
+        let facing = this.getEntranceFacing(this.template.entrance.entrances[0], this.template.entrance.width);
+        let position = new Vec2(this.template.entrance.entrances[0].x, this.template.entrance.entrances[0].y);
 
-        // if (!this.hasExit) 
-        //     throw new Error("Fail to generate a map with exit!");
+        this.putNextRoom(position, this.getOppositeFacing(facing));
+
+        if (!this.hasExit)
+            throw new Error("Fail to generate a map with exit!");
+
         this.fillData();
         return this.map;
     }
 
-    private putNextRoom(): boolean {
+    private putNextRoom(position: Vec2, facing: Facing): boolean {
+        switch (facing) {
+            case Facing.LEFT:
+                position.x += 1;
+                break;
+            case Facing.RIGHT:
+                position.x -= 1;
+                break;
+            case Facing.UP:
+                position.y += 1;
+                break;
+            case Facing.DOWN:
+                position.y -= 1;
+                break;
+            default:
+                break;
+        }
+        if (this.roomPlaced >= this.minRoom && facing == this.exitFacing) {
+            this.putExitRoom(position);
+            return true;
+        }
 
+        let nextRoom = this.getRandomRoom(facing);
+        let nextPosition: Vec2 = undefined;
+        let thisEntrance: Entrance = undefined;
+        for (let index = 0; index < nextRoom.entrances.length; index++) {
+            const entrance = nextRoom.entrances[index];
+            if (this.getEntranceFacing(entrance, nextRoom.weight) == facing) {
+                let tmpPosition = new Vec2(position.x - entrance.x, position.y - entrance.y);
+                if (this.isValidRoom(tmpPosition, new Vec2(tmpPosition.x + nextRoom.width - 1, tmpPosition.y + nextRoom.height - 1))) {
+                    thisEntrance = entrance;
+                    nextPosition = tmpPosition;
+                }
+            }
+        }
+        if (!thisEntrance) {
+            return false;
+        }
+        let room = this.copyRoom(nextRoom, nextPosition.x, nextPosition.y);
+        this.rooms.push(room);
+        this.roomPlaced += 1;
+        if (this.hasExit && this.gen.range() <= 0.1) {
+            return false;
+        }
+        for (let index = 0; index < nextRoom.entrances.length; index++) {
+            const entrance = nextRoom.entrances[index];
+            if (entrance != thisEntrance) {
+                let facing = this.getEntranceFacing(entrance, nextRoom.width);
+                let position = new Vec2(nextPosition.x + entrance.x, nextPosition.y + entrance.y);
+
+                if (this.putNextRoom(position, this.getOppositeFacing(facing))) {
+                    this.removeEntrance(room, entrance, facing);
+                }
+            }
+        }
         return true;
+    }
+
+    private putExitRoom(position: Vec2): void {
+        position = new Vec2(position.x - this.template.exit.entrances[0].x, position.y - this.template.exit.entrances[0].y);
+        if (!this.isValidRoom(position, new Vec2(position.x + this.template.exit.width - 1, position.y + this.template.exit.height - 1))) {
+            throw new Error("Cannot put exit room!!! Position is invalid!!! Please check order of entrances in map template.");
+        }
+        let room = this.copyRoom(this.template.exit, position.x, position.y);
+        this.rooms.push(room);
+        this.hasExit = true;
+    }
+
+    private removeEntrance(room: Room, entrance: Entrance, facing: Facing): void {
+        let width = room.bottomRight.x - room.topLeft.x + 1;
+        if (facing == Facing.LEFT || facing == Facing.RIGHT) {
+            for (let index = 0; index < entrance.width; index++)
+                room.topLayer[(entrance.y + index) * width + entrance.x] = 0;
+            if (entrance.y > 0)
+                room.topLayer[(entrance.y - 1) * width + entrance.x] = entrance.alt_tile[0];
+            if (entrance.y + entrance.width <= (room.bottomRight.y - room.topLeft.y))
+                room.topLayer[(entrance.y + entrance.width) * width + entrance.x] = entrance.alt_tile[1];
+        }
+        else {
+            for (let index = 0; index < entrance.width; index++)
+                room.topLayer[(entrance.y) * width + entrance.x + index] = 0;
+            if (entrance.x > 0)
+                room.topLayer[(entrance.y) * width + entrance.x - 1] = entrance.alt_tile[0];
+            if (entrance.x + entrance.width <= (room.bottomRight.x - room.topLeft.x))
+                room.topLayer[(entrance.y) * width + entrance.x + entrance.width] = entrance.alt_tile[1];
+        }
     }
 
     private fillData() {
@@ -144,7 +236,8 @@ export default class RandomMapGenerator {
         this.map.layers[0].data = new Array(width * height).fill(this.template.background);
         this.map.layers[1].data = new Array(width * height);
 
-        this.rooms.forEach((room) => {
+        for (let index = 0; index < this.rooms.length; index++) {
+            const room = this.rooms[index];
             let roomWidth = room.bottomRight.x - room.topLeft.x + 1;
             let roomHeight = room.bottomRight.y - room.topLeft.y + 1;
             for (let i = 0; i < roomHeight; i++)
@@ -152,18 +245,20 @@ export default class RandomMapGenerator {
                     this.map.layers[0].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.bottomLayer[i * roomWidth + j];
                     this.map.layers[1].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.topLayer[i * roomWidth + j];
                 }
-        })
+        }
     }
 
     private isValidRoom(topLeft: Vec2, bottomRight: Vec2): boolean {
-        this.rooms.forEach((room) => {
-            if (room.topLeft.x < bottomRight.x &&
-                room.bottomRight.x > topLeft.x &&
-                room.topLeft.y < bottomRight.y &&
-                room.bottomRight.y > topLeft.y)
-                return true;
-        })
-        return false;
+        for (let index = 0; index < this.rooms.length; index++) {
+            const room = this.rooms[index];
+            if (room.topLeft.x <= bottomRight.x &&
+                room.bottomRight.x >= topLeft.x &&
+                room.topLeft.y <= bottomRight.y &&
+                room.bottomRight.y >= topLeft.y)
+                return false;
+        }
+        console.warn("Found an invalid room! TopLeft:", topLeft.toString, "BottomRight:", bottomRight.toString);
+        return true;
     }
 
     private getEntranceFacing(entrance: Entrance, width: number): Facing {
@@ -189,18 +284,20 @@ export default class RandomMapGenerator {
         }
     }
 
-    private getRandomRoom(value: number, facing: Facing): RoomTemplate {
+    private getRandomRoom(facing: Facing): RoomTemplate {
         let array = this.getRoomArray(facing), weight = this.getRoomWeight(facing);
+        let value = this.gen(weight);
 
         if (value >= weight)
             throw new Error("Random number " + value + " is larger than total weight " + weight);
 
-        array.forEach((room) => {
+        for (let index = 0; index < array.length; index++) {
+            let room = array[index];
             if (value < room.weight)
                 return room;
             value -= room.weight;
-        })
-        throw new Error("Cannot find Room! \nRooms: " + JSON.stringify(array) + "\nValue: " + value);
+        }
+        throw new Error("Cannot find Room! \nValue: " + value + "\nRooms: " + JSON.stringify(array));
     }
 
     private getRoomArray(facing: Facing): Array<RoomTemplate> {
