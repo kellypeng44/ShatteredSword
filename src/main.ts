@@ -1,6 +1,9 @@
 
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./shattered_sword/Scenes/MainMenu";
+import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
+import WeaponTemplateRegistry from "./shattered_sword/Registry/WeaponRegistry";
+import WeaponTypeRegistry from "./shattered_sword/Registry/WeaponTypeRegistry";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
@@ -27,6 +30,14 @@ import MainMenu from "./shattered_sword/Scenes/MainMenu";
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: true                       // Whether to show debug messages. You can change this to true if you want
     }
+
+
+    // Set up custom registries
+    let weaponTemplateRegistry = new WeaponTemplateRegistry();
+    RegistryManager.addCustomRegistry("weaponTemplates", weaponTemplateRegistry);
+    
+    let weaponTypeRegistry = new WeaponTypeRegistry();
+    RegistryManager.addCustomRegistry("weaponTypes", weaponTypeRegistry);
 
     // Create a game with the options specified
     const game = new Game(options);

@@ -10,6 +10,7 @@ import GameLevel from "./GameLevel";
 export default class Tutorial extends GameLevel{
     private map: TiledTilemapData;
     loadScene(): void {
+        super.loadScene();
         // Load resources
         // this.load.tilemap("forest1", "shattered_sword_assets/tilemaps/Tutorial.json");
         // let map = localStorage.getItem("map");

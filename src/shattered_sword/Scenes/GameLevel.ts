@@ -17,6 +17,14 @@ import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController from "../Player/PlayerController";
 import MainMenu from "./MainMenu";
 import { Player_Events } from "../sword_enums";
+import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
+import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
+import Weapon from "../GameSystems/items/Weapon";
+import BattleManager from "../GameSystems/BattleManager";
+//import EnemyAI from "../AI/EnemyAI";
+import BattlerAI from "../AI/BattlerAI";
+
+
 
 //  TODO
 /**
@@ -42,12 +50,27 @@ export default class GameLevel extends Scene {
     // Screen fade in/out for level start and end
     protected levelTransitionTimer: Timer;
     protected levelTransitionScreen: Rect;
-    
+
+    // The battle manager for the scene
+    private battleManager: BattleManager;
 
     // Health UI
     protected healthLabel: Label;
     
+    loadScene(): void {
+        //can load player sprite here
 
+        //can load enemy sprite here
+
+        // Load the scene info
+        //this.load.object("weaponData", "shattered_sword_assets/data/weaponData.json");
+
+        // Load in the enemy info
+        //this.load.object("enemyData", "shattered_sword_assets/data/enemy.json");
+
+        // Load in item info
+        //this.load.object("itemData", "shattered_sword_assets/data/items.json");
+    }
 
     startScene(): void {
 
@@ -211,6 +234,18 @@ export default class GameLevel extends Scene {
         });
       
 
+        // Initialize all enemies
+        //this.initializeEnemies();
+
+        // Send the player and enemies to the battle manager
+        //this.battleManager.setPlayers([<BattlerAI>this.player._ai]);
+        //this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
+
+        // Subscribe to relevant events
+        //this.receiver.subscribe("");
+      
+
+
     }
 
     /**
@@ -258,7 +293,7 @@ export default class GameLevel extends Scene {
 
    
     protected handlePlayerEnemyCollision(player: AnimatedSprite, enemy: AnimatedSprite) {
-        
+        //collisions are handled by the battleManager - no need for this in gamelevel for now 
     }
 
     /**
@@ -300,5 +335,19 @@ export default class GameLevel extends Scene {
 			
 			this.player.position.set(this.playerSpawn.x,this.playerSpawn.y);
 		}
+    }
+
+    //TODO - determine whether we will have weapon datatype
+    /**
+     * 
+     * Creates and returns a new weapon
+     * @param type The weaponType of the weapon, as a string
+     */
+     createWeapon(type: string): Weapon {
+        let weaponType = <WeaponType>RegistryManager.getRegistry("weaponTypes").get(type);
+
+        let sprite = this.add.sprite(weaponType.spriteKey, "primary");
+
+        return new Weapon(sprite, weaponType, this.battleManager);
     }
 }
