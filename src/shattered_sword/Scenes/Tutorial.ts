@@ -14,7 +14,8 @@ export default class Tutorial extends GameLevel{
         // Load resources
         // this.load.tilemap("forest1", "shattered_sword_assets/tilemaps/Tutorial.json");
         // let map = localStorage.getItem("map");
-        let rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", 114514);
+        let randomSeed = Math.floor(Math.random()*10000000000);
+        let rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", randomSeed);
         this.map = rmg.getMap();
         this.load.tilemapFromObject("forest1", this.map);
         
