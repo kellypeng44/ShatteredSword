@@ -26,6 +26,7 @@ export default class Tutorial extends GameLevel{
         // Add the level 1 tilemap
         this.add.tilemap("forest1", new Vec2(2, 2));
         this.viewport.setBounds(0, 0, this.map.width*32, this.map.height*32);
+        this.viewport.follow(this.player);
 
         this.playerSpawn = new Vec2(5*32, 9*32);
 
