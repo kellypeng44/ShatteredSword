@@ -90,7 +90,7 @@ export default class MainMenu extends Scene {
         aboutHeader.textColor = Color.WHITE;
 
         
-        const text1 = "This game was created by Henry Chen, Kelly Peng, and Xinyu Xu";
+        const text1 = "This game was created by Henry Chen, Kelly Peng, and Renge";
         const text2 = "using the Wolfie2D game engine, a TypeScript game engine created by";
         const text3 = "Joe Weaver and Richard McKenna.";
 

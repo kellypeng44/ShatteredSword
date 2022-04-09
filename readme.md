@@ -7,7 +7,7 @@ CSE380 2D Game Design Project, Spring 2022
 <div style="text-align: left"><img width='500' alt='Shattered Sword' src='./public/GUI/Logo.png'></div>
 
 ## About our team
-Henry Chen, Kelly Peng, Xinyu Xu
+Henry Chen, Kelly Peng, Renge
 
 # Game Engine
 ## How to transpile and run
