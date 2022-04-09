@@ -41,7 +41,7 @@ export default class Weapon extends Item {
         this.battleManager = battleManager;
 
         // Create the cooldown timer
-        this.cooldownTimer = new Timer(type.cooldown);
+        this.cooldownTimer = new Timer(type.cooldown);  
     }
 
     // @override

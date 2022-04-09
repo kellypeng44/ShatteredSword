@@ -10,6 +10,12 @@ import InAir from "./PlayerStates/InAir";
 import Jump from "./PlayerStates/Jump";
 import Walk from "./PlayerStates/Walk";
 import Debug from "../../Wolfie2D/Debug/Debug";
+import Item from "../GameSystems/items/Item";
+import InventoryManager from "../GameSystems/InventoryManager";
+import Input from "../../Wolfie2D/Input/Input";
+import BattlerAI from "../AI/BattlerAI";
+import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+
 
 export enum PlayerType {
     PLATFORMER = "platformer",
@@ -40,8 +46,8 @@ type Buffs = [
 ]
 
 
-export default class PlayerController extends StateMachineAI {
-    protected owner: GameNode;
+export default class PlayerController extends StateMachineAI implements BattlerAI{
+    owner: GameNode;
     velocity: Vec2 = Vec2.ZERO;
 	speed: number = 200;
 	MIN_SPEED: number = 200;
@@ -56,6 +62,20 @@ export default class PlayerController extends StateMachineAI {
     MAX_DEF: number = 100;
     CURRENT_DEF: number = 100;
     tilemap: OrthogonalTilemap;
+
+    // TODO - 
+    damage(damage: number): void {
+        this.CURRENT_HP -= damage;
+    }
+
+    private lookDirection: Vec2;
+
+
+    /** A list of items in the game world */
+    private items: Array<Item>;
+
+    // The inventory of the player
+    inventory: InventoryManager;
 
     CURRENT_BUFFS: {
         atk: 0;
@@ -91,7 +111,9 @@ export default class PlayerController extends StateMachineAI {
 
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
       
+        this.inventory  = options.inventory;
 
+        this.lookDirection = new Vec2();
     }
 
     initializePlatformer(): void {
@@ -132,5 +154,21 @@ export default class PlayerController extends StateMachineAI {
             Debug.log("playerstate", "Player State: Fall");
         }
         Debug.log("playerspeed", "x: " + this.velocity.x + ", y:" + this.velocity.y);
+
+
+        //testing the attacks here, may be moved to another place latera
+        if(Input.isJustPressed("attack")){
+            let item = this.inventory.getItem();
+            //TODO - get proper look direction 
+            this.lookDirection.x = (<Sprite>this.owner).invertX ? -1 : 1;
+            // If there is an item in the current slot, use it
+            if (item) {
+                item.use(this.owner, "player", this.lookDirection);
+            }
+        }
+        
+
 	}
+
+    
 }

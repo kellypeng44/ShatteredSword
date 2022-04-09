@@ -7,7 +7,7 @@ import GameNode from "../../Wolfie2D/Nodes/GameNode";
 export default interface BattlerAI extends AI {
     owner: GameNode;
 
-    health: number;
+    CURRENT_HP: number;     //changed health to CURRENT_HP
 
     damage: (damage: number) => void;
 }

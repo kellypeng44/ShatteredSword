@@ -27,6 +27,8 @@ export default class OnGround extends PlayerState {
 		} else if(!this.owner.onGround){
 			this.finished("fall");
 		}
+
+		
 	}
 
 	onExit(): Record<string, any> {

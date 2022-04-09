@@ -23,6 +23,10 @@ import Weapon from "../GameSystems/items/Weapon";
 import BattleManager from "../GameSystems/BattleManager";
 //import EnemyAI from "../AI/EnemyAI";
 import BattlerAI from "../AI/BattlerAI";
+import InventoryManager from "../GameSystems/InventoryManager";
+import Item from "../GameSystems/items/Item";
+
+
 
 
 
@@ -56,6 +60,9 @@ export default class GameLevel extends Scene {
 
     // Health UI
     protected healthLabel: Label;
+
+     // A list of items in the scene
+     private items: Array<Item>;
     
     loadScene(): void {
         //can load player sprite here
@@ -63,23 +70,43 @@ export default class GameLevel extends Scene {
         //can load enemy sprite here
 
         // Load the scene info
-        //this.load.object("weaponData", "shattered_sword_assets/data/weaponData.json");
+        this.load.object("weaponData", "shattered_sword_assets/data/weaponData.json");
 
         // Load in the enemy info
         //this.load.object("enemyData", "shattered_sword_assets/data/enemy.json");
 
         // Load in item info
         //this.load.object("itemData", "shattered_sword_assets/data/items.json");
+
+
+        this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
+        this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
+        this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
     }
 
     startScene(): void {
 
+       
+
         // Do the game level standard initializations
         this.initLayers();
         this.initViewport();
+
+        // Create the battle manager
+        this.battleManager = new BattleManager();
+
+         // TODO
+         this.initializeWeapons();
+         // Initialize the items array - this represents items that are in the game world
+         this.items = new Array();
+
         this.initPlayer();
         this.subscribeToEvents();
         this.addUI();
+
+        
+        // Send the player and enemies to the battle manager
+        this.battleManager.setPlayers([<PlayerController>this.player._ai]);
 
         // Initialize the timers
         this.respawnTimer = new Timer(1000, () => {
@@ -98,6 +125,7 @@ export default class GameLevel extends Scene {
         });
 
 
+        
         // Start the black screen fade out
         this.levelTransitionScreen.tweens.play("fadeOut");
 
@@ -118,9 +146,11 @@ export default class GameLevel extends Scene {
             }
         }
 
+        //update health UI 
+        let playerAI = (<PlayerController>this.player.ai);
+        this.healthLabel.text = "Player Health: "+ playerAI.CURRENT_HP +'/' + (playerAI.MAX_HP );
 
-
-        //handle collisions
+        //handle collisions - may be in battle manager instead
 
 
         //move background
@@ -134,6 +164,7 @@ export default class GameLevel extends Scene {
 
 
 
+        
     }
 
     /**
@@ -248,10 +279,57 @@ export default class GameLevel extends Scene {
 
     }
 
+    //TODO - determine whether we will have weapon datatype
+    /**
+     * 
+     * Creates and returns a new weapon
+     * @param type The weaponType of the weapon, as a string
+     */
+     createWeapon(type: string): Weapon {
+        let weaponType = <WeaponType>RegistryManager.getRegistry("weaponTypes").get(type);
+
+        let sprite = this.add.sprite(weaponType.spriteKey, "primary");
+
+        return new Weapon(sprite, weaponType, this.battleManager);
+    }
+
+    /**
+     * Initalizes all weapon types based of data from weaponData.json
+     */
+     initializeWeapons(): void{
+        let weaponData = this.load.getObject("weaponData");
+
+        for(let i = 0; i < weaponData.numWeapons; i++){
+            let weapon = weaponData.weapons[i];
+
+            // Get the constructor of the prototype
+            let constr = RegistryManager.getRegistry("weaponTemplates").get(weapon.weaponType);
+
+            // Create a weapon type
+            let weaponType = new constr();
+
+            // Initialize the weapon type
+            weaponType.initialize(weapon);
+
+            // Register the weapon type
+            RegistryManager.getRegistry("weaponTypes").registerItem(weapon.name, weaponType)
+        }
+    }
     /**
      * Initializes the player
      */
     protected initPlayer(): void {
+        
+
+        //create the inventory
+        let inventory = new InventoryManager(this, 1, "inventorySlot", new Vec2(16, 16), 4, "slots1", "items1");
+        
+
+        //add starting weapon to inventory
+        let startingWeapon = this.createWeapon("knife");
+        inventory.addItem(startingWeapon);              //using slice to test right now
+
+
         // Add the player
         this.player = this.add.animatedSprite("player", "primary");
         this.player.scale.set(2, 2);
@@ -262,7 +340,16 @@ export default class GameLevel extends Scene {
         this.player.position.copy(this.playerSpawn);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(32, 32)));  //sets the collision shape
         this.player.colliderOffset.set(0, 2);
-        this.player.addAI(PlayerController, {playerType: "platformer", tilemap: "Main"});
+        this.player.addAI(PlayerController, {
+                        playerType: "platformer", 
+                        tilemap: "Main",
+                        speed: 100,
+                        health: 10,
+                        inventory: inventory,
+                        items: this.items,
+                        inputEnabled: false,
+                        range: 100
+                    });
 
         this.player.setGroup("player");
 
@@ -277,19 +364,19 @@ export default class GameLevel extends Scene {
      * @param tilePos The tilemap position to add the Enemy to
      * @param aiOptions The options for the Enemy AI
      */
-    /*
+    
     protected addEnemy(spriteKey: string, tilePos: Vec2, aiOptions: Record<string, any>): void {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
         enemy.position.set(tilePos.x*32, tilePos.y*32);
         enemy.scale.set(2, 2);
         enemy.addPhysics();
-        enemy.addAI(EnemyController, aiOptions); //TODO - add individual enemy AI
+        //enemy.addAI(EnemyAI, aiOptions); //TODO - add individual enemy AI
         enemy.setGroup("Enemy");
 
         enemy.setTrigger("player",Player_Events.PLAYER_HIT_ENEMY, null);
 
     }
-    */
+    
 
    
     protected handlePlayerEnemyCollision(player: AnimatedSprite, enemy: AnimatedSprite) {
@@ -337,17 +424,5 @@ export default class GameLevel extends Scene {
 		}
     }
 
-    //TODO - determine whether we will have weapon datatype
-    /**
-     * 
-     * Creates and returns a new weapon
-     * @param type The weaponType of the weapon, as a string
-     */
-     createWeapon(type: string): Weapon {
-        let weaponType = <WeaponType>RegistryManager.getRegistry("weaponTypes").get(type);
-
-        let sprite = this.add.sprite(weaponType.spriteKey, "primary");
-
-        return new Weapon(sprite, weaponType, this.battleManager);
-    }
+    
 }

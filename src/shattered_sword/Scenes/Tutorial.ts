@@ -20,6 +20,11 @@ export default class Tutorial extends GameLevel{
         this.load.tilemapFromObject("forest1", this.map);
         
         this.load.spritesheet("player", "shattered_sword_assets/spritesheets/Hiro.json")
+
+        // TODO - change when done testing
+        this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
+        
+
         //load music here
     }
 
