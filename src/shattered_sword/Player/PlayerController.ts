@@ -32,8 +32,12 @@ export enum PlayerStates {
 
 export enum BuffType {
     ATK = "attack",
-    DEF = "defence"
+    DEF = "defence",
+    HEALTH = "health",
+    SPEED = "speed",
+    RANGE = "range"
 }
+
 
 type Buff = {
     "type": BuffType,
@@ -45,10 +49,11 @@ type Buffs = [
     Buff, Buff, Buff
 ]
 
-
+//TODO - discuss max stats during refinement, unused for now
 export default class PlayerController extends StateMachineAI implements BattlerAI{
     owner: GameNode;
     velocity: Vec2 = Vec2.ZERO;
+    //will need to discuss redundant stats
 	speed: number = 200;
 	MIN_SPEED: number = 200;
     MAX_SPEED: number = 300;
@@ -78,10 +83,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     inventory: InventoryManager;
 
     CURRENT_BUFFS: {
-        atk: 0;
-        hp: 0;
-        def: 0;
-        speed: 0;
+        atk: number;    //flat value to add to weapon
+        hp: number;     //flat value 
+        def: number;    //falt value
+        speed: number;
+        range:number;   //range will be a multiplier value: 1.5 = 150% range
     }
     
     
@@ -99,9 +105,35 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 	 * Add given buff to the player
 	 * @param buff Given buff
 	 */
-    setBuff(buff: Buff): void {
+    addBuff(buff: Buff): void {
         // TODO
+        let item = this.inventory.getItem();
+            
+        switch(buff.type){
+            case BuffType.HEALTH:
+                this.CURRENT_BUFFS.hp += buff.value;
+                this.CURRENT_HP += buff.value;
+                break;
+            case BuffType.ATK:
+                //TODO - may have to modify the weapon dmg value here instead
+                this.CURRENT_BUFFS.atk += buff.value;
+                break;
+            case BuffType.SPEED:
+                this.CURRENT_BUFFS.speed += buff.value;
+                break;
+            case BuffType.DEF:
+                this.CURRENT_BUFFS.def += buff.value;
+                break;
+            case BuffType.RANGE:
+                this.CURRENT_BUFFS.range += buff.value;
+                if (item) {
+                    //item.sprite.
+                }
+                break;
+        }
     }
+
+    
 
     //TODO - get the correct tilemap
     initializeAI(owner: GameNode, options: Record<string, any>){
@@ -114,6 +146,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.inventory  = options.inventory;
 
         this.lookDirection = new Vec2();
+
+        this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
+       
+        this.addBuff( {type:BuffType.HEALTH, value:1, bonus:false} );
     }
 
     initializePlatformer(): void {
@@ -167,7 +203,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             }
         }
         
-
+        
 	}
 
     

@@ -16,12 +16,12 @@ import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController from "../Player/PlayerController";
 import MainMenu from "./MainMenu";
-import { Player_Events } from "../sword_enums";
+import { Player_Events, Statuses } from "../sword_enums";
 import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
 import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
 import Weapon from "../GameSystems/items/Weapon";
 import BattleManager from "../GameSystems/BattleManager";
-//import EnemyAI from "../AI/EnemyAI";
+import EnemyAI from "../AI/EnemyAI";
 import BattlerAI from "../AI/BattlerAI";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Item from "../GameSystems/items/Item";
@@ -63,6 +63,9 @@ export default class GameLevel extends Scene {
 
      // A list of items in the scene
      private items: Array<Item>;
+
+     // A list of enemies
+    private enemies: Array<AnimatedSprite>;
     
     loadScene(): void {
         //can load player sprite here
@@ -82,6 +85,8 @@ export default class GameLevel extends Scene {
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
         this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
         this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
+
+        this.load.spritesheet("test_dummy","shattered_sword_assets/spritesheets/test_dummy.json")
     }
 
     startScene(): void {
@@ -95,10 +100,13 @@ export default class GameLevel extends Scene {
         // Create the battle manager
         this.battleManager = new BattleManager();
 
-         // TODO
-         this.initializeWeapons();
-         // Initialize the items array - this represents items that are in the game world
-         this.items = new Array();
+        // TODO
+        this.initializeWeapons();
+        // Initialize the items array - this represents items that are in the game world
+        this.items = new Array();
+
+         // Create an enemies array
+        this.enemies = new Array();
 
         this.initPlayer();
         this.subscribeToEvents();
@@ -148,7 +156,7 @@ export default class GameLevel extends Scene {
 
         //update health UI 
         let playerAI = (<PlayerController>this.player.ai);
-        this.healthLabel.text = "Player Health: "+ playerAI.CURRENT_HP +'/' + (playerAI.MAX_HP );
+        this.healthLabel.text = "Player Health: "+ playerAI.CURRENT_HP +'/' + (playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp );
 
         //handle collisions - may be in battle manager instead
 
@@ -163,8 +171,18 @@ export default class GameLevel extends Scene {
         this.playerFalloff(viewportCenter, baseViewportSize);
 
 
+        //TODO - this is for testing
+        if(Input.isJustPressed("spawn")){
+            console.log("trying to spawn enemy");
+            this.addEnemy("test_dummy",this.player.position,{player: this.player, 
+                                health :100,
+                                tilemap: "Main",
+                                //actions:actions,
+                                goal: Statuses.REACHED_GOAL,
 
-        
+                                });
+        }
+
     }
 
     /**
@@ -204,7 +222,7 @@ export default class GameLevel extends Scene {
      */
     protected addUI(){
         // In-game labels
-        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(80, 30), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
+        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 30), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
         this.healthLabel.textColor = Color.WHITE;
         this.healthLabel.font = "PixelSimple";
 
@@ -339,7 +357,7 @@ export default class GameLevel extends Scene {
         }
         this.player.position.copy(this.playerSpawn);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(32, 32)));  //sets the collision shape
-        this.player.colliderOffset.set(0, 2);
+        this.player.colliderOffset.set(0, 0);
         this.player.addAI(PlayerController, {
                         playerType: "platformer", 
                         tilemap: "Main",
@@ -367,14 +385,17 @@ export default class GameLevel extends Scene {
     
     protected addEnemy(spriteKey: string, tilePos: Vec2, aiOptions: Record<string, any>): void {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
-        enemy.position.set(tilePos.x*32, tilePos.y*32);
+        //enemy.position.set(tilePos.x*32, tilePos.y*32);
+        enemy.position.copy(tilePos);
         enemy.scale.set(2, 2);
-        enemy.addPhysics();
-        //enemy.addAI(EnemyAI, aiOptions); //TODO - add individual enemy AI
+        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(16, 25)));
+        enemy.colliderOffset.set(0, 6);
+        enemy.addAI(EnemyAI, aiOptions); //TODO - add individual enemy AI
         enemy.setGroup("Enemy");
-
-        enemy.setTrigger("player",Player_Events.PLAYER_HIT_ENEMY, null);
-
+        
+        //add enemy to the enemy array
+        this.enemies.push(enemy);
+        this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
     }
     
 

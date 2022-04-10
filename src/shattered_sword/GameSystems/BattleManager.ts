@@ -11,12 +11,13 @@ export default class BattleManager {
     handleInteraction(attackerType: string, weapon: Weapon) {
         //may be unneeded since we are controlling the player - 
         //we determine enemy collision there
-        /* 
+        
         if (attackerType === "player") {
             // Check for collisions with enemies
             for (let enemy of this.enemies) {
                 if (weapon.hits(enemy.owner)) {
                     enemy.damage(weapon.type.damage);
+                    console.log("enemy took dmg");
                 }
             }
         } else {
@@ -27,14 +28,8 @@ export default class BattleManager {
                 }
             }
         }
-        */
+        
 
-        // Check for collision with player
-        for (let player of this.players) {
-            if (weapon.hits(player.owner)) {
-                player.damage(weapon.type.damage);
-            }
-        }
     }
 
     setPlayers(player: Array<BattlerAI>): void {
@@ -43,5 +38,9 @@ export default class BattleManager {
 
     setEnemies(enemies: Array<BattlerAI>): void {
         this.enemies = enemies;
+    }
+
+    addEnemy(enemy : BattlerAI){
+        this.enemies.push(enemy);
     }
 }

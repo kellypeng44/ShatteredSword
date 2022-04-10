@@ -16,3 +16,10 @@ export enum Damage_Type {
     ENVIRONMENT_DAMAGE = "EnvironmentDamage",
     DOT_DAMAGE = "DOTDamage",
 }
+
+export enum Statuses {
+    IN_RANGE = "IN_RANGE",
+    LOW_HEALTH = "LOW_HEALTH",
+    CAN_RETREAT = "CAN_RETREAT",
+    REACHED_GOAL = "GOAL"
+}
