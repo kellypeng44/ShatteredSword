@@ -357,15 +357,17 @@ export default class RandomMapGenerator {
         if (old.sprites) {
             for (let index = 0; index < old.sprites.length; index++) {
                 const sprite = old.sprites[index];
-                if (sprite.type == 'player') {
+                if (sprite.type === 'player') {
                     this.player.x = sprite.x;
                     this.player.y = sprite.y;
                 }
                 else {
-                    let tmp = new Enemy();
-                    tmp.type = sprite.type;
-                    tmp.position = new Vec2(posX + sprite.x, posY + sprite.y);
-                    room.enemies.push(tmp);
+                    if (this.gen.random() <= sprite.possibility) {
+                        let tmp = new Enemy();
+                        tmp.type = sprite.type;
+                        tmp.position = new Vec2(posX + sprite.x, posY + sprite.y);
+                        room.enemies.push(tmp);
+                    }
                 }
             }
         }
