@@ -23,6 +23,8 @@ export default class RandomMapGenerator {
     private minRoom: number;
     private roomPlaced: number;
     private exitFacing: Facing;
+    private enemies: Array<Enemy>;
+    private player: Vec2;
 
     constructor(JSONFilePath: string, seed: any) {
         let xhr = new XMLHttpRequest();
@@ -40,6 +42,8 @@ export default class RandomMapGenerator {
 
         this.map = new TiledTilemapData();
         this.rooms = new Array();
+        this.enemies = new Array();
+        this.player = new Vec2();
         let gen = require('random-seed');
         this.gen = new gen(seed);
         this.hasExit = false;
@@ -102,6 +106,14 @@ export default class RandomMapGenerator {
 
         this.fillData();
         return this.map;
+    }
+
+    getPlayer(): Vec2 {
+        return this.player;
+    }
+
+    getEnemies(): Array<Enemy> {
+        return this.enemies;
     }
 
     private putNextRoom(position: Vec2, facing: Facing): boolean {
@@ -245,7 +257,16 @@ export default class RandomMapGenerator {
                     this.map.layers[0].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.bottomLayer[i * roomWidth + j];
                     this.map.layers[1].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.topLayer[i * roomWidth + j];
                 }
+            if (room.enemies)
+                for (let index = 0; index < room.enemies.length; index++) {
+                    const enemy = room.enemies[index];
+                    enemy.position.x -= this.minX;
+                    enemy.position.y -= this.minY;
+                    this.enemies.push(enemy);
+                }
         }
+        this.player.x -= this.minX;
+        this.player.y -= this.minY;
     }
 
     private isValidRoom(topLeft: Vec2, bottomRight: Vec2): boolean {
@@ -332,6 +353,22 @@ export default class RandomMapGenerator {
         room.bottomRight = new Vec2(posX + old.width - 1, posY + old.height - 1);
         room.topLayer = [...old.topLayer];
         room.bottomLayer = [...old.bottomLayer];
+        room.enemies = new Array();
+        if (old.sprites) {
+            for (let index = 0; index < old.sprites.length; index++) {
+                const sprite = old.sprites[index];
+                if (sprite.type == 'player') {
+                    this.player.x = sprite.x;
+                    this.player.y = sprite.y;
+                }
+                else {
+                    let tmp = new Enemy();
+                    tmp.type = sprite.type;
+                    tmp.position = new Vec2(posX + sprite.x, posY + sprite.y);
+                    room.enemies.push(tmp);
+                }
+            }
+        }
         if (posX < this.minX)
             this.minX = posX;
         if (posY < this.minY)
@@ -349,6 +386,12 @@ class Room {
     bottomRight: Vec2;
     topLayer: Array<number>;
     bottomLayer: Array<number>;
+    enemies: Array<Enemy>
+}
+
+export class Enemy {
+    type: String;
+    position: Vec2;
 }
 
 enum Facing {
