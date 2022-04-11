@@ -25,6 +25,10 @@ export default class Weapon extends Item {
     /** The cooldown timer for this weapon's use */
     cooldownTimer: Timer;
 
+    EXTRA_DAMAGE : number;  //flat extra damage value
+
+    EXTRA_RANGE: number ;   //percentage value -> .1 = 10% extra range
+
     constructor(sprite: Sprite, type: WeaponType, battleManager: BattleManager){
         super(sprite);
 
@@ -42,6 +46,8 @@ export default class Weapon extends Item {
 
         // Create the cooldown timer
         this.cooldownTimer = new Timer(type.cooldown);  
+        this.EXTRA_DAMAGE = 0;
+        this.EXTRA_RANGE=0; 
     }
 
     // @override
@@ -58,7 +64,7 @@ export default class Weapon extends Item {
         this.assets = this.type.createRequiredAssets(this.sprite.getScene());
 
         // Do a type specific weapon animation
-        this.type.doAnimation(user, direction, ...this.assets);
+        this.type.doAnimation(user, direction, this.EXTRA_RANGE, ...this.assets);
 
         // Apply damage
         this.battleManager.handleInteraction(userType, this);

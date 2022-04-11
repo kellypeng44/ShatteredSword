@@ -15,6 +15,7 @@ import InventoryManager from "../GameSystems/InventoryManager";
 import Input from "../../Wolfie2D/Input/Input";
 import BattlerAI from "../AI/BattlerAI";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+import Weapon from "../GameSystems/items/Weapon";
 
 
 export enum PlayerType {
@@ -115,8 +116,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.CURRENT_HP += buff.value;
                 break;
             case BuffType.ATK:
-                //TODO - may have to modify the weapon dmg value here instead
+                //TODO - decide what to do with atk stat
                 this.CURRENT_BUFFS.atk += buff.value;
+                if (item) {
+                    (<Weapon>item).EXTRA_DAMAGE += buff.value;
+                }
                 break;
             case BuffType.SPEED:
                 this.CURRENT_BUFFS.speed += buff.value;
@@ -127,7 +131,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             case BuffType.RANGE:
                 this.CURRENT_BUFFS.range += buff.value;
                 if (item) {
-                    //item.sprite.
+                    (<Weapon>item).EXTRA_RANGE += buff.value;
                 }
                 break;
         }
@@ -149,7 +153,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
        
+        //to test the buffs
         this.addBuff( {type:BuffType.HEALTH, value:1, bonus:false} );
+        this.addBuff( {type:BuffType.RANGE, value:1, bonus:false} );
     }
 
     initializePlatformer(): void {
