@@ -18,8 +18,8 @@ export default class Slice extends WeaponType {
     doAnimation(attacker: GameNode, direction: Vec2, extraRange:number,sliceSprite: AnimatedSprite): void {
         //TODO- 
         //4 to scale up the default sprite - may be different later depending on atk anim
-        sliceSprite.scaleX = 4*(1+extraRange); //might have to add extra range to y as well
-        sliceSprite.scaleY = 4;
+        sliceSprite.scaleX = 2*(1+extraRange); //might have to add extra range to y as well
+        sliceSprite.scaleY = 2;
 
         // Rotate this with the game node
         // TODO - need to rotate the anim properly
@@ -27,8 +27,8 @@ export default class Slice extends WeaponType {
         sliceSprite.rotation = (<Sprite>attacker).invertX? .5* Math.PI : 1.5 * Math.PI;
         // Move the slice out from the player
         //scale = num of pixels between center of sprite and atk anim
-        sliceSprite.position = attacker.position.clone().add(direction.scaled(65)); 
-        
+        sliceSprite.position = attacker.position.clone().add(direction.scaled(32)); 
+        sliceSprite.position =  sliceSprite.position.add(new Vec2(0,16));    //make it go down a bit
         
         // Play the slice animation w/o loop, but queue the normal animation
         sliceSprite.animation.play("SLICE");

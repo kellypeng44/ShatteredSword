@@ -14,7 +14,7 @@ export default class Walk extends OnGround {
 
 	update(deltaT: number): void {
 		super.update(deltaT);
-
+		//console.log("walking anim");
         this.owner.animation.playIfNotAlready("WALK", true);
 
 		let dir = this.getInputDirection();

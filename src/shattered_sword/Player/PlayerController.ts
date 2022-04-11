@@ -16,6 +16,7 @@ import Input from "../../Wolfie2D/Input/Input";
 import BattlerAI from "../AI/BattlerAI";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import Weapon from "../GameSystems/items/Weapon";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 
 export enum PlayerType {
@@ -86,8 +87,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     CURRENT_BUFFS: {
         atk: number;    //flat value to add to weapon
         hp: number;     //flat value 
-        def: number;    //falt value
-        speed: number;
+        def: number;    //flat value
+        speed: number;  //flat value
         range:number;   //range will be a multiplier value: 1.5 = 150% range
     }
     
@@ -154,8 +155,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
        
         //to test the buffs
-        this.addBuff( {type:BuffType.HEALTH, value:1, bonus:false} );
-        this.addBuff( {type:BuffType.RANGE, value:1, bonus:false} );
+        //this.addBuff( {type:BuffType.HEALTH, value:1, bonus:false} );
+        //this.addBuff( {type:BuffType.RANGE, value:1, bonus:false} );
     }
 
     initializePlatformer(): void {
@@ -201,6 +202,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         //testing the attacks here, may be moved to another place latera
         if(Input.isJustPressed("attack")){
             let item = this.inventory.getItem();
+            (<AnimatedSprite>this.owner).animation.playIfNotAlready("ATTACK", true);
             //TODO - get proper look direction 
             this.lookDirection.x = (<Sprite>this.owner).invertX ? -1 : 1;
             // If there is an item in the current slot, use it

@@ -50,6 +50,7 @@ export default class PlayerController extends ControllerAI {
             if(velocity.x === 0){
                     this.owner.animation.playIfNotAlready("IDLE", true);
             } else {
+                console.log("walking anim");
                 this.owner.animation.playIfNotAlready("WALK", true);
             }
         }

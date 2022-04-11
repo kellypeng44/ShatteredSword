@@ -366,14 +366,14 @@ export default class GameLevel extends Scene {
 
         // Add the player
         this.player = this.add.animatedSprite("player", "primary");
-        this.player.scale.set(2, 2);
+        this.player.scale.set(1, 1);
         if(!this.playerSpawn){
             console.warn("Player spawn was never set - setting spawn to (0, 0)");
             this.playerSpawn = Vec2.ZERO;
         }
         this.player.position.copy(this.playerSpawn);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(32, 32)));  //sets the collision shape
-        this.player.colliderOffset.set(0, 0);
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(14, 16)));  //sets the collision shape
+        this.player.colliderOffset.set(0, 16);
         this.player.addAI(PlayerController, {
                         playerType: "platformer", 
                         tilemap: "Main",
