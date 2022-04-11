@@ -52,9 +52,9 @@ export default class RandomMapGenerator {
         this.exitFacing = this.getEntranceFacing(this.template.exit.entrances[0], this.template.exit.width);
 
 
-        this.template.rooms.forEach((room) => {
+        for (let room of this.template.rooms) {
             let left = false, right = false, up = false, down = false;
-            room.entrances.forEach((entrance) => {
+            for (let entrance of room.entrances) {
                 let facing = this.getEntranceFacing(entrance, room.width);
                 switch (facing) {
                     case Facing.LEFT:
@@ -72,7 +72,7 @@ export default class RandomMapGenerator {
                     default:
                         break;
                 }
-            })
+            }
             if (left) {
                 this.roomWithLeftEntrance.push(room);
                 this.roomWithLeftEntranceWeight += room.weight;
@@ -89,7 +89,7 @@ export default class RandomMapGenerator {
                 this.roomWithDownEntrance.push(room);
                 this.roomWithDownEntranceWeight += room.weight;
             }
-        })
+        }
     }
 
     getMap(): TiledTilemapData {
@@ -105,6 +105,7 @@ export default class RandomMapGenerator {
             throw new Error("Fail to generate a map with exit!");
 
         this.fillData();
+        console.log("Generated map:", this.map);
         return this.map;
     }
 
@@ -141,8 +142,7 @@ export default class RandomMapGenerator {
         let nextRoom = this.getRandomRoom(facing);
         let nextPosition: Vec2 = undefined;
         let thisEntrance: Entrance = undefined;
-        for (let index = 0; index < nextRoom.entrances.length; index++) {
-            const entrance = nextRoom.entrances[index];
+        for (let entrance of nextRoom.entrances) {
             if (this.getEntranceFacing(entrance, nextRoom.weight) == facing) {
                 let tmpPosition = new Vec2(position.x - entrance.x, position.y - entrance.y);
                 if (this.isValidRoom(tmpPosition, new Vec2(tmpPosition.x + nextRoom.width - 1, tmpPosition.y + nextRoom.height - 1))) {
@@ -160,8 +160,7 @@ export default class RandomMapGenerator {
         if (this.hasExit && this.gen.range() <= 0.1) {
             return false;
         }
-        for (let index = 0; index < nextRoom.entrances.length; index++) {
-            const entrance = nextRoom.entrances[index];
+        for (let entrance of nextRoom.entrances) {
             if (entrance != thisEntrance) {
                 let facing = this.getEntranceFacing(entrance, nextRoom.width);
                 let position = new Vec2(nextPosition.x + entrance.x, nextPosition.y + entrance.y);
@@ -248,8 +247,7 @@ export default class RandomMapGenerator {
         this.map.layers[0].data = new Array(width * height).fill(this.template.background);
         this.map.layers[1].data = new Array(width * height);
 
-        for (let index = 0; index < this.rooms.length; index++) {
-            const room = this.rooms[index];
+        for (let room of this.rooms) {
             let roomWidth = room.bottomRight.x - room.topLeft.x + 1;
             let roomHeight = room.bottomRight.y - room.topLeft.y + 1;
             for (let i = 0; i < roomHeight; i++)
@@ -258,8 +256,7 @@ export default class RandomMapGenerator {
                     this.map.layers[1].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.topLayer[i * roomWidth + j];
                 }
             if (room.enemies)
-                for (let index = 0; index < room.enemies.length; index++) {
-                    const enemy = room.enemies[index];
+                for (let enemy of this.enemies) {
                     enemy.position.x -= this.minX;
                     enemy.position.y -= this.minY;
                     this.enemies.push(enemy);
@@ -270,15 +267,15 @@ export default class RandomMapGenerator {
     }
 
     private isValidRoom(topLeft: Vec2, bottomRight: Vec2): boolean {
-        for (let index = 0; index < this.rooms.length; index++) {
-            const room = this.rooms[index];
+        for (let room of this.rooms) {
             if (room.topLeft.x <= bottomRight.x &&
                 room.bottomRight.x >= topLeft.x &&
                 room.topLeft.y <= bottomRight.y &&
-                room.bottomRight.y >= topLeft.y)
+                room.bottomRight.y >= topLeft.y) {
+                console.warn("Found an invalid room! TopLeft:", topLeft.toString(), "BottomRight:", bottomRight.toString());
                 return false;
+            }
         }
-        console.warn("Found an invalid room! TopLeft:", topLeft.toString, "BottomRight:", bottomRight.toString);
         return true;
     }
 
@@ -312,8 +309,7 @@ export default class RandomMapGenerator {
         if (value >= weight)
             throw new Error("Random number " + value + " is larger than total weight " + weight);
 
-        for (let index = 0; index < array.length; index++) {
-            let room = array[index];
+        for (let room of array) {
             if (value < room.weight)
                 return room;
             value -= room.weight;
@@ -355,8 +351,7 @@ export default class RandomMapGenerator {
         room.bottomLayer = [...old.bottomLayer];
         room.enemies = new Array();
         if (old.sprites) {
-            for (let index = 0; index < old.sprites.length; index++) {
-                const sprite = old.sprites[index];
+            for (let sprite of old.sprites) {
                 if (sprite.type === 'player') {
                     this.player.x = sprite.x;
                     this.player.y = sprite.y;
