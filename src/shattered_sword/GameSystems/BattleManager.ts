@@ -14,10 +14,12 @@ export default class BattleManager {
         
         if (attackerType === "player") {
             // Check for collisions with enemies
-            for (let enemy of this.enemies) {
-                if (weapon.hits(enemy.owner)) {
-                    enemy.damage(weapon.type.damage);
-                    console.log("enemy took dmg");
+            if(this.enemies.length != 0){
+                for (let enemy of this.enemies) {
+                    if (weapon.hits(enemy.owner)) {
+                        enemy.damage(weapon.type.damage);
+                        console.log("enemy took dmg");
+                    }
                 }
             }
         } else {

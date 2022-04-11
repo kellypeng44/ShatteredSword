@@ -39,19 +39,19 @@ export default class Patrol extends EnemyState {
             console.log(this.parent.tilemap.getTileAtRowCol(colrow));
             this.parent.direction *= -1;
             (<Sprite>this.owner).invertX = MathUtils.sign(1) < 0;
-            console.log("turn around cus wall in front");
+            //console.log("turn around cus wall in front");
         }
         //check if next ground tile is collidable 
         else if(this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y+1)){
             //keep moving
             //this.velocity.x =  this.speed;
-            console.log("there is floor ahead");
+            //console.log("there is floor ahead");
         }
         else{
             //turn around 
             this.parent.direction *=-1;
             (<Sprite>this.owner).invertX = MathUtils.sign(1) < 0;
-            console.log("turn around cus no floor in front");
+            //console.log("turn around cus no floor in front");
             
         }
         //move

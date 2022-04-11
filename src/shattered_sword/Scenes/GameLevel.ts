@@ -61,12 +61,16 @@ export default class GameLevel extends Scene {
     // Health UI
     protected healthLabel: Label;
 
-     // A list of items in the scene
-     private items: Array<Item>;
+    //seed UI
+    protected seedLabel: Label;   
+
+    // A list of items in the scene
+    private items: Array<Item>;
 
      // A list of enemies
     private enemies: Array<AnimatedSprite>;
     
+    randomSeed: number;
     loadScene(): void {
         //can load player sprite here
 
@@ -115,6 +119,13 @@ export default class GameLevel extends Scene {
         
         // Send the player and enemies to the battle manager
         this.battleManager.setPlayers([<PlayerController>this.player._ai]);
+        // Initialize all enemies
+        //this.initializeEnemies();
+        this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
+
+        // Subscribe to relevant events
+        //this.receiver.subscribe("");
+      
 
         // Initialize the timers
         this.respawnTimer = new Timer(1000, () => {
@@ -160,16 +171,13 @@ export default class GameLevel extends Scene {
 
         //handle collisions - may be in battle manager instead
 
-
         //move background
-
 
         // Get the viewport center and padded size
 		const viewportCenter = this.viewport.getCenter().clone();
 		const baseViewportSize = this.viewport.getHalfSize().scaled(2);
         //check position of player
         this.playerFalloff(viewportCenter, baseViewportSize);
-
 
         //TODO - this is for testing
         if(Input.isJustPressed("spawn")){
@@ -222,10 +230,17 @@ export default class GameLevel extends Scene {
      */
     protected addUI(){
         // In-game labels
-        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 30), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
+        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(120, 30), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
         this.healthLabel.textColor = Color.WHITE;
         this.healthLabel.font = "PixelSimple";
 
+        //seed label
+        
+        //this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(400, 30), text: "Seed: "+ this.randomSeed });
+        this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(this.worldSize.x - 50, 30), text: "Seed: "+ this.randomSeed });
+        this.seedLabel.textColor = Color.WHITE;
+        this.seedLabel.font = "PixelSimple";
+      
 
         // End of level label (start off screen)
         this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(-300, 200), text: "Level Complete"});
@@ -281,18 +296,6 @@ export default class GameLevel extends Scene {
             ],
             onEnd: Player_Events.LEVEL_START
         });
-      
-
-        // Initialize all enemies
-        //this.initializeEnemies();
-
-        // Send the player and enemies to the battle manager
-        //this.battleManager.setPlayers([<BattlerAI>this.player._ai]);
-        //this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
-
-        // Subscribe to relevant events
-        //this.receiver.subscribe("");
-      
 
 
     }

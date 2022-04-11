@@ -4,18 +4,21 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import RandomMapGenerator from "../Tools/RandomMapGenerator";
 import GameLevel from "./GameLevel";
-
-
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import Color from "../../Wolfie2D/Utils/Color";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 
 export default class Tutorial extends GameLevel{
     private map: TiledTilemapData;
+    
+
     loadScene(): void {
         super.loadScene();
         // Load resources
         // this.load.tilemap("forest1", "shattered_sword_assets/tilemaps/Tutorial.json");
         // let map = localStorage.getItem("map");
-        let randomSeed = Math.floor(Math.random()*10000000000);
-        let rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", randomSeed);
+        this.randomSeed = Math.floor(Math.random()*10000000000);
+        let rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", this.randomSeed);
         this.map = rmg.getMap();
         this.load.tilemapFromObject("forest1", this.map);
         
@@ -23,6 +26,7 @@ export default class Tutorial extends GameLevel{
 
         // TODO - change when done testing
         this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
+        
         
 
         //load music here
