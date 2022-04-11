@@ -8,6 +8,7 @@ import EnemyState from "./EnemyState";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import OnGround from "./OnGround";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 export default class Patrol extends EnemyState {
 
@@ -23,6 +24,7 @@ export default class Patrol extends EnemyState {
 
     onEnter(options: Record<string, any>): void {
         //this.currentPath = this.getNextPath();
+        (<AnimatedSprite>this.owner).animation.play("IDLE", true);
     }
 
     handleInput(event: GameEvent): void { }
@@ -36,7 +38,7 @@ export default class Patrol extends EnemyState {
         //check if next tile on walking path is collidable
         if(this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y)){
             //turn around
-            console.log(this.parent.tilemap.getTileAtRowCol(colrow));
+            //console.log(this.parent.tilemap.getTileAtRowCol(colrow));
             this.parent.direction *= -1;
             (<Sprite>this.owner).invertX = MathUtils.sign(1) < 0;
             //console.log("turn around cus wall in front");

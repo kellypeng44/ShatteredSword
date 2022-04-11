@@ -25,9 +25,9 @@
         },
         {
             "name": "HURT",
-            "frames": [ {"index": 0, "duration": 250},
-                        {"index": 1, "duration": 500},
-                        {"index": 0, "duration": 250} ]
+            "frames": [ {"index": 0, "duration": 1},
+                        {"index": 1, "duration": 50},
+                        {"index": 0, "duration": 25} ]
         }
     ]
 }

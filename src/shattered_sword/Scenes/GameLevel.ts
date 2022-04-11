@@ -161,6 +161,17 @@ export default class GameLevel extends Scene {
             let event = this.receiver.getNextEvent();
             
             switch(event.type){
+                case Player_Events.ENEMY_KILLED:
+                    
+                    let node = this.sceneGraph.getNode(event.data.get("owner"));//get enemy id 
+                    //remove enemy from enemies
+                    this.enemies = this.enemies.filter(item => item !== event.data.get("ai"));
+                    this.battleManager.removeEnemy(event.data.get("ai"));
+                    
+                    console.log("enemy destroyed");
+                    node.destroy();
+                    break;
+
                 
             }
         }
@@ -190,6 +201,8 @@ export default class GameLevel extends Scene {
 
                                 });
         }
+
+        
 
     }
 
@@ -398,7 +411,8 @@ export default class GameLevel extends Scene {
         
         //add enemy to the enemy array
         this.enemies.push(enemy);
-        this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
+        //this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
+        this.battleManager.addEnemy(<BattlerAI>enemy._ai);
     }
     
 

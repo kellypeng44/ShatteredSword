@@ -18,7 +18,8 @@ export default class BattleManager {
                 for (let enemy of this.enemies) {
                     if (weapon.hits(enemy.owner)) {
                         enemy.damage(weapon.type.damage);
-                        console.log("enemy took dmg");
+                        
+                        //console.log("enemy took dmg");
                     }
                 }
             }
@@ -44,5 +45,16 @@ export default class BattleManager {
 
     addEnemy(enemy : BattlerAI){
         this.enemies.push(enemy);
+    }
+
+    removeEnemy(enemy : BattlerAI){
+       
+        
+        this.enemies = this.enemies.filter(item => item !== enemy)
+        if(this.enemies.length == 0){
+            this.enemies = new Array();
+        }
+        return this.enemies;
+          
     }
 }

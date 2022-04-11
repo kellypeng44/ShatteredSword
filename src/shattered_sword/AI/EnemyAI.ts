@@ -20,6 +20,8 @@ import { Statuses } from "../sword_enums";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
+
+import { Player_Events } from "../sword_enums";
 export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     /** The owner of this AI */
     owner: AnimatedSprite;
@@ -105,6 +107,9 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
     damage(damage: number): void {
         this.CURRENT_HP -= damage;
+        //TODO -
+        this.owner.animation.play("HURT");
+        console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
 
         // If we're low enough, add Low Health status to enemy
         if (this.CURRENT_HP <= Math.floor(this.maxHealth/2)) {
@@ -117,7 +122,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
             this.owner.isCollidable = false;
             this.owner.visible = false;
 
-            this.emitter.fireEvent("enemyDied", {enemy: this.owner})
+            this.emitter.fireEvent(Player_Events.ENEMY_KILLED, {owner: this.owner.id, ai:this});
 
 
             if (Math.random() < 0.05) {
