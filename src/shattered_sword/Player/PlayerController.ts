@@ -72,6 +72,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     // TODO - 
     damage(damage: number): void {
+        (<AnimatedSprite>this.owner).animation.play("HURT", false);
         this.CURRENT_HP -= damage;
     }
 
