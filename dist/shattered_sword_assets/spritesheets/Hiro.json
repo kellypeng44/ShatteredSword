@@ -6,8 +6,7 @@
 	"columns": 7,
 	"rows": 7,
 	"durationType": "time",
-	"animations": [
-		
+	"animations": [		
 		{
 			"name": "IDLE",
 			"repeat": true,
@@ -20,7 +19,6 @@
 					"index": 1,
 					"duration": 150
 				}
-
 			]
 		},
 		{
@@ -62,7 +60,40 @@
 			]
 		},
 		{
+			"name": "FALL",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 0,
+					"duration": 150
+				},
+				{
+					"index": 1,
+					"duration": 150
+				}
+
+			]
+		},
+		{
 			"name": "JUMP",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 30,
+					"duration": 150
+				},
+				{
+					"index": 31,
+					"duration": 150
+				},
+				{
+					"index": 32,
+					"duration": 150
+				}
+			]
+		},
+		{
+			"name": "JUMP_RIGHT",
 			"repeat": false,
 			"frames": [
 				{
@@ -88,22 +119,6 @@
 			]
 		},
 		{
-			"name": "FALL",
-			"repeat": true,
-			"frames": [
-				{
-					"index": 0,
-					"duration": 150
-				},
-				{
-					"index": 1,
-					"duration": 150
-				}
-
-			]
-		},
-		
-		{
 			"name": "JUMP_LEFT",
 			"repeat": false,
 			"frames": [
@@ -125,24 +140,6 @@
 				},
 				{
 					"index": 29,
-					"duration": 150
-				}
-			]
-		},
-		{
-			"name": "JUMP_UP",
-			"repeat": false,
-			"frames": [
-				{
-					"index": 30,
-					"duration": 150
-				},
-				{
-					"index": 31,
-					"duration": 150
-				},
-				{
-					"index": 32,
 					"duration": 150
 				}
 			]

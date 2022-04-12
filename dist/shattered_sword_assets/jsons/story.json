@@ -1,0 +1,52 @@
+{
+    "bgm": [
+        {
+            "key": "test",
+            "path": "shattered_sword_assets/sounds/test.mp3"
+        }
+    ],
+    "texts": [
+        {
+            "speaker": "",
+            "content": "There's a the legendary royal greatsword that is the only weapon powerful enough to slay the monster",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "sword",
+                    "path": "shattered_sword_assets/images/story1.png",
+                    "positon": [
+                        600,
+                        250
+                    ],
+                    "scale": [
+                        8,
+                        8
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "But the monster shatter it into 6 pieces",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "sword"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "sword_shattered",
+                    "path": "shattered_sword_assets/images/story2.png",
+                    "positon": [
+                        600,
+                        250
+                    ],
+                    "scale": [
+                        8,
+                        8
+                    ]
+                }
+            ]
+        }
+    ]
+}
