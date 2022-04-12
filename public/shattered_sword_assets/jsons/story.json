@@ -1,0 +1,131 @@
+{
+    "bgm": [
+        {
+            "key": "test",
+            "path": "shattered_sword_assets/sounds/test.mp3"
+        }
+    ],
+    "texts": [
+        {
+            "speaker": "",
+            "content": "There's a the legendary royal greatsword that is the only weapon powerful enough to slay the monster",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "sword",
+                    "path": "shattered_sword_assets/images/story1.png",
+                    "positon": [
+                        600,
+                        250
+                    ],
+                    "scale": [
+                        8,
+                        8
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "But the monster shatter it into 6 pieces",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "sword"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "sword_shattered",
+                    "path": "shattered_sword_assets/images/story2.png",
+                    "positon": [
+                        600,
+                        250
+                    ],
+                    "scale": [
+                        8,
+                        8
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Hiro is the only prince from the kingdom",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "sword_shattered"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "hiro_appear",
+                    "path": "shattered_sword_assets/images/story3.png",
+                    "positon": [
+                        630,
+                        300
+                    ],
+                    "scale": [
+                        7,
+                        7
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "Hiro",
+            "content": "To bring prosperity back to the kingdom...",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "hiro_appear"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "hiro_sword",
+                    "path": "shattered_sword_assets/images/story4.png",
+                    "positon": [
+                        630,
+                        300
+                    ],
+                    "scale": [
+                        7,
+                        7
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "Hiro",
+            "content": "I should go on the journey to collect the pieces of the sword... and kill the monster!",
+            "actions": [
+                {
+                    "type": "showSprite",
+                    "key": "hiro_sword"
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "hiro_sword"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "hiro",
+                    "path": "shattered_sword_assets/images/Logo.png",
+                    "positon": [
+                        650,
+                        300
+                    ],
+                    "scale": [
+                        1,
+                        1
+                    ]
+                }
+            ]
+        }
+    ]
+}

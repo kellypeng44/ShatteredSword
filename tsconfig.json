@@ -1,7 +1,9 @@
 {
     "include": [
         "src/**/*",
-        "src/*"
+        "src/*",
+        "src/**/*.ts",
+        "spec/**/*.ts"
     ],
     "compilerOptions": {
         "noImplicitAny": true,
