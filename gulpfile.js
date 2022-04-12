@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+const shell = require('gulp-shell');
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
@@ -32,3 +33,7 @@ function bundle() {
 gulp.task('default', gulp.series(gulp.parallel('copy-html'), bundle));
 watchedBrowserify.on('update', bundle);
 watchedBrowserify.on('log', fancy_log);
+
+gulp.task('firebase', shell.task([
+    'firebase deploy'
+]));

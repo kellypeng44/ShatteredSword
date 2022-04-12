@@ -4,7 +4,9 @@
   "description": "A game engine written in TypeScript",
   "main": "./dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp",
+    "deploy": "gulp && firebase deploy"
   },
   "author": "Joe Weaver",
   "license": "ISC",
@@ -14,11 +16,12 @@
     "gulp": "^4.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "tsify": "^5.0.0",
-    "typescript": "^3.9.7",
+    "typescript": "^3.9.10",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1"
   },
   "dependencies": {
+    "gulp-shell": "^0.8.0",
     "random-seed": "^0.3.0",
     "typescript-require": "^0.3.0"
   }

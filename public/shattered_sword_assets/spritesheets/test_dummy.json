@@ -1,0 +1,33 @@
+{
+    "name": "test_dummy",
+    "spriteSheetImage": "test_dummy.png",
+    "spriteWidth": 32,
+    "spriteHeight": 32,
+    "columns": 1,
+    "rows": 2,
+    "durationType": "time",
+    "animations": [
+        { 
+            "name": "IDLE",
+            "frames": [ {"index": 0, "duration": 540} ]
+        },
+        {
+            "name": "JUMP",
+            "frames":[ {"index": 0, "duration": 32}]
+        },
+        { 
+            "name": "WALK",
+            "frames": [ {"index": 0, "duration": 540} ]
+        },
+        { 
+            "name": "FALL",
+            "frames": [ {"index": 0, "duration": 540} ]
+        },
+        {
+            "name": "HURT",
+            "frames": [ {"index": 0, "duration": 1},
+                        {"index": 1, "duration": 50},
+                        {"index": 0, "duration": 25} ]
+        }
+    ]
+}
