@@ -203,7 +203,7 @@ export default class SceneWithStory extends Scene {
             let event = this.receiver.getNextEvent();
             // Testing code            
             if (event.type === "loadStory" && this.currentMode === Mode.GAME_MODE) {
-                this.storyLoader("shattered_sword_assets/jsons/samplestory.json");
+                this.storyLoader("shattered_sword_assets/jsons/story.json");
             }
         }
         // Testing code

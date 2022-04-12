@@ -49,16 +49,76 @@
             ]
         },
         {
-            "speaker": "Hiro",
-            "content": "Hello\r\n\nworld!",
+            "speaker": "",
+            "content": "Hiro is the only prince from the kingdom",
             "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "sword_shattered"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "hiro_appear",
+                    "path": "shattered_sword_assets/images/story3.png",
+                    "positon": [
+                        630,
+                        300
+                    ],
+                    "scale": [
+                        7,
+                        7
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "Hiro",
+            "content": "To bring prosperity back to the kingdom...",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "hiro_appear"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "hiro_sword",
+                    "path": "shattered_sword_assets/images/story4.png",
+                    "positon": [
+                        630,
+                        300
+                    ],
+                    "scale": [
+                        7,
+                        7
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "Hiro",
+            "content": "I should go on the journey to collect the pieces of the sword... and kill the monster!",
+            "actions": [
+                {
+                    "type": "showSprite",
+                    "key": "hiro_sword"
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "hiro_sword"
+                },
                 {
                     "type": "loadSprite",
                     "key": "hiro",
                     "path": "shattered_sword_assets/images/Logo.png",
                     "positon": [
-                        500,
-                        500
+                        650,
+                        300
                     ],
                     "scale": [
                         1,
