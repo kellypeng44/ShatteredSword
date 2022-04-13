@@ -193,9 +193,11 @@ export default class GameLevel extends Scene {
 
                 case Player_Events.GIVE_BUFF:
                     this.buffs = PlayerController.generateBuffs();
-                    this.buffButton1.text = "Increase "+this.buffs[0].type + "\n by "+this.buffs[0].value;
-                    this.buffButton2.text = "Increase "+this.buffs[1].type + "\n by "+this.buffs[1].value;
-                    this.buffButton3.text = "Increase "+this.buffs[2].type + "\n by "+this.buffs[2].value;
+                    this.buffButton1.text = "Increase "+this.buffs[0].type.toString() + " by "+this.buffs[0].value;
+                    this.buffButton2.text = "Increase "+this.buffs[1].type + " by "+this.buffs[1].value;
+                    this.buffButton3.text = "Increase "+this.buffs[2].type + " by "+this.buffs[2].value;
+                    
+
                     this.buffLayer.enable();
                     
                     break;
@@ -366,7 +368,7 @@ export default class GameLevel extends Scene {
         console.log("buffbutton pos:"+this.buffButton1.position);
 
         this.buffButton1.size.set(180,200);
-        this.buffButton1.borderWidth = 20;
+        this.buffButton1.borderWidth = 5;
         this.buffButton1.borderColor = Color.RED;
         this.buffButton1.backgroundColor = Color.WHITE;
         this.buffButton1.textColor = Color.BLACK;
@@ -378,7 +380,7 @@ export default class GameLevel extends Scene {
         //this.buffButton2.setPosition(this.buffButton1.position.clone().scale(this.viewport.getZoomLevel()));
         //this.buffButton2.position = this.buffButton2.position.clone().scale(this.viewport.getZoomLevel());
         this.buffButton2.size.set(180,200);
-        this.buffButton2.borderWidth = 2;
+        this.buffButton2.borderWidth = 5;
         this.buffButton2.borderColor = Color.RED;
         this.buffButton2.backgroundColor = Color.WHITE;
         this.buffButton2.textColor = Color.BLACK;
@@ -389,7 +391,7 @@ export default class GameLevel extends Scene {
         //this.buffButton3.setPosition(this.buffButton1.position.clone().scale(this.viewport.getZoomLevel()));
         //this.buffButton3.position = this.buffButton3.position.clone().scale(this.viewport.getZoomLevel());
         this.buffButton3.size.set(180,200);
-        this.buffButton3.borderWidth = 2;
+        this.buffButton3.borderWidth = 5;
         this.buffButton3.borderColor = Color.RED;
         this.buffButton3.backgroundColor = Color.WHITE;
         this.buffButton3.textColor = Color.BLACK;
