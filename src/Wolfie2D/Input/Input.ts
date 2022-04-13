@@ -299,12 +299,14 @@ export default class Input {
 		return Input.mousePosition.clone().scale(1 / this.viewport.getZoomLevel()).add(Input.viewport.getOrigin());
 	}
 
+
+	// -- MODIFIED BY HENRY -> added a scaling
 	/**
 	 * Gets the position of the last mouse press
 	 * @returns The mouse position stored as a Vec2
 	 */
 	static getMousePressPosition(): Vec2 {
-		return Input.mousePressPosition;
+		return Input.mousePressPosition.scaled(1 / this.viewport.getZoomLevel());
 	}
 
 	/**

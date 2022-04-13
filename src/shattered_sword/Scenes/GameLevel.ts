@@ -28,6 +28,7 @@ import Item from "../GameSystems/items/Item";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { Buff } from "../Player/PlayerController";
+import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
 
 
 
@@ -102,9 +103,12 @@ export default class GameLevel extends Scene {
         this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
 
         this.load.spritesheet("test_dummy","shattered_sword_assets/spritesheets/test_dummy.json")
+
+
     }
 
     startScene(): void {
+
         //call super after extending story with scene
        
         
@@ -166,6 +170,9 @@ export default class GameLevel extends Scene {
 
 
     updateScene(deltaT: number){
+        let clickpos = Input.getMousePosition();
+        if(Input.isMouseJustPressed())
+            console.log("mouse pos: " +clickpos);
         // Handle events and update the UI if needed
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
@@ -193,17 +200,14 @@ export default class GameLevel extends Scene {
                     
                     break;
                 case "buff1":
-                    console.log("button 1 pressed");
                     (<PlayerController>this.player._ai).addBuff(this.buffs[0]);
                     this.buffLayer.disable();
                     break;
                 case "buff2":
-                    console.log("button 2 pressed");
                     (<PlayerController>this.player._ai).addBuff(this.buffs[1]);
                     this.buffLayer.disable();
                     break;
                 case "buff3":
-                    console.log("button 3 pressed");
                     (<PlayerController>this.player._ai).addBuff(this.buffs[2]);
                     this.buffLayer.disable();
                     break;
@@ -356,15 +360,23 @@ export default class GameLevel extends Scene {
         //TODO - 
         //determine button location 
         this.buffButton1 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(100, 250),text:"buffButton1"});
+        console.log("buffbutton pos:"+this.buffButton1.position);
+        //this.buffButton1.position = this.buffButton1.position.clone().scale(this.viewport.getZoomLevel());
+        this.buffButton1
+        console.log("buffbutton pos:"+this.buffButton1.position);
+
         this.buffButton1.size.set(180,200);
-        this.buffButton1.borderWidth = 2;
+        this.buffButton1.borderWidth = 20;
         this.buffButton1.borderColor = Color.RED;
         this.buffButton1.backgroundColor = Color.WHITE;
         this.buffButton1.textColor = Color.BLACK;
         this.buffButton1.onClickEventId = "buff1";
         this.buffButton1.fontSize = 20;
 
+
         this.buffButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(300, 250),text:"buffButton1"});
+        //this.buffButton2.setPosition(this.buffButton1.position.clone().scale(this.viewport.getZoomLevel()));
+        //this.buffButton2.position = this.buffButton2.position.clone().scale(this.viewport.getZoomLevel());
         this.buffButton2.size.set(180,200);
         this.buffButton2.borderWidth = 2;
         this.buffButton2.borderColor = Color.RED;
@@ -374,6 +386,8 @@ export default class GameLevel extends Scene {
         this.buffButton2.fontSize = 20;
 
         this.buffButton3 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(500, 250),text:"buffButton1"});
+        //this.buffButton3.setPosition(this.buffButton1.position.clone().scale(this.viewport.getZoomLevel()));
+        //this.buffButton3.position = this.buffButton3.position.clone().scale(this.viewport.getZoomLevel());
         this.buffButton3.size.set(180,200);
         this.buffButton3.borderWidth = 2;
         this.buffButton3.borderColor = Color.RED;
