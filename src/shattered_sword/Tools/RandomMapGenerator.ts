@@ -258,7 +258,7 @@ export default class RandomMapGenerator {
                     this.map.layers[1].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.topLayer[i * roomWidth + j];
                 }
             if (room.enemies)
-                for (let enemy of this.enemies) {
+                for (let enemy of room.enemies) {
                     enemy.position.x += room.topLeft.x;
                     enemy.position.y += room.topLeft.y;
                     this.enemies.push(enemy);

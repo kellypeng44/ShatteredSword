@@ -40,7 +40,7 @@ export default class Tutorial extends GameLevel{
         this.viewport.setBounds(0, 0, this.map.width*32, this.map.height*32);
         this.viewport.follow(this.player);
 
-        console.log(this.rmg.getPlayer().toString());
+        console.log(this.rmg.getEnemies());
         this.playerSpawn = this.rmg.getPlayer().scale(32);
 
         // Do generic setup for a GameLevel

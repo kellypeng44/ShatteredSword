@@ -28,6 +28,12 @@
             "type": "player",
             "x": 5,
             "y": 19
+         },
+         {
+            "type": "test_dummy",
+            "x": 7,
+            "y": 19,
+            "possibility": 1
          }
       ]
    },
