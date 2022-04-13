@@ -110,7 +110,7 @@ export default class RandomMapGenerator {
     }
 
     getPlayer(): Vec2 {
-        return this.player;
+        return new Vec2(this.player.x - this.minX, this.player.y - this.minY);
     }
 
     getEnemies(): Array<Enemy> {
@@ -250,6 +250,10 @@ export default class RandomMapGenerator {
         for (let room of this.rooms) {
             let roomWidth = room.bottomRight.x - room.topLeft.x + 1;
             let roomHeight = room.bottomRight.y - room.topLeft.y + 1;
+            room.topLeft.x -= this.minX;
+            room.topLeft.y -= this.minY;
+            room.bottomRight.x -= this.minX;
+            room.bottomRight.y -= this.minY;
             for (let i = 0; i < roomHeight; i++)
                 for (let j = 0; j < roomWidth; j++) {
                     this.map.layers[0].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.bottomLayer[i * roomWidth + j];
@@ -257,13 +261,11 @@ export default class RandomMapGenerator {
                 }
             if (room.enemies)
                 for (let enemy of this.enemies) {
-                    enemy.position.x -= this.minX;
-                    enemy.position.y -= this.minY;
+                    enemy.position.x += room.topLeft.x;
+                    enemy.position.y += room.topLeft.y;
                     this.enemies.push(enemy);
                 }
         }
-        this.player.x -= this.minX;
-        this.player.y -= this.minY;
     }
 
     private isValidRoom(topLeft: Vec2, bottomRight: Vec2): boolean {
@@ -353,8 +355,8 @@ export default class RandomMapGenerator {
         if (old.sprites) {
             for (let sprite of old.sprites) {
                 if (sprite.type === 'player') {
-                    this.player.x = sprite.x;
-                    this.player.y = sprite.y;
+                    this.player.x = sprite.x + posX;
+                    this.player.y = sprite.y + posY;
                 }
                 else {
                     if (this.gen.random() <= sprite.possibility) {
