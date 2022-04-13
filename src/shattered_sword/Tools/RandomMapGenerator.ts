@@ -252,8 +252,6 @@ export default class RandomMapGenerator {
             let roomHeight = room.bottomRight.y - room.topLeft.y + 1;
             room.topLeft.x -= this.minX;
             room.topLeft.y -= this.minY;
-            room.bottomRight.x -= this.minX;
-            room.bottomRight.y -= this.minY;
             for (let i = 0; i < roomHeight; i++)
                 for (let j = 0; j < roomWidth; j++) {
                     this.map.layers[0].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.bottomLayer[i * roomWidth + j];
@@ -362,7 +360,7 @@ export default class RandomMapGenerator {
                     if (this.gen.random() <= sprite.possibility) {
                         let tmp = new Enemy();
                         tmp.type = sprite.type;
-                        tmp.position = new Vec2(posX + sprite.x, posY + sprite.y);
+                        tmp.position = new Vec2(sprite.x, sprite.y);
                         room.enemies.push(tmp);
                     }
                 }
