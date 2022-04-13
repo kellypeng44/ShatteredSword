@@ -59,7 +59,7 @@ export default class GameLevel extends Scene {
     protected levelTransitionScreen: Rect;
 
     // The battle manager for the scene
-    private battleManager: BattleManager;
+    protected battleManager: BattleManager;
 
     // Health UI
     protected healthLabel: Label;
@@ -70,10 +70,10 @@ export default class GameLevel extends Scene {
     protected seedLabel: Label;   
 
     // A list of items in the scene
-    private items: Array<Item>;
+    protected items: Array<Item>;
 
      // A list of enemies
-    private enemies: Array<AnimatedSprite>;
+    protected enemies: Array<AnimatedSprite>;
 
     //buffs layer
     buffLayer: Layer;
@@ -103,6 +103,8 @@ export default class GameLevel extends Scene {
         this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
 
         this.load.spritesheet("test_dummy","shattered_sword_assets/spritesheets/test_dummy.json")
+        this.enemies = new Array();
+        this.battleManager = new BattleManager();
 
 
     }
@@ -116,7 +118,6 @@ export default class GameLevel extends Scene {
         this.initViewport();
         this.initLayers();
         // Create the battle manager
-        this.battleManager = new BattleManager();
 
         // TODO
         this.initializeWeapons();
@@ -129,7 +130,6 @@ export default class GameLevel extends Scene {
         this.addUI();
         
         // Create an enemies array
-        this.enemies = new Array();
         // Send the player and enemies to the battle manager
         this.battleManager.setPlayers([<PlayerController>this.player._ai]);
         // Initialize all enemies
