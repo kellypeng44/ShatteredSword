@@ -250,6 +250,10 @@ export default class RandomMapGenerator {
         for (let room of this.rooms) {
             let roomWidth = room.bottomRight.x - room.topLeft.x + 1;
             let roomHeight = room.bottomRight.y - room.topLeft.y + 1;
+            room.topLeft.x -= this.minX;
+            room.topLeft.y -= this.minY;
+            room.bottomRight.x -= this.minX;
+            room.bottomRight.y -= this.minY;
             for (let i = 0; i < roomHeight; i++)
                 for (let j = 0; j < roomWidth; j++) {
                     this.map.layers[0].data[(room.topLeft.y + i) * width + room.topLeft.x + j] = room.bottomLayer[i * roomWidth + j];
