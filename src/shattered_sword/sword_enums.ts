@@ -10,6 +10,7 @@ export enum Player_Events {
     ENEMY_KILLED = "EnemyKilled",
     PLAYER_HIT_ENEMY = "PlayerHitEnemy",
     BOSS_KILLED = "BossKilled",
+    GIVE_BUFF = "GiveBuff"
 }
 export enum Damage_Type {
     NORMAL_DAMAGE = "NormalDamage",

@@ -25,7 +25,9 @@ import EnemyAI from "../AI/EnemyAI";
 import BattlerAI from "../AI/BattlerAI";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Item from "../GameSystems/items/Item";
-
+import Layer from "../../Wolfie2D/Scene/Layer";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
+import { Buff } from "../Player/PlayerController";
 
 
 
@@ -60,6 +62,8 @@ export default class GameLevel extends Scene {
 
     // Health UI
     protected healthLabel: Label;
+    //may need exp label
+    //may need mp label 
 
     //seed UI
     protected seedLabel: Label;   
@@ -69,7 +73,14 @@ export default class GameLevel extends Scene {
 
      // A list of enemies
     private enemies: Array<AnimatedSprite>;
-    
+
+    //buffs layer
+    buffLayer: Layer;
+    buffButton1 : Button;
+    buffButton2 : Button;
+    buffButton3 : Button;
+    buffs: Array<Buff>;
+
     randomSeed: number;
     loadScene(): void {
         //can load player sprite here
@@ -94,13 +105,12 @@ export default class GameLevel extends Scene {
     }
 
     startScene(): void {
-
+        //call super after extending story with scene
        
-
+        
         // Do the game level standard initializations
-        this.initLayers();
         this.initViewport();
-
+        this.initLayers();
         // Create the battle manager
         this.battleManager = new BattleManager();
 
@@ -109,24 +119,21 @@ export default class GameLevel extends Scene {
         // Initialize the items array - this represents items that are in the game world
         this.items = new Array();
 
-         // Create an enemies array
-        this.enemies = new Array();
-
         this.initPlayer();
+        //subscribe to relevant events
         this.subscribeToEvents();
         this.addUI();
-
         
+        // Create an enemies array
+        this.enemies = new Array();
         // Send the player and enemies to the battle manager
         this.battleManager.setPlayers([<PlayerController>this.player._ai]);
         // Initialize all enemies
         //this.initializeEnemies();
         this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
 
-        // Subscribe to relevant events
-        //this.receiver.subscribe("");
+        
       
-
         // Initialize the timers
         this.respawnTimer = new Timer(1000, () => {
             if(GameLevel.livesCount === 0){
@@ -137,16 +144,19 @@ export default class GameLevel extends Scene {
                 this.player.unfreeze();
             }
         });
+
+        /*
         this.levelTransitionTimer = new Timer(500);
         this.levelEndTimer = new Timer(3000, () => {
             // After the level end timer ends, fade to black and then go to the next scene
             this.levelTransitionScreen.tweens.play("fadeIn");
         });
+        */
 
-
-        
         // Start the black screen fade out
+        /*
         this.levelTransitionScreen.tweens.play("fadeOut");
+        */
 
         //TODO - uncomment when done testing
         // Initially disable player movement
@@ -170,9 +180,33 @@ export default class GameLevel extends Scene {
                     
                     console.log("enemy destroyed");
                     node.destroy();
+                    //TODO - this is for testing,  add some chance here later
+                    this.emitter.fireEvent(Player_Events.GIVE_BUFF);
                     break;
 
-                
+                case Player_Events.GIVE_BUFF:
+                    this.buffs = PlayerController.generateBuffs();
+                    this.buffButton1.text = "Increase "+this.buffs[0].type + "\n by "+this.buffs[0].value;
+                    this.buffButton2.text = "Increase "+this.buffs[1].type + "\n by "+this.buffs[1].value;
+                    this.buffButton3.text = "Increase "+this.buffs[2].type + "\n by "+this.buffs[2].value;
+                    this.buffLayer.enable();
+                    
+                    break;
+                case "buff1":
+                    console.log("button 1 pressed");
+                    (<PlayerController>this.player._ai).addBuff(this.buffs[0]);
+                    this.buffLayer.disable();
+                    break;
+                case "buff2":
+                    console.log("button 2 pressed");
+                    (<PlayerController>this.player._ai).addBuff(this.buffs[1]);
+                    this.buffLayer.disable();
+                    break;
+                case "buff3":
+                    console.log("button 3 pressed");
+                    (<PlayerController>this.player._ai).addBuff(this.buffs[2]);
+                    this.buffLayer.disable();
+                    break;
             }
         }
 
@@ -202,7 +236,6 @@ export default class GameLevel extends Scene {
                                 });
         }
 
-        
 
     }
 
@@ -215,6 +248,8 @@ export default class GameLevel extends Scene {
 
         // Add a layer for players and enemies
         this.addLayer("primary", 1);
+
+        this.buffLayer = this.addUILayer("buffLayer");   //TODO - test depth later, may be just a regular Layer
     }
 
     /**
@@ -233,8 +268,12 @@ export default class GameLevel extends Scene {
             Player_Events.ENEMY_KILLED,
             Player_Events.LEVEL_START,
             Player_Events.LEVEL_END,
-            Player_Events.PLAYER_KILLED
+            Player_Events.PLAYER_KILLED,
+            Player_Events.GIVE_BUFF,
         ]);
+        this.receiver.subscribe("buff1");
+        this.receiver.subscribe("buff2");
+        this.receiver.subscribe("buff3");
     }
 
     // TODO - 
@@ -248,14 +287,14 @@ export default class GameLevel extends Scene {
         this.healthLabel.font = "PixelSimple";
 
         //seed label
-        
-        //this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(400, 30), text: "Seed: "+ this.randomSeed });
+        //worldsize.x doesnt work how i want it to
         this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(this.worldSize.x - 50, 30), text: "Seed: "+ this.randomSeed });
         this.seedLabel.textColor = Color.WHITE;
         this.seedLabel.font = "PixelSimple";
       
 
         // End of level label (start off screen)
+        /*
         this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(-300, 200), text: "Level Complete"});
         this.levelEndLabel.size.set(1200, 60);
         this.levelEndLabel.borderRadius = 0;
@@ -277,7 +316,9 @@ export default class GameLevel extends Scene {
                 }
             ]
         });
+        */
 
+        /*
         this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(300, 200), size: new Vec2(600, 400)});
         this.levelTransitionScreen.color = new Color(34, 32, 52);
         this.levelTransitionScreen.alpha = 1;
@@ -309,7 +350,41 @@ export default class GameLevel extends Scene {
             ],
             onEnd: Player_Events.LEVEL_START
         });
+        */
 
+
+        //TODO - 
+        //determine button location 
+        this.buffButton1 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(100, 250),text:"buffButton1"});
+        this.buffButton1.size.set(180,200);
+        this.buffButton1.borderWidth = 2;
+        this.buffButton1.borderColor = Color.RED;
+        this.buffButton1.backgroundColor = Color.WHITE;
+        this.buffButton1.textColor = Color.BLACK;
+        this.buffButton1.onClickEventId = "buff1";
+        this.buffButton1.fontSize = 20;
+
+        this.buffButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(300, 250),text:"buffButton1"});
+        this.buffButton2.size.set(180,200);
+        this.buffButton2.borderWidth = 2;
+        this.buffButton2.borderColor = Color.RED;
+        this.buffButton2.backgroundColor = Color.WHITE;
+        this.buffButton2.textColor = Color.BLACK;
+        this.buffButton2.onClickEventId = "buff2";
+        this.buffButton2.fontSize = 20;
+
+        this.buffButton3 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(500, 250),text:"buffButton1"});
+        this.buffButton3.size.set(180,200);
+        this.buffButton3.borderWidth = 2;
+        this.buffButton3.borderColor = Color.RED;
+        this.buffButton3.backgroundColor = Color.WHITE;
+        this.buffButton3.textColor = Color.BLACK;
+        this.buffButton3.onClickEventId = "buff3";
+        this.buffButton3.fontSize = 20;
+
+        this.buffs = this.buffs = PlayerController.generateBuffs();
+
+        this.buffLayer.disable();
 
     }
 
@@ -445,7 +520,6 @@ export default class GameLevel extends Scene {
         this.sceneManager.changeToScene(MainMenu, {});
         Input.enableInput();
     }
-
 
 
     /**

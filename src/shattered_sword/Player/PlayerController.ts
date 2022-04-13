@@ -41,10 +41,10 @@ export enum BuffType {
 }
 
 
-type Buff = {
-    "type": BuffType,
-    "value": number,
-    "bonus": boolean,
+export class Buff  {
+    "type": BuffType;
+    "value": number;
+    //"bonus": boolean,         //need to determine what bonus gives
 }
 
 type Buffs = [
@@ -104,6 +104,31 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         return undefined;
     }
 
+
+    //generate array of 3 different buffs
+    /**
+     * generate array of 3 buffs
+     * @returns array of 3 differently typed buffs
+     */
+    static generateBuffs() : Buff[]{
+        let num = Number(Math.random().toPrecision(1)) * 10;    //number from 1 to 10
+        let array : Buff[] = [
+            {type:BuffType.ATK, value:num},
+            {type:BuffType.HEALTH, value:num},
+            {type:BuffType.DEF, value:num},
+            {type:BuffType.SPEED, value:num},
+            {type:BuffType.RANGE, value:num/10} //range is a multiplier percent
+        ];
+
+        // Shuffle array
+        const shuffled = array.sort(() => 0.5 - Math.random());
+
+        // Get sub-array of first 3 elements after shuffled
+        let selected = shuffled.slice(0, 3);
+
+        return selected;
+    }
+
     /**
 	 * Add given buff to the player
 	 * @param buff Given buff
@@ -156,7 +181,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
        
         //to test the buffs
-        //this.addBuff( {type:BuffType.HEALTH, value:1, bonus:false} );
+        this.addBuff( {type:BuffType.HEALTH, value:1} );
         //this.addBuff( {type:BuffType.RANGE, value:1, bonus:false} );
     }
 
@@ -198,7 +223,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             Debug.log("playerstate", "Player State: Fall");
         }
         Debug.log("playerspeed", "x: " + this.velocity.x + ", y:" + this.velocity.y);
-
+        Debug.log("player Coords:",  this.owner.position );
 
         //testing the attacks here, may be moved to another place latera
         if(Input.isJustPressed("attack")){

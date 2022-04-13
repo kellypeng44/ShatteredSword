@@ -149,7 +149,6 @@ export default class MainMenu extends Scene {
         back.backgroundColor = Color.TRANSPARENT;
         back.onClickEventId = "menu";
         
-
     }
 
     unloadScene(): void {
