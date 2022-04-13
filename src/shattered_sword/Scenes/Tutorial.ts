@@ -39,7 +39,7 @@ export default class Tutorial extends GameLevel{
         this.viewport.setBounds(0, -500, this.map.width*32, this.map.height*32);
         this.viewport.follow(this.player);
 
-        this.playerSpawn = new Vec2(1*32, 1*32);
+        this.playerSpawn = new Vec2(5*32, 9*32);
 
         // Do generic setup for a GameLevel
         super.startScene();

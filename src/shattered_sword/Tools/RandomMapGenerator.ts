@@ -110,7 +110,7 @@ export default class RandomMapGenerator {
     }
 
     getPlayer(): Vec2 {
-        return this.player;
+        return new Vec2(this.player.x - this.minX, this.player.y - this.minY);
     }
 
     getEnemies(): Array<Enemy> {
@@ -261,13 +261,11 @@ export default class RandomMapGenerator {
                 }
             if (room.enemies)
                 for (let enemy of this.enemies) {
-                    enemy.position.x -= this.minX;
-                    enemy.position.y -= this.minY;
+                    enemy.position.x += room.topLeft.x;
+                    enemy.position.y += room.topLeft.y;
                     this.enemies.push(enemy);
                 }
         }
-        this.player.x -= this.minX;
-        this.player.y -= this.minY;
     }
 
     private isValidRoom(topLeft: Vec2, bottomRight: Vec2): boolean {
@@ -357,8 +355,8 @@ export default class RandomMapGenerator {
         if (old.sprites) {
             for (let sprite of old.sprites) {
                 if (sprite.type === 'player') {
-                    this.player.x = sprite.x;
-                    this.player.y = sprite.y;
+                    this.player.x = sprite.x + posX;
+                    this.player.y = sprite.y + posY;
                 }
                 else {
                     if (this.gen.random() <= sprite.possibility) {
