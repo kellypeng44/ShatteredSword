@@ -64,12 +64,12 @@
 			"repeat": true,
 			"frames": [
 				{
-					"index": 0,
-					"duration": 150
+					"index": 44,
+					"duration": 100
 				},
 				{
-					"index": 1,
-					"duration": 150
+					"index": 45,
+					"duration": 100
 				}
 
 			]
@@ -84,10 +84,18 @@
 				},
 				{
 					"index": 31,
-					"duration": 150
+					"duration": 100
 				},
 				{
 					"index": 32,
+					"duration": 150
+				},
+				{
+					"index": 31,
+					"duration": 100
+				},
+				{
+					"index": 30,
 					"duration": 150
 				}
 			]
