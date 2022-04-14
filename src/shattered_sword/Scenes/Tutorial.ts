@@ -32,6 +32,10 @@ export default class Tutorial extends GameLevel {
         // TODO - change when done testing
         this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
 
+        //load enemies
+        this.load.spritesheet("snake","shattered_sword_assets/spritesheets/snake.json");
+        this.load.spritesheet("tiger","shattered_sword_assets/spritesheets/tiger.json");
+
 
 
         //load music here
@@ -54,6 +58,7 @@ export default class Tutorial extends GameLevel {
         super.startScene();
 
         let enemies = this.rmg.getEnemies();
+        /*
         for (let enemy of enemies) {
             switch (enemy.type) {
                 case "test_dummy":
@@ -70,6 +75,10 @@ export default class Tutorial extends GameLevel {
                     break;
             }
         }
+        */
+
+        //may have to move this to start scene in gameLevel
+        this.initializeEnemies(enemies);
     }
 
     updateScene(deltaT: number): void {

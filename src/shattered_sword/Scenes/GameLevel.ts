@@ -29,7 +29,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { Buff } from "../Player/PlayerController";
 import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
-
+import { Enemy } from "../Tools/RandomMapGenerator";
 
 
 
@@ -506,6 +506,44 @@ export default class GameLevel extends Scene {
         this.battleManager.addEnemy(<BattlerAI>enemy._ai);
     }
     
+
+    protected initializeEnemies( enemies: Enemy[]){
+        for (let enemy of enemies) {
+            switch (enemy.type) {
+                case "test_dummy":
+                    this.addEnemy("test_dummy", enemy.position.scale(32), {
+                        player: this.player,
+                        health: 100,
+                        tilemap: "Main",
+                        //actions:actions,
+                        goal: Statuses.REACHED_GOAL,
+                    })
+                    break;
+                case "snake":
+                    this.addEnemy("snake", enemy.position.scale(32), {
+                        player: this.player,
+                        health: 100,
+                        tilemap: "Main",
+                        //actions:actions,
+                        goal: Statuses.REACHED_GOAL,
+                    })
+                    break;
+                case "tiger":
+                    this.addEnemy("tiger", enemy.position.scale(32), {
+                        player: this.player,
+                        health: 100,
+                        tilemap: "Main",
+                        //actions:actions,
+                        goal: Statuses.REACHED_GOAL,
+                    })
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+    }
 
    
     protected handlePlayerEnemyCollision(player: AnimatedSprite, enemy: AnimatedSprite) {

@@ -28,11 +28,17 @@
             "type": "player",
             "x": 5,
             "y": 19
-         },
+         }, 
          {
             "type": "test_dummy",
             "x": 7,
             "y": 19,
+            "possibility": 1
+         },
+         {
+            "type": "snake",
+            "x": 1,
+            "y": 10,
             "possibility": 1
          }
       ]
@@ -71,6 +77,44 @@
                "width": 3,
                "alt_tile": [477, 479]
             }
+         ],
+         "sprites": [
+            {
+               "type": "test_dummy",
+               "x": 1,
+               "y": 10,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 12,
+               "y": 12,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 18,
+               "y": 15,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 14,
+               "y": 16,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 24,
+               "y": 17,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 6,
+               "y": 17,
+               "possibility": 1
+            }
          ]
       },
       {
@@ -91,6 +135,56 @@
                "y": 16,
                "width": 3,
                "alt_tile": [477, 479]
+            }
+         ],
+         "sprites": [
+            {
+               "type": "test_dummy",
+               "x": 1,
+               "y": 10,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 5,
+               "y": 15,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 14,
+               "y": 10,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 11,
+               "y": 13,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 18,
+               "y": 12,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 23,
+               "y": 15,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 16,
+               "y": 17,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 27,
+               "y": 18,
+               "possibility": 1
             }
          ]
       },
@@ -114,8 +208,44 @@
                "alt_tile": [477, 479]
             }
          ],
-         "sprites":[
-            
+         "sprites": [
+            {
+               "type": "test_dummy",
+               "x": 1,
+               "y": 10,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 5,
+               "y": 14,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 11,
+               "y": 12,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 12,
+               "y": 9,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 15,
+               "y": 15,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 25,
+               "y": 14,
+               "possibility": 1
+            }
+
          ]
       },
       {
@@ -137,6 +267,44 @@
                "width": 3,
                "alt_tile": [477, 479]
             }
+         ],
+         "sprites": [
+            {
+               "type": "test_dummy",
+               "x": 1,
+               "y": 10,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 9,
+               "y": 10,
+               "possibility": 1
+            },
+            {
+               "type": "test_dummy",
+               "x": 9,
+               "y": 5,
+               "possibility": 1
+            },
+            {
+               "type": "test_dummy",
+               "x": 15,
+               "y": 18,
+               "possibility": 1
+            },
+            {
+               "type": "test_dummy",
+               "x": 23,
+               "y": 16,
+               "possibility": 1
+            },
+            {
+               "type": "test_dummy",
+               "x": 27,
+               "y": 14,
+               "possibility": 1
+            }
          ]
       },
       {
@@ -157,6 +325,44 @@
                "y": 14,
                "width": 3,
                "alt_tile": [477, 479]
+            }
+         ],
+         "sprites": [
+            {
+               "type": "test_dummy",
+               "x": 1,
+               "y": 10,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 7,
+               "y": 13,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 13,
+               "y": 12,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 18,
+               "y": 14,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 13,
+               "y": 16,
+               "possibility": 1
+            },
+            {
+               "type": "snake",
+               "x": 23,
+               "y": 13,
+               "possibility": 1
             }
          ]
       }

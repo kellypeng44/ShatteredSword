@@ -36,28 +36,29 @@ export default class Patrol extends EnemyState {
         let colrow = this.parent.tilemap.getColRowAt(this.owner.position.clone());
         
         //check if next tile on walking path is collidable
-        if(this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y)){
+        if(this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y) || this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y-1)){
             //turn around
             //console.log(this.parent.tilemap.getTileAtRowCol(colrow));
             this.parent.direction *= -1;
-            (<Sprite>this.owner).invertX = MathUtils.sign(1) < 0;
+            console.log((<Sprite>this.owner).invertX);
+            //(<Sprite>this.owner).invertX != (<Sprite>this.owner).invertX ;
             //console.log("turn around cus wall in front");
         }
         //check if next ground tile is collidable 
-        else if(this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y+1)){
+        else if(!this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y+1)){
+            //turn around 
+            this.parent.direction *=-1;
+            console.log((<Sprite>this.owner).invertX);
+            //console.log("turn around cus no floor in front");
+        }
+        else{
             //keep moving
             //this.velocity.x =  this.speed;
             //console.log("there is floor ahead");
         }
-        else{
-            //turn around 
-            this.parent.direction *=-1;
-            (<Sprite>this.owner).invertX = MathUtils.sign(1) < 0;
-            //console.log("turn around cus no floor in front");
-            
-        }
         //move
         this.parent.velocity.x = this.parent.direction * this.parent.speed;
+        (<Sprite>this.owner).invertX = this.parent.direction ==1? true: false ;
 
         //move this elsewhere later
         this.owner.move(this.parent.velocity.scaled(deltaT));

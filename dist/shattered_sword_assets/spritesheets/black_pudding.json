@@ -1,0 +1,654 @@
+{
+  "name": "Black Pudding",
+  "spriteSheetImage": "black_pudding.png",
+  "spriteWidth": 128,
+  "spriteHeight": 128,
+  "columns": 30,
+  "rows": 10,
+  "leftBuffer": 0,
+  "rightBuffer": 0,
+  "topBuffer": 0,
+  "bottomBuffer": 0,
+  "animations": [
+    {
+      "name": "Idle",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 0,
+          "duration": 4
+        },
+        {
+          "index": 1,
+          "duration": 4
+        },
+        {
+          "index": 2,
+          "duration": 4
+        },
+        {
+          "index": 3,
+          "duration": 4
+        },
+        {
+          "index": 4,
+          "duration": 4
+        },
+        {
+          "index": 5,
+          "duration": 4
+        },
+        {
+          "index": 6,
+          "duration": 4
+        },
+        {
+          "index": 7,
+          "duration": 4
+        },
+        {
+          "index": 8,
+          "duration": 4
+        },
+        {
+          "index": 9,
+          "duration": 4
+        },
+        {
+          "index": 10,
+          "duration": 4
+        },
+        {
+          "index": 11,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "Moving Left",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 30,
+          "duration": 4
+        },
+        {
+          "index": 31,
+          "duration": 4
+        },
+        {
+          "index": 32,
+          "duration": 4
+        },
+        {
+          "index": 33,
+          "duration": 4
+        },
+        {
+          "index": 34,
+          "duration": 4
+        },
+        {
+          "index": 35,
+          "duration": 4
+        },
+        {
+          "index": 36,
+          "duration": 4
+        },
+        {
+          "index": 37,
+          "duration": 4
+        },
+        {
+          "index": 38,
+          "duration": 4
+        },
+        {
+          "index": 39,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "Moving Right",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 60,
+          "duration": 4
+        },
+        {
+          "index": 61,
+          "duration": 4
+        },
+        {
+          "index": 62,
+          "duration": 4
+        },
+        {
+          "index": 63,
+          "duration": 4
+        },
+        {
+          "index": 64,
+          "duration": 4
+        },
+        {
+          "index": 65,
+          "duration": 4
+        },
+        {
+          "index": 66,
+          "duration": 4
+        },
+        {
+          "index": 67,
+          "duration": 4
+        },
+        {
+          "index": 68,
+          "duration": 4
+        },
+        {
+          "index": 69,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "Attack Left",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 90,
+          "duration": 4
+        },
+        {
+          "index": 91,
+          "duration": 4
+        },
+        {
+          "index": 92,
+          "duration": 4
+        },
+        {
+          "index": 93,
+          "duration": 4
+        },
+        {
+          "index": 94,
+          "duration": 4
+        },
+        {
+          "index": 95,
+          "duration": 4
+        },
+        {
+          "index": 96,
+          "duration": 4
+        },
+        {
+          "index": 97,
+          "duration": 4
+        },
+        {
+          "index": 98,
+          "duration": 4
+        },
+        {
+          "index": 99,
+          "duration": 4
+        },
+        {
+          "index": 100,
+          "duration": 4
+        },
+        {
+          "index": 101,
+          "duration": 4
+        },
+        {
+          "index": 102,
+          "duration": 4
+        },
+        {
+          "index": 103,
+          "duration": 4
+        },
+        {
+          "index": 104,
+          "duration": 4
+        },
+        {
+          "index": 105,
+          "duration": 4
+        },
+        {
+          "index": 106,
+          "duration": 4
+        },
+        {
+          "index": 107,
+          "duration": 4
+        },
+        {
+          "index": 108,
+          "duration": 4
+        },
+        {
+          "index": 109,
+          "duration": 4
+        },
+        {
+          "index": 110,
+          "duration": 4
+        },
+        {
+          "index": 111,
+          "duration": 4
+        },
+        {
+          "index": 112,
+          "duration": 4
+        },
+        {
+          "index": 113,
+          "duration": 4
+        },
+        {
+          "index": 114,
+          "duration": 4
+        },
+        {
+          "index": 115,
+          "duration": 4
+        },
+        {
+          "index": 116,
+          "duration": 4
+        },
+        {
+          "index": 117,
+          "duration": 4
+        },
+        {
+          "index": 118,
+          "duration": 4
+        },
+        {
+          "index": 119,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "Attack Right",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 120,
+          "duration": 4
+        },
+        {
+          "index": 121,
+          "duration": 4
+        },
+        {
+          "index": 122,
+          "duration": 4
+        },
+        {
+          "index": 123,
+          "duration": 4
+        },
+        {
+          "index": 124,
+          "duration": 4
+        },
+        {
+          "index": 125,
+          "duration": 4
+        },
+        {
+          "index": 126,
+          "duration": 4
+        },
+        {
+          "index": 127,
+          "duration": 4
+        },
+        {
+          "index": 128,
+          "duration": 4
+        },
+        {
+          "index": 129,
+          "duration": 4
+        },
+        {
+          "index": 130,
+          "duration": 4
+        },
+        {
+          "index": 131,
+          "duration": 4
+        },
+        {
+          "index": 132,
+          "duration": 4
+        },
+        {
+          "index": 133,
+          "duration": 4
+        },
+        {
+          "index": 134,
+          "duration": 4
+        },
+        {
+          "index": 135,
+          "duration": 4
+        },
+        {
+          "index": 136,
+          "duration": 4
+        },
+        {
+          "index": 137,
+          "duration": 4
+        },
+        {
+          "index": 138,
+          "duration": 4
+        },
+        {
+          "index": 139,
+          "duration": 4
+        },
+        {
+          "index": 140,
+          "duration": 4
+        },
+        {
+          "index": 141,
+          "duration": 4
+        },
+        {
+          "index": 142,
+          "duration": 4
+        },
+        {
+          "index": 143,
+          "duration": 4
+        },
+        {
+          "index": 144,
+          "duration": 4
+        },
+        {
+          "index": 145,
+          "duration": 4
+        },
+        {
+          "index": 146,
+          "duration": 4
+        },
+        {
+          "index": 147,
+          "duration": 4
+        },
+        {
+          "index": 148,
+          "duration": 4
+        },
+        {
+          "index": 149,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "Damaged Left",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 150,
+          "duration": 4
+        },
+        {
+          "index": 151,
+          "duration": 4
+        },
+        {
+          "index": 152,
+          "duration": 4
+        },
+        {
+          "index": 153,
+          "duration": 4
+        },
+        {
+          "index": 154,
+          "duration": 4
+        },
+        {
+          "index": 155,
+          "duration": 4
+        },
+        {
+          "index": 156,
+          "duration": 4
+        },
+        {
+          "index": 157,
+          "duration": 4
+        },
+        {
+          "index": 158,
+          "duration": 4
+        },
+        {
+          "index": 159,
+          "duration": 4
+        },
+        {
+          "index": 160,
+          "duration": 4
+        },
+        {
+          "index": 161,
+          "duration": 4
+        },
+        {
+          "index": 162,
+          "duration": 4
+        },
+        {
+          "index": 163,
+          "duration": 4
+        },
+        {
+          "index": 164,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "Damaged Right",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 180,
+          "duration": 4
+        },
+        {
+          "index": 181,
+          "duration": 4
+        },
+        {
+          "index": 182,
+          "duration": 4
+        },
+        {
+          "index": 183,
+          "duration": 4
+        },
+        {
+          "index": 184,
+          "duration": 4
+        },
+        {
+          "index": 185,
+          "duration": 4
+        },
+        {
+          "index": 186,
+          "duration": 4
+        },
+        {
+          "index": 187,
+          "duration": 4
+        },
+        {
+          "index": 188,
+          "duration": 4
+        },
+        {
+          "index": 189,
+          "duration": 4
+        },
+        {
+          "index": 190,
+          "duration": 4
+        },
+        {
+          "index": 191,
+          "duration": 4
+        },
+        {
+          "index": 192,
+          "duration": 4
+        },
+        {
+          "index": 193,
+          "duration": 4
+        },
+        {
+          "index": 194,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "Dying",
+      "repeat": false,
+      "frames": [
+        {
+          "index": 210,
+          "duration": 4
+        },
+        {
+          "index": 211,
+          "duration": 4
+        },
+        {
+          "index": 212,
+          "duration": 4
+        },
+        {
+          "index": 213,
+          "duration": 4
+        },
+        {
+          "index": 214,
+          "duration": 4
+        },
+        {
+          "index": 215,
+          "duration": 4
+        },
+        {
+          "index": 216,
+          "duration": 4
+        },
+        {
+          "index": 217,
+          "duration": 4
+        },
+        {
+          "index": 218,
+          "duration": 4
+        },
+        {
+          "index": 219,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "Dead",
+      "repeat": false,
+      "frames": [
+        {
+          "index": 240,
+          "duration": 100
+        }
+      ]
+    },
+    {
+      "name": "Dancing",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 270,
+          "duration": 4
+        },
+        {
+          "index": 271,
+          "duration": 4
+        },
+        {
+          "index": 272,
+          "duration": 4
+        },
+        {
+          "index": 273,
+          "duration": 4
+        },
+        {
+          "index": 272,
+          "duration": 4
+        },
+        {
+          "index": 271,
+          "duration": 4
+        },
+        {
+          "index": 270,
+          "duration": 4
+        },
+        {
+          "index": 274,
+          "duration": 4
+        },
+        {
+          "index": 275,
+          "duration": 4
+        },
+        {
+          "index": 276,
+          "duration": 4
+        },
+        {
+          "index": 275,
+          "duration": 4
+        },
+        {
+          "index": 274,
+          "duration": 4
+        }
+      ]
+    }
+  ]
+}

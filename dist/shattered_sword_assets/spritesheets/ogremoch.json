@@ -1,0 +1,271 @@
+{
+    "name": "Ogremoch",
+    "spriteSheetImage": "ogremoch.png",
+    "spriteWidth": 128,
+    "spriteHeight": 128,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 7,
+    "rows": 10,
+    "animations": [
+        {
+            "name": "IDLE",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 8
+                },
+                {
+                    "index": 1,
+                    "duration": 9
+                },
+                {
+                    "index": 2,
+                    "duration": 10
+                },
+                {
+                    "index": 3,
+                    "duration": 11
+                },
+                {
+                    "index": 4,
+                    "duration": 11
+                },
+                {
+                    "index": 5,
+                    "duration": 10
+                },
+                {
+                    "index": 6,
+                    "duration": 9
+                }
+            ]
+        },
+        {
+            "name": "Dancing",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 7,
+                    "duration": 6
+                },
+                {
+                    "index": 8,
+                    "duration": 6
+                },
+                {
+                    "index": 9,
+                    "duration": 6
+                },
+                {
+                    "index": 10,
+                    "duration": 6
+                },
+                {
+                    "index": 11,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "DYING",
+            "repeat": false,
+            "next": "DEAD",
+            "frames": [
+                {
+                    "index": 14,
+                    "duration": 6
+                },
+                {
+                    "index": 15,
+                    "duration": 6
+                },
+                {
+                    "index": 16,
+                    "duration": 6
+                },
+                {
+                    "index": 17,
+                    "duration": 6
+                },
+                {
+                    "index": 18,
+                    "duration": 6
+                },
+                {
+                    "index": 19,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "DEAD",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 21,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "WALK_LEFT",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 28,
+                    "duration": 6
+                },
+                {
+                    "index": 29,
+                    "duration": 6
+                },
+                {
+                    "index": 30,
+                    "duration": 6
+                },
+                {
+                    "index": 31,
+                    "duration": 6
+                },
+                {
+                    "index": 32,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "WALK_RIGHT",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 35,
+                    "duration": 6
+                },
+                {
+                    "index": 36,
+                    "duration": 6
+                },
+                {
+                    "index": 37,
+                    "duration": 6
+                },
+                {
+                    "index": 38,
+                    "duration": 6
+                },
+                {
+                    "index": 39,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "DMG_LEFT",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 42,
+                    "duration": 6
+                },
+                {
+                    "index": 43,
+                    "duration": 6
+                },
+                {
+                    "index": 44,
+                    "duration": 6
+                },
+                {
+                    "index": 45,
+                    "duration": 6
+                },
+                {
+                    "index": 46,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "DMG_RIGHT",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 49,
+                    "duration": 6
+                },
+                {
+                    "index": 50,
+                    "duration": 6
+                },
+                {
+                    "index": 51,
+                    "duration": 6
+                },
+                {
+                    "index": 52,
+                    "duration": 6
+                },
+                {
+                    "index": 53,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "ATK_LEFT",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 56,
+                    "duration": 6
+                },
+                {
+                    "index": 57,
+                    "duration": 6
+                },
+                {
+                    "index": 58,
+                    "duration": 6
+                },
+                {
+                    "index": 59,
+                    "duration": 6
+                },
+                {
+                    "index": 60,
+                    "duration": 6
+                }
+            ]
+        },
+        {
+            "name": "ATK_RIGHT",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 63,
+                    "duration": 6
+                },
+                {
+                    "index": 64,
+                    "duration": 6
+                },
+                {
+                    "index": 65,
+                    "duration": 6
+                },
+                {
+                    "index": 66,
+                    "duration": 3
+                },
+                {
+                    "index": 67,
+                    "duration": 6
+                }
+            ]
+        }
+    ]
+}
