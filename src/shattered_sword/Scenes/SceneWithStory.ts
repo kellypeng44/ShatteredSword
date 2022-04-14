@@ -9,6 +9,7 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 
+
 enum Mode {
     GAME_MODE = "GameMode",
     STORY_MODE = "StoryMode",
