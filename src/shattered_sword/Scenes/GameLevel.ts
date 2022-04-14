@@ -495,6 +495,9 @@ export default class GameLevel extends Scene {
         //enemy.position.set(tilePos.x*32, tilePos.y*32);
         enemy.position.copy(tilePos);
         enemy.scale.set(2, 2);
+        //TODO - add custom collision shape for each enemy in an option variable 
+        //enemy.addPhysics(aiOptions.size.clone());
+
         enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(16, 25)));
         enemy.colliderOffset.set(0, 6);
         enemy.addAI(EnemyAI, aiOptions); //TODO - add individual enemy AI
@@ -517,9 +520,11 @@ export default class GameLevel extends Scene {
                         tilemap: "Main",
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
+                        //TODO - test Add collision shape for each enemy type
+                        //size: new AABB(Vec2.ZERO, new Vec2(16, 25))
                     })
                     break;
-                case "snake":
+                case "snake":       //snake enemies drop from sky("trees")? or could just be very abundant
                     this.addEnemy("snake", enemy.position.scale(32), {
                         player: this.player,
                         health: 100,
@@ -528,7 +533,7 @@ export default class GameLevel extends Scene {
                         goal: Statuses.REACHED_GOAL,
                     })
                     break;
-                case "tiger":
+                case "tiger":       //tiger can be miniboss for now? 
                     this.addEnemy("tiger", enemy.position.scale(32), {
                         player: this.player,
                         health: 100,
