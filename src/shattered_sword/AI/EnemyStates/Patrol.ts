@@ -40,7 +40,7 @@ export default class Patrol extends EnemyState {
             //turn around
             //console.log(this.parent.tilemap.getTileAtRowCol(colrow));
             this.parent.direction *= -1;
-            console.log((<Sprite>this.owner).invertX);
+            //console.log((<Sprite>this.owner).invertX);
             //(<Sprite>this.owner).invertX != (<Sprite>this.owner).invertX ;
             //console.log("turn around cus wall in front");
         }
@@ -48,7 +48,7 @@ export default class Patrol extends EnemyState {
         else if(!this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y+1)){
             //turn around 
             this.parent.direction *=-1;
-            console.log((<Sprite>this.owner).invertX);
+            //console.log((<Sprite>this.owner).invertX);
             //console.log("turn around cus no floor in front");
         }
         else{

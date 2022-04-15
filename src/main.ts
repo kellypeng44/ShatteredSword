@@ -22,7 +22,7 @@ import WeaponTypeRegistry from "./shattered_sword/Registry/WeaponTypeRegistry";
             {name: "down", keys: ["s"]},
             {name: "jump", keys: ["x","space"]},
             {name: "attack", keys: ["j","z","enter"]},  
-            {name: "dash", keys: ["k","z"]},
+            {name: "dash", keys: ["k","x"]},    //
             {name: "skill", keys: ["l","v"]},
             {name: "inventory", keys: ["i","b"]},
             {name: "pause", keys: ["escape"]},    

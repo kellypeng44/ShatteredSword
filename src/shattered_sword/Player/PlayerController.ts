@@ -70,6 +70,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     CURRENT_DEF: number = 100;
     tilemap: OrthogonalTilemap;
 
+    //for doublejumps maybe = # of jumps in air allowed
+    MAX_airjumps: number = 1;
+    airjumps:number = 0;
+    
     // TODO - 
     damage(damage: number): void {
         (<AnimatedSprite>this.owner).animation.play("HURT", false);
@@ -222,10 +226,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 		} else if(this.currentState instanceof Fall){
             Debug.log("playerstate", "Player State: Fall");
         }
-        Debug.log("playerspeed", "x: " + this.velocity.x + ", y:" + this.velocity.y);
-        Debug.log("player Coords:",  this.owner.position );
+        Debug.log("player speed", "player speed: x: " + this.velocity.x + ", y:" + this.velocity.y);
+        Debug.log("player Coords:", "Player Coords:" +this.owner.position );
 
-        //testing the attacks here, may be moved to another place latera
+        //testing the attacks here, may be moved to another place later
         if(Input.isJustPressed("attack")){
             let item = this.inventory.getItem();
             (<AnimatedSprite>this.owner).animation.playIfNotAlready("ATTACK", true);
@@ -236,6 +240,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 item.use(this.owner, "player", this.lookDirection);
             }
         }
+
         
         
 	}

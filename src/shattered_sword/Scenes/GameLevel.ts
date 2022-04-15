@@ -170,9 +170,6 @@ export default class GameLevel extends Scene {
 
 
     updateScene(deltaT: number){
-        let clickpos = Input.getMousePosition();
-        if(Input.isMouseJustPressed())
-            console.log("mouse pos: " +clickpos);
         // Handle events and update the UI if needed
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
@@ -184,8 +181,6 @@ export default class GameLevel extends Scene {
                     //remove enemy from enemies
                     this.enemies = this.enemies.filter(item => item !== event.data.get("ai"));
                     this.battleManager.removeEnemy(event.data.get("ai"));
-                    
-                    console.log("enemy destroyed");
                     node.destroy();
                     //TODO - this is for testing,  add some chance here later
                     this.emitter.fireEvent(Player_Events.GIVE_BUFF);
@@ -197,7 +192,7 @@ export default class GameLevel extends Scene {
                     this.buffButton2.text = "Increase "+this.buffs[1].type + " by "+this.buffs[1].value;
                     this.buffButton3.text = "Increase "+this.buffs[2].type + " by "+this.buffs[2].value;
                     
-
+                    //pause game here 
                     this.buffLayer.enable();
                     
                     break;
@@ -527,7 +522,7 @@ export default class GameLevel extends Scene {
                 case "snake":       //snake enemies drop from sky("trees")? or could just be very abundant
                     this.addEnemy("snake", enemy.position.scale(32), {
                         player: this.player,
-                        health: 100,
+                        health: 50,
                         tilemap: "Main",
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
@@ -536,7 +531,7 @@ export default class GameLevel extends Scene {
                 case "tiger":       //tiger can be miniboss for now? 
                     this.addEnemy("tiger", enemy.position.scale(32), {
                         player: this.player,
-                        health: 100,
+                        health: 200,
                         tilemap: "Main",
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
