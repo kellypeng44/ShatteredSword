@@ -73,7 +73,7 @@ export default class MainMenu extends Scene {
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
             console.log(event);
-            if (InputWrapper.isMouseJustPressed(0)) {  //if left click
+            if (InputWrapper.isLeftMouseJustPressed()) {  //if left click
                 this.sceneManager.changeToScene(MainMenu, {}, {});
                 
             }

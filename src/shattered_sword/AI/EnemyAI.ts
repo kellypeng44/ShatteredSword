@@ -15,13 +15,14 @@ import Weapon from "../GameSystems/items/Weapon";
 import BattlerAI from "./BattlerAI";
 
 import Patrol from "./EnemyStates/Patrol";
-import { Statuses } from "../sword_enums";
+import { GameState, Statuses } from "../sword_enums";
 
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 import { Player_Events } from "../sword_enums";
+import InputWrapper from "../Tools/InputWrapper";
 export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     /** The owner of this AI */
     owner: AnimatedSprite;
@@ -181,6 +182,9 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     
 
     update(deltaT: number){
+        if (InputWrapper.getState() != GameState.GAMING) {
+            return;
+        }
         super.update(deltaT);
 
         // This is the plan that is executed in the Active state, so whenever we don't have a plan, acquire a new one given the current statuses the enemy has

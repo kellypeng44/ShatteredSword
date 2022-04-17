@@ -136,8 +136,8 @@ export default class InputWrapper {
         return false;
     }
 
-    static isMouseJustPressed(mouseButton?: number): boolean{
-        return Input.isMouseJustPressed(mouseButton);
+    static isLeftMouseJustPressed(): boolean{
+        return Input.isMouseJustPressed(0);
     }
 
     static disableInput() {
@@ -152,4 +152,7 @@ export default class InputWrapper {
         InputWrapper.gameState = gameState;
     }
 
+    static getState(): GameState {
+        return InputWrapper.gameState;
+    }
 }
