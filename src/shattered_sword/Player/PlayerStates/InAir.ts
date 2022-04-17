@@ -17,7 +17,6 @@ export default abstract class InAir extends PlayerState {
         
 		this.parent.velocity.x += dir.x * (this.parent.speed+this.parent.CURRENT_BUFFS.speed)/3.5 - 0.3*this.parent.velocity.x;
 
-		this.owner.move(this.parent.velocity.scaled(deltaT));
 
         if(this.owner.onGround){
 			this.finished(PlayerStates.PREVIOUS);

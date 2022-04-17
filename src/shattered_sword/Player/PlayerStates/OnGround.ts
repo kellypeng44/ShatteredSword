@@ -35,7 +35,6 @@ export default class OnGround extends PlayerState {
 			this.finished("fall");
 		}
 		super.update(deltaT);
-		this.owner.move(this.parent.velocity.scaled(deltaT));
 		
 	}
 

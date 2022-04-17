@@ -5,7 +5,7 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
-import { Player_Events } from "../../sword_enums";
+import { GameState, Player_Events } from "../../sword_enums";
 import InputWrapper from "../../Tools/InputWrapper";
 import PlayerController from "../PlayerController";
 
@@ -62,13 +62,17 @@ export default abstract class PlayerState extends State {
 			this.emitter.fireEvent(Player_Events.PLAYER_MOVE, {position: this.owner.position.clone()});
 			this.positionTimer.start();
 		}
-		this.parent.velocity.y += this.gravity*deltaT;
+		
 
 		if(InputWrapper.isDashJustPressed()){
 			this.doDash();
 		}
 		if (!PlayerState.dashTimer.isStopped()) {
 			this.parent.velocity.x = (<Sprite>this.owner).invertX ? -800 : 800;
+		}
+		if (InputWrapper.getState() === GameState.GAMING) {
+			this.parent.velocity.y += this.gravity*deltaT;
+			this.owner.move(this.parent.velocity.scaled(deltaT));
 		}
 	}
 }

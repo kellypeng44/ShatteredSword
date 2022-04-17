@@ -23,7 +23,6 @@ export default class Idle extends OnGround {
 		
 		this.parent.velocity.x = 0;
 		super.update(deltaT);
-		this.owner.move(this.parent.velocity.scaled(deltaT));
 	}
 
 	onExit(): Record<string, any> {
