@@ -148,6 +148,7 @@ export default class InputWrapper {
         Input.enableInput();
     }
 
+    // DO NOT call this function directly
     static setState(gameState: GameState): void {
         InputWrapper.gameState = gameState;
     }

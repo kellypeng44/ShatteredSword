@@ -183,8 +183,10 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
     update(deltaT: number){
         if (InputWrapper.getState() != GameState.GAMING) {
+            this.owner.animation.pause();
             return;
         }
+        this.owner.animation.resume();
         super.update(deltaT);
 
         // This is the plan that is executed in the Active state, so whenever we don't have a plan, acquire a new one given the current statuses the enemy has
