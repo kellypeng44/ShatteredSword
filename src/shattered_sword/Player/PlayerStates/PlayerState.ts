@@ -2,10 +2,10 @@ import State from "../../../Wolfie2D/DataTypes/State/State";
 import StateMachine from "../../../Wolfie2D/DataTypes/State/StateMachine";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import Input from "../../../Wolfie2D/Input/Input";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import { Player_Events } from "../../sword_enums";
+import InputWrapper from "../../Tools/InputWrapper";
 import PlayerController from "../PlayerController";
 
 
@@ -32,8 +32,8 @@ export default abstract class PlayerState extends State {
 	 */
 	getInputDirection(): Vec2 {
 		let direction = Vec2.ZERO;
-		direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
-		direction.y = (Input.isJustPressed("jump") ? -1 : 0);
+		direction.x = (InputWrapper.isLeftPressed() ? -1 : 0) + (InputWrapper.isRightPressed() ? 1 : 0);
+		direction.y = (InputWrapper.isJumpJustPressed() ? -1 : 0);
 		return direction;
 	}
 

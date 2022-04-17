@@ -24,3 +24,10 @@ export enum Statuses {
     CAN_RETREAT = "CAN_RETREAT",
     REACHED_GOAL = "GOAL"
 }
+
+export enum GameState {
+    GAMING = "gaming",
+    STORY = "story",
+    BUFF = "buff",
+    PAUSE = "pause"
+}

@@ -2,7 +2,6 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../Wolfie2D/Debug/Debug";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import Input from "../../Wolfie2D/Input/Input";
 import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Point from "../../Wolfie2D/Nodes/Graphics/Point";
@@ -16,7 +15,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import PlayerController from "../Player/PlayerController";
 import MainMenu from "./MainMenu";
-import { Player_Events, Statuses } from "../sword_enums";
+import { GameState, Player_Events, Statuses } from "../sword_enums";
 import RegistryManager from "../../Wolfie2D/Registry/RegistryManager";
 import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
 import Weapon from "../GameSystems/items/Weapon";
@@ -30,6 +29,8 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { Buff } from "../Player/PlayerController";
 import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
 import { Enemy } from "../Tools/RandomMapGenerator";
+import Stack from "../../Wolfie2D/DataTypes/Stack";
+import InputWrapper from "../Tools/InputWrapper";
 
 
 
@@ -74,6 +75,8 @@ export default class GameLevel extends Scene {
 
      // A list of enemies
     protected enemies: Array<AnimatedSprite>;
+
+    protected gameStateStack: Stack<GameState>;
 
     //buffs layer
     buffLayer: Layer;
@@ -170,49 +173,62 @@ export default class GameLevel extends Scene {
         //TODO - uncomment when done testing
         // Initially disable player movement
         //Input.disableInput();
-        Input.enableInput();
+        this.gameStateStack = new Stack();
+        this.setGameState(GameState.GAMING);
+        InputWrapper.enableInput();
     }
 
 
     updateScene(deltaT: number){
+        
         // Handle events and update the UI if needed
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
-            
-            switch(event.type){
-                case Player_Events.ENEMY_KILLED:
-                    
-                    let node = this.sceneGraph.getNode(event.data.get("owner"));//get enemy id 
-                    //remove enemy from enemies
-                    this.enemies = this.enemies.filter(item => item !== event.data.get("ai"));
-                    this.battleManager.removeEnemy(event.data.get("ai"));
-                    node.destroy();
-                    //TODO - this is for testing,  add some chance here later
-                    this.emitter.fireEvent(Player_Events.GIVE_BUFF);
-                    break;
 
-                case Player_Events.GIVE_BUFF:
-                    this.buffs = PlayerController.generateBuffs();
-                    this.buffButton1.text = "Increase "+this.buffs[0].type.toString() + " by "+this.buffs[0].value;
-                    this.buffButton2.text = "Increase "+this.buffs[1].type + " by "+this.buffs[1].value;
-                    this.buffButton3.text = "Increase "+this.buffs[2].type + " by "+this.buffs[2].value;
-                    
-                    //pause game here 
-                    this.buffLayer.enable();
-                    
-                    break;
-                case "buff1":
-                    (<PlayerController>this.player._ai).addBuff(this.buffs[0]);
-                    this.buffLayer.disable();
-                    break;
-                case "buff2":
-                    (<PlayerController>this.player._ai).addBuff(this.buffs[1]);
-                    this.buffLayer.disable();
-                    break;
-                case "buff3":
-                    (<PlayerController>this.player._ai).addBuff(this.buffs[2]);
-                    this.buffLayer.disable();
-                    break;
+            if (this.gameStateStack.peek() == GameState.GAMING) {
+                switch(event.type){
+                    case Player_Events.ENEMY_KILLED:
+                        
+                        let node = this.sceneGraph.getNode(event.data.get("owner"));//get enemy id 
+                        //remove enemy from enemies
+                        this.enemies = this.enemies.filter(item => item !== event.data.get("ai"));
+                        this.battleManager.removeEnemy(event.data.get("ai"));
+                        node.destroy();
+                        //TODO - this is for testing,  add some chance here later
+                        this.emitter.fireEvent(Player_Events.GIVE_BUFF);
+                        break;
+
+                    case Player_Events.GIVE_BUFF:
+                        this.buffs = PlayerController.generateBuffs();
+                        this.buffButton1.text = "Increase "+this.buffs[0].type.toString() + " by "+this.buffs[0].value;
+                        this.buffButton2.text = "Increase "+this.buffs[1].type + " by "+this.buffs[1].value;
+                        this.buffButton3.text = "Increase "+this.buffs[2].type + " by "+this.buffs[2].value;
+                        
+                        //pause game here 
+                        this.setGameState(GameState.BUFF);
+                        this.buffLayer.enable();
+                        break;
+                }
+            }
+
+            else if (this.gameStateStack.peek() == GameState.BUFF) {
+                switch(event.type){
+                    case "buff1":
+                        (<PlayerController>this.player._ai).addBuff(this.buffs[0]);
+                        this.buffLayer.disable();
+                        this.setGameState();
+                        break;
+                    case "buff2":
+                        (<PlayerController>this.player._ai).addBuff(this.buffs[1]);
+                        this.buffLayer.disable();
+                        this.setGameState();
+                        break;
+                    case "buff3":
+                        (<PlayerController>this.player._ai).addBuff(this.buffs[2]);
+                        this.buffLayer.disable();
+                        this.setGameState();
+                        break;
+                }
             }
         }
 
@@ -231,7 +247,7 @@ export default class GameLevel extends Scene {
         this.playerFalloff(viewportCenter, baseViewportSize);
 
         //TODO - this is for testing
-        if(Input.isJustPressed("spawn")){
+        if(InputWrapper.isSpawnJustPressed()){
             console.log("trying to spawn enemy");
             this.addEnemy("test_dummy",this.player.position,{player: this.player, 
                                 health :100,
@@ -243,6 +259,18 @@ export default class GameLevel extends Scene {
         }
 
 
+    }
+
+    // TODO put UI changes in here
+    protected setGameState(gameState?: GameState) {
+        if (gameState) {
+            this.gameStateStack.push(gameState);
+            InputWrapper.setState(gameState);
+        }
+        else {
+            this.gameStateStack.pop();
+            InputWrapper.setState(this.gameStateStack.peek());
+        }
     }
 
     /**
@@ -603,7 +631,7 @@ export default class GameLevel extends Scene {
         GameLevel.livesCount += amt;
         this.livesCountLabel.text = "Lives: " + GameLevel.livesCount;
         if (GameLevel.livesCount == 0){
-            Input.disableInput();
+            InputWrapper.disableInput();
             this.player.disablePhysics();
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
             this.player.tweens.play("death");
@@ -617,7 +645,7 @@ export default class GameLevel extends Scene {
         GameLevel.livesCount = 3;
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
         this.sceneManager.changeToScene(MainMenu, {});
-        Input.enableInput();
+        InputWrapper.enableInput();
     }
 
 
@@ -637,3 +665,4 @@ export default class GameLevel extends Scene {
 
     
 }
+

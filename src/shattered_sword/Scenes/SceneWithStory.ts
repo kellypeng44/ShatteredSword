@@ -7,7 +7,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import Input from "../../Wolfie2D/Input/Input";
+import InputWrapper from "../Tools/InputWrapper";
 
 
 enum Mode {
@@ -20,7 +20,6 @@ export default class SceneWithStory extends Scene {
     private currentMode: Mode = Mode.GAME_MODE;
     private storytextLabel: Label;
     private storyLayer: Layer;
-    private primary: Layer;
     private story: Story;
     private storyProgress: number;
     private storySprites: Array<Sprite>;
@@ -29,12 +28,8 @@ export default class SceneWithStory extends Scene {
     private currentContent: string;
 
     startScene(): void {
-
-
-
         // The code below are for testing only. Please comment them when submit
 
-        this.primary = this.addUILayer("primary");
         const center = this.viewport.getCenter();
         const loadStory = this.add.uiElement(UIElementType.BUTTON, "primary", { position: new Vec2(center.x, center.y), text: "LoadStory" });
         loadStory.size.set(200, 50);
@@ -56,21 +51,12 @@ export default class SceneWithStory extends Scene {
      * @param storyPath The path to the story JSON
      */
     async storyLoader(storyPath: string) {
-        // I may want to load multiple stories in a single scene, but this 
-        // Layer with name story already exists
-        // so can i detect whether this layer exists?
         const response = await (await fetch(storyPath)).json();
         this.story = <Story>response;
         console.log("story:", this.story);
         if (this.story.bgm) {
             this.storyBGMs = new Array;
             this.story.bgm.forEach((bgm) => {
-                // this.load.audio(bgm.key, bgm.path);
-                // console.log("audio:", bgm.key, "path:", bgm.path);
-                // this.load.loadResourcesFromQueue(() => {
-                //     console.log("finished loading audio");
-                //     this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
-                // });
 
                 if (this.load.getAudio(bgm.key)) {
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
@@ -115,13 +101,6 @@ export default class SceneWithStory extends Scene {
                 this.story.texts[this.storyProgress].actions.forEach(action => {
                     switch (action.type) {
                         case "loadSprite":
-                            // this.load.image(action.key, action.path);
-                            // this.load.loadResourcesFromQueue(() => {
-                            //     tmp = this.add.sprite(action.key, "story");
-                            //     tmp.position.set(action.positon[0], action.positon[1]);
-                            //     tmp.scale.set(action.scale[0], action.scale[1]);
-                            //     this.storySprites.push(tmp);
-                            // });
                             if (this.load.getImage(action.key)) {
                                 tmp = this.add.sprite(action.key, "story");
                                 tmp.position.set(action.positon[0], action.positon[1]);
@@ -137,15 +116,6 @@ export default class SceneWithStory extends Scene {
                                 })
                             }
                             break;
-                        // case "loadAnimatedSprite":
-                        //     this.load.spritesheet(action.key, action.path);
-                        //     this.load.loadResourcesFromQueue(() => {
-                        //         tmp = this.add.animatedSprite(action.key, "story");
-                        //         tmp.position.set(action.positon[0], action.positon[1]);
-                        //         tmp.scale.set(action.scale[0], action.scale[1]);
-                        //         this.storySprites.push(tmp);
-                        //     });
-                        //     break;
                         case "moveSprite":
                             tmp = this.storySprites.find(function (sprite) {
                                 return sprite.imageId === action.key;
@@ -208,7 +178,7 @@ export default class SceneWithStory extends Scene {
             }
         }
         // Testing code
-        if (Input.isMouseJustPressed() && this.currentMode === Mode.STORY_MODE) {
+        if (InputWrapper.isNextJustPressed() && this.currentMode === Mode.STORY_MODE) {
             this.updateStory();
         }
     }

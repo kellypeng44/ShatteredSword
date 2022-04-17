@@ -12,11 +12,11 @@ import Walk from "./PlayerStates/Walk";
 import Debug from "../../Wolfie2D/Debug/Debug";
 import Item from "../GameSystems/items/Item";
 import InventoryManager from "../GameSystems/InventoryManager";
-import Input from "../../Wolfie2D/Input/Input";
 import BattlerAI from "../AI/BattlerAI";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import Weapon from "../GameSystems/items/Weapon";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import InputWrapper from "../Tools/InputWrapper";
 
 
 export enum PlayerType {
@@ -102,15 +102,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             (<AnimatedSprite>this.owner).animation.play("HURT", false);
             this.CURRENT_HP -= damage;
         }
-    }
-
-	/**
-	 * Returns three legal random generate buffs based on current state
-	 * @returns Three buffs
-	 */
-    static getBuffs(): Buffs {
-        // TODO
-        return undefined;
     }
 
     //TODO - balance buff value generation 
@@ -241,7 +232,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         Debug.log("player Coords:", "Player Coords:" +this.owner.position );
 
         //testing the attacks here, may be moved to another place later
-        if(Input.isJustPressed("attack")){
+        if(InputWrapper.isAttackJustPressed()){
             let item = this.inventory.getItem();
             (<AnimatedSprite>this.owner).animation.playIfNotAlready("ATTACK", true);
             //TODO - get proper look direction 

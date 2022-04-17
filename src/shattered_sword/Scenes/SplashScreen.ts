@@ -10,7 +10,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Levels from "./Levels";
-import Input from "../../Wolfie2D/Input/Input";
+import InputWrapper from "../Tools/InputWrapper";
 
 
 export default class MainMenu extends Scene {
@@ -73,7 +73,7 @@ export default class MainMenu extends Scene {
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
             console.log(event);
-            if (Input.isMouseJustPressed(0)) {  //if left click
+            if (InputWrapper.isMouseJustPressed(0)) {  //if left click
                 this.sceneManager.changeToScene(MainMenu, {}, {});
                 
             }

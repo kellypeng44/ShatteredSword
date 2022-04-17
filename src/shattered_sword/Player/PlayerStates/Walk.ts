@@ -1,6 +1,6 @@
-import Input from "../../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { Player_Events } from "../../sword_enums";
+import InputWrapper from "../../Tools/InputWrapper";
 import { PlayerStates } from "../PlayerController";
 import OnGround from "./OnGround";
 
@@ -26,7 +26,7 @@ export default class Walk extends OnGround {
 		this.parent.velocity.x = dir.x * (this.parent.speed + this.parent.CURRENT_BUFFS.speed);
 		
 		//TODO - decide how to implement dash - could be a flash - maybe allow in air as well
-		if(Input.isJustPressed("dash")){
+		if(InputWrapper.isDashJustPressed()){
 			//play dash anim maybe
 			//TODO - might give buffed speed stat to dash speed
 			this.parent.velocity.x = dir.x * 1000; //give sidewards velocity
