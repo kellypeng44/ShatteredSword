@@ -1,6 +1,6 @@
 {
    "name" : "Tiger",
-   "spriteSheetImage": "Tiger.png",
+   "spriteSheetImage": "tiger.png",
    "spriteWidth": 192,
    "spriteHeight": 192,
    "columns": 3,
