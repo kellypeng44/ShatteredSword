@@ -97,7 +97,7 @@ export default class InputWrapper {
             return false;
         }
         
-        if (Input.isJustPressed("attack")) {
+        if (Input.isJustPressed("inventory")) {
             return true;
         }
         return false;

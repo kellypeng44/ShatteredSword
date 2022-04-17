@@ -7,7 +7,7 @@ import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Point from "../../Wolfie2D/Nodes/Graphics/Point";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import Label, { HAlign } from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Timer from "../../Wolfie2D/Timing/Timer";
@@ -31,6 +31,8 @@ import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
 import { Enemy } from "../Tools/RandomMapGenerator";
 import Stack from "../../Wolfie2D/DataTypes/Stack";
 import InputWrapper from "../Tools/InputWrapper";
+import Story from "../Tools/DataTypes/Story";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
 
 
@@ -77,6 +79,16 @@ export default class GameLevel extends Scene {
     protected enemies: Array<AnimatedSprite>;
 
     protected gameStateStack: Stack<GameState>;
+
+    // Story
+    private storytextLabel: Label;
+    private storyLayer: Layer;
+    private story: Story;
+    private storyProgress: number;
+    private storySprites: Array<Sprite>;
+    private storyBGMs: Array<string>;
+    private currentSpeaker: string;
+    private currentContent: string;
 
     //buffs layer
     buffLayer: Layer;
@@ -185,7 +197,7 @@ export default class GameLevel extends Scene {
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
 
-            if (this.gameStateStack.peek() == GameState.GAMING) {
+            if (this.gameStateStack.peek() === GameState.GAMING) {
                 switch(event.type){
                     case Player_Events.ENEMY_KILLED:
                         
@@ -211,7 +223,7 @@ export default class GameLevel extends Scene {
                 }
             }
 
-            else if (this.gameStateStack.peek() == GameState.BUFF) {
+            else if (this.gameStateStack.peek() === GameState.BUFF) {
                 switch(event.type){
                     case "buff1":
                         (<PlayerController>this.player._ai).addBuff(this.buffs[0]);
@@ -230,6 +242,11 @@ export default class GameLevel extends Scene {
                         break;
                 }
             }
+        }
+        if (this.gameStateStack.peek() === GameState.STORY) {
+                if (InputWrapper.isNextJustPressed() && this.gameStateStack.peek() === GameState.STORY) {
+                    this.updateStory();
+                }
         }
 
         //update health UI 
@@ -258,6 +275,11 @@ export default class GameLevel extends Scene {
                                 });
         }
 
+        if (InputWrapper.isInventoryJustPressed()) {
+            console.log("LoadingStory");
+            this.storyLoader("shattered_sword_assets/jsons/story.json");
+        }
+
 
     }
 
@@ -284,6 +306,13 @@ export default class GameLevel extends Scene {
         this.addLayer("primary", 1);
 
         this.buffLayer = this.addUILayer("buffLayer");   //TODO - test depth later, may be just a regular Layer
+    
+
+        this.storyLayer = this.addUILayer("story");
+        this.storyLayer.disable();
+
+
+        this.receiver.subscribe("loadStory");
     }
 
     /**
@@ -630,7 +659,7 @@ export default class GameLevel extends Scene {
     protected incPlayerLife(amt: number): void {
         GameLevel.livesCount += amt;
         this.livesCountLabel.text = "Lives: " + GameLevel.livesCount;
-        if (GameLevel.livesCount == 0){
+        if (GameLevel.livesCount === 0){
             InputWrapper.disableInput();
             this.player.disablePhysics();
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
@@ -661,6 +690,123 @@ export default class GameLevel extends Scene {
 			
 			this.player.position.set(this.playerSpawn.x,this.playerSpawn.y);
 		}
+    }
+
+
+    async storyLoader(storyPath: string) {
+        if (this.gameStateStack.peek() === GameState.STORY) {
+            return;
+        }
+        this.setGameState(GameState.STORY);
+        const response = await (await fetch(storyPath)).json();
+        this.story = <Story>response;
+        console.log("story:", this.story);
+        if (this.story.bgm) {
+            this.storyBGMs = new Array;
+            this.story.bgm.forEach((bgm) => {
+
+                if (this.load.getAudio(bgm.key)) {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
+                }
+                else {
+                    this.load.singleAudio(bgm.key, bgm.path, () => {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, { key: bgm.key, loop: false, holdReference: true });
+                    })
+                }
+                this.storyBGMs.push(bgm.key);
+            })
+        }
+        this.currentSpeaker = this.story.texts[0].speaker;
+        this.currentContent = this.story.texts[0].content;
+        this.storyLayer.enable();
+        this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y + 240), text: "" });
+        this.storytextLabel.textColor = Color.WHITE;
+        this.storytextLabel.font = "PixelSimple";
+        this.storytextLabel.fontSize = 20;
+        this.storytextLabel.setHAlign(HAlign.LEFT);
+        this.storyProgress = -1;
+        this.storySprites = new Array;
+        this.updateStory();
+    }
+
+    hasNextStory(): boolean {
+        return this.gameStateStack.peek() ===  GameState.STORY && this.storyProgress + 1 < this.story.texts.length;
+    }
+
+    updateStory() {
+        if (this.hasNextStory()) {
+            this.storyProgress++;
+            let tmp = undefined;
+            if (this.story.texts[this.storyProgress].actions) {
+                this.story.texts[this.storyProgress].actions.forEach(action => {
+                    switch (action.type) {
+                        case "loadSprite":
+                            if (this.load.getImage(action.key)) {
+                                tmp = this.add.sprite(action.key, "story");
+                                tmp.position.set(action.positon[0], action.positon[1]);
+                                tmp.scale.set(action.scale[0], action.scale[1]);
+                                this.storySprites.push(tmp);
+                            }
+                            else {
+                                this.load.singleImage(action.key, action.path, () => {
+                                    tmp = this.add.sprite(action.key, "story");
+                                    tmp.position.set(action.positon[0], action.positon[1]);
+                                    tmp.scale.set(action.scale[0], action.scale[1]);
+                                    this.storySprites.push(tmp);
+                                })
+                            }
+                            break;
+                        case "moveSprite":
+                            tmp = this.storySprites.find(function (sprite) {
+                                return sprite.imageId === action.key;
+                            });
+                            tmp.position.set(action.positon[0], action.positon[1]);
+                            tmp.scale.set(action.scale[0], action.scale[1]);
+                            break;
+                        case "showSprite":
+                            tmp = this.storySprites.find(function (sprite) {
+                                return sprite.imageId === action.key;
+                            });
+                            tmp.visible = true;
+                            break;
+                        case "hideSprite":
+                            tmp = this.storySprites.find(function (sprite) {
+                                return sprite.imageId === action.key;
+                            });
+                            tmp.visible = false;
+                            break;
+                        default:
+                            break;
+                    }
+                })
+            }
+            this.currentSpeaker = this.story.texts[this.storyProgress].speaker;
+            this.currentContent = this.story.texts[this.storyProgress].content;
+            this.storytextLabel.text = (this.currentSpeaker?(this.currentSpeaker+":"):("")) + '\n' + this.currentContent;
+        }
+        else {
+            this.setGameState();
+            this.storyProgress = Infinity;
+            this.storytextLabel.destroy();
+            if (this.storySprites) {
+                this.storySprites.forEach((sprite) => {
+                    sprite.visible = false;
+                    sprite.destroy();
+                });
+            }
+            if (this.storyBGMs) {
+                this.storyBGMs.forEach((bgm) => {
+                    this.emitter.fireEvent(GameEventType.STOP_SOUND, { key: bgm });
+                    console.log("sound stopped:", bgm);
+                });
+            }
+            this.storyLayer.disable();
+            this.storyBGMs = undefined;
+            this.storySprites = undefined;
+            this.story = undefined;
+            this.storytextLabel = undefined;
+            // this.storyLayer = undefined;
+        }
     }
 
     
