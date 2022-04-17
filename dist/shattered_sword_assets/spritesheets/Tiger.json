@@ -1,8 +1,8 @@
 {
    "name" : "Tiger",
-   "spriteSheetImage": "tiger.png",
-   "spriteWidth": 192,
-   "spriteHeight": 192,
+   "spriteSheetImage": "Tiger.png",
+   "spriteWidth": 64,
+   "spriteHeight": 64,
    "columns": 3,
    "rows": 3,
    "durationType": "time",
@@ -16,6 +16,28 @@
                "duration": 150
             }
 
+         ]
+      },
+      {
+         "name": "WALK",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 1,
+               "duration": 150
+            },
+            {
+               "index": 2,
+               "duration": 150
+            },
+            {
+               "index": 3,
+               "duration": 150
+            },
+            {
+               "index": 4,
+               "duration": 150
+            }
          ]
       },
       {
