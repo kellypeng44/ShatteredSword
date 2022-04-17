@@ -16,7 +16,7 @@ export default class OnGround extends PlayerState {
 		}
 
 
-		super.update(deltaT);
+		
 
 		let direction = this.getInputDirection();
 
@@ -34,7 +34,8 @@ export default class OnGround extends PlayerState {
 		else if(!this.owner.onGround){
 			this.finished("fall");
 		}
-
+		super.update(deltaT);
+		this.owner.move(this.parent.velocity.scaled(deltaT));
 		
 	}
 

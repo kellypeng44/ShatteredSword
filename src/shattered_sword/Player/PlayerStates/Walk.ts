@@ -13,7 +13,6 @@ export default class Walk extends OnGround {
 
 
 	update(deltaT: number): void {
-		super.update(deltaT);
 		//console.log("walking anim");
         this.owner.animation.playIfNotAlready("WALK", true);
 
@@ -25,14 +24,7 @@ export default class Walk extends OnGround {
 		
 		this.parent.velocity.x = dir.x * (this.parent.speed + this.parent.CURRENT_BUFFS.speed);
 		
-		//TODO - decide how to implement dash - could be a flash - maybe allow in air as well
-		if(InputWrapper.isDashJustPressed()){
-			//play dash anim maybe
-			//TODO - might give buffed speed stat to dash speed
-			this.parent.velocity.x = dir.x * 1000; //give sidewards velocity
-			//TODO - give player i frame
-		}
-		this.owner.move(this.parent.velocity.scaled(deltaT));
+		super.update(deltaT);
 	}
 
 	onExit(): Record<string, any> {

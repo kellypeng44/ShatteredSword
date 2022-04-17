@@ -3,6 +3,7 @@ import StateMachine from "../../../Wolfie2D/DataTypes/State/StateMachine";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import { Player_Events } from "../../sword_enums";
 import InputWrapper from "../../Tools/InputWrapper";
@@ -14,17 +15,32 @@ export default abstract class PlayerState extends State {
 	gravity: number = 1500; //TODO - can change later
 	parent: PlayerController;
 	positionTimer: Timer;
+	static dashTimer: Timer;
+	static dashCoolDownTimer: Timer;
 
 	constructor(parent: StateMachine, owner: GameNode){
 		super(parent);
 		this.owner = owner;
 		this.positionTimer = new Timer(250);
 		this.positionTimer.start();
+		PlayerState.dashTimer = new Timer(50);
+		PlayerState.dashCoolDownTimer = new Timer(600);
 	}
 
 	
 	handleInput(event: GameEvent): void {
 		
+	}
+
+	doDash(): void {
+		if (PlayerState.dashCoolDownTimer.isStopped()) {
+			//TODO - decide how to implement dash - could be a flash - maybe allow in air as well
+			//play dash anim maybe
+			//TODO - might give buffed speed stat to dash speed
+			//TODO - give player i frame
+			PlayerState.dashCoolDownTimer.start();
+			PlayerState.dashTimer.start();
+		}
 	}
 
 	/** 
@@ -47,5 +63,12 @@ export default abstract class PlayerState extends State {
 			this.positionTimer.start();
 		}
 		this.parent.velocity.y += this.gravity*deltaT;
+
+		if(InputWrapper.isDashJustPressed()){
+			this.doDash();
+		}
+		if (!PlayerState.dashTimer.isStopped()) {
+			this.parent.velocity.x = (<Sprite>this.owner).invertX ? -800 : 800;
+		}
 	}
 }
