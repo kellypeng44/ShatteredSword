@@ -33,8 +33,8 @@ export default class Tutorial extends GameLevel {
         this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
 
         //load enemies
-        this.load.spritesheet("snake","shattered_sword_assets/spritesheets/snake.json");
-        this.load.spritesheet("tiger","shattered_sword_assets/spritesheets/tiger.json");
+        this.load.spritesheet("Snake","shattered_sword_assets/spritesheets/Snake.json");
+        this.load.spritesheet("Tiger","shattered_sword_assets/spritesheets/Tiger.json");
 
 
 

@@ -87,6 +87,11 @@ export default class GameLevel extends Scene {
         //can load player sprite here
 
         //can load enemy sprite here
+        //sprites obtained from cse380 sprite wesbite
+        this.load.spritesheet("Tiger","shattered_sword_assets/spritesheets/Tiger.json");
+        this.load.spritesheet("remus_werewolf","shattered_sword_assets/spritesheets/remus_werewolf.json");
+        this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
+
 
         // Load the scene info
         this.load.object("weaponData", "shattered_sword_assets/data/weaponData.json");
@@ -101,7 +106,7 @@ export default class GameLevel extends Scene {
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
         this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
         this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
-
+  
         this.load.spritesheet("test_dummy","shattered_sword_assets/spritesheets/test_dummy.json")
         this.enemies = new Array();
         this.battleManager = new BattleManager();
@@ -489,12 +494,29 @@ export default class GameLevel extends Scene {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
         //enemy.position.set(tilePos.x*32, tilePos.y*32);
         enemy.position.copy(tilePos);
-        enemy.scale.set(2, 2);
-        //TODO - add custom collision shape for each enemy in an option variable 
-        //enemy.addPhysics(aiOptions.size.clone());
+        
+        if( "scale" in aiOptions){
+            enemy.scale.set(aiOptions.scale,aiOptions.scale);
+        }
+        else{
+            enemy.scale.set(2, 2);
+        }
 
-        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(16, 25)));
-        enemy.colliderOffset.set(0, 6);
+        //TODO - add custom collision shape for each enemy in an option variable 
+        if( "size" in aiOptions){
+            enemy.addPhysics(new AABB(Vec2.ZERO, aiOptions.size.clone()));
+        }
+        else{
+            enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(16, 25)));
+        }
+
+        if("offset" in aiOptions){
+            enemy.colliderOffset.set(aiOptions.offset.x,aiOptions.offset.y);
+        }
+        else{
+            enemy.colliderOffset.set(0, 6);
+        }
+
         enemy.addAI(EnemyAI, aiOptions); //TODO - add individual enemy AI
         enemy.setGroup("Enemy");
         
@@ -519,17 +541,19 @@ export default class GameLevel extends Scene {
                         //size: new AABB(Vec2.ZERO, new Vec2(16, 25))
                     })
                     break;
-                case "snake":       //snake enemies drop from sky("trees")? or could just be very abundant
-                    this.addEnemy("snake", enemy.position.scale(32), {
+                case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
+                    this.addEnemy("Snake", enemy.position.scale(32), {
                         player: this.player,
                         health: 50,
                         tilemap: "Main",
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
+                        size: new Vec2(16,16),
+                        offset : new Vec2(0, 16)
                     })
                     break;
-                case "tiger":       //tiger can be miniboss for now? 
-                    this.addEnemy("tiger", enemy.position.scale(32), {
+                case "Tiger":       //Tiger can be miniboss for now? 
+                    this.addEnemy("Tiger", enemy.position.scale(32), {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",
@@ -538,6 +562,27 @@ export default class GameLevel extends Scene {
                     })
                     break;
 
+                case "remus_werewolf":       
+                    this.addEnemy("remus_werewolf", enemy.position.scale(32), {
+                        player: this.player,
+                        health: 200,
+                        tilemap: "Main",
+                        //actions:actions,
+                        goal: Statuses.REACHED_GOAL,
+                    })
+                    break;
+                case "black_pudding":       
+                    this.addEnemy("black_pudding", enemy.position.scale(32), {
+                        player: this.player,
+                        health: 200,
+                        tilemap: "Main",
+                        //actions:actions,
+                        goal: Statuses.REACHED_GOAL,
+                        scale: .25,
+                        size: new Vec2(16,16),
+                        offset : new Vec2(0,0)
+                    })
+                    break;
                 default:
                     break;
             }

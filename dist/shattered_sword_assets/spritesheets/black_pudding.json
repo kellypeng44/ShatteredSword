@@ -11,7 +11,7 @@
   "bottomBuffer": 0,
   "animations": [
     {
-      "name": "Idle",
+      "name": "IDLE",
       "repeat": true,
       "frames": [
         {
@@ -60,6 +60,244 @@
         },
         {
           "index": 11,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "WALK",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 60,
+          "duration": 4
+        },
+        {
+          "index": 61,
+          "duration": 4
+        },
+        {
+          "index": 62,
+          "duration": 4
+        },
+        {
+          "index": 63,
+          "duration": 4
+        },
+        {
+          "index": 64,
+          "duration": 4
+        },
+        {
+          "index": 65,
+          "duration": 4
+        },
+        {
+          "index": 66,
+          "duration": 4
+        },
+        {
+          "index": 67,
+          "duration": 4
+        },
+        {
+          "index": 68,
+          "duration": 4
+        },
+        {
+          "index": 69,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "ATTACK",
+      "repeat": true,
+      "frames": [
+        {
+          "index": 120,
+          "duration": 4
+        },
+        {
+          "index": 121,
+          "duration": 4
+        },
+        {
+          "index": 122,
+          "duration": 4
+        },
+        {
+          "index": 123,
+          "duration": 4
+        },
+        {
+          "index": 124,
+          "duration": 4
+        },
+        {
+          "index": 125,
+          "duration": 4
+        },
+        {
+          "index": 126,
+          "duration": 4
+        },
+        {
+          "index": 127,
+          "duration": 4
+        },
+        {
+          "index": 128,
+          "duration": 4
+        },
+        {
+          "index": 129,
+          "duration": 4
+        },
+        {
+          "index": 130,
+          "duration": 4
+        },
+        {
+          "index": 131,
+          "duration": 4
+        },
+        {
+          "index": 132,
+          "duration": 4
+        },
+        {
+          "index": 133,
+          "duration": 4
+        },
+        {
+          "index": 134,
+          "duration": 4
+        },
+        {
+          "index": 135,
+          "duration": 4
+        },
+        {
+          "index": 136,
+          "duration": 4
+        },
+        {
+          "index": 137,
+          "duration": 4
+        },
+        {
+          "index": 138,
+          "duration": 4
+        },
+        {
+          "index": 139,
+          "duration": 4
+        },
+        {
+          "index": 140,
+          "duration": 4
+        },
+        {
+          "index": 141,
+          "duration": 4
+        },
+        {
+          "index": 142,
+          "duration": 4
+        },
+        {
+          "index": 143,
+          "duration": 4
+        },
+        {
+          "index": 144,
+          "duration": 4
+        },
+        {
+          "index": 145,
+          "duration": 4
+        },
+        {
+          "index": 146,
+          "duration": 4
+        },
+        {
+          "index": 147,
+          "duration": 4
+        },
+        {
+          "index": 148,
+          "duration": 4
+        },
+        {
+          "index": 149,
+          "duration": 4
+        }
+      ]
+    },
+    {
+      "name": "HURT",
+      "repeat": false,
+      "frames": [
+        {
+          "index": 180,
+          "duration": 4
+        },
+        {
+          "index": 181,
+          "duration": 4
+        },
+        {
+          "index": 182,
+          "duration": 4
+        },
+        {
+          "index": 183,
+          "duration": 4
+        },
+        {
+          "index": 184,
+          "duration": 4
+        },
+        {
+          "index": 185,
+          "duration": 4
+        },
+        {
+          "index": 186,
+          "duration": 4
+        },
+        {
+          "index": 187,
+          "duration": 4
+        },
+        {
+          "index": 188,
+          "duration": 4
+        },
+        {
+          "index": 189,
+          "duration": 4
+        },
+        {
+          "index": 190,
+          "duration": 4
+        },
+        {
+          "index": 191,
+          "duration": 4
+        },
+        {
+          "index": 192,
+          "duration": 4
+        },
+        {
+          "index": 193,
+          "duration": 4
+        },
+        {
+          "index": 194,
           "duration": 4
         }
       ]
@@ -541,7 +779,7 @@
       ]
     },
     {
-      "name": "Dying",
+      "name": "DYING",
       "repeat": false,
       "frames": [
         {
@@ -587,7 +825,7 @@
       ]
     },
     {
-      "name": "Dead",
+      "name": "DEAD",
       "repeat": false,
       "frames": [
         {

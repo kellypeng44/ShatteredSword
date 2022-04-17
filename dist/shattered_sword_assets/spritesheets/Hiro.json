@@ -208,7 +208,7 @@
 		},
 		{
 			"name": "HURT",
-			"repeat": true,
+			"repeat": false,
 			"frames": [
 				{
 					"index": 0,

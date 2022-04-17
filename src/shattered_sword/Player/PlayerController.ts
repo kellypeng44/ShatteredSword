@@ -68,20 +68,18 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     BASE_DEF: number = 100;
     MAX_DEF: number = 100;
     CURRENT_DEF: number = 100;
+    CURRENT_EXP : number = 0;
+    MAX_EXP : number = 100;
+
+    invincible : boolean = false;
+
     tilemap: OrthogonalTilemap;
 
     //for doublejumps maybe = # of jumps in air allowed
     MAX_airjumps: number = 1;
     airjumps:number = 0;
     
-    // TODO - 
-    damage(damage: number): void {
-        (<AnimatedSprite>this.owner).animation.play("HURT", false);
-        this.CURRENT_HP -= damage;
-    }
-
     private lookDirection: Vec2;
-
 
     /** A list of items in the game world */
     private items: Array<Item>;
@@ -98,6 +96,13 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     }
     
     
+    // TODO - 
+    damage(damage: number): void {
+        if( !this.invincible){
+            (<AnimatedSprite>this.owner).animation.play("HURT", false);
+            this.CURRENT_HP -= damage;
+        }
+    }
 
 	/**
 	 * Returns three legal random generate buffs based on current state
@@ -108,14 +113,18 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         return undefined;
     }
 
-
-    //generate array of 3 different buffs
+    //TODO - balance buff value generation 
     /**
-     * generate array of 3 buffs
-     * @returns array of 3 differently typed buffs
+     * returns an array of three randomly generated buffs 
+     * @param val optional value to give buff
+     * @returns array of three Buffs
      */
-    static generateBuffs() : Buff[]{
-        let num = Number(Math.random().toPrecision(1)) * 10;    //number from 1 to 10
+    static generateBuffs( val? : number) : Buff[]{
+        let num = Number(Math.random().toPrecision(1)) * 10;    //random number from 1 to 10 if no value given
+        if(typeof val !== 'undefined'){
+            num = val;
+        }
+        
         let array : Buff[] = [
             {type:BuffType.ATK, value:num},
             {type:BuffType.HEALTH, value:num},
@@ -155,9 +164,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 break;
             case BuffType.SPEED:
                 this.CURRENT_BUFFS.speed += buff.value;
+                this.speed += buff.value;
                 break;
             case BuffType.DEF:
                 this.CURRENT_BUFFS.def += buff.value;
+                this.CURRENT_DEF += buff.value;
                 break;
             case BuffType.RANGE:
                 this.CURRENT_BUFFS.range += buff.value;
@@ -240,10 +251,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 item.use(this.owner, "player", this.lookDirection);
             }
         }
-
-        
         
 	}
 
     
+
+
 }
