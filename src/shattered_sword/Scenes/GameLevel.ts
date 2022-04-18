@@ -262,6 +262,11 @@ export default class GameLevel extends Scene {
 		const baseViewportSize = this.viewport.getHalfSize().scaled(2);
         //check position of player
         this.playerFalloff(viewportCenter, baseViewportSize);
+        
+        // Update player safe position
+        if (this.player.onGround) {
+            this.playerSpawn = this.player.position.clone();
+        }
 
         //TODO - this is for testing
         if(InputWrapper.isSpawnJustPressed()){
