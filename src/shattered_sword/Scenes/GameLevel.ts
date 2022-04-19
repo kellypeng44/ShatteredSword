@@ -272,9 +272,17 @@ export default class GameLevel extends Scene {
             }
         }
         if (this.gameStateStack.peek() === GameState.STORY) {
-                if (InputWrapper.isNextJustPressed() && this.gameStateStack.peek() === GameState.STORY) {
-                    this.updateStory();
-                }
+            if (InputWrapper.isNextJustPressed() && this.gameStateStack.peek() === GameState.STORY) {
+                this.updateStory();
+            }
+        }
+        if (InputWrapper.isPauseJustPressed()) {
+            if (this.gameStateStack.peek() === GameState.GAMING) {
+                this.setGameState(GameState.PAUSE);
+            }
+            else if (this.gameStateStack.peek() === GameState.PAUSE) {
+                this.setGameState();
+            }
         }
 
         //update health UI 
