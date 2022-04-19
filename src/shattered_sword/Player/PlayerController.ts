@@ -76,6 +76,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     MAX_SHIELD : number = 20;
     invincible : boolean = false;
 
+    godMode: boolean = false;
+
     tilemap: OrthogonalTilemap;
 
     //for doublejumps maybe = # of jumps in air allowed
@@ -103,6 +105,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     
     // TODO - figure out attacker 
     damage(damage: number, attacker?: GameNode): void {
+        if (this.godMode) {
+            return;
+        }
         if( !this.invincible){
             //i frame here
             PlayerController.invincibilityTimer.start();

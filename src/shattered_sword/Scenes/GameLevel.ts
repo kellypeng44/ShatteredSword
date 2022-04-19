@@ -34,6 +34,7 @@ import InputWrapper from "../Tools/InputWrapper";
 import Story from "../Tools/DataTypes/Story";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Platformer from "../../demos/Platformer";
+import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 
 
 
@@ -101,6 +102,12 @@ export default class GameLevel extends Scene {
     buffButton3 : Button;
     buffs: Array<Buff>;
 
+    //pause layer
+    pauseLayer: Layer;
+    pauseText: Label;
+    pauseInput: TextInput;
+    pauseSubmit: Label;
+
     randomSeed: number;
 
     startpos: Vec2; 
@@ -127,6 +134,7 @@ export default class GameLevel extends Scene {
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
         this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
         this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
+        this.load.image("black", "shattered_sword_assets/images/black.png");
   
         this.load.spritesheet("test_dummy","shattered_sword_assets/spritesheets/test_dummy.json")
         this.enemies = new Array();
@@ -270,6 +278,9 @@ export default class GameLevel extends Scene {
                         break;
                 }
             }
+            if (event.type === "cheat") {
+                this.enableCheat();
+            }
         }
         if (this.gameStateStack.peek() === GameState.STORY) {
             if (InputWrapper.isNextJustPressed() && this.gameStateStack.peek() === GameState.STORY) {
@@ -279,9 +290,11 @@ export default class GameLevel extends Scene {
         if (InputWrapper.isPauseJustPressed()) {
             if (this.gameStateStack.peek() === GameState.GAMING) {
                 this.setGameState(GameState.PAUSE);
+                this.pauseLayer.enable();
             }
             else if (this.gameStateStack.peek() === GameState.PAUSE) {
-                this.setGameState();
+                this.setGameState();    
+                this.pauseLayer.disable();
             }
         }
 
@@ -364,6 +377,9 @@ export default class GameLevel extends Scene {
         this.storyLayer = this.addUILayer("story");
         this.storyLayer.disable();
 
+        this.pauseLayer = this.addUILayer("pause");
+        this.pauseLayer.disable();
+
 
         this.receiver.subscribe("loadStory");
     }
@@ -391,6 +407,7 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe("buff1");
         this.receiver.subscribe("buff2");
         this.receiver.subscribe("buff3");
+        this.receiver.subscribe("cheat");
     }
 
     // TODO - 
@@ -514,7 +531,23 @@ export default class GameLevel extends Scene {
 
         this.buffLayer.disable();
 
-    }
+        this.pauseText = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(500, 250), text: "Game Paused"});
+        this.pauseInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "pause", {position: new Vec2(500, 300), text: ""});
+        this.pauseSubmit = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(500, 350), text: "Submit"});
+
+        // let tmp = this.add.sprite("black", "pause");
+        this.pauseLayer.setAlpha(0.5);
+        this.pauseInput.size.set(500, 30);
+        this.pauseText.textColor = Color.BLACK;
+        this.pauseText.borderColor = Color.BLACK;
+        this.pauseText.backgroundColor = Color.WHITE;
+        this.pauseText.borderWidth = 3;
+        this.pauseSubmit.textColor = Color.BLACK;
+        this.pauseSubmit.borderColor = Color.BLACK;
+        this.pauseSubmit.backgroundColor = Color.WHITE;
+        this.pauseSubmit.onClickEventId = "cheat";
+        this.pauseSubmit.borderWidth = 3;
+}
 
     //TODO - determine whether we will have weapon datatype
     /**
@@ -890,6 +923,38 @@ export default class GameLevel extends Scene {
         }
     }
 
+    // Cheat
+    enableCheat() {
+        if (this.pauseInput.text.toUpperCase() === "UUDDLRLRBABA") {
+            (<PlayerController>this.player._ai).godMode = true;
+            return;
+        }
+        else {
+            let commands = this.pauseInput.text.split(' ');
+            if (commands.length === 3) {
+                if (commands[0].toUpperCase() !== "SET") {
+                    switch (commands[1].toUpperCase()) {
+                        case "ATK":
+                            (<PlayerController>this.player._ai).CURRENT_ATK = parseInt(commands[2]);
+                            break;
+                        case "HP":
+                            (<PlayerController>this.player._ai).CURRENT_HP = parseInt(commands[2]);
+                            break;
+                        case "EXP":
+                            (<PlayerController>this.player._ai).CURRENT_EXP = parseInt(commands[2]);
+                            break;
+                        case "SLD":
+                            (<PlayerController>this.player._ai).CURRENT_SHIELD = parseInt(commands[2]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            (<PlayerController>this.player._ai).godMode = false;
+            
+        }
+    }
     
 }
 
