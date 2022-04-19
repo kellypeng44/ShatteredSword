@@ -23,7 +23,12 @@ export default class Patrol extends EnemyState {
 
     onEnter(options: Record<string, any>): void {
         //this.currentPath = this.getNextPath();
-        (<AnimatedSprite>this.owner).animation.play("IDLE", true);
+        //if(!(<AnimatedSprite>this.owner).animation.isPlaying("DYING")){
+            //(<AnimatedSprite>this.owner).animation.queue("IDLE", true);
+        //}
+        //else{
+            (<AnimatedSprite>this.owner).animation.playIfNotAlready("IDLE", true);
+        //}
     }
 
     handleInput(event: GameEvent): void { }

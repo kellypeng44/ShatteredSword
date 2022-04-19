@@ -72,10 +72,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     CURRENT_DEF: number = 100;
     CURRENT_EXP : number = 0;
     MAX_EXP : number = 100;
-    //shield buff
     CURRENT_SHIELD : number =0;
     MAX_SHIELD : number = 20;
-
     invincible : boolean = false;
 
     tilemap: OrthogonalTilemap;
@@ -85,7 +83,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     airjumps:number = 0;
     
     private lookDirection: Vec2;
-
     /** A list of items in the game world */
     private items: Array<Item>;
 
@@ -110,20 +107,21 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             //shield absorbs the damage and sends dmg back to attacker
             if(this.CURRENT_SHIELD > 0){
                 let newshield = Math.max(0, this.CURRENT_SHIELD - damage ); //calculate the new shield value
-                (<EnemyAI>attacker._ai).damage(this.CURRENT_SHIELD - newshield); //damage the attacker the dmg taken to shield
+                if( attacker !== undefined){
+                    (<EnemyAI>attacker._ai).damage(this.CURRENT_SHIELD - newshield); //damage the attacker the dmg taken to shield
+                }
                 this.CURRENT_SHIELD = newshield; //update shield value
             }
             else{
                 //i frame here
                 PlayerController.invincibilityTimer.start();
                 this.invincible = true;
-
-                (<AnimatedSprite>this.owner).animation.playIfNotAlready("HURT", false);
+                //console.log("hurt anim");
+                (<AnimatedSprite>this.owner).animation.play("HURT" );
                 this.CURRENT_HP -= damage;
                 if(this.CURRENT_HP <= 0){
-                    this.emitter.fireEvent(Player_Events.PLAYER_KILLED);
-                    (<AnimatedSprite>this.owner).animation.playIfNotAlready("DYING", false);
-                    (<AnimatedSprite>this.owner).animation.queue("DEAD", false);
+                    (<AnimatedSprite>this.owner).animation.play("DYING");
+                    (<AnimatedSprite>this.owner).animation.queue("DEAD", true, Player_Events.PLAYER_KILLED);
                 }
             }
             
@@ -236,7 +234,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         //this.addBuff( {type:BuffType.HEALTH, value:1} );
         
         //i frame timer
-        PlayerController.invincibilityTimer = new Timer(400);
+        PlayerController.invincibilityTimer = new Timer(2000);
     }
 
     initializePlatformer(): void {
@@ -285,7 +283,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         //testing the attacks here, may be moved to another place later
         if(InputWrapper.isAttackJustPressed()){
             let item = this.inventory.getItem();
-            (<AnimatedSprite>this.owner).animation.playIfNotAlready("ATTACK", true);
+            (<AnimatedSprite>this.owner).animation.play("ATTACK", true);
             //TODO - get proper look direction 
             this.lookDirection.x = (<Sprite>this.owner).invertX ? -1 : 1;
             // If there is an item in the current slot, use it

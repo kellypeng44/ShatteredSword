@@ -20,6 +20,10 @@ export default class BattleManager {
                     if (weapon.hits(enemy.owner)) {
                         enemy.damage(weapon.type.damage + weapon.EXTRA_DAMAGE);
                         //console.log("enemy took dmg");
+                        
+                        //TODO - test shield, 
+                        //add checking for each onhit buff here
+                        (<PlayerController>this.players[0]).addShield(1);
                     }
                 }
             }
@@ -28,6 +32,7 @@ export default class BattleManager {
             for (let player of this.players) {
                 if (weapon.hits(player.owner)) {
                     (<PlayerController>player).damage(weapon.type.damage, user);
+
                 }
             }
         }

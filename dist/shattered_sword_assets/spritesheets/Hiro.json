@@ -212,11 +212,11 @@
 			"frames": [
 				{
 					"index": 0,
-					"duration": 50
+					"duration": 500
 				},
 				{
 					"index": 39,
-					"duration": 50
+					"duration": 500
 				}
 			]
 		},
