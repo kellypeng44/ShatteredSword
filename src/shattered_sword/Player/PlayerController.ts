@@ -104,6 +104,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     // TODO - figure out attacker 
     damage(damage: number, attacker?: GameNode): void {
         if( !this.invincible){
+            //i frame here
+            PlayerController.invincibilityTimer.start();
+            this.invincible = true;
             //shield absorbs the damage and sends dmg back to attacker
             if(this.CURRENT_SHIELD > 0){
                 let newshield = Math.max(0, this.CURRENT_SHIELD - damage ); //calculate the new shield value
@@ -113,9 +116,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.CURRENT_SHIELD = newshield; //update shield value
             }
             else{
-                //i frame here
-                PlayerController.invincibilityTimer.start();
-                this.invincible = true;
                 //console.log("hurt anim");
                 (<AnimatedSprite>this.owner).animation.play("HURT" );
                 this.CURRENT_HP -= damage;
