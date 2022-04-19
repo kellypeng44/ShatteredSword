@@ -12,7 +12,7 @@ import WeaponTypeRegistry from "./shattered_sword/Registry/WeaponTypeRegistry";
 
     // Set up options for our game
     let options = {
-        canvasSize: {x : window.innerWidth, y:window.innerHeight},
+        canvasSize: {x : 1920, y:1080},
         //canvasSize: {x: window.innerWidth, y: window.innerHeight},          // The size of the game
         clearColor: {r: 0, g: 0, b: 0},   // The color the game clears to
         inputs: [
