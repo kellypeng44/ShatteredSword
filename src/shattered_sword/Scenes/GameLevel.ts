@@ -33,6 +33,7 @@ import Stack from "../../Wolfie2D/DataTypes/Stack";
 import InputWrapper from "../Tools/InputWrapper";
 import Story from "../Tools/DataTypes/Story";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import Platformer from "../../demos/Platformer";
 
 
 
@@ -101,6 +102,8 @@ export default class GameLevel extends Scene {
     buffs: Array<Buff>;
 
     randomSeed: number;
+
+    startpos: Vec2; 
     loadScene(): void {
         //can load player sprite here
 
@@ -202,6 +205,19 @@ export default class GameLevel extends Scene {
 
             if (this.gameStateStack.peek() === GameState.GAMING) {
                 switch(event.type){
+                    case Player_Events.PLAYER_COLLIDE:
+                        let n = this.sceneGraph.getNode(event.data.get("node"));
+                        let other = this.sceneGraph.getNode(event.data.get("other"));
+
+                        if(n === this.player){
+                            // Node is player, other is enemy
+                            this.handlePlayerEnemyCollision(<AnimatedSprite>n, <AnimatedSprite>other);
+                        } else {
+                            // Other is player, node is balloon
+                            this.handlePlayerEnemyCollision(<AnimatedSprite>other,<AnimatedSprite>n);
+
+                        }
+                        break;
                     case Player_Events.ENEMY_KILLED:
                         
                         let node = this.sceneGraph.getNode(event.data.get("owner"));//get enemy id 
@@ -224,6 +240,13 @@ export default class GameLevel extends Scene {
                         //pause game here 
                         this.setGameState(GameState.BUFF);
                         this.buffLayer.enable();
+                        break;
+                    case Player_Events.PLAYER_KILLED:
+                        //respawn player if he has lives, otherwise end game
+                        console.log("player Died");
+                        (<AnimatedSprite>this.player).animation.play("DEAD", false);
+                        InputWrapper.disableInput();
+                        this.respawnPlayer();
                         break;
                 }
             }
@@ -349,6 +372,7 @@ export default class GameLevel extends Scene {
      */
     protected subscribeToEvents(){
         this.receiver.subscribe([
+            Player_Events.PLAYER_COLLIDE,
             Player_Events.PLAYER_HIT_ENEMY,
             Player_Events.ENEMY_KILLED,
             Player_Events.LEVEL_START,
@@ -542,6 +566,7 @@ export default class GameLevel extends Scene {
             console.warn("Player spawn was never set - setting spawn to (0, 0)");
             this.playerSpawn = Vec2.ZERO;
         }
+        this.startpos = this.playerSpawn;
         this.player.position.copy(this.playerSpawn);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(14, 16)));  //sets the collision shape
         this.player.colliderOffset.set(0, 16);
@@ -599,6 +624,7 @@ export default class GameLevel extends Scene {
 
         enemy.addAI(EnemyAI, aiOptions); //TODO - add individual enemy AI
         enemy.setGroup("Enemy");
+        enemy.setTrigger("player", Player_Events.PLAYER_COLLIDE, null);
         
         //add enemy to the enemy array
         this.enemies.push(enemy);
@@ -676,8 +702,28 @@ export default class GameLevel extends Scene {
     }
 
    
+    /**
+     * damages the player if they collide with an enemy
+     * @param player player sprite
+     * @param enemy enemy sprite
+     */
     protected handlePlayerEnemyCollision(player: AnimatedSprite, enemy: AnimatedSprite) {
-        //collisions are handled by the battleManager - no need for this in gamelevel for now 
+        if(enemy === undefined){
+            console.log("undefined enemy");
+            return;
+        }
+        if( player === undefined){
+            console.log("undefined player");
+            return;
+        }
+        if(typeof enemy != undefined && typeof player != undefined){
+                //damage the player 
+                console.log("player collision damage");
+                (<PlayerController>this.player._ai).damage(10); //10 collision dmg for now
+        }
+                
+        
+
     }
 
     /**
@@ -699,10 +745,10 @@ export default class GameLevel extends Scene {
      * Returns the player to spawn
      */
     protected respawnPlayer(): void {
-        GameLevel.livesCount = 3;
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
-        this.sceneManager.changeToScene(MainMenu, {});
         InputWrapper.enableInput();
+        this.player.position.copy(this.startpos);
+        (<PlayerController>this.player._ai).CURRENT_HP = (<PlayerController>this.player._ai).MAX_HP + (<PlayerController>this.player._ai).CURRENT_BUFFS.hp;
     }
 
 

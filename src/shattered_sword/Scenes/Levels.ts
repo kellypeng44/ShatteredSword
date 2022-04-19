@@ -99,7 +99,18 @@ export default class Levels extends Scene {
 
 
             if(event.type === "tutorial"){
-                this.sceneManager.changeToScene(Tutorial, {});
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemies"],
+                        collisions:
+                        [
+                            [0, 1, 1],
+                            [1, 0, 0],
+                            [1, 0, 0]
+                        ]
+                    }
+                }
+                this.sceneManager.changeToScene(Tutorial, {}, sceneOptions);
             }
 
             if(event.type === "level1"){

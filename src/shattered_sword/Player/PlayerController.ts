@@ -18,6 +18,7 @@ import Weapon from "../GameSystems/items/Weapon";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import InputWrapper from "../Tools/InputWrapper";
 import EnemyAI from "../AI/EnemyAI";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 
 export enum PlayerType {
@@ -91,6 +92,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     // The inventory of the player
     inventory: InventoryManager;
 
+	static invincibilityTimer: Timer;
+    
+
     CURRENT_BUFFS: {
         atk: number;    //flat value to add to weapon
         hp: number;     //flat value 
@@ -110,8 +114,17 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.CURRENT_SHIELD = newshield; //update shield value
             }
             else{
-                (<AnimatedSprite>this.owner).animation.play("HURT", false);
+                //i frame here
+                PlayerController.invincibilityTimer.start();
+                this.invincible = true;
+
+                (<AnimatedSprite>this.owner).animation.playIfNotAlready("HURT", false);
                 this.CURRENT_HP -= damage;
+                if(this.CURRENT_HP <= 0){
+                    this.emitter.fireEvent(Player_Events.PLAYER_KILLED);
+                    (<AnimatedSprite>this.owner).animation.playIfNotAlready("DYING", false);
+                    (<AnimatedSprite>this.owner).animation.queue("DEAD", false);
+                }
             }
             
         }
@@ -220,8 +233,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
        
         //to test the buffs
-        this.addBuff( {type:BuffType.HEALTH, value:1} );
-        //this.addBuff( {type:BuffType.RANGE, value:1, bonus:false} );
+        //this.addBuff( {type:BuffType.HEALTH, value:1} );
+        
+        //i frame timer
+        PlayerController.invincibilityTimer = new Timer(400);
     }
 
     initializePlatformer(): void {
@@ -251,6 +266,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     update(deltaT: number): void {
 		super.update(deltaT);
+        if(PlayerController.invincibilityTimer.isStopped()){
+            this.invincible = false;
+        }
 
 		if(this.currentState instanceof Jump){
 			Debug.log("playerstate", "Player State: Jump");

@@ -42,7 +42,8 @@ export default class Tutorial extends GameLevel {
     }
 
     startScene(): void {
-
+        
+        this.startpos = this.rmg.getPlayer().scale(32);
 
         // Add the level 1 tilemap
         this.add.tilemap("forest1", new Vec2(2, 2));

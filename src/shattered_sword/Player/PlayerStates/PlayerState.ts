@@ -25,6 +25,7 @@ export default abstract class PlayerState extends State {
 		this.positionTimer.start();
 		PlayerState.dashTimer = new Timer(50);
 		PlayerState.dashCoolDownTimer = new Timer(600);
+
 	}
 
 	
@@ -74,5 +75,7 @@ export default abstract class PlayerState extends State {
 			this.parent.velocity.y += this.gravity*deltaT;
 			this.owner.move(this.parent.velocity.scaled(deltaT));
 		}
+
+
 	}
 }
