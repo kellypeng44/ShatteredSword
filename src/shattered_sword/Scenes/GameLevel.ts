@@ -66,8 +66,11 @@ export default class GameLevel extends Scene {
 
     // Health UI
     protected healthLabel: Label;
-    //may need exp label
-    //may need mp label 
+    //exp label
+    protected expLabel : Label;
+
+    //shield label
+    protected shieldLabel : Label;
 
     //seed UI
     protected seedLabel: Label;   
@@ -205,9 +208,11 @@ export default class GameLevel extends Scene {
                         //remove enemy from enemies
                         this.enemies = this.enemies.filter(item => item !== event.data.get("ai"));
                         this.battleManager.removeEnemy(event.data.get("ai"));
-                        node.destroy();
+                        //give the player the exp value of the enemy killed
+                        (<PlayerController>this.player._ai).giveExp(event.data.get("ai").exp_val);
+                        node.destroy(); //destroy enemy node
                         //TODO - this is for testing,  add some chance here later
-                        this.emitter.fireEvent(Player_Events.GIVE_BUFF);
+                        //this.emitter.fireEvent(Player_Events.GIVE_BUFF);
                         break;
 
                     case Player_Events.GIVE_BUFF:
@@ -251,8 +256,20 @@ export default class GameLevel extends Scene {
 
         //update health UI 
         let playerAI = (<PlayerController>this.player.ai);
-        this.healthLabel.text = "Player Health: "+ playerAI.CURRENT_HP +'/' + (playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp );
+        this.healthLabel.text = "Health: "+ playerAI.CURRENT_HP +'/' + (playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp );
+        this.healthLabel.sizeToText();
 
+        //update shield ui
+        this.shieldLabel.text = "Shield: "+ playerAI.CURRENT_SHIELD +'/' + (playerAI.MAX_SHIELD);
+        this.shieldLabel.sizeToText();
+
+        //update exp ui
+        this.expLabel.text = "EXP: "+ playerAI.CURRENT_EXP +'/' + (playerAI.MAX_EXP);
+        this.expLabel.sizeToText();
+
+        
+
+    
         //handle collisions - may be in battle manager instead
 
         //move background
@@ -354,6 +371,16 @@ export default class GameLevel extends Scene {
         this.healthLabel.textColor = Color.WHITE;
         this.healthLabel.font = "PixelSimple";
 
+        this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(120, 50), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
+        this.shieldLabel.textColor = Color.WHITE;
+        this.shieldLabel.font = "PixelSimple";
+
+        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(120, 70), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
+        this.expLabel.textColor = Color.WHITE;
+        this.expLabel.font = "PixelSimple";
+
+        
+
         //seed label
         //worldsize.x doesnt work how i want it to
         this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(this.worldSize.x - 50, 30), text: "Seed: "+ this.randomSeed });
@@ -424,11 +451,6 @@ export default class GameLevel extends Scene {
         //TODO - 
         //determine button location 
         this.buffButton1 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(100, 250),text:"buffButton1"});
-        console.log("buffbutton pos:"+this.buffButton1.position);
-        //this.buffButton1.position = this.buffButton1.position.clone().scale(this.viewport.getZoomLevel());
-        this.buffButton1
-        console.log("buffbutton pos:"+this.buffButton1.position);
-
         this.buffButton1.size.set(180,200);
         this.buffButton1.borderWidth = 5;
         this.buffButton1.borderColor = Color.RED;
@@ -439,8 +461,6 @@ export default class GameLevel extends Scene {
 
 
         this.buffButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(300, 250),text:"buffButton1"});
-        //this.buffButton2.setPosition(this.buffButton1.position.clone().scale(this.viewport.getZoomLevel()));
-        //this.buffButton2.position = this.buffButton2.position.clone().scale(this.viewport.getZoomLevel());
         this.buffButton2.size.set(180,200);
         this.buffButton2.borderWidth = 5;
         this.buffButton2.borderColor = Color.RED;
@@ -450,8 +470,6 @@ export default class GameLevel extends Scene {
         this.buffButton2.fontSize = 20;
 
         this.buffButton3 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(500, 250),text:"buffButton1"});
-        //this.buffButton3.setPosition(this.buffButton1.position.clone().scale(this.viewport.getZoomLevel()));
-        //this.buffButton3.position = this.buffButton3.position.clone().scale(this.viewport.getZoomLevel());
         this.buffButton3.size.set(180,200);
         this.buffButton3.borderWidth = 5;
         this.buffButton3.borderColor = Color.RED;
@@ -600,7 +618,8 @@ export default class GameLevel extends Scene {
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
                         //TODO - test Add collision shape for each enemy type
-                        //size: new AABB(Vec2.ZERO, new Vec2(16, 25))
+                        //size: new AABB(Vec2.ZERO, new Vec2(16, 25)),
+                        exp: 100
                     })
                     break;
                 case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
@@ -611,7 +630,8 @@ export default class GameLevel extends Scene {
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
                         size: new Vec2(16,16),
-                        offset : new Vec2(0, 16)
+                        offset : new Vec2(0, 16),
+                        exp: 50
                     })
                     break;
                 case "Tiger":       //Tiger can be miniboss for now? 
@@ -621,6 +641,7 @@ export default class GameLevel extends Scene {
                         tilemap: "Main",
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
+                        exp: 100
                     })
                     break;
 
@@ -631,6 +652,7 @@ export default class GameLevel extends Scene {
                         tilemap: "Main",
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
+                        exp: 50
                     })
                     break;
                 case "black_pudding":       
@@ -642,7 +664,8 @@ export default class GameLevel extends Scene {
                         goal: Statuses.REACHED_GOAL,
                         scale: .25,
                         size: new Vec2(16,16),
-                        offset : new Vec2(0,0)
+                        offset : new Vec2(0,0),
+                        exp: 50
                     })
                     break;
                 default:

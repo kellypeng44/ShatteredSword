@@ -63,6 +63,8 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
     direction: number; //1 for right, -1 for left
 
+    exp_val: number =0; //exp value to give player when this dies
+
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
 
@@ -101,6 +103,9 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         //this.getPlayerPosition();
 
         this.direction = 1; //default moving to the right
+
+        //exp value
+        this.exp_val = options.exp;
         
     }
 

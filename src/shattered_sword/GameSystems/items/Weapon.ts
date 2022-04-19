@@ -67,7 +67,7 @@ export default class Weapon extends Item {
         this.type.doAnimation(user, direction, this.EXTRA_RANGE, ...this.assets);
 
         // Apply damage
-        this.battleManager.handleInteraction(userType, this);
+        this.battleManager.handleInteraction(userType, this, user);
     
         // Reset the cooldown timer
         this.cooldownTimer.start();

@@ -2,13 +2,14 @@
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import BattlerAI from "../AI/BattlerAI";
 import Weapon from "./items/Weapon";
+import PlayerController from "../Player/PlayerController";
 
 export default class BattleManager {
     players: Array<BattlerAI>;
 
     enemies: Array<BattlerAI>;
 
-    handleInteraction(attackerType: string, weapon: Weapon) {
+    handleInteraction(attackerType: string, weapon: Weapon, user?: GameNode) {
         //may be unneeded since we are controlling the player - 
         //we determine enemy collision there
         
@@ -26,7 +27,7 @@ export default class BattleManager {
             // Check for collision with player
             for (let player of this.players) {
                 if (weapon.hits(player.owner)) {
-                    player.damage(weapon.type.damage);
+                    (<PlayerController>player).damage(weapon.type.damage, user);
                 }
             }
         }

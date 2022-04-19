@@ -17,6 +17,7 @@ import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import Weapon from "../GameSystems/items/Weapon";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import InputWrapper from "../Tools/InputWrapper";
+import EnemyAI from "../AI/EnemyAI";
 
 
 export enum PlayerType {
@@ -70,6 +71,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     CURRENT_DEF: number = 100;
     CURRENT_EXP : number = 0;
     MAX_EXP : number = 100;
+    //shield buff
+    CURRENT_SHIELD : number =0;
+    MAX_SHIELD : number = 20;
 
     invincible : boolean = false;
 
@@ -96,14 +100,43 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     }
     
     
-    // TODO - 
-    damage(damage: number): void {
+    // TODO - figure out attacker 
+    damage(damage: number, attacker?: GameNode): void {
         if( !this.invincible){
-            (<AnimatedSprite>this.owner).animation.play("HURT", false);
-            this.CURRENT_HP -= damage;
+            //shield absorbs the damage and sends dmg back to attacker
+            if(this.CURRENT_SHIELD > 0){
+                let newshield = Math.max(0, this.CURRENT_SHIELD - damage ); //calculate the new shield value
+                (<EnemyAI>attacker._ai).damage(this.CURRENT_SHIELD - newshield); //damage the attacker the dmg taken to shield
+                this.CURRENT_SHIELD = newshield; //update shield value
+            }
+            else{
+                (<AnimatedSprite>this.owner).animation.play("HURT", false);
+                this.CURRENT_HP -= damage;
+            }
+            
         }
     }
 
+    /**
+     * gives the player a certain amount of shield
+     * @param shield amount of shield to add to player
+     */
+    addShield(shield : number){
+        this.CURRENT_SHIELD = (this.CURRENT_SHIELD + shield) % this.MAX_SHIELD;
+    }
+
+    /**
+     * gives the player exp
+     * @param exp amount of exp to give the player
+     */
+    giveExp(exp: number){
+        this.CURRENT_EXP += exp;
+        //if > than max exp level up (give buff)
+        if(this.CURRENT_EXP >= this.MAX_EXP){
+            this.CURRENT_EXP -= this.MAX_EXP;
+            this.emitter.fireEvent(Player_Events.GIVE_BUFF);
+        }
+    }
     //TODO - balance buff value generation 
     /**
      * returns an array of three randomly generated buffs 
