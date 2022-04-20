@@ -11,9 +11,13 @@ export default class Idle extends OnGround {
 
 	
 	update(deltaT: number): void {
-		
+		if (this.parent.invincible) {
+			this.owner.animation.playIfNotAlready("HURT");
+		}
+		else {
+			this.owner.animation.playIfNotAlready("IDLE", true);
+		}
         
-        this.owner.animation.playIfNotAlready("IDLE", true);
 
 		let dir = this.getInputDirection();
 

@@ -121,8 +121,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.CURRENT_SHIELD = newshield; //update shield value
             }
             else{
-                //console.log("hurt anim");
-                (<AnimatedSprite>this.owner).animation.play("HURT" );
+                console.log("hurt anim");
+                (<AnimatedSprite>this.owner).animation.play("HURT", false);
                 this.CURRENT_HP -= damage;
                 if(this.CURRENT_HP <= 0){
                     (<AnimatedSprite>this.owner).animation.play("DYING");

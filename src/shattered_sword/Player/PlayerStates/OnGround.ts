@@ -1,6 +1,8 @@
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import Game from "../../../Wolfie2D/Loop/Game";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
+import { GameState } from "../../sword_enums";
 import InputWrapper from "../../Tools/InputWrapper";
 import PlayerState from "./PlayerState";
 
@@ -31,7 +33,7 @@ export default class OnGround extends PlayerState {
 			this.parent.velocity.y = -600;	// basically jump height
 			
 		} 
-		else if(!this.owner.onGround){
+		else if(!this.owner.onGround && InputWrapper.getState() === GameState.GAMING){
 			this.finished("fall");
 		}
 		super.update(deltaT);
