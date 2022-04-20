@@ -94,10 +94,12 @@ export default class RandomMapGenerator {
 
     getMap(): TiledTilemapData {
         let room = this.copyRoom(this.template.entrance, 0, 0);
-        this.rooms.push(room);
-
         let facing = this.getEntranceFacing(this.template.entrance.entrances[0], this.template.entrance.width);
         let position = new Vec2(this.template.entrance.entrances[0].x, this.template.entrance.entrances[0].y);
+        // this.removeEntrance(room, this.template.entrance.entrances[0], facing);
+        this.rooms.push(room);
+
+        
 
         this.putNextRoom(position, this.getOppositeFacing(facing));
 
@@ -134,7 +136,7 @@ export default class RandomMapGenerator {
             default:
                 break;
         }
-        if (this.roomPlaced >= this.minRoom && facing == this.exitFacing) {
+        if (this.roomPlaced >= this.minRoom && facing == this.exitFacing && !this.hasExit) {
             this.putExitRoom(position);
             return true;
         }
@@ -155,9 +157,10 @@ export default class RandomMapGenerator {
             return false;
         }
         let room = this.copyRoom(nextRoom, nextPosition.x, nextPosition.y);
+        this.removeEntrance(room, thisEntrance, facing);
         this.rooms.push(room);
         this.roomPlaced += 1;
-        if (this.hasExit && this.gen.range() <= 0.5) {
+        if (this.hasExit && this.gen.random() <= 0.3) {
             return false;
         }
         for (let entrance of nextRoom.entrances) {

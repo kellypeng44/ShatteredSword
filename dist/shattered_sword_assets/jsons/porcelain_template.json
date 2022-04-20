@@ -24,7 +24,15 @@
             "width": 3,
             "alt_tile": [11, 11]
          }
+      ],
+      "sprites": [
+         {
+            "type": "player",
+            "x": 5,
+            "y": 10
+         }
       ]
+
    },
    "exit": {
       "width": 30,
