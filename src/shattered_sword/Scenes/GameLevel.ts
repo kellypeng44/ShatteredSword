@@ -246,7 +246,9 @@ export default class GameLevel extends Scene {
                         this.enemies = this.enemies.filter(item => item !== event.data.get("ai"));
                         this.battleManager.removeEnemy(event.data.get("ai"));
                         //give the player the exp value of the enemy killed
-                        (<PlayerController>this.player._ai).giveExp(event.data.get("ai").exp_val);
+                        if(event.data.get("ai").exp_val !== undefined){
+                            (<PlayerController>this.player._ai).giveExp(event.data.get("ai").exp_val);
+                        }
                         node.destroy(); //destroy enemy node
                         //TODO - this is for testing,  add some chance here later
                         //this.emitter.fireEvent(Player_Events.GIVE_BUFF);
@@ -254,9 +256,26 @@ export default class GameLevel extends Scene {
 
                     case Player_Events.GIVE_BUFF:
                         this.buffs = (<PlayerController>this.player._ai).generateBuffs();
-                        this.buffButton1.text = "Increase "+this.buffs[0].type.toString() + " by "+this.buffs[0].value;
-                        this.buffButton2.text = "Increase "+this.buffs[1].type + " by "+this.buffs[1].value;
-                        this.buffButton3.text = "Increase "+this.buffs[2].type + " by "+this.buffs[2].value;
+                        if(this.buffs[0].string !== undefined){
+                            this.buffButton1.text = this.buffs[0].string;
+                        }
+                        else{
+                            this.buffButton1.text = "Increase "+this.buffs[0].type + " by "+this.buffs[0].value;
+                        }
+
+                        if(this.buffs[1].string !== undefined){
+                            this.buffButton2.text = this.buffs[1].string;
+                        }
+                        else{
+                            this.buffButton2.text = "Increase "+this.buffs[1].type + " by "+this.buffs[1].value;
+                        }
+                        
+                        if(this.buffs[2].string !== undefined){
+                            this.buffButton3.text = this.buffs[2].string;
+                        }
+                        else{
+                            this.buffButton3.text = "Increase "+this.buffs[2].type + " by "+this.buffs[2].value;
+                        }
                         
                         //pause game here 
                         this.setGameState(GameState.BUFF);

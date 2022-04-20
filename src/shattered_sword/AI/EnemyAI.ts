@@ -24,6 +24,7 @@ import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 import { Player_Events } from "../sword_enums";
 import InputWrapper from "../Tools/InputWrapper";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import PlayerController from "../Player/PlayerController";
 export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     /** The owner of this AI */
     owner: AnimatedSprite;
@@ -64,7 +65,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
     direction: number; //1 for right, -1 for left
 
-    exp_val: number =0; //exp value to give player when this dies
+    exp_val: number = 100; //exp value to give player when this dies
 
     poisonTimer : Timer;
     poisonCounter : number = 0;
@@ -76,7 +77,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     bleedCounter :number = 0;
 
 
-    initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
+    initializeAI(owner: AnimatedSprite, options: Record<string, any>): void { 
         this.owner = owner;
 
         //add states
@@ -220,21 +221,21 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         }
         */
         
-        //TODO - add extra dot damage
+        //TODO 
         if(this.burnTimer.isStopped() && this.burnCounter >0){
             this.burnCounter --;
             this.burnTimer.start();
-            this.damage(5);
+            this.damage(5 + (<PlayerController>this.player._ai).extraDotDmg + (<PlayerController>this.player._ai).CURRENT_ATK * .2);
         }
         if(this.poisonTimer.isStopped() && this.poisonCounter >0){
             this.poisonCounter --;
             this.poisonTimer.start();
-            this.damage(5);
+            this.damage(5 + (<PlayerController>this.player._ai).extraDotDmg + (<PlayerController>this.player._ai).CURRENT_ATK * .2);
         }
         if(this.bleedTimer.isStopped() && this.bleedCounter >0){
             this.bleedCounter --;
             this.bleedTimer.start();
-            this.damage(5);
+            this.damage(5 + (<PlayerController>this.player._ai).extraDotDmg + (<PlayerController>this.player._ai).CURRENT_ATK * .08);
         }
     }
 }

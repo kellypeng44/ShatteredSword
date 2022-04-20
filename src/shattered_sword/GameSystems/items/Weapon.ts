@@ -22,6 +22,7 @@ export default class Weapon extends Item {
     /** The battle manager */
     battleManager: BattleManager;
 
+    cooldown : number = 0;
     /** The cooldown timer for this weapon's use */
     cooldownTimer: Timer;
 
@@ -46,6 +47,8 @@ export default class Weapon extends Item {
 
         // Create the cooldown timer
         this.cooldownTimer = new Timer(type.cooldown);  
+        this.cooldown = type.cooldown;
+
         this.EXTRA_DAMAGE = 0;
         this.EXTRA_RANGE=0; 
     }

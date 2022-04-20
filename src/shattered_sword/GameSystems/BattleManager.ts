@@ -37,7 +37,10 @@ export default class BattleManager {
                         if(player.hasBurn){
                             (<EnemyAI>enemy).burnCounter =5 ;
                         }
-                        
+
+                        if(player.hasDoubleStrike){
+                            enemy.damage(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/200);
+                        }
                     }
                 }
             }
