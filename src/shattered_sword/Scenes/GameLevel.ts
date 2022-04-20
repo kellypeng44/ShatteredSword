@@ -70,11 +70,14 @@ export default class GameLevel extends Scene {
 
     // Health UI
     protected healthLabel: Label;
+    protected healthBar: Rect;
     //exp label
     protected expLabel : Label;
+    protected expBar: Rect;
 
     //shield label
     protected shieldLabel : Label;
+    protected shieldBar: Rect;
 
     //seed UI
     protected seedLabel: Label;   
@@ -333,14 +336,32 @@ export default class GameLevel extends Scene {
         //update health UI 
         let playerAI = (<PlayerController>this.player.ai);
         this.healthLabel.text = "Health: "+ playerAI.CURRENT_HP +'/' + (playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp );
+        this.healthBar.size.set(playerAI.MAX_HP*2, 10);
+        this.healthBar.position.set(playerAI.MAX_HP+50, 20);
+        this.healthBar.fillWidth = playerAI.CURRENT_HP*2;
+        if (playerAI.CURRENT_HP/playerAI.MAX_HP >= 2/3) {
+            this.healthBar.color = Color.GREEN;
+            this.healthLabel.textColor = Color.GREEN;
+        }
+        else if (playerAI.CURRENT_HP/playerAI.MAX_HP >= 1/3) {
+            this.healthBar.color = Color.YELLOW;
+            this.healthLabel.textColor = Color.YELLOW;
+        }
+        else {
+            this.healthBar.color = Color.RED;
+            this.healthLabel.textColor = Color.RED;
+        }
         // this.healthLabel.sizeToText();
 
         //update shield ui
         this.shieldLabel.text = "Shield: "+ playerAI.CURRENT_SHIELD +'/' + (playerAI.MAX_SHIELD);
+        this.shieldBar.size.set(playerAI.CURRENT_SHIELD*2, 10);
+        this.shieldBar.position.set(playerAI.CURRENT_SHIELD+50, 60);
         // this.shieldLabel.sizeToText();
 
         //update exp ui
         this.expLabel.text = "EXP: "+ playerAI.CURRENT_EXP +'/' + (playerAI.MAX_EXP);
+        this.expBar.fillWidth = (playerAI.CURRENT_EXP/playerAI.MAX_EXP)*200;
         // this.expLabel.sizeToText();
 
         
@@ -448,23 +469,35 @@ export default class GameLevel extends Scene {
      */
     protected addUI(){
         // In-game labels
-        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 30), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
+        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 40), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
         this.healthLabel.size.set(200, 50);
         this.healthLabel.setHAlign(HAlign.LEFT);
-        this.healthLabel.textColor = Color.WHITE;
+        this.healthLabel.textColor = Color.GREEN;
         this.healthLabel.font = "PixelSimple";
+        this.healthBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 20), size: new Vec2(400, 10)});
+        this.healthBar.borderColor = Color.BLACK;
+        this.healthBar.borderWidth = 3;
+        this.healthBar.color = Color.GREEN;
 
-        this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 50), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
+        this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 80), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
         this.shieldLabel.size.set(200, 50);
         this.shieldLabel.setHAlign(HAlign.LEFT);
-        this.shieldLabel.textColor = Color.WHITE;
+        this.shieldLabel.textColor = Color.ORANGE;
         this.shieldLabel.font = "PixelSimple";
+        this.shieldBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 60), size: new Vec2(400, 10)});
+        this.shieldBar.borderColor = Color.BLACK;
+        this.shieldBar.borderWidth = 3;
+        this.shieldBar.color = Color.ORANGE;
 
-        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 70), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
+        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 120), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
         this.expLabel.size.set(200, 50);
         this.expLabel.setHAlign(HAlign.LEFT);
-        this.expLabel.textColor = Color.WHITE;
+        this.expLabel.textColor = Color.BLUE;
         this.expLabel.font = "PixelSimple";
+        this.expBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(150, 100), size: new Vec2(200, 10)});
+        this.expBar.borderColor = Color.BLACK;
+        this.expBar.borderWidth = 3;
+        this.expBar.color = Color.BLUE;
 
         
 
