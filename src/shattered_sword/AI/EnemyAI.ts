@@ -23,6 +23,7 @@ import MathUtils from "../../Wolfie2D/Utils/MathUtils";
 
 import { Player_Events } from "../sword_enums";
 import InputWrapper from "../Tools/InputWrapper";
+import Timer from "../../Wolfie2D/Timing/Timer";
 export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     /** The owner of this AI */
     owner: AnimatedSprite;
@@ -65,6 +66,16 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
     exp_val: number =0; //exp value to give player when this dies
 
+    poisonTimer : Timer;
+    poisonCounter : number = 0;
+
+    burnTimer : Timer ;
+    burnCounter : number =0;
+
+    bleedTimer : Timer;
+    bleedCounter :number = 0;
+
+
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
 
@@ -106,6 +117,12 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
         //exp value
         this.exp_val = options.exp;
+
+        //TODO - dots every 1 sec? can change
+        this.burnTimer = new Timer(1000);
+        this.bleedTimer = new Timer(1000);
+        this.poisonTimer = new Timer(1000);
+
         
     }
 
@@ -116,7 +133,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         this.CURRENT_HP -= damage;
         //TODO -
         this.owner.animation.play("HURT",false);
-        //console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
+        console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
 
         // If we're low enough, add Low Health status to enemy
         if (this.CURRENT_HP <= Math.floor(this.maxHealth/2)) {
@@ -203,6 +220,22 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         }
         */
         
+        //TODO - add extra dot damage
+        if(this.burnTimer.isStopped() && this.burnCounter >0){
+            this.burnCounter --;
+            this.burnTimer.start();
+            this.damage(5);
+        }
+        if(this.poisonTimer.isStopped() && this.poisonCounter >0){
+            this.poisonCounter --;
+            this.poisonTimer.start();
+            this.damage(5);
+        }
+        if(this.bleedTimer.isStopped() && this.bleedCounter >0){
+            this.bleedCounter --;
+            this.bleedTimer.start();
+            this.damage(5);
+        }
     }
 }
 

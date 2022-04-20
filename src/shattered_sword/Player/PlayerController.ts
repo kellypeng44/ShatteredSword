@@ -154,8 +154,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
        
-        //to test the buffs
-        //this.addBuff( {type:BuffType.HEALTH, value:1} );
         
         //i frame timer
         PlayerController.invincibilityTimer = new Timer(2000);
@@ -169,6 +167,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             PlayerController.buffPool.push(BuffCategory.SHIELD);
             PlayerController.buffPool.push(BuffCategory.HEALTH);
         }
+
+        //to test the buffs
+        //this.addBuff( {type:BuffType.HEALTH, value:1} );
+        this.addBuff({type:BuffType.BLEED, value:1, category:BuffCategory.DOT});
+        
         
     }
 

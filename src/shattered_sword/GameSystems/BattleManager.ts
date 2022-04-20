@@ -3,6 +3,7 @@ import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import BattlerAI from "../AI/BattlerAI";
 import Weapon from "./items/Weapon";
 import PlayerController from "../Player/PlayerController";
+import EnemyAI from "../AI/EnemyAI";
 
 export default class BattleManager {
     players: Array<BattlerAI>;
@@ -23,7 +24,20 @@ export default class BattleManager {
                         
                         //TODO - test shield, 
                         //add checking for each onhit buff here
-                        (<PlayerController>this.players[0]).addShield(1);
+                        let player = (<PlayerController>this.players[0]);
+
+                        player.addShield(1);
+                        //DOTS
+                        if(player.hasBleed){
+                            (<EnemyAI>enemy).bleedCounter +=3;
+                        }
+                        if(player.hasPoison){
+                            (<EnemyAI>enemy).poisonCounter =5 ;
+                        }
+                        if(player.hasBurn){
+                            (<EnemyAI>enemy).burnCounter =5 ;
+                        }
+                        
                     }
                 }
             }
