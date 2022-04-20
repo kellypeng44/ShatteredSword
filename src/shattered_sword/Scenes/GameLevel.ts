@@ -301,15 +301,15 @@ export default class GameLevel extends Scene {
         //update health UI 
         let playerAI = (<PlayerController>this.player.ai);
         this.healthLabel.text = "Health: "+ playerAI.CURRENT_HP +'/' + (playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp );
-        this.healthLabel.sizeToText();
+        // this.healthLabel.sizeToText();
 
         //update shield ui
         this.shieldLabel.text = "Shield: "+ playerAI.CURRENT_SHIELD +'/' + (playerAI.MAX_SHIELD);
-        this.shieldLabel.sizeToText();
+        // this.shieldLabel.sizeToText();
 
         //update exp ui
         this.expLabel.text = "EXP: "+ playerAI.CURRENT_EXP +'/' + (playerAI.MAX_EXP);
-        this.expLabel.sizeToText();
+        // this.expLabel.sizeToText();
 
         
 
@@ -416,15 +416,21 @@ export default class GameLevel extends Scene {
      */
     protected addUI(){
         // In-game labels
-        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(120, 30), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
+        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 30), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
+        this.healthLabel.size.set(200, 50);
+        this.healthLabel.setHAlign(HAlign.LEFT);
         this.healthLabel.textColor = Color.WHITE;
         this.healthLabel.font = "PixelSimple";
 
-        this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(120, 50), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
+        this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 50), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
+        this.shieldLabel.size.set(200, 50);
+        this.shieldLabel.setHAlign(HAlign.LEFT);
         this.shieldLabel.textColor = Color.WHITE;
         this.shieldLabel.font = "PixelSimple";
 
-        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(120, 70), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
+        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 70), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
+        this.expLabel.size.set(200, 50);
+        this.expLabel.setHAlign(HAlign.LEFT);
         this.expLabel.textColor = Color.WHITE;
         this.expLabel.font = "PixelSimple";
 
@@ -432,7 +438,9 @@ export default class GameLevel extends Scene {
 
         //seed label
         //worldsize.x doesnt work how i want it to
-        this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(this.worldSize.x - 50, 30), text: "Seed: "+ this.randomSeed });
+        this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, Math.floor(this.viewport.getHalfSize().y*2 - 30)), text: "Seed: "+ this.randomSeed });
+        this.seedLabel.size.set(200, 50);
+        this.seedLabel.setHAlign(HAlign.LEFT);
         this.seedLabel.textColor = Color.WHITE;
         this.seedLabel.font = "PixelSimple";
       
@@ -499,7 +507,7 @@ export default class GameLevel extends Scene {
 
         //TODO - 
         //determine button location 
-        this.buffButton1 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(100, 250),text:"buffButton1"});
+        this.buffButton1 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*2/3-180/2), Math.floor(this.viewport.getHalfSize().y)),text:"buffButton1"});
         this.buffButton1.size.set(180,200);
         this.buffButton1.borderWidth = 5;
         this.buffButton1.borderColor = Color.RED;
@@ -509,7 +517,7 @@ export default class GameLevel extends Scene {
         this.buffButton1.fontSize = 20;
 
 
-        this.buffButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(300, 250),text:"buffButton1"});
+        this.buffButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), Math.floor(this.viewport.getHalfSize().y)),text:"buffButton1"});
         this.buffButton2.size.set(180,200);
         this.buffButton2.borderWidth = 5;
         this.buffButton2.borderColor = Color.RED;
@@ -518,7 +526,7 @@ export default class GameLevel extends Scene {
         this.buffButton2.onClickEventId = "buff2";
         this.buffButton2.fontSize = 20;
 
-        this.buffButton3 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(500, 250),text:"buffButton1"});
+        this.buffButton3 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*4/3+180/2), Math.floor(this.viewport.getHalfSize().y)), text:"buffButton1"});
         this.buffButton3.size.set(180,200);
         this.buffButton3.borderWidth = 5;
         this.buffButton3.borderColor = Color.RED;
@@ -531,9 +539,9 @@ export default class GameLevel extends Scene {
 
         this.buffLayer.disable();
 
-        this.pauseText = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(500, 250), text: "Game Paused"});
-        this.pauseInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "pause", {position: new Vec2(500, 300), text: ""});
-        this.pauseSubmit = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(500, 350), text: "Submit"});
+        this.pauseText = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), Math.floor(this.viewport.getHalfSize().y - 50)), text: "Game Paused"});
+        this.pauseInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), Math.floor(this.viewport.getHalfSize().y)), text: ""});
+        this.pauseSubmit = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), Math.floor(this.viewport.getHalfSize().y + 50)), text: "Submit"});
 
         this.add.sprite("black", "pause");
         this.add.sprite("black", "story");
@@ -835,10 +843,10 @@ export default class GameLevel extends Scene {
         this.currentSpeaker = this.story.texts[0].speaker;
         this.currentContent = this.story.texts[0].content;
         this.storyLayer.enable();
-        this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y + 240), text: "" });
+        this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y + 200), text: "" });
         this.storytextLabel.textColor = Color.WHITE;
         this.storytextLabel.font = "PixelSimple";
-        this.storytextLabel.fontSize = 20;
+        this.storytextLabel.fontSize = 30;
         this.storytextLabel.setHAlign(HAlign.LEFT);
         this.storyProgress = -1;
         this.storySprites = new Array;
