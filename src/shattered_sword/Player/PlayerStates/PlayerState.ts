@@ -3,6 +3,7 @@ import StateMachine from "../../../Wolfie2D/DataTypes/State/StateMachine";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Timer from "../../../Wolfie2D/Timing/Timer";
 import { GameState, Player_Events } from "../../sword_enums";
@@ -72,10 +73,12 @@ export default abstract class PlayerState extends State {
 			this.parent.velocity.x = (<Sprite>this.owner).invertX ? -800 : 800;
 		}
 		if (InputWrapper.getState() === GameState.GAMING) {
+			(<AnimatedSprite>this.parent.owner).animation.resume();
 			this.parent.velocity.y += this.gravity*deltaT;
 			this.owner.move(this.parent.velocity.scaled(deltaT));
 		}
-
-
+		else {
+			(<AnimatedSprite>this.parent.owner).animation.pause();
+		}
 	}
 }
