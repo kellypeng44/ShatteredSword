@@ -28,13 +28,14 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import { Buff } from "../Player/PlayerController";
 import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
-import { Enemy } from "../Tools/RandomMapGenerator";
+import RandomMapGenerator, { Enemy } from "../Tools/RandomMapGenerator";
 import Stack from "../../Wolfie2D/DataTypes/Stack";
 import InputWrapper from "../Tools/InputWrapper";
 import Story from "../Tools/DataTypes/Story";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Platformer from "../../demos/Platformer";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
+import { TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
 
 
 
@@ -108,18 +109,16 @@ export default class GameLevel extends Scene {
     pauseInput: TextInput;
     pauseSubmit: Label;
 
-    randomSeed: number;
+    protected randomSeed: number;
+    protected rmg: RandomMapGenerator;
+    protected map: TiledTilemapData;
 
     startpos: Vec2; 
     loadScene(): void {
         //can load player sprite here
-
-        //can load enemy sprite here
-        //sprites obtained from cse380 sprite wesbite
-        this.load.spritesheet("Tiger","shattered_sword_assets/spritesheets/Tiger.json");
-        this.load.spritesheet("remus_werewolf","shattered_sword_assets/spritesheets/remus_werewolf.json");
-        this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
-
+        this.load.spritesheet("player", "shattered_sword_assets/spritesheets/Hiro.json")
+        // TODO - change when done testing
+        this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
 
         // Load the scene info
         this.load.object("weaponData", "shattered_sword_assets/data/weaponData.json");
@@ -140,10 +139,19 @@ export default class GameLevel extends Scene {
         this.enemies = new Array();
         this.battleManager = new BattleManager();
 
-
+        this.randomSeed = Math.floor(Math.random() * 10000000000);
     }
 
     startScene(): void {
+        this.add.tilemap("map", new Vec2(2, 2));
+        console.log("width,height:" + this.map.width, this.map.height);
+        this.viewport.setBounds(0, 0, this.map.width * 32, this.map.height * 32);
+        this.viewport.follow(this.player);
+
+        this.playerSpawn = this.rmg.getPlayer().scale(32);
+        console.log(this.playerSpawn)
+
+        this.startpos = this.rmg.getPlayer().scale(32);
 
         //call super after extending story with scene
        
@@ -182,6 +190,10 @@ export default class GameLevel extends Scene {
                 this.player.unfreeze();
             }
         });
+
+        let enemies = this.rmg.getEnemies();
+        //may have to move this to start scene in gameLevel
+        this.initializeEnemies(enemies);
 
         /*
         this.levelTransitionTimer = new Timer(500);
