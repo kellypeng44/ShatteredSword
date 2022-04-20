@@ -143,7 +143,7 @@ export default class RandomMapGenerator {
         let nextPosition: Vec2 = undefined;
         let thisEntrance: Entrance = undefined;
         for (let entrance of nextRoom.entrances) {
-            if (this.getEntranceFacing(entrance, nextRoom.weight) == facing) {
+            if (this.getEntranceFacing(entrance, nextRoom.width) == facing) {
                 let tmpPosition = new Vec2(position.x - entrance.x, position.y - entrance.y);
                 if (this.isValidRoom(tmpPosition, new Vec2(tmpPosition.x + nextRoom.width - 1, tmpPosition.y + nextRoom.height - 1))) {
                     thisEntrance = entrance;
@@ -157,7 +157,7 @@ export default class RandomMapGenerator {
         let room = this.copyRoom(nextRoom, nextPosition.x, nextPosition.y);
         this.rooms.push(room);
         this.roomPlaced += 1;
-        if (this.hasExit && this.gen.range() <= 0.1) {
+        if (this.hasExit && this.gen.range() <= 0.5) {
             return false;
         }
         for (let entrance of nextRoom.entrances) {
