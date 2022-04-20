@@ -19,6 +19,7 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import InputWrapper from "../Tools/InputWrapper";
 import EnemyAI from "../AI/EnemyAI";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import PlayerState from "./PlayerStates/PlayerState";
 
 
 export enum PlayerType {
@@ -233,7 +234,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if (this.godMode) {
             return;
         }
-        if( !this.invincible){
+        if( !this.invincible && !PlayerState.dashTimer.isStopped()){
             //i frame here
             PlayerController.invincibilityTimer.start();
             this.invincible = true;

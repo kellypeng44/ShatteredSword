@@ -112,6 +112,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     activate(options: Record<string, any>): void { }
 
     damage(damage: number): void {
+        console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
         this.CURRENT_HP -= damage;
         //TODO -
         this.owner.animation.play("HURT",false);

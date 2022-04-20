@@ -9,12 +9,17 @@ export default class Walk extends OnGround {
 
 	onEnter(options: Record<string, any>): void {
 		this.parent.speed = this.parent.MIN_SPEED;
+        
 	}
 
 
 	update(deltaT: number): void {
-		console.log("walking anim");
-        this.owner.animation.playIfNotAlready("WALK", true);
+		if (this.parent.invincible) {
+			this.owner.animation.playIfNotAlready("HURT");
+		}
+		else {
+			this.owner.animation.playIfNotAlready("WALK", true);
+		}
 
 		let dir = this.getInputDirection();
 

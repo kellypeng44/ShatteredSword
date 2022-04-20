@@ -211,12 +211,64 @@
 			"repeat": false,
 			"frames": [
 				{
+					"index": 39,
+					"duration": 5
+				},
+				{
 					"index": 0,
-					"duration": 500
+					"duration": 5
 				},
 				{
 					"index": 39,
-					"duration": 500
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
 				}
 			]
 		},

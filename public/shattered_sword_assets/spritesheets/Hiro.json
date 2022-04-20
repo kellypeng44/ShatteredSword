@@ -200,15 +200,63 @@
 		},
 		{
 			"name": "HURT",
-			"repeat": true,
+			"repeat": false,
 			"frames": [
 				{
 					"index": 0,
-					"duration": 50
+					"duration": 5
 				},
 				{
 					"index": 39,
-					"duration": 50
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
 				}
 			]
 		},

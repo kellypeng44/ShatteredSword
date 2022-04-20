@@ -17,9 +17,13 @@ export default class Jump extends InAir {
 	
 
 	update(deltaT: number): void {
-		super.update(deltaT);
+		if (this.parent.invincible) {
+			this.owner.animation.playIfNotAlready("HURT");
+		}
+		else {
+			this.owner.animation.playIfNotAlready("JUMP", true);
+		}
 
-        this.owner.animation.play("JUMP", true);
 
 		if(this.owner.onCeiling){
 			this.parent.velocity.y = 0;
@@ -38,6 +42,7 @@ export default class Jump extends InAir {
 		if(this.parent.velocity.y >= 0){
 			this.finished(PlayerStates.FALL);
 		}
+		super.update(deltaT);
 	}
 
 	onExit(): Record<string, any> {
