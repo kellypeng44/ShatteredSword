@@ -12,7 +12,7 @@ export default class Idle extends OnGround {
 	
 	update(deltaT: number): void {
 		
-        
+        //("idle anim");
         this.owner.animation.playIfNotAlready("IDLE", true);
 
 		let dir = this.getInputDirection();

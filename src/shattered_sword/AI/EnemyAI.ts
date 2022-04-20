@@ -115,7 +115,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         this.CURRENT_HP -= damage;
         //TODO -
         this.owner.animation.play("HURT",false);
-        console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
+        //console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
 
         // If we're low enough, add Low Health status to enemy
         if (this.CURRENT_HP <= Math.floor(this.maxHealth/2)) {

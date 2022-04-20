@@ -18,7 +18,7 @@ export default class BattleManager {
             if(this.enemies.length != 0){
                 for (let enemy of this.enemies) {
                     if (weapon.hits(enemy.owner)) {
-                        enemy.damage(weapon.type.damage + weapon.EXTRA_DAMAGE);
+                        enemy.damage(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/100);
                         //console.log("enemy took dmg");
                         
                         //TODO - test shield, 

@@ -35,11 +35,22 @@ export enum PlayerStates {
 }
 
 export enum BuffType {
-    ATK = "attack",
+    ATK  = "attack",
     DEF = "defence",
     HEALTH = "health",
     SPEED = "speed",
-    RANGE = "range"
+    RANGE = "range",
+    ATKSPEED = "attackspeed",
+    DOUBLESTRIKE = "doublestrike",
+    POISON = "poison",
+    BLEED = "bleed",
+    BURN = "burn",
+    EXTRA_DOT = "extradot",
+    SHIELD = "shield",
+    SHIELD_DMG = "shielddmg",   //increase shield dmg ratio
+    LIFESTEAL = "lifesteal",
+    EXTRALIFE= "extralife",
+    ONESHOT = "oneshot"
 }
 
 
@@ -47,11 +58,20 @@ export class Buff  {
     "type": BuffType;
     "value": number;
     //"bonus": boolean,         //need to determine what bonus gives
+    "string"? : string;
+    "category" : BuffCategory
 }
 
-type Buffs = [
-    Buff, Buff, Buff
-]
+
+
+//TODO - need better names 
+export enum BuffCategory{
+    ATTACK = "ATTACK",
+    DOT = "DOT",
+    SHIELD = "SHIELD",
+    HEALTH = "HEALTH",
+    EXTRA = "EXTRA"
+}
 
 //TODO - discuss max stats during refinement, unused for now
 export default class PlayerController extends StateMachineAI implements BattlerAI{
@@ -93,7 +113,19 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 	static invincibilityTimer: Timer;
     
+    static buffPool : Array<BuffCategory>;
 
+    //add to current_buffs later
+    hasBleed : Boolean = false;
+    hasPoison : Boolean = false;
+    hasBurn : Boolean = false;
+    hasShield : Boolean = false;
+    shieldDamage : number = 1;
+    hasDoubleStrike : Boolean = false;
+    hasLifesteal : Boolean = false;
+
+
+    //TODO - add new buffs here
     CURRENT_BUFFS: {
         atk: number;    //flat value to add to weapon
         hp: number;     //flat value 
@@ -103,122 +135,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     }
     
     
-    // TODO - figure out attacker 
-    damage(damage: number, attacker?: GameNode): void {
-        if (this.godMode) {
-            return;
-        }
-        if( !this.invincible){
-            //i frame here
-            PlayerController.invincibilityTimer.start();
-            this.invincible = true;
-            //shield absorbs the damage and sends dmg back to attacker
-            if(this.CURRENT_SHIELD > 0){
-                let newshield = Math.max(0, this.CURRENT_SHIELD - damage ); //calculate the new shield value
-                if( attacker !== undefined){
-                    (<EnemyAI>attacker._ai).damage(this.CURRENT_SHIELD - newshield); //damage the attacker the dmg taken to shield
-                }
-                this.CURRENT_SHIELD = newshield; //update shield value
-            }
-            else{
-                //console.log("hurt anim");
-                (<AnimatedSprite>this.owner).animation.play("HURT" );
-                this.CURRENT_HP -= damage;
-                if(this.CURRENT_HP <= 0){
-                    (<AnimatedSprite>this.owner).animation.play("DYING");
-                    (<AnimatedSprite>this.owner).animation.queue("DEAD", true, Player_Events.PLAYER_KILLED);
-                }
-            }
-            
-        }
-    }
-
-    /**
-     * gives the player a certain amount of shield
-     * @param shield amount of shield to add to player
-     */
-    addShield(shield : number){
-        this.CURRENT_SHIELD = (this.CURRENT_SHIELD + shield) % this.MAX_SHIELD;
-    }
-
-    /**
-     * gives the player exp
-     * @param exp amount of exp to give the player
-     */
-    giveExp(exp: number){
-        this.CURRENT_EXP += exp;
-        //if > than max exp level up (give buff)
-        if(this.CURRENT_EXP >= this.MAX_EXP){
-            this.CURRENT_EXP -= this.MAX_EXP;
-            this.emitter.fireEvent(Player_Events.GIVE_BUFF);
-        }
-    }
-    //TODO - balance buff value generation 
-    /**
-     * returns an array of three randomly generated buffs 
-     * @param val optional value to give buff
-     * @returns array of three Buffs
-     */
-    static generateBuffs( val? : number) : Buff[]{
-        let num = Number(Math.random().toPrecision(1)) * 10;    //random number from 1 to 10 if no value given
-        if(typeof val !== 'undefined'){
-            num = val;
-        }
-        
-        let array : Buff[] = [
-            {type:BuffType.ATK, value:num},
-            {type:BuffType.HEALTH, value:num},
-            {type:BuffType.DEF, value:num},
-            {type:BuffType.SPEED, value:num},
-            {type:BuffType.RANGE, value:num/10} //range is a multiplier percent
-        ];
-
-        // Shuffle array
-        const shuffled = array.sort(() => 0.5 - Math.random());
-
-        // Get sub-array of first 3 elements after shuffled
-        let selected = shuffled.slice(0, 3);
-
-        return selected;
-    }
-
-    /**
-	 * Add given buff to the player
-	 * @param buff Given buff
-	 */
-    addBuff(buff: Buff): void {
-        // TODO
-        let item = this.inventory.getItem();
-            
-        switch(buff.type){
-            case BuffType.HEALTH:
-                this.CURRENT_BUFFS.hp += buff.value;
-                this.CURRENT_HP += buff.value;
-                break;
-            case BuffType.ATK:
-                //TODO - decide what to do with atk stat
-                this.CURRENT_BUFFS.atk += buff.value;
-                if (item) {
-                    (<Weapon>item).EXTRA_DAMAGE += buff.value;
-                }
-                break;
-            case BuffType.SPEED:
-                this.CURRENT_BUFFS.speed += buff.value;
-                this.speed += buff.value;
-                break;
-            case BuffType.DEF:
-                this.CURRENT_BUFFS.def += buff.value;
-                this.CURRENT_DEF += buff.value;
-                break;
-            case BuffType.RANGE:
-                this.CURRENT_BUFFS.range += buff.value;
-                if (item) {
-                    (<Weapon>item).EXTRA_RANGE += buff.value;
-                }
-                break;
-        }
-    }
-
     
 
     //TODO - get the correct tilemap
@@ -240,6 +156,17 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         
         //i frame timer
         PlayerController.invincibilityTimer = new Timer(2000);
+
+        //initialize the buff pool - each has same weight at first 
+        PlayerController.buffPool = new Array();
+        for( let i=0 ; i< 4; i++){
+            PlayerController.buffPool.push(BuffCategory.ATTACK);
+            PlayerController.buffPool.push(BuffCategory.EXTRA);
+            PlayerController.buffPool.push(BuffCategory.DOT);
+            PlayerController.buffPool.push(BuffCategory.SHIELD);
+            PlayerController.buffPool.push(BuffCategory.HEALTH);
+        }
+        
     }
 
     initializePlatformer(): void {
@@ -301,5 +228,211 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
     
 
+    // TODO - figure out attacker 
+    damage(damage: number, attacker?: GameNode): void {
+        if (this.godMode) {
+            return;
+        }
+        if( !this.invincible){
+            //i frame here
+            PlayerController.invincibilityTimer.start();
+            this.invincible = true;
+            //shield absorbs the damage and sends dmg back to attacker
+            if(this.CURRENT_SHIELD > 0){
+                let newshield = Math.max(0, this.CURRENT_SHIELD - damage ); //calculate the new shield value
+                if( attacker !== undefined){
+                    (<EnemyAI>attacker._ai).damage((this.CURRENT_SHIELD - newshield) * this.shieldDamage); //damage the attacker the dmg taken to shield
+                }
+                this.CURRENT_SHIELD = newshield; //update shield value
+            }
+            else{
+                //i frame here
+                PlayerController.invincibilityTimer.start();
+                this.invincible = true;
+                //console.log("hurt anim");
+                (<AnimatedSprite>this.owner).animation.play("HURT" );
+                this.CURRENT_HP -= damage;
+                if(this.CURRENT_HP <= 0){
+                    (<AnimatedSprite>this.owner).animation.play("DYING");
+                    (<AnimatedSprite>this.owner).animation.queue("DEAD", true, Player_Events.PLAYER_KILLED);
+                }
+            }
+            
+        }
+    }
+
+    /**
+     * gives the player a certain amount of shield
+     * @param shield amount of shield to add to player
+     */
+    addShield(shield : number){
+        this.CURRENT_SHIELD = (this.CURRENT_SHIELD + shield) % this.MAX_SHIELD;
+    }
+
+    /**
+     * gives the player exp
+     * @param exp amount of exp to give the player
+     */
+    giveExp(exp: number){
+        this.CURRENT_EXP += exp;
+        //if > than max exp level up (give buff)
+        if(this.CURRENT_EXP >= this.MAX_EXP){
+            this.CURRENT_EXP -= this.MAX_EXP;
+            this.emitter.fireEvent(Player_Events.GIVE_BUFF);
+        }
+    }
+    //TODO - balance buff value generation 
+    /**
+     * returns an array of three randomly generated buffs 
+     * @param val optional value to give buff
+     * @returns array of three Buffs
+     */
+    static generateBuffs( val? : number) : Buff[]{
+        //shuffle pool of buff categories 
+        PlayerController.buffPool.sort(() => 0.5 - Math.random());
+
+        // Get sub-array of first 3 elements after shuffled
+        let shuffled = PlayerController.buffPool.slice(0, 3); //3 buff categories
+
+        let num = Number(Math.random().toPrecision(1)) * 10;    //random number from 1 to 10 if no value given
+        if(typeof val !== 'undefined'){
+            num = val;
+        }
+        
+        let attackBuffs : Buff[] = [
+            {type:BuffType.RANGE, value:num, category: BuffCategory.ATTACK},
+            {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
+            {type:BuffType.DOUBLESTRIKE, value:num, category: BuffCategory.ATTACK},
+        ];
+
+        let dotBuffs : Buff[] = [
+            {type:BuffType.BLEED, value:num, category: BuffCategory.DOT},
+            {type:BuffType.BURN, value:num, category: BuffCategory.DOT},
+            {type:BuffType.POISON, value:num, category: BuffCategory.DOT},
+            {type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT},
+
+        ];
+        
+        let shieldBuffs : Buff[] = [
+            {type:BuffType.SHIELD, value:num, category: BuffCategory.SHIELD},
+            {type:BuffType.SHIELD_DMG, value:num, category: BuffCategory.SHIELD},
+            {type:BuffType.HEALTH, value:num, category: BuffCategory.SHIELD},
+        ];
+
+        let healthBuffs : Buff[] = [
+            {type:BuffType.LIFESTEAL, value:num, category: BuffCategory.HEALTH},
+            {type:BuffType.DEF, value:num, category: BuffCategory.HEALTH},
+            {type:BuffType.LIFESTEAL, value:num, category: BuffCategory.HEALTH},   //increase lifesteal
+        ];
+
+        let extraBuffs : Buff[] = [
+            {type:BuffType.EXTRALIFE, value:num, category: BuffCategory.EXTRA},
+            {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
+            {type:BuffType.ATK, value:num, category: BuffCategory.EXTRA},
+            {type:BuffType.ONESHOT, value:num, category: BuffCategory.EXTRA},
+        ];
+
+
+        let selected = new Array();
+        while( shuffled.length != 0){
+            let cat = shuffled.pop();
+            switch(cat){
+                case BuffCategory.ATTACK:
+                    attackBuffs.sort(() => 0.5 - Math.random());
+                    selected.push(attackBuffs.pop());
+                    break;
+                case BuffCategory.DOT:
+                    dotBuffs.sort(() => 0.5 - Math.random());
+                    selected.push(dotBuffs.pop());
+                    break;
+                case BuffCategory.EXTRA:
+                    extraBuffs.sort(() => 0.5 - Math.random());
+                    selected.push(extraBuffs.pop());
+                    break;
+                case BuffCategory.HEALTH:
+                    healthBuffs.sort(() => 0.5 - Math.random());
+                    selected.push(healthBuffs.pop());
+                    break;
+                case BuffCategory.SHIELD:
+                    shieldBuffs.sort(() => 0.5 - Math.random());
+                    selected.push(shieldBuffs.pop());
+                    break;
+            }
+        }
+
+        return selected;
+    }
+
+    /**
+	 * Add given buff to the player
+	 * @param buff Given buff
+	 */
+    addBuff(buff: Buff): void {
+        
+        //increase weight of selected buff category
+        PlayerController.buffPool.push(buff.category);
+
+        // TODO
+        let item = this.inventory.getItem();
+        switch(buff.type){
+            case BuffType.HEALTH:
+                this.CURRENT_BUFFS.hp += buff.value;
+                this.CURRENT_HP += buff.value;
+                break;
+            case BuffType.ATK:
+                //TODO - decide what to do with atk stat
+                this.CURRENT_BUFFS.atk += buff.value;
+                this.CURRENT_ATK +=buff.value;
+                break;
+            case BuffType.SPEED:
+                this.CURRENT_BUFFS.speed += buff.value;
+                this.speed += buff.value;
+                break;
+            case BuffType.DEF:
+                this.CURRENT_BUFFS.def += buff.value;
+                this.CURRENT_DEF += buff.value;
+                break;
+            case BuffType.RANGE:
+                this.CURRENT_BUFFS.range += buff.value;
+                if (item) {
+                    (<Weapon>item).EXTRA_RANGE += buff.value;
+                }
+                break;
+
+            //TODO 
+            case BuffType.BLEED:
+                this.hasBleed = true;
+                break;
+            case BuffType.BURN:
+                this.hasBleed = true;
+                break;
+            case BuffType.POISON:
+                this.hasPoison = true;
+                break;
+            case BuffType.SHIELD:
+                this.hasShield = true;
+                break;
+            case BuffType.ATKSPEED:
+                if (item) {
+                    //reduce cooldowntimer 
+                    //(<Weapon>item).cooldownTimer 
+        }
+                break;
+            case BuffType.DOUBLESTRIKE:
+                break;
+            case BuffType.SHIELD_DMG:
+                this.shieldDamage += buff.value/10 ;
+                break;
+            case BuffType.EXTRALIFE:
+
+                break;
+            case BuffType.LIFESTEAL:
+                this.hasLifesteal = true;
+                break;
+            case BuffType.ONESHOT:
+                break;
+            }
+        }
+        
 
 }

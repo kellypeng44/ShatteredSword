@@ -51,6 +51,7 @@ export default class GameLevel extends Scene {
     protected respawnTimer: Timer;
 
     // Labels for the UI
+    //TODO - lives here or in playercontroller
     protected static livesCount: number = 3;
     protected livesCountLabel: Label;
 
@@ -825,7 +826,11 @@ export default class GameLevel extends Scene {
          if(this.player.position.y >= viewportCenter.y +viewportSize.y/2.0){
 			
 			this.player.position.set(this.playerSpawn.x,this.playerSpawn.y);
+
+            //TODO - decrease player health or can kill player here
+            (<PlayerController>this.player._ai).CURRENT_HP *= .75;
 		}
+        
     }
 
 
