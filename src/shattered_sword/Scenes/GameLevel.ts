@@ -535,7 +535,9 @@ export default class GameLevel extends Scene {
         this.pauseInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "pause", {position: new Vec2(500, 300), text: ""});
         this.pauseSubmit = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(500, 350), text: "Submit"});
 
-        // let tmp = this.add.sprite("black", "pause");
+        this.add.sprite("black", "pause");
+        this.add.sprite("black", "story");
+        this.add.sprite("black", "buffLayer");
         this.pauseLayer.setAlpha(0.5);
         this.pauseInput.size.set(500, 30);
         this.pauseText.textColor = Color.BLACK;
