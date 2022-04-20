@@ -739,6 +739,10 @@ export default class GameLevel extends Scene {
         }
 
         enemy.addAI(EnemyAI, aiOptions); //TODO - add individual enemy AI
+        (<EnemyAI>enemy._ai).healthBar = <Rect>this.add.graphic(GraphicType.RECT, "primary", {position: enemy.collisionShape.center.clone().add(new Vec2(0, -((<AABB>enemy.collisionShape).hh+5))), size: new Vec2((<AABB>enemy.collisionShape).hw*3, 5)});
+        (<EnemyAI>enemy._ai).healthBar.borderColor = Color.BLACK;
+        (<EnemyAI>enemy._ai).healthBar.borderWidth = 1;
+        (<EnemyAI>enemy._ai).healthBar.color = Color.GREEN;
         enemy.setGroup("Enemy");
         enemy.setTrigger("player", Player_Events.PLAYER_COLLIDE, null);
         
