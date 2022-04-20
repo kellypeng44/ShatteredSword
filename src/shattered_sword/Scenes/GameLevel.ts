@@ -253,7 +253,7 @@ export default class GameLevel extends Scene {
                         break;
 
                     case Player_Events.GIVE_BUFF:
-                        this.buffs = PlayerController.generateBuffs();
+                        this.buffs = (<PlayerController>this.player._ai).generateBuffs();
                         this.buffButton1.text = "Increase "+this.buffs[0].type.toString() + " by "+this.buffs[0].value;
                         this.buffButton2.text = "Increase "+this.buffs[1].type + " by "+this.buffs[1].value;
                         this.buffButton3.text = "Increase "+this.buffs[2].type + " by "+this.buffs[2].value;
@@ -548,7 +548,7 @@ export default class GameLevel extends Scene {
         this.buffButton3.onClickEventId = "buff3";
         this.buffButton3.fontSize = 20;
 
-        this.buffs = this.buffs = PlayerController.generateBuffs();
+        this.buffs =  (<PlayerController>this.player._ai).generateBuffs();
 
         this.buffLayer.disable();
 
@@ -828,7 +828,7 @@ export default class GameLevel extends Scene {
 			this.player.position.set(this.playerSpawn.x,this.playerSpawn.y);
 
             //TODO - decrease player health or can kill player here
-            (<PlayerController>this.player._ai).CURRENT_HP *= .75;
+            //(<PlayerController>this.player._ai).CURRENT_HP *= .75;
 		}
         
     }

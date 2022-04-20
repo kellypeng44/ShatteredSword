@@ -50,6 +50,7 @@ export enum BuffType {
     SHIELD = "shield",
     SHIELD_DMG = "shielddmg",   //increase shield dmg ratio
     LIFESTEAL = "lifesteal",
+    LIFESTEALBUFF = "lifestealbuff",
     EXTRALIFE= "extralife",
     ONESHOT = "oneshot"
 }
@@ -124,7 +125,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     shieldDamage : number = 1;
     hasDoubleStrike : Boolean = false;
     hasLifesteal : Boolean = false;
-
+    lifestealratio : number = 0; //percent of damage to steal
+    hasOneShot: Boolean = false;
 
     //TODO - add new buffs here
     CURRENT_BUFFS: {
@@ -232,9 +234,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     // TODO - figure out attacker 
     damage(damage: number, attacker?: GameNode): void {
         if (this.godMode) {
+            //console.log("godmode");
             return;
         }
-        if( !this.invincible && !PlayerState.dashTimer.isStopped()){
+        if( !this.invincible && PlayerState.dashTimer.isStopped()){
+            //console.log("take damage");
             //i frame here
             PlayerController.invincibilityTimer.start();
             this.invincible = true;
@@ -259,6 +263,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 }
             }
             
+        }
+        else{
+            //console.log("player is invincible");
         }
     }
 
@@ -288,7 +295,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
      * @param val optional value to give buff
      * @returns array of three Buffs
      */
-    static generateBuffs( val? : number) : Buff[]{
+    generateBuffs( val? : number) : Buff[]{
         //shuffle pool of buff categories 
         PlayerController.buffPool.sort(() => 0.5 - Math.random());
 
@@ -300,6 +307,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             num = val;
         }
         
+        //TODO - implement better buff genertion - some buffs dont want multiple of
         let attackBuffs : Buff[] = [
             {type:BuffType.RANGE, value:num, category: BuffCategory.ATTACK},
             {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
@@ -315,23 +323,36 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         ];
         
         let shieldBuffs : Buff[] = [
-            {type:BuffType.SHIELD, value:num, category: BuffCategory.SHIELD},
-            {type:BuffType.SHIELD_DMG, value:num, category: BuffCategory.SHIELD},
             {type:BuffType.HEALTH, value:num, category: BuffCategory.SHIELD},
         ];
+        //if player doesnt have shield buff, give them the option, otherwise give buff shield option
+        if(!this.hasShield){
+            shieldBuffs.push({type:BuffType.SHIELD, value:num, category: BuffCategory.SHIELD});
+        }
+        else{
+            shieldBuffs.push({type:BuffType.SHIELD_DMG, value:num, category: BuffCategory.SHIELD});
+        }
+
 
         let healthBuffs : Buff[] = [
-            {type:BuffType.LIFESTEAL, value:num, category: BuffCategory.HEALTH},
-            {type:BuffType.DEF, value:num, category: BuffCategory.HEALTH},
-            {type:BuffType.LIFESTEAL, value:num, category: BuffCategory.HEALTH},   //increase lifesteal
+            {type:BuffType.DEF, value:num, category: BuffCategory.HEALTH}
         ];
+        if(!this.hasLifesteal){
+            shieldBuffs.push({type:BuffType.LIFESTEAL, value:num, category: BuffCategory.HEALTH});
+        }
+        else{
+            shieldBuffs.push({type:BuffType.LIFESTEALBUFF, value:num, category: BuffCategory.HEALTH});
+        }
+
 
         let extraBuffs : Buff[] = [
             {type:BuffType.EXTRALIFE, value:num, category: BuffCategory.EXTRA},
             {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
-            {type:BuffType.ATK, value:num, category: BuffCategory.EXTRA},
-            {type:BuffType.ONESHOT, value:num, category: BuffCategory.EXTRA},
+            {type:BuffType.ATK, value:num, category: BuffCategory.EXTRA}
         ];
+        if(!this.hasOneShot){
+            extraBuffs.push({type:BuffType.ONESHOT, value:num, category: BuffCategory.EXTRA});
+        };
 
 
         let selected = new Array();
