@@ -37,7 +37,7 @@ export default class Tutorial extends GameLevel {
         super.updateScene(deltaT);
         
         //spawn snake()
-        if(Math.random() < .002){
+        if(Math.random() < .001){
             console.log("RANDOM SNAKE!");
             this.addEnemy("Snake", this.player.position.clone().add(new Vec2(0,-320)),{
                 player: this.player,
