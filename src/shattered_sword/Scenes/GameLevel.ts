@@ -110,6 +110,9 @@ export default class GameLevel extends Scene {
     buffButton1 : Button;
     buffButton2 : Button;
     buffButton3 : Button;
+    buffLable1: Label;
+    buffLable2: Label;
+    buffLable3: Label;
     buffs: Array<Buff>;
 
     //pause layer
@@ -609,7 +612,8 @@ export default class GameLevel extends Scene {
 
         //TODO - 
         //determine button location 
-        this.buffButton1 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*2/3-180/2), Math.floor(this.viewport.getHalfSize().y)),text:"buffButton1"});
+        this.buffButton1 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*2/3-180/2), Math.floor(this.viewport.getHalfSize().y)),text:""});
+        this.buffLable1 = <Label>this.add.uiElement(UIElementType.LABEL, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*2/3-180/2), Math.floor(this.viewport.getHalfSize().y)-30),text:"a testing text lable \naaaaaaaaaaaaaaaaaaaaaaaaaaaa"})
         this.buffButton1.size.set(180,200);
         this.buffButton1.borderWidth = 5;
         this.buffButton1.borderColor = Color.RED;
