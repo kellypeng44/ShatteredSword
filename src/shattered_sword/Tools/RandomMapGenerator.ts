@@ -155,7 +155,7 @@ export default class RandomMapGenerator {
         }
         if (!thisEntrance) {
             if (!this.hasExit) {
-                // throw new Error("Wrong order in map template" + facing);
+                throw new Error("Wrong order in map template" + facing);
             }
             return false;
         }
@@ -164,7 +164,7 @@ export default class RandomMapGenerator {
         this.rooms.push(room);
         this.roomPlaced += 1;
         if (this.hasExit && this.gen.random() <= 0.3) {
-            return false;
+            return true;
         }
         for (let entrance of nextRoom.entrances) {
             if (entrance != thisEntrance) {
