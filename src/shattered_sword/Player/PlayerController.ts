@@ -173,9 +173,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         //to test the buffs
         //this.addBuff( {type:BuffType.HEALTH, value:1} );
-        this.addBuff({type:BuffType.BURN, value:1, category:BuffCategory.DOT});
-        this.addBuff({type:BuffType.BLEED, value:1, category:BuffCategory.DOT});
-        this.addBuff({type:BuffType.POISON, value:1, category:BuffCategory.DOT});
+        //this.addBuff({type:BuffType.BURN, value:1, category:BuffCategory.DOT});
+        //this.addBuff({type:BuffType.BLEED, value:1, category:BuffCategory.DOT});
+        //this.addBuff({type:BuffType.POISON, value:1, category:BuffCategory.DOT});
         
         
     }

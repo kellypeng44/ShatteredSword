@@ -276,21 +276,21 @@ export default class GameLevel extends Scene {
                         }
                         else{
                             //this.buffButton1.text = "Increase "+this.buffs[0].type + " by "+this.buffs[0].value;
-                            this.buffLabel1.text = "Increase "+this.buffs[0].type + " by "+this.buffs[0].value;
+                            this.buffLabel1.text = "Increase "+this.buffs[0].type + "\n by \n"+this.buffs[0].value;
                         }
                         
                         if(this.buffs[1].string !== undefined){
                             this.buffLabel2.text = this.buffs[1].string;
                         }
                         else{
-                            this.buffLabel2.text = "Increase "+this.buffs[1].type + " by "+this.buffs[1].value;
+                            this.buffLabel2.text = "Increase "+this.buffs[1].type + "\n by \n"+this.buffs[1].value;
                         }
                         
                         if(this.buffs[2].string !== undefined){
                             this.buffLabel3.text = this.buffs[2].string;
                         }
                         else{
-                            this.buffLabel3.text = "Increase "+this.buffs[2].type + " by "+this.buffs[2].value;
+                            this.buffLabel3.text = "Increase "+this.buffs[2].type + "\n by \n"+this.buffs[2].value;
                         }
                         
                         //pause game here 
@@ -404,7 +404,10 @@ export default class GameLevel extends Scene {
                                 tilemap: "Main",
                                 //actions:actions,
                                 goal: Statuses.REACHED_GOAL,
-
+                                actions: [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
+                                new Move(2, [], [Statuses.IN_RANGE], {inRange: 60})],
+                                status : [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK],
+                                weapon : this.createWeapon("knife")
                                 });
         }
 
@@ -598,7 +601,6 @@ export default class GameLevel extends Scene {
         //TODO - 
         //determine button location 
         this.buffButton1 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*2/3-180/2), Math.floor(this.viewport.getHalfSize().y)),text:""});
-        this.buffLabel1 = <Label>this.add.uiElement(UIElementType.LABEL, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*2/3-180/2), Math.floor(this.viewport.getHalfSize().y)-30),text:"a testing text lable \naaaaaaaaaaaaaaaaaaaaaaaaaaaa"})
         this.buffButton1.size.set(180,200);
         this.buffButton1.borderWidth = 5;
         this.buffButton1.borderColor = Color.RED;
@@ -776,13 +778,13 @@ export default class GameLevel extends Scene {
         (<EnemyAI>enemy._ai).healthBar.color = Color.GREEN;
         (<EnemyAI>enemy._ai).poisonStat = this.add.sprite("poisoning", "primary");
         (<EnemyAI>enemy._ai).poisonStat.position = enemy.collisionShape.center.clone().add(new Vec2((((<AABB>enemy.collisionShape).hw)*-1, -((<AABB>enemy.collisionShape).hh+5))));
-        (<EnemyAI>enemy._ai).poisonStat.scale.set(0.5, 0.5);
+        (<EnemyAI>enemy._ai).poisonStat.scale.set(1, 1);
         (<EnemyAI>enemy._ai).burnStat = this.add.sprite("burning", "primary");
         (<EnemyAI>enemy._ai).burnStat.position = (<EnemyAI>enemy._ai).poisonStat.position.clone().add(new Vec2(15, 0));
-        (<EnemyAI>enemy._ai).burnStat.scale.set(0.5, 0.5);
+        (<EnemyAI>enemy._ai).burnStat.scale.set(1, 1);
         (<EnemyAI>enemy._ai).bleedStat = this.add.sprite("bleeding", "primary");
         (<EnemyAI>enemy._ai).bleedStat.position = (<EnemyAI>enemy._ai).poisonStat.position.clone().add(new Vec2(30, 0));
-        (<EnemyAI>enemy._ai).bleedStat.scale.set(0.5, 0.5);
+        (<EnemyAI>enemy._ai).bleedStat.scale.set(1, 1);
         enemy.setGroup("Enemy");
         enemy.setTrigger("player", Player_Events.PLAYER_COLLIDE, null);
         let actionsDefault = [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),

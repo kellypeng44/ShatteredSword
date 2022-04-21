@@ -229,6 +229,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         super.update(deltaT);
 
         // This is the plan that is executed in the Active state, so whenever we don't have a plan, acquire a new one given the current statuses the enemy has
+        /*
         if (this.plan.isEmpty()) {
             //get a new plan
             if(this.possibleActions === undefined){
@@ -240,7 +241,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
             }
             this.plan = this.planner.plan(Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
         }
-        
+        */
         
         //TODO 
         if(this.burnTimer.isStopped() && this.burnCounter >0){
@@ -288,9 +289,9 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         else {
             this.healthBar.color = Color.RED;
         }
-        this.poisonStat.position = this.owner.collisionShape.center.clone().add(new Vec2(-((<AABB>this.owner.collisionShape).hw)*1.5+5, -((<AABB>this.owner.collisionShape).hh+15)));
-        this.burnStat.position = this.poisonStat.position.clone().add(new Vec2(10, 0));
-        this.bleedStat.position = this.poisonStat.position.clone().add(new Vec2(20, 0));
+        this.poisonStat.position = this.owner.collisionShape.center.clone().add(new Vec2(-((<AABB>this.owner.collisionShape).hw)*1.5+10, -((<AABB>this.owner.collisionShape).hh+15)));
+        this.burnStat.position = this.poisonStat.position.clone().add(new Vec2(15, 0));
+        this.bleedStat.position = this.poisonStat.position.clone().add(new Vec2(30, 0));
         this.poisonStat.visible = this.poisonCounter > 0;
         this.burnStat.visible = this.burnCounter > 0;
         this.bleedStat.visible = this.bleedCounter > 0;
