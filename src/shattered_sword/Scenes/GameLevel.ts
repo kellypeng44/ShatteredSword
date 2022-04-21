@@ -141,6 +141,11 @@ export default class GameLevel extends Scene {
         // Load in item info
         //this.load.object("itemData", "shattered_sword_assets/data/items.json");
 
+        this.load.audio("jump", "shattered_sword_assets/sounds/jump2.wav");
+        this.load.audio("hurt", "shattered_sword_assets/sounds/hurt.wav");
+        this.load.audio("die", "shattered_sword_assets/sounds/die.wav");
+
+
 
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
         this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");

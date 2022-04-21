@@ -83,6 +83,8 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     burnStat: Sprite;
     bleedStat: Sprite;
 
+    attackTimer : Timer;
+
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void { 
         this.owner = owner;
@@ -126,7 +128,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         this.bleedTimer = new Timer(1000);
         this.poisonTimer = new Timer(1000);
 
-        
+        this.attackTimer = new Timer(500);
     }
 
     activate(options: Record<string, any>): void { }
@@ -269,8 +271,9 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         if( distance <= 60){
             if( this.direction ==  Math.sign(this.getPlayerPosition().x -this.owner.position.x) ){
                 let dir = this.getPlayerPosition().clone().sub(this.owner.position).normalize();
-                if(this.weapon.use(this.owner, "enemy", dir.scale(1,0))){
-                    
+                if(this.attackTimer.isPaused()){
+                    this.weapon.use(this.owner, "enemy", dir.scale(1,0))
+                    this.attackTimer.start();
                 }
             }
             

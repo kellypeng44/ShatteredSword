@@ -20,7 +20,7 @@ import InputWrapper from "../Tools/InputWrapper";
 import EnemyAI from "../AI/EnemyAI";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import PlayerState from "./PlayerStates/PlayerState";
-
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 export enum PlayerType {
     PLATFORMER = "platformer",
@@ -266,6 +266,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 (<AnimatedSprite>this.owner).animation.play("HURT" );
                 damage /= this.BASE_DEF/ this.CURRENT_DEF;
                 this.CURRENT_HP -= damage;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hurt", loop: false, holdReference: false});
+
                 //if player has shield buff give them shield when damaged
                 if(this.hasShield){
                     this.CURRENT_SHIELD += damage * .5;
