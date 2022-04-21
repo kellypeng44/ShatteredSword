@@ -11,12 +11,15 @@ export default class Rect extends Graphic {
     /** The width of the border */
     borderWidth: number;
 
+    fillWidth: number;
+
     constructor(position: Vec2, size: Vec2){
         super();
         this.position = position;
         this.size = size;
         this.borderColor = Color.TRANSPARENT;
         this.borderWidth = 0;
+        this.fillWidth = null;
     }
 
     /**

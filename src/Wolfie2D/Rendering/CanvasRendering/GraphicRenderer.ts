@@ -59,7 +59,11 @@ export default class GraphicRenderer {
         // Draw the interior of the rect
         if(rect.color.a !== 0){
             this.ctx.fillStyle = rect.color.toStringRGB();
-            this.ctx.fillRect((-rect.size.x/2)*zoom, (-rect.size.y/2)*zoom, rect.size.x*zoom, rect.size.y*zoom);
+            if (rect.fillWidth !== null) {
+                this.ctx.fillRect((-rect.size.x/2)*zoom, (-rect.size.y/2)*zoom, rect.fillWidth*zoom, rect.size.y*zoom);
+            } else {
+                this.ctx.fillRect((-rect.size.x/2)*zoom, (-rect.size.y/2)*zoom, rect.size.x*zoom, rect.size.y*zoom);
+            }
         }
 
         // Draw the border of the rect if it isn't transparent

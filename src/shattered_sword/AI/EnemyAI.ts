@@ -25,6 +25,8 @@ import { Player_Events } from "../sword_enums";
 import InputWrapper from "../Tools/InputWrapper";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import PlayerController from "../Player/PlayerController";
+import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
+import Color from "../../Wolfie2D/Utils/Color";
 export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     /** The owner of this AI */
     owner: AnimatedSprite;
@@ -75,6 +77,8 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
     bleedTimer : Timer;
     bleedCounter :number = 0;
+
+    healthBar: Rect;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void { 
@@ -141,6 +145,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
             this.owner.setAIActive(false, {});
             this.owner.isCollidable = false;
             this.owner.visible = false;
+            this.healthBar.destroy();
 
             this.emitter.fireEvent(Player_Events.ENEMY_KILLED, {owner: this.owner.id, ai:this});
 
@@ -269,6 +274,17 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         
 
 
+        this.healthBar.position = this.owner.collisionShape.center.clone().add(new Vec2(0, -((<AABB>this.owner.collisionShape).hh+5)));
+        this.healthBar.fillWidth = this.CURRENT_HP/this.maxHealth * this.owner.collisionShape.hw * 3;
+        if (this.CURRENT_HP/this.maxHealth >= 2/3) {
+            this.healthBar.color = Color.GREEN;
+        }
+        else if (this.CURRENT_HP/this.maxHealth >= 1/3) {
+            this.healthBar.color = Color.YELLOW;
+        }
+        else {
+            this.healthBar.color = Color.RED;
+        }
     }
 }
 
