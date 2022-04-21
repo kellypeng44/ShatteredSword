@@ -450,7 +450,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.hasBleed = true;
                 break;
             case BuffType.BURN:
-                this.hasBleed = true;
+                this.hasBurn = true;
                 break;
             case BuffType.POISON:
                 this.hasPoison = true;
