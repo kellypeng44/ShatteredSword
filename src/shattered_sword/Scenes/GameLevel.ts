@@ -80,6 +80,10 @@ export default class GameLevel extends Scene {
     protected shieldLabel : Label;
     protected shieldBar: Rect;
 
+    protected poisonStat: Sprite;
+    protected burnStat: Sprite;
+    protected bleedStat: Sprite;
+
     //seed UI
     protected seedLabel: Label;   
 
@@ -139,6 +143,9 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
         this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
         this.load.image("black", "shattered_sword_assets/images/black.png");
+        this.load.image("poisoning", "shattered_sword_assets/images/poisoning.png");
+        this.load.image("burning", "shattered_sword_assets/images/burning.png");
+        this.load.image("bleeding", "shattered_sword_assets/images/bleeding.png");
   
         this.load.spritesheet("test_dummy","shattered_sword_assets/spritesheets/test_dummy.json")
         this.enemies = new Array();
@@ -343,7 +350,7 @@ export default class GameLevel extends Scene {
         let playerAI = (<PlayerController>this.player.ai);
         this.healthLabel.text = "Health: "+ playerAI.CURRENT_HP +'/' + (playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp );
         this.healthBar.size.set(playerAI.MAX_HP*2, 10);
-        this.healthBar.position.set(playerAI.MAX_HP+50, 20);
+        this.healthBar.position.set(playerAI.MAX_HP+50, 40);
         this.healthBar.fillWidth = playerAI.CURRENT_HP*2;
         if (playerAI.CURRENT_HP/playerAI.MAX_HP >= 2/3) {
             this.healthBar.color = Color.GREEN;
@@ -362,7 +369,7 @@ export default class GameLevel extends Scene {
         //update shield ui
         this.shieldLabel.text = "Shield: "+ playerAI.CURRENT_SHIELD +'/' + (playerAI.MAX_SHIELD);
         this.shieldBar.size.set(playerAI.CURRENT_SHIELD*2, 10);
-        this.shieldBar.position.set(playerAI.CURRENT_SHIELD+50, 60);
+        this.shieldBar.position.set(playerAI.CURRENT_SHIELD+50, 70);
         // this.shieldLabel.sizeToText();
 
         //update exp ui
@@ -489,27 +496,37 @@ export default class GameLevel extends Scene {
      */
     protected addUI(){
         // In-game labels
-        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 40), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
+        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 55), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
         this.healthLabel.size.set(200, 50);
         this.healthLabel.setHAlign(HAlign.LEFT);
         this.healthLabel.textColor = Color.GREEN;
         this.healthLabel.font = "PixelSimple";
-        this.healthBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 20), size: new Vec2(400, 10)});
+        this.healthBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 40), size: new Vec2(400, 10)});
         this.healthBar.borderColor = Color.BLACK;
         this.healthBar.borderWidth = 3;
         this.healthBar.color = Color.GREEN;
 
-        this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 80), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
+        // this.poisonStat = this.add.sprite("poisoning", "UI");
+        // this.poisonStat.position.set(55, 25);
+        // this.poisonStat.scale.set(0.3, 0.3);
+        // this.burnStat = this.add.sprite("burning", "UI");
+        // this.burnStat.position.set(70, 25);
+        // this.burnStat.scale.set(0.3, 0.3);
+        // this.bleedStat = this.add.sprite("bleeding", "UI");
+        // this.bleedStat.position.set(85, 25);
+        // this.bleedStat.scale.set(0.3, 0.3);
+
+        this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 85), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
         this.shieldLabel.size.set(200, 50);
         this.shieldLabel.setHAlign(HAlign.LEFT);
         this.shieldLabel.textColor = Color.ORANGE;
         this.shieldLabel.font = "PixelSimple";
-        this.shieldBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 60), size: new Vec2(400, 10)});
+        this.shieldBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 70), size: new Vec2(400, 10)});
         this.shieldBar.borderColor = Color.BLACK;
         this.shieldBar.borderWidth = 3;
         this.shieldBar.color = Color.ORANGE;
 
-        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 120), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
+        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 115), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
         this.expLabel.size.set(200, 50);
         this.expLabel.setHAlign(HAlign.LEFT);
         this.expLabel.textColor = Color.BLUE;
@@ -763,6 +780,15 @@ export default class GameLevel extends Scene {
         (<EnemyAI>enemy._ai).healthBar.borderColor = Color.BLACK;
         (<EnemyAI>enemy._ai).healthBar.borderWidth = 1;
         (<EnemyAI>enemy._ai).healthBar.color = Color.GREEN;
+        (<EnemyAI>enemy._ai).poisonStat = this.add.sprite("poisoning", "primary");
+        (<EnemyAI>enemy._ai).poisonStat.position = enemy.collisionShape.center.clone().add(new Vec2((((<AABB>enemy.collisionShape).hw)*-1, -((<AABB>enemy.collisionShape).hh+5))));
+        (<EnemyAI>enemy._ai).poisonStat.scale.set(0.2, 0.2);
+        (<EnemyAI>enemy._ai).burnStat = this.add.sprite("burning", "primary");
+        (<EnemyAI>enemy._ai).burnStat.position = (<EnemyAI>enemy._ai).poisonStat.position.clone().add(new Vec2(15, 0));
+        (<EnemyAI>enemy._ai).burnStat.scale.set(0.2, 0.2);
+        (<EnemyAI>enemy._ai).bleedStat = this.add.sprite("bleeding", "primary");
+        (<EnemyAI>enemy._ai).bleedStat.position = (<EnemyAI>enemy._ai).poisonStat.position.clone().add(new Vec2(30, 0));
+        (<EnemyAI>enemy._ai).bleedStat.scale.set(0.2, 0.2);
         enemy.setGroup("Enemy");
         enemy.setTrigger("player", Player_Events.PLAYER_COLLIDE, null);
         let actionsDefault = [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
