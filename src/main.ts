@@ -18,11 +18,11 @@ import WeaponTypeRegistry from "./shattered_sword/Registry/WeaponTypeRegistry";
         inputs: [
             {name: "left", keys: ["a", "arrowleft"]},    //TODO - add arrow keys
             {name: "right", keys: ["d", "arrowright"]},
-            {name: "up", keys: ["w"]},
-            {name: "down", keys: ["s"]},
-            {name: "jump", keys: ["x","space"]},
-            {name: "attack", keys: ["j","z","enter"]},  
-            {name: "dash", keys: ["k","x"]},    //
+            {name: "up", keys: ["w", "arrowup"]},
+            {name: "down", keys: ["s", "arrowdown"]},
+            {name: "jump", keys: ["z", "space"]},
+            {name: "attack", keys: ["j","x","enter"]},  
+            {name: "dash", keys: ["k","c"]},    //
             {name: "skill", keys: ["l","v"]},
             {name: "inventory", keys: ["i","b"]},
             {name: "pause", keys: ["escape"]},    
