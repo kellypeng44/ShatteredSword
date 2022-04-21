@@ -41,6 +41,9 @@ export default class BattleManager {
                         if(player.hasDoubleStrike){
                             enemy.damage(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/200);
                         }
+                        if(player.hasLifesteal){
+                            player.addHealth(weapon.type.damage * player.CURRENT_ATK/100 * player.lifestealratio);
+                        }
                     }
                 }
             }
