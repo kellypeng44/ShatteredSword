@@ -79,6 +79,9 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     bleedCounter :number = 0;
 
     healthBar: Rect;
+    poisonStat: Sprite;
+    burnStat: Sprite;
+    bleedStat: Sprite;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void { 
@@ -285,6 +288,12 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         else {
             this.healthBar.color = Color.RED;
         }
+        this.poisonStat.position = this.owner.collisionShape.center.clone().add(new Vec2(-((<AABB>this.owner.collisionShape).hw)*1.5+5, -((<AABB>this.owner.collisionShape).hh+15)));
+        this.burnStat.position = this.poisonStat.position.clone().add(new Vec2(10, 0));
+        this.bleedStat.position = this.poisonStat.position.clone().add(new Vec2(20, 0));
+        this.poisonStat.visible = this.poisonCounter > 0;
+        this.burnStat.visible = this.burnCounter > 0;
+        this.bleedStat.visible = this.bleedCounter > 0;
     }
 }
 
