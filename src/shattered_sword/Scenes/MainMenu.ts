@@ -73,6 +73,15 @@ export default class MainMenu extends Scene {
         about.backgroundColor = Color.TRANSPARENT;
         about.onClickEventId = "about";
 
+        // Add about button
+        const form = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y + 200), text: "Google Form"});
+        form.size.set(200, 50);
+        form.borderWidth = 2;
+        form.borderColor = Color.WHITE;
+        form.backgroundColor = Color.TRANSPARENT;
+        form.onClick = function() {
+            window.open("https://forms.gle/Ku7RmUdNn7b9m5ch6");
+        };
         
         // Add control button, and give it an event to emit on press
         const control = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y), text: "Controls"});
