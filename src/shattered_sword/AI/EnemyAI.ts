@@ -150,8 +150,23 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
             this.owner.setAIActive(false, {});
             this.owner.isCollidable = false;
             this.owner.visible = false;
-            this.healthBar.destroy();
-
+            if (this.healthBar) {
+                this.healthBar.destroy();
+                this.healthBar = undefined;
+            }
+            if (this.poisonStat) {
+                this.poisonStat.destroy();
+                this.poisonStat = undefined;
+            }
+            if (this.burnStat) {
+                this.burnStat.destroy();
+                this.burnStat = undefined;
+            }
+            if (this.bleedStat) {
+                this.bleedStat.destroy();
+                this.bleedStat = undefined;
+            }
+            
             this.emitter.fireEvent(Player_Events.ENEMY_KILLED, {owner: this.owner.id, ai:this});
 
 
@@ -281,23 +296,31 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         
 
 
-        this.healthBar.position = this.owner.collisionShape.center.clone().add(new Vec2(0, -((<AABB>this.owner.collisionShape).hh+5)));
-        this.healthBar.fillWidth = this.CURRENT_HP/this.maxHealth * this.owner.collisionShape.hw * 3;
-        if (this.CURRENT_HP/this.maxHealth >= 2/3) {
-            this.healthBar.color = Color.GREEN;
+        if (this.healthBar) {
+            this.healthBar.position = this.owner.collisionShape.center.clone().add(new Vec2(0, -((<AABB>this.owner.collisionShape).hh+5)));
+            this.healthBar.fillWidth = this.CURRENT_HP/this.maxHealth * this.owner.collisionShape.hw * 3;
+            if (this.CURRENT_HP/this.maxHealth >= 2/3) {
+                this.healthBar.color = Color.GREEN;
+            }
+            else if (this.CURRENT_HP/this.maxHealth >= 1/3) {
+                this.healthBar.color = Color.YELLOW;
+            }
+            else {
+                this.healthBar.color = Color.RED;
+            }
         }
-        else if (this.CURRENT_HP/this.maxHealth >= 1/3) {
-            this.healthBar.color = Color.YELLOW;
+        if (this.poisonStat) {
+            this.poisonStat.position = this.owner.collisionShape.center.clone().add(new Vec2(-((<AABB>this.owner.collisionShape).hw)*1.5+10, -((<AABB>this.owner.collisionShape).hh+15)));
+            this.poisonStat.visible = this.poisonCounter > 0;
         }
-        else {
-            this.healthBar.color = Color.RED;
+        if (this.burnStat) {
+            this.burnStat.position = this.poisonStat.position.clone().add(new Vec2(15, 0));
+            this.burnStat.visible = this.burnCounter > 0;
         }
-        this.poisonStat.position = this.owner.collisionShape.center.clone().add(new Vec2(-((<AABB>this.owner.collisionShape).hw)*1.5+10, -((<AABB>this.owner.collisionShape).hh+15)));
-        this.burnStat.position = this.poisonStat.position.clone().add(new Vec2(15, 0));
-        this.bleedStat.position = this.poisonStat.position.clone().add(new Vec2(30, 0));
-        this.poisonStat.visible = this.poisonCounter > 0;
-        this.burnStat.visible = this.burnCounter > 0;
-        this.bleedStat.visible = this.bleedCounter > 0;
+        if (this.bleedStat) {
+            this.bleedStat.position = this.poisonStat.position.clone().add(new Vec2(30, 0));
+            this.bleedStat.visible = this.bleedCounter > 0;
+        }   
     }
 }
 
