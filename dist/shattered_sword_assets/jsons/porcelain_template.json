@@ -10,7 +10,7 @@
    "spacing":0,
    "name":"porcelain_tileset",
    "image":"shattered_sword_assets/tilemaps/porcelain_tileset.png",
-   "background": 3,
+   "background": 4,
    "minroom": 10,
    "entrance": {
       "width": 30,
