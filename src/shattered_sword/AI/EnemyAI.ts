@@ -105,14 +105,9 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         this.planner = new GoapActionPlanner();
 
         //TODO - get correct tilemap
-        //this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
         this.tilemap = <OrthogonalTilemap>this.owner.getScene().getLayer("Wall").getItems()[0];
-        //this.tilemap = <OrthogonalTilemap>this.owner.getScene().getTilemap("Main");
-
         // Initialize to the default state
         this.initialize(EnemyStates.DEFAULT);
-
-        //this.getPlayerPosition();
 
         this.direction = 1; //default moving to the right
 
@@ -158,9 +153,9 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     }
 
     //TODO - need to modify for side view
-    /*
+    
     isPlayerVisible(pos: Vec2): Vec2{
-        //Check if one player is visible, taking into account walls
+        //Check ifplayer is visible, taking into account walls
 
         // Get the new player location
         let start = this.owner.position.clone();
@@ -173,7 +168,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         let maxY = Math.max(start.y, pos.y);
 
         // Get the wall tilemap
-        let walls = <OrthogonalTilemap>this.owner.getScene().getLayer("Wall").getItems()[0];
+        let walls = this.tilemap
 
         let minIndex = walls.getColRowAt(new Vec2(minX, minY));
         let maxIndex = walls.getColRowAt(new Vec2(maxX, maxY));
@@ -193,6 +188,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
                     if (hit !== null && start.distanceSqTo(hit.pos) < start.distanceSqTo(pos)) {
                         // We hit a wall, we can't see the player
+                        console.log("player not visible")
                         return null;
                     }
                 }
@@ -201,10 +197,21 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
         return pos;
     }
-    */
+    
 
     
 
+    /**
+     * gets the position of the player
+     * @returns position of the player if visible, else null
+     */
+    getPlayerPosition(): Vec2 {
+        //TODO - check if player is visible
+        if(this.isPlayerVisible(this.player.position))
+            return this.player.position;
+        else    
+            return null;
+    }
     update(deltaT: number){
         if (InputWrapper.getState() != GameState.GAMING) {
             this.owner.animation.pause();
@@ -214,12 +221,18 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         super.update(deltaT);
 
         // This is the plan that is executed in the Active state, so whenever we don't have a plan, acquire a new one given the current statuses the enemy has
-        /*
         if (this.plan.isEmpty()) {
             //get a new plan
+            if(this.possibleActions === undefined){
+                console.log("undefined possiblse actions");
+            }
+
+            if(this.currentState === undefined){
+                console.log("undefined current status");
+            }
             this.plan = this.planner.plan(Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
         }
-        */
+        
         
         //TODO 
         if(this.burnTimer.isStopped() && this.burnCounter >0){
@@ -237,6 +250,25 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
             this.bleedTimer.start();
             this.damage(5 + (<PlayerController>this.player._ai).extraDotDmg + (<PlayerController>this.player._ai).CURRENT_ATK * .08);
         }
+
+
+        //TODO - GOAP NOT WORKING, ATTACK WORKAROUND
+        if(this.getPlayerPosition() ==  null){
+            return;
+        }
+        let distance = this.owner.position.distanceTo(this.getPlayerPosition());
+        if( distance <= 60){
+            if( this.direction ==  Math.sign(this.getPlayerPosition().x -this.owner.position.x) ){
+                let dir = this.getPlayerPosition().clone().sub(this.owner.position).normalize();
+                if(this.weapon.use(this.owner, "enemy", dir.scale(1,0))){
+                    
+                }
+            }
+            
+        }
+        
+
+
     }
 }
 

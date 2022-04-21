@@ -36,8 +36,9 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Platformer from "../../demos/Platformer";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 import { TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
-
-
+import AttackAction from "../AI/EnemyActions/AttackAction";
+import Move from "../AI/EnemyActions/Move";
+import GameOver from "./GameOver";
 
 //  TODO
 /**
@@ -262,7 +263,7 @@ export default class GameLevel extends Scene {
                         else{
                             this.buffButton1.text = "Increase "+this.buffs[0].type + " by "+this.buffs[0].value;
                         }
-
+                        
                         if(this.buffs[1].string !== undefined){
                             this.buffButton2.text = this.buffs[1].string;
                         }
@@ -286,7 +287,12 @@ export default class GameLevel extends Scene {
                         console.log("player Died");
                         (<AnimatedSprite>this.player).animation.play("DEAD", false);
                         InputWrapper.disableInput();
-                        this.respawnPlayer();
+                        if((<PlayerController>this.player._ai).lives >0){
+                            this.respawnPlayer();
+                        }
+                        else{ //no more lives
+                            this.sceneManager.changeToScene(GameOver, {});
+                        }
                         break;
                 }
             }
@@ -343,10 +349,6 @@ export default class GameLevel extends Scene {
         this.expLabel.text = "EXP: "+ playerAI.CURRENT_EXP +'/' + (playerAI.MAX_EXP);
         // this.expLabel.sizeToText();
 
-        
-
-    
-        //handle collisions - may be in battle manager instead
 
         //move background
 
@@ -379,6 +381,24 @@ export default class GameLevel extends Scene {
         }
 
 
+
+        //spawn snake()
+        if(Math.random() < .002){
+            console.log("RANDOM SNAKE!");
+            this.addEnemy("Snake", this.player.position.clone().add(new Vec2(0,-320)),{
+                player: this.player,
+                        health: 50,
+                        tilemap: "Main",
+                        goal: Statuses.REACHED_GOAL,
+                        size: new Vec2(16,16),
+                        offset : new Vec2(0, 16),
+                        exp: 50,
+                        actions: [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
+                        new Move(2, [], [Statuses.IN_RANGE], {inRange: 60})],
+                        status : [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK],
+                        weapon : this.createWeapon("knife")
+            })
+        }
     }
 
     // TODO put UI changes in here
@@ -403,7 +423,7 @@ export default class GameLevel extends Scene {
         // Add a layer for players and enemies
         this.addLayer("primary", 1);
 
-        this.buffLayer = this.addUILayer("buffLayer");   //TODO - test depth later, may be just a regular Layer
+        this.buffLayer = this.addUILayer("buffLayer");  
     
 
         this.storyLayer = this.addUILayer("story");
@@ -708,7 +728,19 @@ export default class GameLevel extends Scene {
         enemy.addAI(EnemyAI, aiOptions); //TODO - add individual enemy AI
         enemy.setGroup("Enemy");
         enemy.setTrigger("player", Player_Events.PLAYER_COLLIDE, null);
-        
+        let actionsDefault = [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
+        new Move(2, [], [Statuses.IN_RANGE], {inRange: 60}),
+        ];
+
+        let statusArray : Array<string> = [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK];
+
+        //TODO - not working correctly
+        if ( "status" !in aiOptions ){
+            aiOptions["status"] = statusArray;
+        }
+        if( "actions"  !in aiOptions){
+            aiOptions["actions"] = actionsDefault;
+        }
         //add enemy to the enemy array
         this.enemies.push(enemy);
         //this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
@@ -716,7 +748,16 @@ export default class GameLevel extends Scene {
     }
     
 
+    //TODO - give each enemy unique weapon
     protected initializeEnemies( enemies: Enemy[]){
+
+
+        let actionsDefault = [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
+        new Move(2, [], [Statuses.IN_RANGE], {inRange: 60}),
+        ];
+
+        let statusArray : Array<string> = [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK];
+        
         for (let enemy of enemies) {
             switch (enemy.type) {
                 case "test_dummy":
@@ -724,11 +765,12 @@ export default class GameLevel extends Scene {
                         player: this.player,
                         health: 100,
                         tilemap: "Main",
-                        //actions:actions,
+                        actions: actionsDefault,
+                        status: statusArray,
                         goal: Statuses.REACHED_GOAL,
-                        //TODO - test Add collision shape for each enemy type
                         //size: new AABB(Vec2.ZERO, new Vec2(16, 25)),
-                        exp: 100
+                        exp: 100,
+                        weapon : this.createWeapon("knife")
                     })
                     break;
                 case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
@@ -736,11 +778,13 @@ export default class GameLevel extends Scene {
                         player: this.player,
                         health: 50,
                         tilemap: "Main",
-                        //actions:actions,
+                        actions: actionsDefault,
+                        status: statusArray,
                         goal: Statuses.REACHED_GOAL,
                         size: new Vec2(16,16),
                         offset : new Vec2(0, 16),
-                        exp: 50
+                        exp: 50,
+                        weapon : this.createWeapon("knife"),
                     })
                     break;
                 case "Tiger":       //Tiger can be miniboss for now? 
@@ -748,9 +792,11 @@ export default class GameLevel extends Scene {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",
-                        //actions:actions,
                         goal: Statuses.REACHED_GOAL,
-                        exp: 100
+                        exp: 100,
+                        weapon : this.createWeapon("knife"),
+                        actions: actionsDefault,
+                        status: statusArray,
                     })
                     break;
 
@@ -761,7 +807,10 @@ export default class GameLevel extends Scene {
                         tilemap: "Main",
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
-                        exp: 50
+                        exp: 50,
+                        weapon : this.createWeapon("knife"),
+                        actions: actionsDefault,
+                        status: statusArray,
                     })
                     break;
                 case "black_pudding":       
@@ -774,7 +823,10 @@ export default class GameLevel extends Scene {
                         scale: .25,
                         size: new Vec2(16,16),
                         offset : new Vec2(0,0),
-                        exp: 50
+                        exp: 50,
+                        weapon : this.createWeapon("knife"),
+                        actions: actionsDefault,
+                        status: statusArray,
                     })
                     break;
                 default:
@@ -831,6 +883,8 @@ export default class GameLevel extends Scene {
         InputWrapper.enableInput();
         this.player.position.copy(this.startpos);
         (<PlayerController>this.player._ai).CURRENT_HP = (<PlayerController>this.player._ai).MAX_HP + (<PlayerController>this.player._ai).CURRENT_BUFFS.hp;
+        (<PlayerController>this.player._ai).lives --;
+
     }
 
 
@@ -848,6 +902,7 @@ export default class GameLevel extends Scene {
 
             //TODO - decrease player health or can kill player here
             //(<PlayerController>this.player._ai).CURRENT_HP *= .75;
+            //this.emitter.fireEvent(Player_Events.PLAYER_KILLED);
 		}
         
     }

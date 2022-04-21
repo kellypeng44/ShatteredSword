@@ -42,23 +42,15 @@ export default class Patrol extends EnemyState {
         //check if next tile on walking path is collidable
         if(this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y) || this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y-1)){
             //turn around
-            //console.log(this.parent.tilemap.getTileAtRowCol(colrow));
-            this.parent.direction *= -1;
-            //console.log((<Sprite>this.owner).invertX);
-            //(<Sprite>this.owner).invertX != (<Sprite>this.owner).invertX ;
-            //console.log("turn around cus wall in front");
+             this.parent.direction *= -1;
         }
         //check if next ground tile is collidable 
         else if(!this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y+1)){
             //turn around 
             this.parent.direction *=-1;
-            //console.log((<Sprite>this.owner).invertX);
-            //console.log("turn around cus no floor in front");
         }
         else{
             //keep moving
-            //this.velocity.x =  this.speed;
-            //console.log("there is floor ahead");
         }
         //move
         this.parent.velocity.x = this.parent.direction * this.parent.speed;

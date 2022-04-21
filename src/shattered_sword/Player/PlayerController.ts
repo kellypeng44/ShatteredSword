@@ -52,7 +52,8 @@ export enum BuffType {
     LIFESTEAL = "lifesteal",
     LIFESTEALBUFF = "lifestealbuff",
     EXTRALIFE= "extralife",
-    ONESHOT = "oneshot"
+    ONESHOT = "oneshot",
+    JUMP = "jump"
 }
 
 
@@ -128,6 +129,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     lifestealratio : number = 0; //percent of damage to steal
     hasOneShot: Boolean = false;
     extraDotDmg : number =0;
+    lives: number = 1;
+    cooldownMultiplier : number = 1;
 
     //TODO - add new buffs here
     CURRENT_BUFFS: {
@@ -138,8 +141,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         range:number;   //range will be a multiplier value: 1.5 = 150% range
     }
     
-    
-    
+
 
     //TODO - get the correct tilemap
     initializeAI(owner: GameNode, options: Record<string, any>){
@@ -260,6 +262,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.invincible = true;
                 //console.log("hurt anim");
                 (<AnimatedSprite>this.owner).animation.play("HURT" );
+                damage /= this.BASE_DEF/ this.CURRENT_DEF;
                 this.CURRENT_HP -= damage;
                 //if player has shield buff give them shield when damaged
                 if(this.hasShield){
@@ -276,6 +279,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if(this.CURRENT_HP <= 0){
             (<AnimatedSprite>this.owner).animation.play("DYING");
             (<AnimatedSprite>this.owner).animation.queue("DEAD", true, Player_Events.PLAYER_KILLED);
+            this.emitter.fireEvent(Player_Events.PLAYER_KILLED);
         }
     }
 
@@ -331,14 +335,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
         ];
         if(!this.hasDoubleStrike){
-            attackBuffs.push({type:BuffType.DOUBLESTRIKE, value:num, category: BuffCategory.ATTACK, string:"your attacks are followed by a weaker strike"});
+            attackBuffs.push({type:BuffType.DOUBLESTRIKE, value:num, category: BuffCategory.ATTACK, string:"your attacks are \nfollowed by a \nweaker strike"});
         }
 
         let dotBuffs : Buff[] = [
-            {type:BuffType.BLEED, value:1, category: BuffCategory.DOT, string: "Your hits apply Bleed"},
-            {type:BuffType.BURN, value:1, category: BuffCategory.DOT, string: "Your hits apply Burn"},
-            {type:BuffType.POISON, value:1, category: BuffCategory.DOT, string: "Your hits apply poison"},
-            {type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "increase your DOT damage"},
+            {type:BuffType.BLEED, value:1, category: BuffCategory.DOT, string: "Your hits \napply Bleed"},
+            {type:BuffType.BURN, value:1, category: BuffCategory.DOT, string: "Your hits \napply Burn"},
+            {type:BuffType.POISON, value:1, category: BuffCategory.DOT, string: "Your hits \napply poison"},
+            {type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "increase your \nDOT damage"},
 
         ];
         
@@ -347,10 +351,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         ];
         //if player doesnt have shield buff, give them the option, otherwise give buff shield option
         if(!this.hasShield){
-            shieldBuffs.push({type:BuffType.SHIELD, value:1, category: BuffCategory.SHIELD, string: "Gain Shield When Damaged"});
+            shieldBuffs.push({type:BuffType.SHIELD, value:1, category: BuffCategory.SHIELD, string: "Gain Shield \nWhen Damaged \n Shields return \nthe damage taken \nto attacker"});
         }
         else{
-            shieldBuffs.push({type:BuffType.SHIELD_DMG, value:num, category: BuffCategory.SHIELD});
+            shieldBuffs.push({type:BuffType.SHIELD_DMG, value:num, category: BuffCategory.SHIELD, string: "increase damage \nreturned by shield"});
         }
 
 
@@ -361,17 +365,17 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             healthBuffs.push({type:BuffType.LIFESTEAL, value:1, category: BuffCategory.HEALTH, string:"Gain lifesteal"});
         }
         else{
-            healthBuffs.push({type:BuffType.LIFESTEALBUFF, value:num, category: BuffCategory.HEALTH});
+            healthBuffs.push({type:BuffType.LIFESTEALBUFF, value:num/10, category: BuffCategory.HEALTH, string:"Increase Lifesteal \nstrength by "+ num+ "%"});
         }
 
 
         let extraBuffs : Buff[] = [
-            {type:BuffType.EXTRALIFE, value:1, category: BuffCategory.EXTRA, string: "Gain an Extra Life"},
+            {type:BuffType.EXTRALIFE, value:1, category: BuffCategory.EXTRA, string: "Gain an \nExtra Life"},
             {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
             {type:BuffType.ATK, value:num, category: BuffCategory.EXTRA}
         ];
         if(!this.hasOneShot){
-            extraBuffs.push({type:BuffType.ONESHOT, value:1, category: BuffCategory.EXTRA, string: "Your hits hurt 100x more but you die in one shot"});
+            extraBuffs.push({type:BuffType.ONESHOT, value:1, category: BuffCategory.EXTRA, string: "Your hits hurt \n100x more but \nyour max health \nis set to 1 "});
         };
 
 
@@ -460,20 +464,26 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
             case BuffType.ATKSPEED:
                 if (item) {
+                    this.cooldownMultiplier -= buff.value;
                     //reduce cooldowntimer 
-                    //(<Weapon>item).cooldownTimer 
+                    (<Weapon>item).cooldownTimer = new Timer((<Weapon>item).cooldown * this.cooldownMultiplier )
                 }
                 break;
             case BuffType.DOUBLESTRIKE:
+                //TODO - 
                 break;
             case BuffType.SHIELD_DMG:
                 this.shieldDamage += buff.value/10 ;
                 break;
             case BuffType.EXTRALIFE:
-
+                this.lives ++;
                 break;
             case BuffType.LIFESTEAL:
                 this.hasLifesteal = true;
+                this.lifestealratio = .2; //20% lifesteal
+                break;
+            case BuffType.LIFESTEALBUFF:
+                this.lifestealratio += buff.value;
                 break;
             case BuffType.ONESHOT:
                 this.MAX_HP = 1;

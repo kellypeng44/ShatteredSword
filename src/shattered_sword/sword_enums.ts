@@ -23,7 +23,8 @@ export enum Statuses {
     IN_RANGE = "IN_RANGE",
     LOW_HEALTH = "LOW_HEALTH",
     CAN_RETREAT = "CAN_RETREAT",
-    REACHED_GOAL = "GOAL"
+    REACHED_GOAL = "GOAL",
+    CAN_BERSERK = "CAN_BERSERK"
 }
 
 export enum GameState {

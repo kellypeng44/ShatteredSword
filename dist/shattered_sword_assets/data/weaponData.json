@@ -8,7 +8,7 @@
             "animationSprite": "slice",
             "spriteKey": "knife",
             "damage": 50,
-            "cooldown": 3,
+            "cooldown": 30,
             "useVolume": 0
         }
     ]
