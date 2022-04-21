@@ -26,56 +26,21 @@ export default class Levels extends Scene {
         this.primary = this.addUILayer("primary");
 
         
-        const tutorial = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 200), text: "tutorial "});
+        const tutorial = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 50), text: "tutorial "});
         tutorial.size.set(200, 50);
         tutorial.borderWidth = 2;
         tutorial.borderColor = Color.WHITE;
         tutorial.backgroundColor = Color.TRANSPARENT;
         tutorial.onClickEventId = "tutorial";
 
-        const porcelain = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 150), text: "porcelain"});
+        const porcelain = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y), text: "porcelain"});
         porcelain.size.set(200, 50);
         porcelain.borderWidth = 2;
         porcelain.borderColor = Color.WHITE;
         porcelain.backgroundColor = Color.TRANSPARENT;
         porcelain.onClickEventId = "porcelain";
 
-        const level2 = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 100), text: "level 2"});
-        level2.size.set(200, 50);
-        level2.borderWidth = 2;
-        level2.borderColor = Color.WHITE;
-        level2.backgroundColor = Color.TRANSPARENT;
-        level2.onClickEventId = "level2";
-
-        const level3 = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 50), text: "level 3"});
-        level3.size.set(200, 50);
-        level3.borderWidth = 2;
-        level3.borderColor = Color.WHITE;
-        level3.backgroundColor = Color.TRANSPARENT;
-        level3.onClickEventId = "level3";
-
-        const level4 = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y ), text: "level 4"});
-        level4.size.set(200, 50);
-        level4.borderWidth = 2;
-        level4.borderColor = Color.WHITE;
-        level4.backgroundColor = Color.TRANSPARENT;
-        level4.onClickEventId = "level4";
-
-        const level5 = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 50), text: "level 5"});
-        level5.size.set(200, 50);
-        level5.borderWidth = 2;
-        level5.borderColor = Color.WHITE;
-        level5.backgroundColor = Color.TRANSPARENT;
-        level5.onClickEventId = "level5";
-
-        const StorySceneTester = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 100), text: "StorySceneTester"});
-        StorySceneTester.size.set(200, 50);
-        StorySceneTester.borderWidth = 2;
-        StorySceneTester.borderColor = Color.WHITE;
-        StorySceneTester.backgroundColor = Color.TRANSPARENT;
-        StorySceneTester.onClickEventId = "StorySceneTester";
-
-        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 250), text: "Back"});
+        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 50), text: "Back"});
         back.size.set(200, 50);
         back.borderWidth = 2;
         back.borderColor = Color.WHITE;
@@ -84,11 +49,6 @@ export default class Levels extends Scene {
         
         this.receiver.subscribe("tutorial");
         this.receiver.subscribe("porcelain");
-        this.receiver.subscribe("level2");
-        this.receiver.subscribe("level3");
-        this.receiver.subscribe("level4");
-        this.receiver.subscribe("level5");
-        this.receiver.subscribe("StorySceneTester");
         this.receiver.subscribe("back");
     }
 
@@ -128,23 +88,6 @@ export default class Levels extends Scene {
                 }
                 this.sceneManager.changeToScene(Porcelain, {}, sceneOptions);
             }
-
-            if(event.type === "level2"){
-                this.sceneManager.changeToScene(MainMenu, {});
-            }
-
-            if(event.type === "level3"){
-                this.sceneManager.changeToScene(MainMenu, {});
-            }
-
-            if(event.type === "level4"){
-                this.sceneManager.changeToScene(MainMenu, {});
-            }
-
-            if(event.type === "level5"){
-                this.sceneManager.changeToScene(MainMenu, {});
-            }
-
             if(event.type === "back"){
                 this.sceneManager.changeToScene(MainMenu, {});
             }
