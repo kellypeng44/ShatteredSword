@@ -1,10 +1,4 @@
 {
-    "bgm": [
-        {
-            "key": "test",
-            "path": "shattered_sword_assets/sounds/test.mp3"
-        }
-    ],
     "texts": [
         {
             "speaker": "",
@@ -27,7 +21,7 @@
         },
         {
             "speaker": "",
-            "content": "But the monster shatter it into 6 pieces",
+            "content": "But the monster shattered it into 6 pieces",
             "actions": [
                 {
                     "type": "hideSprite",
