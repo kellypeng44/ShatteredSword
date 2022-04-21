@@ -154,6 +154,9 @@ export default class RandomMapGenerator {
             }
         }
         if (!thisEntrance) {
+            if (!this.hasExit) {
+                // throw new Error("Wrong order in map template" + facing);
+            }
             return false;
         }
         let room = this.copyRoom(nextRoom, nextPosition.x, nextPosition.y);
