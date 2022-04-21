@@ -19,7 +19,7 @@ export default class BattleManager {
             if(this.enemies.length != 0){
                 for (let enemy of this.enemies) {
                     if (weapon.hits(enemy.owner)) {
-                        enemy.damage(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/100);
+                        enemy.damage(Math.round(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/100));
                         //console.log("enemy took dmg");
                         
                         //TODO - test shield, 
@@ -39,10 +39,10 @@ export default class BattleManager {
                         }
 
                         if(player.hasDoubleStrike){
-                            enemy.damage(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/200);
+                            enemy.damage(Math.round(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/200));
                         }
                         if(player.hasLifesteal){
-                            player.addHealth(weapon.type.damage * player.CURRENT_ATK/100 * player.lifestealratio);
+                            player.addHealth(Math.round(weapon.type.damage * player.CURRENT_ATK/100 * player.lifestealratio));
                         }
                     }
                 }

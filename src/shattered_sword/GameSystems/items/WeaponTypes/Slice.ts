@@ -21,7 +21,7 @@ export default class Slice extends WeaponType {
         // TODO - need to rotate the anim properly
         //sliceSprite.rotation = attacker.rotation;
         //sliceSprite.rotation = (<Sprite>attacker).invertX? .5* Math.PI : 1.5 * Math.PI;
-        //sliceSprite.invertX = (<Sprite>attacker).invertX;
+        sliceSprite.invertX = (<Sprite>attacker).invertX;
         
         //TODO- 
         //4 to scale up the default sprite - may be different later depending on atk anim

@@ -174,6 +174,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         //to test the buffs
         //this.addBuff( {type:BuffType.HEALTH, value:1} );
         this.addBuff({type:BuffType.BURN, value:1, category:BuffCategory.DOT});
+        this.addBuff({type:BuffType.BLEED, value:1, category:BuffCategory.DOT});
+        this.addBuff({type:BuffType.POISON, value:1, category:BuffCategory.DOT});
         
         
     }
@@ -331,7 +333,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         
         //TODO - implement better buff genertion - some buffs dont want multiple of
         let attackBuffs : Buff[] = [
-            {type:BuffType.RANGE, value:num, category: BuffCategory.ATTACK},
+            {type:BuffType.RANGE, value:num/10, category: BuffCategory.ATTACK},
             {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
         ];
         if(!this.hasDoubleStrike){

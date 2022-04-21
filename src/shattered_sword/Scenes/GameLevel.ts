@@ -415,23 +415,6 @@ export default class GameLevel extends Scene {
 
 
 
-        //spawn snake()
-        if(Math.random() < .002){
-            console.log("RANDOM SNAKE!");
-            this.addEnemy("Snake", this.player.position.clone().add(new Vec2(0,-320)),{
-                player: this.player,
-                        health: 50,
-                        tilemap: "Main",
-                        goal: Statuses.REACHED_GOAL,
-                        size: new Vec2(16,16),
-                        offset : new Vec2(0, 16),
-                        exp: 50,
-                        actions: [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
-                        new Move(2, [], [Statuses.IN_RANGE], {inRange: 60})],
-                        status : [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK],
-                        weapon : this.createWeapon("knife")
-            })
-        }
     }
 
     // TODO put UI changes in here
@@ -793,13 +776,13 @@ export default class GameLevel extends Scene {
         (<EnemyAI>enemy._ai).healthBar.color = Color.GREEN;
         (<EnemyAI>enemy._ai).poisonStat = this.add.sprite("poisoning", "primary");
         (<EnemyAI>enemy._ai).poisonStat.position = enemy.collisionShape.center.clone().add(new Vec2((((<AABB>enemy.collisionShape).hw)*-1, -((<AABB>enemy.collisionShape).hh+5))));
-        (<EnemyAI>enemy._ai).poisonStat.scale.set(0.2, 0.2);
+        (<EnemyAI>enemy._ai).poisonStat.scale.set(0.5, 0.5);
         (<EnemyAI>enemy._ai).burnStat = this.add.sprite("burning", "primary");
         (<EnemyAI>enemy._ai).burnStat.position = (<EnemyAI>enemy._ai).poisonStat.position.clone().add(new Vec2(15, 0));
-        (<EnemyAI>enemy._ai).burnStat.scale.set(0.2, 0.2);
+        (<EnemyAI>enemy._ai).burnStat.scale.set(0.5, 0.5);
         (<EnemyAI>enemy._ai).bleedStat = this.add.sprite("bleeding", "primary");
         (<EnemyAI>enemy._ai).bleedStat.position = (<EnemyAI>enemy._ai).poisonStat.position.clone().add(new Vec2(30, 0));
-        (<EnemyAI>enemy._ai).bleedStat.scale.set(0.2, 0.2);
+        (<EnemyAI>enemy._ai).bleedStat.scale.set(0.5, 0.5);
         enemy.setGroup("Enemy");
         enemy.setTrigger("player", Player_Events.PLAYER_COLLIDE, null);
         let actionsDefault = [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
