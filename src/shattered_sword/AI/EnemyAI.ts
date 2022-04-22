@@ -134,6 +134,10 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
     activate(options: Record<string, any>): void { }
 
     damage(damage: number): void {
+        // enemy already dead, do not send new event
+        if (this.CURRENT_HP <= 0) {
+            return;
+        }
         console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
         this.CURRENT_HP -= damage;
         //TODO -
