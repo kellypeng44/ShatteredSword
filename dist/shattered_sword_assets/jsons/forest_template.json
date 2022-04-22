@@ -51,7 +51,8 @@
             "y": 10,
             "possibility": 1
          }
-      ]
+      ],
+      "checkPoint": [5, 19, 5, 5]
    },
    "exit": {
       "width": 30,

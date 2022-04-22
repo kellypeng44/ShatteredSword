@@ -173,6 +173,8 @@ export default class GameLevel extends Scene {
 
         this.startpos = this.rmg.getPlayer().scale(32);
 
+        
+
         //call super after extending story with scene
        
         
@@ -190,6 +192,9 @@ export default class GameLevel extends Scene {
         //subscribe to relevant events
         this.subscribeToEvents();
         this.addUI();
+
+        const checkPoint = this.rmg.getCheckPoint();
+        this.addLevelEnd(new Vec2(checkPoint[0], checkPoint[1]), new Vec2(checkPoint[2], checkPoint[3]));
         
         // Create an enemies array
         // Send the player and enemies to the battle manager
@@ -898,6 +903,13 @@ export default class GameLevel extends Scene {
             }
         }
 
+    }
+
+    protected addLevelEnd(startingTile: Vec2, size: Vec2): void {
+        this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {position: startingTile.scale(32), size: size.scale(32)});
+        this.levelEndArea.addPhysics(undefined, undefined, false, true);
+        // this.levelEndArea.setTrigger("player", somelevelendevent, null);
+        this.levelEndArea.color = new Color(0, 0, 0, 0);
     }
 
    

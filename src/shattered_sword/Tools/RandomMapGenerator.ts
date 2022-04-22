@@ -25,6 +25,7 @@ export default class RandomMapGenerator {
     private exitFacing: Facing;
     private enemies: Array<Enemy>;
     private player: Vec2;
+    private checkPoint: [number, number, number, number];
 
     constructor(JSONFilePath: string, seed: any) {
         let xhr = new XMLHttpRequest();
@@ -44,6 +45,7 @@ export default class RandomMapGenerator {
         this.rooms = new Array();
         this.enemies = new Array();
         this.player = new Vec2();
+        this.checkPoint = [0,0,0,0];
         let gen = require('random-seed');
         this.gen = new gen(seed);
         this.hasExit = false;
@@ -113,6 +115,10 @@ export default class RandomMapGenerator {
 
     getPlayer(): Vec2 {
         return new Vec2(this.player.x - this.minX, this.player.y - this.minY);
+    }
+
+    getCheckPoint(): [number, number, number, number] {
+        return [this.checkPoint[0] - this.minX, this.checkPoint[1] - this.minY, this.checkPoint[2], this.checkPoint[3]];
     }
 
     getEnemies(): Array<Enemy> {
@@ -371,6 +377,11 @@ export default class RandomMapGenerator {
                     }
                 }
             }
+        }
+        if (old.checkPoint) {
+            this.checkPoint = [...old.checkPoint];
+            this.checkPoint[0] += posX;
+            this.checkPoint[1] += posY;
         }
         if (posX < this.minX)
             this.minX = posX;
