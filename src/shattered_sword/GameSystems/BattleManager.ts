@@ -22,11 +22,9 @@ export default class BattleManager {
                         enemy.damage(Math.round(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/100));
                         //console.log("enemy took dmg");
                         
-                        //TODO - test shield, 
                         //add checking for each onhit buff here
                         let player = (<PlayerController>this.players[0]);
-
-                        player.addShield(1);
+                        
                         //DOTS
                         if(player.hasBleed){
                             (<EnemyAI>enemy).bleedCounter +=3;
@@ -52,7 +50,9 @@ export default class BattleManager {
             for (let player of this.players) {
                 if (weapon.hits(player.owner)) {
                     (<PlayerController>player).damage(weapon.type.damage, user);
-
+                    if((<PlayerController>player).hasShield){
+                        (<PlayerController>player).addShield(weapon.type.damage * .5);  //half of dmg taken is converted to shield
+                    }
                 }
             }
         }

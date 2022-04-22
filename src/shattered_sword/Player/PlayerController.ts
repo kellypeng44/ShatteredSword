@@ -300,7 +300,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
      * @param health health to give player
      */
     addHealth(health : number){
-        this.CURRENT_HP = (this.CURRENT_HP + health) %this.MAX_HP + this.CURRENT_BUFFS.hp;
+        this.CURRENT_HP += health;
+        if(this.CURRENT_HP > this.MAX_HP + this.CURRENT_BUFFS.hp){
+            this.CURRENT_HP = this.MAX_HP + this.CURRENT_BUFFS.hp;
+        }
     }
 
     /**
