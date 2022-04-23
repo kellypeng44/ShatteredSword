@@ -120,6 +120,7 @@ export default class GameLevel extends Scene {
     pauseText: Label;
     pauseInput: TextInput;
     pauseSubmit: Label;
+    pauseCheatText: Label;
 
     protected randomSeed: number;
     protected rmg: RandomMapGenerator;
@@ -609,6 +610,10 @@ export default class GameLevel extends Scene {
         */
 
 
+        this.add.sprite("black", "pause");
+        this.add.sprite("black", "story");
+        this.add.sprite("black", "buffLayer");
+
         //TODO - 
         //determine button location 
         this.buffButton1 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*2/3-180/2), Math.floor(this.viewport.getHalfSize().y)),text:""});
@@ -649,19 +654,21 @@ export default class GameLevel extends Scene {
 
         this.buffLayer.disable();
 
-        this.pauseText = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), Math.floor(this.viewport.getHalfSize().y - 50)), text: "Game Paused"});
-        this.pauseInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), Math.floor(this.viewport.getHalfSize().y)), text: ""});
-        this.pauseSubmit = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), Math.floor(this.viewport.getHalfSize().y + 50)), text: "Submit"});
+        this.pauseText = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x - 120), Math.floor(this.viewport.getHalfSize().y - 100)), text: ""});
+        this.pauseInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x - 20), Math.floor(this.viewport.getHalfSize().y + 100)), text: ""});
+        this.pauseCheatText = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x - 120), Math.floor(this.viewport.getHalfSize().y + 80)), text: "⬇️⬇️⬇️Cheat Code⬇️⬇️⬇️"});
+        this.pauseSubmit = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x + 120), Math.floor(this.viewport.getHalfSize().y + 100)), text: "Submit"});
 
-        this.add.sprite("black", "pause");
-        this.add.sprite("black", "story");
-        this.add.sprite("black", "buffLayer");
+        
         this.pauseLayer.setAlpha(0.5);
-        this.pauseInput.size.set(500, 30);
-        this.pauseText.textColor = Color.BLACK;
-        this.pauseText.borderColor = Color.BLACK;
-        this.pauseText.backgroundColor = Color.WHITE;
-        this.pauseText.borderWidth = 3;
+        this.pauseText.textColor = Color.WHITE;
+        this.pauseText.setHAlign(HAlign.LEFT);
+        this.pauseText.size = new Vec2(0, 40);
+        this.pauseText.text = "HP:\nATK:\nDamage Ratio:\nBuff1:\nBuff2:\nBuff3:\nBuff4:\nBuff5:\nBuff6:\nEnemy Killed:\n"
+        this.pauseCheatText.textColor = Color.WHITE;
+        this.pauseCheatText.size = new Vec2(0, 40);
+        this.pauseCheatText.setHAlign(HAlign.LEFT);
+        this.pauseInput.size.set(400, 30);
         this.pauseSubmit.textColor = Color.BLACK;
         this.pauseSubmit.borderColor = Color.BLACK;
         this.pauseSubmit.backgroundColor = Color.WHITE;
@@ -1107,12 +1114,12 @@ export default class GameLevel extends Scene {
     enableCheat() {
         if (this.pauseInput.text.toUpperCase() === "UUDDLRLRBABA") {
             (<PlayerController>this.player._ai).godMode = true;
-            return;
         }
         else {
             let commands = this.pauseInput.text.split(' ');
+            console.log(commands);
             if (commands.length === 3) {
-                if (commands[0].toUpperCase() !== "SET") {
+                if (commands[0].toUpperCase() === "SET") {
                     switch (commands[1].toUpperCase()) {
                         case "ATK":
                             (<PlayerController>this.player._ai).CURRENT_ATK = parseInt(commands[2]);
@@ -1132,9 +1139,9 @@ export default class GameLevel extends Scene {
                 }
             }
             (<PlayerController>this.player._ai).godMode = false;
-            
         }
+        this.pauseInput.text = "";
     }
-    
 }
+    
 
