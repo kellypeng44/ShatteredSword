@@ -98,6 +98,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     CURRENT_SHIELD : number =0;
     MAX_SHIELD : number = 20;
     invincible : boolean = false;
+    level : number = 1;
 
     godMode: boolean = false;
 
@@ -281,6 +282,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
 
         if(this.CURRENT_HP <= 0){
+            this.lives --;
             (<AnimatedSprite>this.owner).animation.play("DYING");
             (<AnimatedSprite>this.owner).animation.queue("DEAD", true, Player_Events.PLAYER_KILLED);
             this.emitter.fireEvent(Player_Events.PLAYER_KILLED);
@@ -315,6 +317,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         //if > than max exp level up (give buff)
         if(this.CURRENT_EXP >= this.MAX_EXP){
             this.CURRENT_EXP -= this.MAX_EXP;
+            this.MAX_EXP += 50; //increase max exp needed for level up
+            this.level++ ;
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_up", loop: false, holdReference: false});
             this.emitter.fireEvent(Player_Events.GIVE_BUFF);
         }
     }
@@ -331,7 +336,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         // Get sub-array of first 3 elements after shuffled
         let shuffled = PlayerController.buffPool.slice(0, 3); //3 buff categories
 
-        let num = Number(Math.random().toPrecision(1)) * 10;    //random number from 1 to 10 if no value given
+        let num = parseFloat(Math.random().toPrecision(1)) * 10;    //random number from 1 to 10 if no value given
         if(typeof val !== 'undefined'){
             num = val;
         }
@@ -346,12 +351,21 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
 
         let dotBuffs : Buff[] = [
-            {type:BuffType.BLEED, value:1, category: BuffCategory.DOT, string: "Your hits \napply Bleed"},
-            {type:BuffType.BURN, value:1, category: BuffCategory.DOT, string: "Your hits \napply Burn"},
-            {type:BuffType.POISON, value:1, category: BuffCategory.DOT, string: "Your hits \napply poison"},
-            {type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "increase your \nDOT damage"},
-
         ];
+        if(!this.hasBleed){
+            dotBuffs.push({type:BuffType.BLEED, value:1, category: BuffCategory.DOT, string: "Your hits \napply Bleed"});
+        }
+        if(!this.hasBurn){
+            dotBuffs.push({type:BuffType.BURN, value:1, category: BuffCategory.DOT, string: "Your hits \napply Burn"});
+        }
+        if(!this.hasPoison){
+            dotBuffs.push({type:BuffType.POISON, value:1, category: BuffCategory.DOT, string: "Your hits \napply poison"});
+        }
+
+        if(dotBuffs.length < 3){    //only add extra dot if at least one dot is acquired
+            dotBuffs.push({type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "increase your \nDOT damage"});
+        }
+
         
         let shieldBuffs : Buff[] = [
             {type:BuffType.HEALTH, value:1, category: BuffCategory.SHIELD},
@@ -366,7 +380,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
         let healthBuffs : Buff[] = [
-            {type:BuffType.DEF, value:num, category: BuffCategory.HEALTH}
+            {type:BuffType.DEF, value: num, category: BuffCategory.HEALTH}
         ];
         if(!this.hasLifesteal){
             healthBuffs.push({type:BuffType.LIFESTEAL, value:1, category: BuffCategory.HEALTH, string:"Gain lifesteal"});
@@ -381,7 +395,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
             {type:BuffType.ATK, value:num, category: BuffCategory.EXTRA}
         ];
-        if(!this.hasOneShot){
+        if(!this.hasOneShot){   //only add oneshot buff if it isnt already included 
             extraBuffs.push({type:BuffType.ONESHOT, value:1, category: BuffCategory.EXTRA, string: "Your hits hurt \n100x more but \nyour max health \nis set to 1 "});
         };
 

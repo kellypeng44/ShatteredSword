@@ -76,6 +76,9 @@ export default class GameLevel extends Scene {
     protected expLabel : Label;
     protected expBar: Rect;
 
+    //level label
+    protected playerLevelLabel : Label;
+
     //shield label
     protected shieldLabel : Label;
     protected shieldBar: Rect;
@@ -144,7 +147,7 @@ export default class GameLevel extends Scene {
         this.load.audio("jump", "shattered_sword_assets/sounds/jump2.wav");
         this.load.audio("hurt", "shattered_sword_assets/sounds/hurt.wav");
         this.load.audio("die", "shattered_sword_assets/sounds/die.wav");
-
+        this.load.audio("level_up","shattered_sword_assets/sounds/level_up.wav");
 
 
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
@@ -206,6 +209,7 @@ export default class GameLevel extends Scene {
         
       
         // Initialize the timers
+        /*
         this.respawnTimer = new Timer(1000, () => {
             if(GameLevel.livesCount === 0){
                 this.sceneManager.changeToScene(MainMenu);
@@ -215,6 +219,7 @@ export default class GameLevel extends Scene {
                 this.player.unfreeze();
             }
         });
+        */
 
         let enemies = this.rmg.getEnemies();
         //may have to move this to start scene in gameLevel
@@ -392,6 +397,11 @@ export default class GameLevel extends Scene {
         this.expBar.fillWidth = (playerAI.CURRENT_EXP/playerAI.MAX_EXP)*150;
         // this.expLabel.sizeToText();
 
+        //update level ui
+        this.playerLevelLabel.text = "lv." + playerAI.level;
+        //update lives ui
+        this.livesCountLabel.text = "Lives: " + playerAI.lives;
+
 
         //move background
 
@@ -529,7 +539,12 @@ export default class GameLevel extends Scene {
         this.shieldBar.borderWidth = 3;
         this.shieldBar.color = Color.ORANGE;
 
-        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(70, 95), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
+
+
+        this.playerLevelLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(30, 95), text: "lv. "+ (<PlayerController>this.player.ai).level });
+        this.playerLevelLabel.textColor = Color.BLUE;
+
+        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 95), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
         this.expLabel.size.set(200, 50);
         this.expLabel.setHAlign(HAlign.LEFT);
         this.expLabel.textColor = Color.BLUE;
@@ -667,6 +682,10 @@ export default class GameLevel extends Scene {
         this.pauseSubmit.backgroundColor = Color.WHITE;
         this.pauseSubmit.onClickEventId = "cheat";
         this.pauseSubmit.borderWidth = 3;
+
+        this.livesCountLabel =  <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(600, 30), text:"Lives: "});
+        this.livesCountLabel.textColor = Color.YELLOW;
+
 }
 
     //TODO - determine whether we will have weapon datatype
@@ -942,6 +961,7 @@ export default class GameLevel extends Scene {
      * Increments the amount of life the player has
      * @param amt The amount to add to the player life
      */
+    /*
     protected incPlayerLife(amt: number): void {
         GameLevel.livesCount += amt;
         this.livesCountLabel.text = "Lives: " + GameLevel.livesCount;
@@ -952,6 +972,8 @@ export default class GameLevel extends Scene {
             this.player.tweens.play("death");
         }
     }
+    */
+
 
     /**
      * Returns the player to spawn
@@ -961,7 +983,7 @@ export default class GameLevel extends Scene {
         InputWrapper.enableInput();
         this.player.position.copy(this.startpos);
         (<PlayerController>this.player._ai).CURRENT_HP = (<PlayerController>this.player._ai).MAX_HP + (<PlayerController>this.player._ai).CURRENT_BUFFS.hp;
-        (<PlayerController>this.player._ai).lives --;
+        //(<PlayerController>this.player._ai).lives --;
 
     }
 
