@@ -153,9 +153,9 @@ export default class CanvasRenderer extends RenderingManager {
         this.ctx.setTransform(xScale, 0, 0, yScale, (node.position.x - this.origin.x)*this.zoom, (node.position.y - this.origin.y)*this.zoom);
         this.ctx.rotate(-node.rotation);
         let globalAlpha = this.ctx.globalAlpha;
-        if(node instanceof Rect){
-            Debug.log("node" + node.id, "Node" + node.id + " Alpha: " + node.alpha);
-        }
+        // if(node instanceof Rect){
+            // Debug.log("node" + node.id, "Node" + node.id + " Alpha: " + node.alpha);
+        // }
         this.ctx.globalAlpha = node.alpha;
         
         if(node instanceof AnimatedSprite){
