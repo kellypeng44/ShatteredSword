@@ -128,7 +128,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         this.bleedTimer = new Timer(1000);
         this.poisonTimer = new Timer(1000);
 
-        this.attackTimer = new Timer(500);
+        this.attackTimer = new Timer(2500);
     }
 
     activate(options: Record<string, any>): void { }
@@ -217,7 +217,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
                     if (hit !== null && start.distanceSqTo(hit.pos) < start.distanceSqTo(pos)) {
                         // We hit a wall, we can't see the player
-                        console.log("player not visible")
+                        //console.log("player not visible")
                         return null;
                     }
                 }
@@ -287,10 +287,10 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
             return;
         }
         let distance = this.owner.position.distanceTo(this.getPlayerPosition());
-        if( distance <= 60){
+        if( distance <= 20){
             if( this.direction ==  Math.sign(this.getPlayerPosition().x -this.owner.position.x) ){
                 let dir = this.getPlayerPosition().clone().sub(this.owner.position).normalize();
-                if(this.attackTimer.isPaused()){
+                if(this.attackTimer.isStopped()){
                     this.weapon.use(this.owner, "enemy", dir.scale(1,0))
                     this.attackTimer.start();
                 }

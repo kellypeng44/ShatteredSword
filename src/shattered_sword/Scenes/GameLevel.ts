@@ -152,13 +152,14 @@ export default class GameLevel extends Scene {
 
 
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
-        this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
         this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
         this.load.image("black", "shattered_sword_assets/images/black.png");
         this.load.image("poisoning", "shattered_sword_assets/images/poisoning.png");
         this.load.image("burning", "shattered_sword_assets/images/burning.png");
         this.load.image("bleeding", "shattered_sword_assets/images/bleeding.png");
-  
+
+        //TODO - choose spritesheet for slice - modify the slice.json
+        this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
         this.load.spritesheet("test_dummy","shattered_sword_assets/spritesheets/test_dummy.json")
         this.enemies = new Array();
         this.battleManager = new BattleManager();
@@ -418,6 +419,7 @@ export default class GameLevel extends Scene {
         }
 
         //TODO - this is for testing
+        /*
         if(InputWrapper.isSpawnJustPressed()){
             console.log("trying to spawn enemy");
             this.addEnemy("test_dummy",this.player.position,{player: this.player, 
@@ -431,6 +433,7 @@ export default class GameLevel extends Scene {
                                 weapon : this.createWeapon("knife")
                                 });
         }
+        */
 
         if (InputWrapper.isInventoryJustPressed()) {
             console.log("LoadingStory");
@@ -878,8 +881,8 @@ export default class GameLevel extends Scene {
                         actions: actionsDefault,
                         status: statusArray,
                         goal: Statuses.REACHED_GOAL,
-                        size: new Vec2(16,16),
-                        offset : new Vec2(0, 16),
+                        size: new Vec2(14,10),
+                        offset : new Vec2(0, 22),
                         exp: 50,
                         weapon : this.createWeapon("knife"),
                     })
@@ -918,8 +921,8 @@ export default class GameLevel extends Scene {
                         //actions:actions,
                         goal: Statuses.REACHED_GOAL,
                         scale: .25,
-                        size: new Vec2(16,16),
-                        offset : new Vec2(0,0),
+                        size: new Vec2(16,10),
+                        offset : new Vec2(0,6),
                         exp: 50,
                         weapon : this.createWeapon("knife"),
                         actions: actionsDefault,

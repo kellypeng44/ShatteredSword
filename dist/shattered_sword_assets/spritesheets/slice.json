@@ -1,6 +1,6 @@
 {
     "name": "slice",
-    "spriteSheetImage": "slice.png",
+    "spriteSheetImage": "slice_black.png",
     "spriteWidth": 16,
     "spriteHeight": 16,
     "columns": 4,

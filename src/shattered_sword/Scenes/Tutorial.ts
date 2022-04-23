@@ -37,15 +37,15 @@ export default class Tutorial extends GameLevel {
         super.updateScene(deltaT);
         
         //spawn snake()
-        if(Math.random() < .001){
+        if(Math.random() < .0001){
             console.log("RANDOM SNAKE!");
             this.addEnemy("Snake", this.player.position.clone().add(new Vec2(0,-320)),{
                 player: this.player,
                         health: 50,
                         tilemap: "Main",
                         goal: Statuses.REACHED_GOAL,
-                        size: new Vec2(16,16),
-                        offset : new Vec2(0, 16),
+                        size: new Vec2(14,10),
+                        offset : new Vec2(0, 22),
                         exp: 50,
                         actions: [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
                         new Move(2, [], [Statuses.IN_RANGE], {inRange: 60})],

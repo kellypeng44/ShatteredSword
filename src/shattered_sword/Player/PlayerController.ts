@@ -88,11 +88,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     MAX_HP: number = 100;
     CURRENT_HP: number = 100;
     BASE_ATK: number = 100;
-    MAX_ATK: number = 100;
     CURRENT_ATK: number = 100;
-    BASE_DEF: number = 100;
-    MAX_DEF: number = 100;
-    CURRENT_DEF: number = 100;
+    damage_multiplier: number = 1;
     CURRENT_EXP : number = 0;
     MAX_EXP : number = 100;
     CURRENT_SHIELD : number =0;
@@ -117,7 +114,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 	static invincibilityTimer: Timer;
     
-    static buffPool : Array<BuffCategory>;
+    static buffPool : Array<BuffCategory> = new Array();
+
+    static appliedBuffs: Array<Buff> = new Array();
 
     //add to current_buffs later
     hasBleed : Boolean = false;
@@ -239,7 +238,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 	}
 
     
-
     // TODO - figure out attacker 
     damage(damage: number, attacker?: GameNode): void {
         if (this.godMode) {
@@ -265,7 +263,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.invincible = true;
                 //console.log("hurt anim");
                 (<AnimatedSprite>this.owner).animation.play("HURT" );
-                damage /= this.BASE_DEF/ this.CURRENT_DEF;
+                damage *= this.damage_multiplier;
+                damage = parseFloat(damage.toPrecision(2));
                 this.CURRENT_HP -= damage;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hurt", loop: false, holdReference: false});
 
@@ -380,7 +379,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
         let healthBuffs : Buff[] = [
-            {type:BuffType.DEF, value: num, category: BuffCategory.HEALTH}
+            {type:BuffType.DEF, value: num/10, category: BuffCategory.HEALTH, string: "decrease damage by"+num/10+"%"}
         ];
         if(!this.hasLifesteal){
             healthBuffs.push({type:BuffType.LIFESTEAL, value:1, category: BuffCategory.HEALTH, string:"Gain lifesteal"});
@@ -438,7 +437,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         
         //increase weight of selected buff category
         PlayerController.buffPool.push(buff.category);
-
+        //add buff to array of applied buffs 
+        PlayerController.appliedBuffs.push(buff);
         // TODO
         let item = this.inventory.getItem();
         switch(buff.type){
@@ -456,8 +456,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.speed += buff.value;
                 break;
             case BuffType.DEF:
-                this.CURRENT_BUFFS.def += buff.value;
-                this.CURRENT_DEF += buff.value;
+                this.damage_multiplier *= (1-buff.value);
                 break;
             case BuffType.RANGE:
                 this.CURRENT_BUFFS.range += buff.value;
@@ -511,8 +510,20 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.CURRENT_HP = 1;
                 this.CURRENT_ATK *= 100;
                 break;
-            }
         }
+    }
+
+    /**
+     * 
+     * @returns record of the player stats
+     */
+    getStats(): Record<string, any>{
+        let stats = {} as Record<string,any>;
+        stats.current_health = this.CURRENT_HP;
+
+
+        return 
+    }
         
 
 }
