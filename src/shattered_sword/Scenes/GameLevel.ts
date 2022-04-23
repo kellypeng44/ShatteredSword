@@ -1012,10 +1012,11 @@ export default class GameLevel extends Scene {
         this.currentSpeaker = this.story.texts[0].speaker;
         this.currentContent = this.story.texts[0].content;
         this.storyLayer.enable();
-        this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(this.viewport.getHalfSize().x, this.viewport.getHalfSize().y + 200), text: "" });
+        this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(50, 280), text: "" });
+        this.storytextLabel.size = new Vec2(0, 25);
         this.storytextLabel.textColor = Color.WHITE;
         this.storytextLabel.font = "PixelSimple";
-        this.storytextLabel.fontSize = 30;
+        this.storytextLabel.fontSize = 25;
         this.storytextLabel.setHAlign(HAlign.LEFT);
         this.storyProgress = -1;
         this.storySprites = new Array;
