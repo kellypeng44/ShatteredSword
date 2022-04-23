@@ -363,10 +363,10 @@ export default class GameLevel extends Scene {
 
         //update health UI 
         let playerAI = (<PlayerController>this.player.ai);
-        this.healthLabel.text = "Health: "+ playerAI.CURRENT_HP +'/' + (playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp );
-        this.healthBar.size.set(playerAI.MAX_HP*2, 10);
-        this.healthBar.position.set(playerAI.MAX_HP+50, 40);
-        this.healthBar.fillWidth = playerAI.CURRENT_HP*2;
+        this.healthLabel.text = "Health: "+ Math.round(playerAI.CURRENT_HP) +'/' + Math.round(playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp);
+        this.healthBar.size.set(playerAI.MAX_HP*1.5, 10);
+        this.healthBar.position.set(playerAI.MAX_HP*0.75+20, 20);
+        this.healthBar.fillWidth = playerAI.CURRENT_HP*1.5;
         if (playerAI.CURRENT_HP/playerAI.MAX_HP >= 2/3) {
             this.healthBar.color = Color.GREEN;
             this.healthLabel.textColor = Color.GREEN;
@@ -382,14 +382,14 @@ export default class GameLevel extends Scene {
         // this.healthLabel.sizeToText();
 
         //update shield ui
-        this.shieldLabel.text = "Shield: "+ playerAI.CURRENT_SHIELD +'/' + (playerAI.MAX_SHIELD);
-        this.shieldBar.size.set(playerAI.CURRENT_SHIELD*2, 10);
-        this.shieldBar.position.set(playerAI.CURRENT_SHIELD+50, 70);
+        this.shieldLabel.text = "Shield: "+ Math.round(playerAI.CURRENT_SHIELD) +'/' + Math.round(playerAI.MAX_SHIELD);
+        this.shieldBar.size.set(playerAI.CURRENT_SHIELD*1.5, 10);
+        this.shieldBar.position.set(playerAI.CURRENT_SHIELD*0.75+20, 50);
         // this.shieldLabel.sizeToText();
 
         //update exp ui
-        this.expLabel.text = "EXP: "+ playerAI.CURRENT_EXP +'/' + (playerAI.MAX_EXP);
-        this.expBar.fillWidth = (playerAI.CURRENT_EXP/playerAI.MAX_EXP)*200;
+        this.expLabel.text = "EXP: "+ Math.round(playerAI.CURRENT_EXP) +'/' + Math.round(playerAI.MAX_EXP);
+        this.expBar.fillWidth = (playerAI.CURRENT_EXP/playerAI.MAX_EXP)*150;
         // this.expLabel.sizeToText();
 
 
@@ -497,12 +497,13 @@ export default class GameLevel extends Scene {
      */
     protected addUI(){
         // In-game labels
-        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 55), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
+        this.healthLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(70, 35), text: "Player Health: "+ (<PlayerController>this.player.ai).CURRENT_HP });
         this.healthLabel.size.set(200, 50);
         this.healthLabel.setHAlign(HAlign.LEFT);
         this.healthLabel.textColor = Color.GREEN;
         this.healthLabel.font = "PixelSimple";
-        this.healthBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 40), size: new Vec2(400, 10)});
+        this.healthLabel.fontSize = 25;
+        this.healthBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 20), size: new Vec2(400, 10)});
         this.healthBar.borderColor = Color.BLACK;
         this.healthBar.borderWidth = 3;
         this.healthBar.color = Color.GREEN;
@@ -517,31 +518,31 @@ export default class GameLevel extends Scene {
         // this.bleedStat.position.set(85, 25);
         // this.bleedStat.scale.set(0.3, 0.3);
 
-        this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 85), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
+        this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(70, 65), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
         this.shieldLabel.size.set(200, 50);
         this.shieldLabel.setHAlign(HAlign.LEFT);
         this.shieldLabel.textColor = Color.ORANGE;
         this.shieldLabel.font = "PixelSimple";
-        this.shieldBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 70), size: new Vec2(400, 10)});
+        this.shieldLabel.fontSize = 25;
+        this.shieldBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 50), size: new Vec2(400, 10)});
         this.shieldBar.borderColor = Color.BLACK;
         this.shieldBar.borderWidth = 3;
         this.shieldBar.color = Color.ORANGE;
 
-        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 115), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
+        this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(70, 95), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
         this.expLabel.size.set(200, 50);
         this.expLabel.setHAlign(HAlign.LEFT);
         this.expLabel.textColor = Color.BLUE;
         this.expLabel.font = "PixelSimple";
-        this.expBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(150, 100), size: new Vec2(200, 10)});
+        this.expLabel.fontSize = 25;
+        this.expBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(95, 80), size: new Vec2(150, 10)});
         this.expBar.borderColor = Color.BLACK;
         this.expBar.borderWidth = 3;
         this.expBar.color = Color.BLUE;
 
-        
-
         //seed label
         //worldsize.x doesnt work how i want it to
-        this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, Math.floor(this.viewport.getHalfSize().y*2 - 30)), text: "Seed: "+ this.randomSeed });
+        this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(70, Math.floor(this.viewport.getHalfSize().y*2 - 30)), text: "Seed: "+ this.randomSeed });
         this.seedLabel.size.set(200, 50);
         this.seedLabel.setHAlign(HAlign.LEFT);
         this.seedLabel.textColor = Color.BLACK;
