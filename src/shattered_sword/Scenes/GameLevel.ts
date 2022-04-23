@@ -504,7 +504,7 @@ export default class GameLevel extends Scene {
         this.healthLabel.textColor = Color.GREEN;
         this.healthLabel.font = "PixelSimple";
         this.healthLabel.fontSize = 25;
-        this.healthBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 20), size: new Vec2(400, 10)});
+        this.healthBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(0, 0), size: new Vec2(0, 0)});
         this.healthBar.borderColor = Color.BLACK;
         this.healthBar.borderWidth = 3;
         this.healthBar.color = Color.GREEN;
@@ -525,7 +525,7 @@ export default class GameLevel extends Scene {
         this.shieldLabel.textColor = Color.ORANGE;
         this.shieldLabel.font = "PixelSimple";
         this.shieldLabel.fontSize = 25;
-        this.shieldBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(100+150, 50), size: new Vec2(400, 10)});
+        this.shieldBar = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(0, 0), size: new Vec2(0, 0)});
         this.shieldBar.borderColor = Color.BLACK;
         this.shieldBar.borderWidth = 3;
         this.shieldBar.color = Color.ORANGE;
@@ -1019,7 +1019,7 @@ export default class GameLevel extends Scene {
         this.currentSpeaker = this.story.texts[0].speaker;
         this.currentContent = this.story.texts[0].content;
         this.storyLayer.enable();
-        this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(50, 280), text: "" });
+        this.storytextLabel = <Label>this.add.uiElement(UIElementType.LABEL, "story", { position: new Vec2(50, this.viewport.getHalfSize().y + 80), text: "" });
         this.storytextLabel.size = new Vec2(0, 25);
         this.storytextLabel.textColor = Color.WHITE;
         this.storytextLabel.font = "PixelSimple";
