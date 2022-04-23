@@ -544,7 +544,7 @@ export default class GameLevel extends Scene {
         this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, Math.floor(this.viewport.getHalfSize().y*2 - 30)), text: "Seed: "+ this.randomSeed });
         this.seedLabel.size.set(200, 50);
         this.seedLabel.setHAlign(HAlign.LEFT);
-        this.seedLabel.textColor = Color.WHITE;
+        this.seedLabel.textColor = Color.BLACK;
         this.seedLabel.font = "PixelSimple";
       
 
@@ -618,7 +618,8 @@ export default class GameLevel extends Scene {
         this.buffButton1.textColor = Color.BLACK;
         this.buffButton1.onClickEventId = "buff1";
         this.buffButton1.fontSize = 20;
-        this.buffLabel1 = <Label>this.add.uiElement(UIElementType.LABEL, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*2/3-180/2), Math.floor(this.viewport.getHalfSize().y)),text:"buffLabel1"});
+        this.buffLabel1 = <Label>this.add.uiElement(UIElementType.LABEL, "buffLayer", {position: new Vec2(this.buffButton1.position.x, this.buffButton1.position.y - 40),text:"buffLabel1"});
+        this.buffLabel1.fontSize = 20;
 
 
         this.buffButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), Math.floor(this.viewport.getHalfSize().y)),text:""});
@@ -629,8 +630,8 @@ export default class GameLevel extends Scene {
         this.buffButton2.textColor = Color.BLACK;
         this.buffButton2.onClickEventId = "buff2";
         this.buffButton2.fontSize = 20;
-        this.buffLabel2 = <Label>this.add.uiElement(UIElementType.LABEL, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), Math.floor(this.viewport.getHalfSize().y)),text:"buffLabel2"});
-
+        this.buffLabel2 = <Label>this.add.uiElement(UIElementType.LABEL, "buffLayer", {position: new Vec2(this.buffButton2.position.x, this.buffButton2.position.y - 40),text:"buffLabel2"});
+        this.buffLabel2.fontSize = 20;
 
         this.buffButton3 = <Button>this.add.uiElement(UIElementType.BUTTON, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*4/3+180/2), Math.floor(this.viewport.getHalfSize().y)), text:""});
         this.buffButton3.size.set(180,200);
@@ -640,8 +641,8 @@ export default class GameLevel extends Scene {
         this.buffButton3.textColor = Color.BLACK;
         this.buffButton3.onClickEventId = "buff3";
         this.buffButton3.fontSize = 20;
-        this.buffLabel3 = <Label>this.add.uiElement(UIElementType.LABEL, "buffLayer", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x*4/3+180/2), Math.floor(this.viewport.getHalfSize().y)), text:"buffLabel3"});
-
+        this.buffLabel3 = <Label>this.add.uiElement(UIElementType.LABEL, "buffLayer", {position: new Vec2(this.buffButton3.position.x, this.buffButton3.position.y - 40), text:"buffLabel3"});
+        this.buffLabel3.fontSize = 20;
 
         this.buffs =  (<PlayerController>this.player._ai).generateBuffs();
 
