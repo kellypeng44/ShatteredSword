@@ -158,6 +158,7 @@ export default class GameLevel extends Scene {
         this.load.audio("hurt", "shattered_sword_assets/sounds/hurt.wav");
         this.load.audio("die", "shattered_sword_assets/sounds/die.wav");
         this.load.audio("level_up","shattered_sword_assets/sounds/level_up.wav");
+        this.load.audio("level_music","shattered_sword_assets/sounds/bgm1.mp3")
 
 
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
@@ -251,12 +252,11 @@ export default class GameLevel extends Scene {
         this.levelTransitionScreen.tweens.play("fadeOut");
         */
 
-        //TODO - uncomment when done testing
-        // Initially disable player movement
-        //Input.disableInput();
         this.gameStateStack = new Stack();
         this.setGameState(GameState.GAMING);
         InputWrapper.enableInput();
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
     }
 
 
@@ -321,27 +321,25 @@ export default class GameLevel extends Scene {
 
                     case Player_Events.GIVE_BUFF:
                         this.buffs = (<PlayerController>this.player._ai).generateBuffs();
-                        if(this.buffs[0].string !== undefined){
-                            //this.buffButton1.text = this.buffs[0].string;
-                            this.buffLabel1.text = this.buffs[0].string;
-                        }
-                        else{
-                            //this.buffButton1.text = "Increase "+this.buffs[0].type + " by "+this.buffs[0].value;
+                        if(this.buffs[0].string === undefined){
                             this.buffLabel1.text = "Increase "+this.buffs[0].type + "\n by \n"+this.buffs[0].value;
                         }
-                        
-                        if(this.buffs[1].string !== undefined){
-                            this.buffLabel2.text = this.buffs[1].string;
-                        }
                         else{
+                            this.buffLabel1.text = this.buffs[0].string;
+                        }
+                        
+                        if(this.buffs[1].string === undefined){
                             this.buffLabel2.text = "Increase "+this.buffs[1].type + "\n by \n"+this.buffs[1].value;
                         }
+                        else{
+                            this.buffLabel2.text = this.buffs[1].string;
+                        }
                         
-                        if(this.buffs[2].string !== undefined){
-                            this.buffLabel3.text = this.buffs[2].string;
+                        if(this.buffs[2].string === undefined){
+                            this.buffLabel3.text = "Increase "+this.buffs[2].type + "\n by \n"+this.buffs[2].value;
                         }
                         else{
-                            this.buffLabel3.text = "Increase "+this.buffs[2].type + "\n by \n"+this.buffs[2].value;
+                            this.buffLabel3.text = this.buffs[2].string;
                         }
                         
                         //pause game here 
@@ -998,8 +996,6 @@ export default class GameLevel extends Scene {
                 //damage the player 
                 (<PlayerController>this.player._ai).damage(10); //10 collision dmg for now
         }
-                
-        
 
     }
 

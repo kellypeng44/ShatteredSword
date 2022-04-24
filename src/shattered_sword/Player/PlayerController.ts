@@ -361,13 +361,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             dotBuffs.push({type:BuffType.POISON, value:1, category: BuffCategory.DOT, string: "Your hits \napply poison"});
         }
 
-        if(dotBuffs.length < 3){    //only add extra dot if at least one dot is acquired
+        //only add extra dot if at least one dot is acquired
+        for(let i=dotBuffs.length; i< 3 ; i++){
             dotBuffs.push({type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "increase your \nDOT damage"});
         }
 
         
         let shieldBuffs : Buff[] = [
-            {type:BuffType.HEALTH, value:1, category: BuffCategory.SHIELD},
+            {type:BuffType.HEALTH, value:num, category: BuffCategory.SHIELD},
         ];
         //if player doesnt have shield buff, give them the option, otherwise give buff shield option
         if(!this.hasShield){
@@ -405,23 +406,48 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             switch(cat){
                 case BuffCategory.ATTACK:
                     attackBuffs.sort(() => 0.5 - Math.random());
-                    selected.push(attackBuffs.pop());
+                    if(attackBuffs.length == 0){
+                        selected.push({type:BuffType.RANGE, value:num/10, category: BuffCategory.ATTACK});
+                    }
+                    else{
+                        selected.push(attackBuffs.pop());
+                    }
                     break;
                 case BuffCategory.DOT:
                     dotBuffs.sort(() => 0.5 - Math.random());
-                    selected.push(dotBuffs.pop());
+                    if(dotBuffs.length == 0){
+                        selected.push({type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "increase your \nDOT damage"});
+                    }
+                    else{
+                        selected.push(dotBuffs.pop());
+                    }
                     break;
                 case BuffCategory.EXTRA:
                     extraBuffs.sort(() => 0.5 - Math.random());
-                    selected.push(extraBuffs.pop());
+                    if(extraBuffs.length ==0 ){
+                        selected.push({type:BuffType.EXTRALIFE, value:1, category: BuffCategory.EXTRA, string: "Gain an \nExtra Life"});
+                    }
+                    else{
+                        selected.push(extraBuffs.pop());
+                    }
                     break;
                 case BuffCategory.HEALTH:
                     healthBuffs.sort(() => 0.5 - Math.random());
-                    selected.push(healthBuffs.pop());
+                    if(healthBuffs.length == 0){
+                        selected.push({type:BuffType.DEF, value: num/10, category: BuffCategory.HEALTH, string: "decrease damage\n taken by "+num*10+"%"});
+                    }
+                    else{
+                        selected.push(healthBuffs.pop());
+                    }
                     break;
                 case BuffCategory.SHIELD:
                     shieldBuffs.sort(() => 0.5 - Math.random());
-                    selected.push(shieldBuffs.pop());
+                    if(shieldBuffs.length ==0 ){
+                        selected.push({type:BuffType.HEALTH, value:num, category: BuffCategory.SHIELD});
+                    }
+                    else{
+                        selected.push(shieldBuffs.pop());
+                    }
                     break;
             }
         }
@@ -519,11 +545,17 @@ export default class PlayerController extends StateMachineAI implements BattlerA
      */
     getStats(): Record<string, any>{
         let stats = {} as Record<string,any>;
-        stats.current_health = this.CURRENT_HP;
-
+        stats.CURRENT_HP = this.CURRENT_HP;
+        stats.CURRENT_ATK = this.CURRENT_ATK;
+        stats.CURRENT_SHIELD = this.CURRENT_SHIELD;
+        stats.CURRENT_EXP = this.CURRENT_EXP;
 
         return 
     }
         
+
+    toString(): string{
+        return "";
+    }
 
 }

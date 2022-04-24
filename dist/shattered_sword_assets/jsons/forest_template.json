@@ -38,18 +38,6 @@
             "type": "player",
             "x": 5,
             "y": 19
-         }, 
-         {
-            "type": "black_pudding",
-            "x": 7,
-            "y": 19,
-            "possibility": 1
-         },
-         {
-            "type": "Snake",
-            "x": 1,
-            "y": 10,
-            "possibility": 1
          }
       ],
       "startCheckPoint": [25, 19, 5, 5]
