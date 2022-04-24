@@ -464,9 +464,9 @@ export default class GameLevel extends Scene {
         this.playerFalloff(viewportCenter, baseViewportSize);
         
         // Update player safe position
-        if (this.player.onGround) {
-            this.playerSpawn = this.player.position.clone();
-        }
+        // if (this.player.onGround) {
+        //     this.playerSpawn = this.player.position.clone();
+        // }
 
         //TODO - this is for testing
         /*
