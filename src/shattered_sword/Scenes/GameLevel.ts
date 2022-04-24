@@ -266,24 +266,24 @@ export default class GameLevel extends Scene {
         if (this.gameStateStack.peek() === GameState.GAMING) {
             if (this.gameStarted) {
                 GameLevel.gameTimer += deltaT;
-                let minutes = Math.floor(GameLevel.gameTimer / 60);
-                if (minutes >= 10) {
-                    this.timerLable.text = minutes.toString();
-                }
-                else {
-                    this.timerLable.text = "0" + minutes.toString();
-                }
-                let seconds = Math.floor(GameLevel.gameTimer % 60);
-                if (seconds >= 10) {
-                    this.timerLable.text += ":" + seconds.toString();
-                }
-                else {
-                    this.timerLable.text += ":0" + seconds.toString();
-                }
                 this.timerLable.textColor = Color.BLACK;
             }
             else {
                 this.timerLable.textColor = Color.RED;
+            }
+            let minutes = Math.floor(GameLevel.gameTimer / 60);
+            if (minutes >= 10) {
+                this.timerLable.text = minutes.toString();
+            }
+            else {
+                this.timerLable.text = "0" + minutes.toString();
+            }
+            let seconds = Math.floor(GameLevel.gameTimer % 60);
+            if (seconds >= 10) {
+                this.timerLable.text += ":" + seconds.toString();
+            }
+            else {
+                this.timerLable.text += ":0" + seconds.toString();
             }
         }
     
@@ -1075,7 +1075,6 @@ export default class GameLevel extends Scene {
             this.touchedStartCheckPoint = true;
             this.storyLoader("shattered_sword_assets/jsons/story.json");
             this.startTimer();
-            this.levelEnded = true;
         }
     }
 
