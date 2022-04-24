@@ -39,6 +39,8 @@ import { TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
 import AttackAction from "../AI/EnemyActions/AttackAction";
 import Move from "../AI/EnemyActions/Move";
 import GameOver from "./GameOver";
+import Porcelain from "./Porcelain";
+import Tutorial from "./Tutorial";
 
 //  TODO
 /**
@@ -99,35 +101,44 @@ export default class GameLevel extends Scene {
     protected gameStateStack: Stack<GameState>;
 
     // Story
-    private storytextLabel: Label;
-    private storyLayer: Layer;
-    private story: Story;
-    private storyProgress: number;
-    private storySprites: Array<Sprite>;
-    private storyBGMs: Array<string>;
-    private currentSpeaker: string;
-    private currentContent: string;
+    protected storytextLabel: Label;
+    protected storyLayer: Layer;
+    protected story: Story;
+    protected storyProgress: number;
+    protected storySprites: Array<Sprite>;
+    protected storyBGMs: Array<string>;
+    protected currentSpeaker: string;
+    protected currentContent: string;
 
     //buffs layer
-    buffLayer: Layer;
-    buffButton1 : Button;
-    buffLabel1 : Label;
-    buffButton2 : Button;
-    buffLabel2 : Label;
-    buffButton3 : Button;
-    buffLabel3: Label;
-    buffs: Array<Buff>;
+    protected buffLayer: Layer;
+    protected buffButton1 : Button;
+    protected buffLabel1 : Label;
+    protected buffButton2 : Button;
+    protected buffLabel2 : Label;
+    protected buffButton3 : Button;
+    protected buffLabel3: Label;
+    protected buffs: Array<Buff>;
 
     //pause layer
-    pauseLayer: Layer;
-    pauseText: Label;
-    pauseInput: TextInput;
-    pauseSubmit: Label;
-    pauseCheatText: Label;
+    protected pauseLayer: Layer;
+    protected pauseText: Label;
+    protected pauseInput: TextInput;
+    protected pauseSubmit: Label;
+    protected pauseCheatText: Label;
 
     protected randomSeed: number;
     protected rmg: RandomMapGenerator;
     protected map: TiledTilemapData;
+
+    protected startCheckPoint: Rect;
+    protected endCheckPoint: Rect;
+    protected touchedStartCheckPoint: boolean = false;
+    protected touchedEndCheckPoint: boolean = false;
+    protected static gameTimer: number = 0;
+    protected gameStarted: boolean = false;
+    protected timerLable: Label;
+    protected levelEnded: boolean = false;
 
     startpos: Vec2; 
     loadScene(): void {
@@ -198,8 +209,10 @@ export default class GameLevel extends Scene {
         this.subscribeToEvents();
         this.addUI();
 
-        const checkPoint = this.rmg.getCheckPoint();
-        this.addLevelEnd(new Vec2(checkPoint[0], checkPoint[1]), new Vec2(checkPoint[2], checkPoint[3]));
+        let startCheckPoint = this.rmg.getStartCheckPoint();
+        this.startCheckPoint = this.addCheckPoint(new Vec2(startCheckPoint[0], startCheckPoint[1]), new Vec2(startCheckPoint[2], startCheckPoint[3]), "startStory", "startTimer");
+        let endCheckPoint = this.rmg.getEndCheckPoint();
+        this.endCheckPoint = this.addCheckPoint(new Vec2(endCheckPoint[0], endCheckPoint[1]), new Vec2(endCheckPoint[2], endCheckPoint[3]), "endStory", "nextLevel");
         
         // Create an enemies array
         // Send the player and enemies to the battle manager
@@ -250,7 +263,30 @@ export default class GameLevel extends Scene {
 
 
     updateScene(deltaT: number){
-        
+        if (this.gameStateStack.peek() === GameState.GAMING) {
+            if (this.gameStarted) {
+                GameLevel.gameTimer += deltaT;
+                this.timerLable.textColor = Color.BLACK;
+            }
+            else {
+                this.timerLable.textColor = Color.RED;
+            }
+            let minutes = Math.floor(GameLevel.gameTimer / 60);
+            if (minutes >= 10) {
+                this.timerLable.text = minutes.toString();
+            }
+            else {
+                this.timerLable.text = "0" + minutes.toString();
+            }
+            let seconds = Math.floor(GameLevel.gameTimer % 60);
+            if (seconds >= 10) {
+                this.timerLable.text += ":" + seconds.toString();
+            }
+            else {
+                this.timerLable.text += ":0" + seconds.toString();
+            }
+        }
+    
         // Handle events and update the UI if needed
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
@@ -321,8 +357,22 @@ export default class GameLevel extends Scene {
                             this.respawnPlayer();
                         }
                         else{ //no more lives
+                            this.viewport.setZoomLevel(1);
                             this.sceneManager.changeToScene(GameOver, {});
+                            InputWrapper.enableInput();
                         }
+                        break;
+                    case "startStory":
+                        this.playStartStory();
+                        break;
+                    case "endStory":
+                        this.playEndStory();
+                        break;
+                    case "startTimer":
+                        this.startTimer();
+                        break;
+                    case "nextLevel":
+                        this.goToNextLevel();
                         break;
                 }
             }
@@ -366,6 +416,16 @@ export default class GameLevel extends Scene {
             }
         }
 
+        if (InputWrapper.isBuff1JustPresed()) {
+            this.emitter.fireEvent("buff1");
+        }
+        if (InputWrapper.isBuff2JustPresed()) {
+            this.emitter.fireEvent("buff2");
+        }
+        if (InputWrapper.isBuff3JustPresed()) {
+            this.emitter.fireEvent("buff3");
+        }
+
         //update health UI 
         let playerAI = (<PlayerController>this.player.ai);
         this.healthLabel.text = "Health: "+ Math.round(playerAI.CURRENT_HP) +'/' + Math.round(playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp);
@@ -398,7 +458,7 @@ export default class GameLevel extends Scene {
         // this.expLabel.sizeToText();
 
         //update level ui
-        this.playerLevelLabel.text = "lv." + playerAI.level;
+        this.playerLevelLabel.text = "Lv." + playerAI.level;
         //update lives ui
         this.livesCountLabel.text = "Lives: " + playerAI.lives;
 
@@ -410,36 +470,6 @@ export default class GameLevel extends Scene {
 		const baseViewportSize = this.viewport.getHalfSize().scaled(2);
         //check position of player
         this.playerFalloff(viewportCenter, baseViewportSize);
-        
-        // Update player safe position
-        if (this.player.onGround) {
-            this.playerSpawn = this.player.position.clone();
-        }
-
-        //TODO - this is for testing
-        /*
-        if(InputWrapper.isSpawnJustPressed()){
-            console.log("trying to spawn enemy");
-            this.addEnemy("test_dummy",this.player.position,{player: this.player, 
-                                health :100,
-                                tilemap: "Main",
-                                //actions:actions,
-                                goal: Statuses.REACHED_GOAL,
-                                actions: [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
-                                new Move(2, [], [Statuses.IN_RANGE], {inRange: 60})],
-                                status : [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK],
-                                weapon : this.createWeapon("knife")
-                                });
-        }
-        */
-
-        if (InputWrapper.isInventoryJustPressed()) {
-            console.log("LoadingStory");
-            this.storyLoader("shattered_sword_assets/jsons/story.json");
-        }
-
-
-
     }
 
     // TODO put UI changes in here
@@ -501,6 +531,10 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe("buff2");
         this.receiver.subscribe("buff3");
         this.receiver.subscribe("cheat");
+        this.receiver.subscribe("startStory");
+        this.receiver.subscribe("startTimer");
+        this.receiver.subscribe("endStory");
+        this.receiver.subscribe("nextLevel");
     }
 
     // TODO - 
@@ -543,8 +577,12 @@ export default class GameLevel extends Scene {
 
 
 
-        this.playerLevelLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(30, 95), text: "lv. "+ (<PlayerController>this.player.ai).level });
+        this.playerLevelLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(20, 95), text: "Lv. "+ (<PlayerController>this.player.ai).level });
+        this.playerLevelLabel.size.set(0, 50);
+        this.playerLevelLabel.setHAlign(HAlign.LEFT);
         this.playerLevelLabel.textColor = Color.BLUE;
+        this.playerLevelLabel.font = "PixelSimple";
+        this.playerLevelLabel.fontSize = 25;
 
         this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 95), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
         this.expLabel.size.set(200, 50);
@@ -691,9 +729,12 @@ export default class GameLevel extends Scene {
         this.pauseSubmit.onClickEventId = "cheat";
         this.pauseSubmit.borderWidth = 3;
 
-        this.livesCountLabel =  <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(600, 30), text:"Lives: "});
+        this.livesCountLabel =  <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(this.viewport.getHalfSize().x*2 - 100, 30), text:"Lives: "});
         this.livesCountLabel.textColor = Color.YELLOW;
+        this.livesCountLabel.fontSize = 25;
 
+        this.timerLable = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x), 30), text: "00:00"});
+        this.timerLable.fontSize = 60;
 }
 
     //TODO - determine whether we will have weapon datatype
@@ -736,8 +777,6 @@ export default class GameLevel extends Scene {
      * Initializes the player
      */
     protected initPlayer(): void {
-        
-
         //create the inventory
         let inventory = new InventoryManager(this, 1, "inventorySlot", new Vec2(16, 16), 4, "slots1", "items1");
         
@@ -848,8 +887,6 @@ export default class GameLevel extends Scene {
 
     //TODO - give each enemy unique weapon
     protected initializeEnemies( enemies: Enemy[]){
-
-
         let actionsDefault = [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
         new Move(2, [], [Statuses.IN_RANGE], {inRange: 60}),
         ];
@@ -934,11 +971,12 @@ export default class GameLevel extends Scene {
 
     }
 
-    protected addLevelEnd(startingTile: Vec2, size: Vec2): void {
-        this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {position: startingTile.scale(32), size: size.scale(32)});
-        this.levelEndArea.addPhysics(undefined, undefined, false, true);
-        // this.levelEndArea.setTrigger("player", somelevelendevent, null);
-        this.levelEndArea.color = new Color(0, 0, 0, 0);
+    protected addCheckPoint(startingTile: Vec2, size: Vec2, enter: string, exit: string): Rect {
+        let checkPoint = <Rect>this.add.graphic(GraphicType.RECT, "primary", {position: startingTile.scale(32), size: size.scale(32)});
+        checkPoint.addPhysics(undefined, undefined, false, true);
+        checkPoint.setTrigger("player", enter, null);
+        checkPoint.color = new Color(0, 0, 0, 0);
+        return checkPoint;
     }
 
    
@@ -1003,7 +1041,7 @@ export default class GameLevel extends Scene {
      * @param viewportCenter The center of the viewport
      * @param viewportSize The size of the viewport
      */
-    playerFalloff(viewportCenter: Vec2, viewportSize: Vec2):void{
+    protected playerFalloff(viewportCenter: Vec2, viewportSize: Vec2):void{
          if(this.player.position.y >= viewportCenter.y +viewportSize.y/2.0){
 			
 			this.player.position.set(this.playerSpawn.x,this.playerSpawn.y);
@@ -1016,7 +1054,37 @@ export default class GameLevel extends Scene {
     }
 
 
-    async storyLoader(storyPath: string) {
+    protected playStartStory() {
+        if (!this.touchedStartCheckPoint) {
+            this.touchedStartCheckPoint = true;
+            this.storyLoader("shattered_sword_assets/jsons/story.json");
+            this.startTimer();
+        }
+    }
+
+    protected playEndStory() {
+        if (!this.touchedEndCheckPoint) {
+            this.touchedEndCheckPoint = true;
+            this.storyLoader("shattered_sword_assets/jsons/story.json");
+            this.endTimer();
+            this.levelEnded = true;
+        }
+    }
+
+    protected startTimer() {
+        this.gameStarted = true;
+    }
+
+    protected endTimer() {
+        this.gameStarted = false;
+    }
+
+    protected goToNextLevel() {
+        // this.sceneManager.changeToScene(Porcelain);
+    }
+
+
+    protected async storyLoader(storyPath: string) {
         if (this.gameStateStack.peek() === GameState.STORY) {
             return;
         }
@@ -1053,11 +1121,11 @@ export default class GameLevel extends Scene {
         this.updateStory();
     }
 
-    hasNextStory(): boolean {
+    protected hasNextStory(): boolean {
         return this.gameStateStack.peek() ===  GameState.STORY && this.storyProgress + 1 < this.story.texts.length;
     }
 
-    updateStory() {
+    protected updateStory() {
         if (this.hasNextStory()) {
             this.storyProgress++;
             let tmp = undefined;
@@ -1130,11 +1198,14 @@ export default class GameLevel extends Scene {
             this.story = undefined;
             this.storytextLabel = undefined;
             // this.storyLayer = undefined;
+            if (this.levelEnded) {
+                this.goToNextLevel();
+            }
         }
     }
 
     // Cheat
-    enableCheat() {
+    protected enableCheat() {
         if (this.pauseInput.text.toUpperCase() === "UUDDLRLRBABA") {
             (<PlayerController>this.player._ai).godMode = true;
         }

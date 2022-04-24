@@ -25,7 +25,8 @@ export default class RandomMapGenerator {
     private exitFacing: Facing;
     private enemies: Array<Enemy>;
     private player: Vec2;
-    private checkPoint: [number, number, number, number];
+    private startCheckPoint: [number, number, number, number];
+    private endCheckPoint: [number, number, number, number];
 
     constructor(JSONFilePath: string, seed: any) {
         let xhr = new XMLHttpRequest();
@@ -45,7 +46,8 @@ export default class RandomMapGenerator {
         this.rooms = new Array();
         this.enemies = new Array();
         this.player = new Vec2();
-        this.checkPoint = [0,0,0,0];
+        this.startCheckPoint = [0,0,0,0];
+        this.endCheckPoint = [0, 0, 0, 0];
         let gen = require('random-seed');
         this.gen = new gen(seed);
         this.hasExit = false;
@@ -117,8 +119,12 @@ export default class RandomMapGenerator {
         return new Vec2(this.player.x - this.minX, this.player.y - this.minY);
     }
 
-    getCheckPoint(): [number, number, number, number] {
-        return [this.checkPoint[0] - this.minX, this.checkPoint[1] - this.minY, this.checkPoint[2], this.checkPoint[3]];
+    getStartCheckPoint(): [number, number, number, number] {
+        return [this.startCheckPoint[0] - this.minX, this.startCheckPoint[1] - this.minY, this.startCheckPoint[2], this.startCheckPoint[3]];
+    }
+
+    getEndCheckPoint(): [number, number, number, number] {
+        return [this.endCheckPoint[0] - this.minX, this.endCheckPoint[1] - this.minY, this.endCheckPoint[2], this.endCheckPoint[3]];
     }
 
     getEnemies(): Array<Enemy> {
@@ -378,10 +384,15 @@ export default class RandomMapGenerator {
                 }
             }
         }
-        if (old.checkPoint) {
-            this.checkPoint = [...old.checkPoint];
-            this.checkPoint[0] += posX;
-            this.checkPoint[1] += posY;
+        if (old.startCheckPoint) {
+            this.startCheckPoint = [...old.startCheckPoint];
+            this.startCheckPoint[0] += posX;
+            this.startCheckPoint[1] += posY;
+        }
+        if (old.endCheckPoint) {
+            this.endCheckPoint = [...old.endCheckPoint];
+            this.endCheckPoint[0] += posX;
+            this.endCheckPoint[1] += posY;
         }
         if (posX < this.minX)
             this.minX = posX;

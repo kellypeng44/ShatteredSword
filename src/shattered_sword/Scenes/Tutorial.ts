@@ -13,6 +13,8 @@ import EnemyAI from "../AI/EnemyAI";
 import BattlerAI from "../AI/BattlerAI";
 import AttackAction from "../AI/EnemyActions/AttackAction";
 import Move from "../AI/EnemyActions/Move";
+import Porcelain from "./Porcelain";
+import MainMenu from "./MainMenu";
 
 export default class Tutorial extends GameLevel {
     loadScene(): void {
@@ -53,5 +55,10 @@ export default class Tutorial extends GameLevel {
                         weapon : this.createWeapon("knife")
             })
         }
+    }
+
+    protected goToNextLevel(): void {
+        this.viewport.setZoomLevel(1);
+        this.sceneManager.changeToScene(Porcelain);
     }
 }
