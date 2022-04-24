@@ -450,7 +450,7 @@ export default class GameLevel extends Scene {
         // this.expLabel.sizeToText();
 
         //update level ui
-        this.playerLevelLabel.text = "lv." + playerAI.level;
+        this.playerLevelLabel.text = "Lv." + playerAI.level;
         //update lives ui
         this.livesCountLabel.text = "Lives: " + playerAI.lives;
 
@@ -599,8 +599,12 @@ export default class GameLevel extends Scene {
 
 
 
-        this.playerLevelLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(30, 95), text: "lv. "+ (<PlayerController>this.player.ai).level });
+        this.playerLevelLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(20, 95), text: "Lv. "+ (<PlayerController>this.player.ai).level });
+        this.playerLevelLabel.size.set(0, 50);
+        this.playerLevelLabel.setHAlign(HAlign.LEFT);
         this.playerLevelLabel.textColor = Color.BLUE;
+        this.playerLevelLabel.font = "PixelSimple";
+        this.playerLevelLabel.fontSize = 25;
 
         this.expLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(100, 95), text: "EXP: "+ (<PlayerController>this.player.ai).CURRENT_EXP });
         this.expLabel.size.set(200, 50);
