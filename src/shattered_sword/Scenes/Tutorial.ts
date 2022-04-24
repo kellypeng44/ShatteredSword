@@ -58,6 +58,7 @@ export default class Tutorial extends GameLevel {
     }
 
     protected goToNextLevel(): void {
+        this.viewport.setZoomLevel(1);
         this.sceneManager.changeToScene(MainMenu);
     }
 }
