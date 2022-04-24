@@ -11,8 +11,6 @@ import { Statuses } from "../sword_enums";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import EnemyAI from "../AI/EnemyAI";
 import BattlerAI from "../AI/BattlerAI";
-import AttackAction from "../AI/EnemyActions/AttackAction";
-import Move from "../AI/EnemyActions/Move";
 import Porcelain from "./Porcelain";
 import MainMenu from "./MainMenu";
 
@@ -45,13 +43,9 @@ export default class Tutorial extends GameLevel {
                 player: this.player,
                         health: 50,
                         tilemap: "Main",
-                        goal: Statuses.REACHED_GOAL,
                         size: new Vec2(14,10),
                         offset : new Vec2(0, 22),
                         exp: 50,
-                        actions: [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
-                        new Move(2, [], [Statuses.IN_RANGE], {inRange: 60})],
-                        status : [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK],
                         weapon : this.createWeapon("knife")
             })
         }

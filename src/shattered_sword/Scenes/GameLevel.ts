@@ -34,8 +34,6 @@ import Story from "../Tools/DataTypes/Story";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 import { TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
-import AttackAction from "../AI/EnemyActions/AttackAction";
-import Move from "../AI/EnemyActions/Move";
 import GameOver from "./GameOver";
 import Porcelain from "./Porcelain";
 import Tutorial from "./Tutorial";
@@ -867,19 +865,7 @@ export default class GameLevel extends Scene {
         (<EnemyAI>enemy._ai).bleedStat.scale.set(1, 1);
         enemy.setGroup("Enemy");
         enemy.setTrigger("player", Player_Events.PLAYER_COLLIDE, null);
-        let actionsDefault = [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
-        new Move(2, [], [Statuses.IN_RANGE], {inRange: 60}),
-        ];
 
-        let statusArray : Array<string> = [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK];
-
-        //TODO - not working correctly
-        if ( "status" !in aiOptions ){
-            aiOptions["status"] = statusArray;
-        }
-        if( "actions"  !in aiOptions){
-            aiOptions["actions"] = actionsDefault;
-        }
         //add enemy to the enemy array
         this.enemies.push(enemy);
         //this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
@@ -889,34 +875,13 @@ export default class GameLevel extends Scene {
 
     //TODO - give each enemy unique weapon
     protected initializeEnemies( enemies: Enemy[]){
-        let actionsDefault = [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
-        new Move(2, [], [Statuses.IN_RANGE], {inRange: 60}),
-        ];
-
-        let statusArray : Array<string> = [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK];
-        
         for (let enemy of enemies) {
             switch (enemy.type) {
-                case "test_dummy":
-                    this.addEnemy("test_dummy", enemy.position.scale(32), {
-                        player: this.player,
-                        health: 100,
-                        tilemap: "Main",
-                        actions: actionsDefault,
-                        status: statusArray,
-                        goal: Statuses.REACHED_GOAL,
-                        //size: new AABB(Vec2.ZERO, new Vec2(16, 25)),
-                        exp: 100,
-                        weapon : this.createWeapon("knife")
-                    })
-                    break;
                 case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
                     this.addEnemy("Snake", enemy.position.scale(32), {
                         player: this.player,
                         health: 50,
                         tilemap: "Main",
-                        actions: actionsDefault,
-                        status: statusArray,
                         goal: Statuses.REACHED_GOAL,
                         size: new Vec2(14,10),
                         offset : new Vec2(0, 22),
@@ -929,11 +894,8 @@ export default class GameLevel extends Scene {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",
-                        goal: Statuses.REACHED_GOAL,
                         exp: 100,
                         weapon : this.createWeapon("knife"),
-                        actions: actionsDefault,
-                        status: statusArray,
                     })
                     break;
 
@@ -943,11 +905,8 @@ export default class GameLevel extends Scene {
                         health: 200,
                         tilemap: "Main",
                         //actions:actions,
-                        goal: Statuses.REACHED_GOAL,
                         exp: 50,
                         weapon : this.createWeapon("knife"),
-                        actions: actionsDefault,
-                        status: statusArray,
                     })
                     break;
                 case "black_pudding":       
@@ -956,14 +915,11 @@ export default class GameLevel extends Scene {
                         health: 200,
                         tilemap: "Main",
                         //actions:actions,
-                        goal: Statuses.REACHED_GOAL,
                         scale: .25,
                         size: new Vec2(16,10),
                         offset : new Vec2(0,6),
                         exp: 50,
                         weapon : this.createWeapon("knife"),
-                        actions: actionsDefault,
-                        status: statusArray,
                     })
                     break;
                 default:

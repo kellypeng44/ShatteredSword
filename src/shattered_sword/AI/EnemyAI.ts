@@ -1,12 +1,6 @@
-import GoapActionPlanner from "../../Wolfie2D/AI/GoapActionPlanner";
 import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
-import StateMachineGoapAI from "../../Wolfie2D/AI/StateMachineGoapAI";
-import GoapAction from "../../Wolfie2D/DataTypes/Interfaces/GoapAction";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
-import Stack from "../../Wolfie2D/DataTypes/Stack";
-import State from "../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
@@ -19,15 +13,13 @@ import { GameState, Statuses } from "../sword_enums";
 
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
-import MathUtils from "../../Wolfie2D/Utils/MathUtils";
-
 import { Player_Events } from "../sword_enums";
 import InputWrapper from "../Tools/InputWrapper";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import PlayerController from "../Player/PlayerController";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import Color from "../../Wolfie2D/Utils/Color";
-export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
+export default class EnemyAI extends StateMachineAI implements BattlerAI {
     /** The owner of this AI */
     owner: AnimatedSprite;
 
@@ -51,9 +43,6 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
     // The last known position of the player
     lastPlayerPos: Vec2;
-
-    // Attack range
-    inRange: number;
 
     // Path to player
     //path: NavigationPath;
@@ -91,7 +80,8 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
         //add states
          // Patrol mode
-        this.addState(EnemyStates.DEFAULT, new Patrol(this, owner));
+        this.addState(EnemyStates.PATROL, new Patrol(this, owner));
+        // this.addState(EnemyStates.ALERT,)
         
         this.maxHealth = options.health;
 
@@ -101,22 +91,10 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 
         this.player = options.player;
 
-        this.inRange = options.inRange;
-
-        this.goal = options.goal;
-
-        this.currentStatus = options.status;
-
-        this.possibleActions = options.actions;
-
-        this.plan = new Stack<GoapAction>();
-
-        this.planner = new GoapActionPlanner();
-
         //TODO - get correct tilemap
         this.tilemap = <OrthogonalTilemap>this.owner.getScene().getLayer("Wall").getItems()[0];
         // Initialize to the default state
-        this.initialize(EnemyStates.DEFAULT);
+        this.initialize(EnemyStates.PATROL);
 
         this.direction = 1; //default moving to the right
 
@@ -131,8 +109,6 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         this.attackTimer = new Timer(2500);
     }
 
-    activate(options: Record<string, any>): void { }
-
     damage(damage: number): void {
         // enemy already dead, do not send new event
         if (this.CURRENT_HP <= 0) {
@@ -143,11 +119,6 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         //TODO -
         this.owner.animation.play("HURT",false);
         console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
-
-        // If we're low enough, add Low Health status to enemy
-        if (this.CURRENT_HP <= Math.floor(this.maxHealth/2)) {
-            
-        }
 
         // If health goes below 0, disable AI and fire enemyDied event
         if (this.CURRENT_HP <= 0) {
@@ -172,17 +143,10 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
             }
             
             this.emitter.fireEvent(Player_Events.ENEMY_KILLED, {owner: this.owner.id, ai:this});
-
-
-            if (Math.random() < 0.05) {
-                // give buff maybe
-                //this.emitter.fireEvent("giveBuff", { position: this.owner.position });
-            }
         }
     }
 
     //TODO - need to modify for side view
-    
     isPlayerVisible(pos: Vec2): Vec2{
         //Check ifplayer is visible, taking into account walls
 
@@ -235,12 +199,9 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
      * @returns position of the player if visible, else null
      */
     getPlayerPosition(): Vec2 {
-        //TODO - check if player is visible
-        if(this.isPlayerVisible(this.player.position))
-            return this.player.position;
-        else    
-            return null;
+        return this.isPlayerVisible(this.player.position);
     }
+
     update(deltaT: number){
         if (InputWrapper.getState() != GameState.GAMING) {
             this.owner.animation.pause();
@@ -249,22 +210,6 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         this.owner.animation.resume();
         super.update(deltaT);
 
-        // This is the plan that is executed in the Active state, so whenever we don't have a plan, acquire a new one given the current statuses the enemy has
-        /*
-        if (this.plan.isEmpty()) {
-            //get a new plan
-            if(this.possibleActions === undefined){
-                console.log("undefined possiblse actions");
-            }
-
-            if(this.currentState === undefined){
-                console.log("undefined current status");
-            }
-            this.plan = this.planner.plan(Statuses.REACHED_GOAL, this.possibleActions, this.currentStatus, null);
-        }
-        */
-        
-        //TODO 
         if(this.burnTimer.isStopped() && this.burnCounter >0){
             this.burnCounter --;
             this.burnTimer.start();
@@ -280,10 +225,6 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
             this.bleedTimer.start();
             this.damage(5 + (<PlayerController>this.player._ai).extraDotDmg + (<PlayerController>this.player._ai).CURRENT_ATK * .08);
         }
-
-
-        
-
 
         if (this.healthBar) {
             this.healthBar.position = this.owner.collisionShape.center.clone().add(new Vec2(0, -((<AABB>this.owner.collisionShape).hh+5)));
@@ -314,7 +255,7 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
 }
 
 export enum EnemyStates {
-    DEFAULT = "default",
+    PATROL = "patrol",
     ALERT = "alert",
-    PREVIOUS = "previous"
+    ATTACK = "attack"
 }

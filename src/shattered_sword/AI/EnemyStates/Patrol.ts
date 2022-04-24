@@ -8,63 +8,27 @@ import EnemyState from "./EnemyState";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 
 export default class Patrol extends EnemyState {
-
-    
-
-    // A return object for exiting this state
-    protected retObj: Record<string, any>;
-
-    constructor(parent: EnemyAI, owner: GameNode){
-        super(parent, owner);
-      
-    }
-
     onEnter(options: Record<string, any>): void {
-        //this.currentPath = this.getNextPath();
-        //if(!(<AnimatedSprite>this.owner).animation.isPlaying("DYING")){
-            //(<AnimatedSprite>this.owner).animation.queue("IDLE", true);
-        //}
-        //else{
-            (<AnimatedSprite>this.owner).animation.playIfNotAlready("IDLE", true);
-        //}
+        (<AnimatedSprite>this.owner).animation.playIfNotAlready("IDLE", true);
     }
-
-    handleInput(event: GameEvent): void { }
 
     update(deltaT: number): void {
-        super.update(deltaT);
-        
-        //no goap rn, just adding some moving
-        let colrow = this.parent.tilemap.getColRowAt(this.owner.position.clone());
-        
-        //check if next tile on walking path is collidable
-        if(this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y) || this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y-1)){
-            //turn around
-             this.parent.direction *= -1;
+        if(!this.canWalk()){
+            this.parent.direction *= -1;
         }
-        //check if next ground tile is collidable 
-        else if(!this.parent.tilemap.isTileCollidable(colrow.x+this.parent.direction,colrow.y+1)){
-            //turn around 
-            this.parent.direction *=-1;
-        }
-        else{
-            //keep moving
-        }
+
         //move
         this.parent.velocity.x = this.parent.direction * this.parent.speed;
-        (<Sprite>this.owner).invertX = this.parent.direction ==1? true: false ;
+        (<Sprite>this.owner).invertX = this.parent.direction === 1 ? true : false ;
 
-        //move this elsewhere later
-        this.owner.move(this.parent.velocity.scaled(deltaT));
-        //console.log("enemy moving");
+        super.update(deltaT);
     }
 
     onExit(): Record<string, any> {
-        return this.retObj;
+        (<AnimatedSprite>this.owner).animation.stop();
+        return null;
     }
-
-    
-
 }
