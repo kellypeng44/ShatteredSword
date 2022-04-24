@@ -39,6 +39,8 @@ import { TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
 import AttackAction from "../AI/EnemyActions/AttackAction";
 import Move from "../AI/EnemyActions/Move";
 import GameOver from "./GameOver";
+import Porcelain from "./Porcelain";
+import Tutorial from "./Tutorial";
 
 //  TODO
 /**
@@ -136,6 +138,7 @@ export default class GameLevel extends Scene {
     protected static gameTimer: number = 0;
     protected gameStarted: boolean = false;
     protected timerLable: Label;
+    protected levelEnded: boolean = false;
 
     startpos: Vec2; 
     loadScene(): void {
@@ -1072,6 +1075,7 @@ export default class GameLevel extends Scene {
             this.touchedStartCheckPoint = true;
             this.storyLoader("shattered_sword_assets/jsons/story.json");
             this.startTimer();
+            this.levelEnded = true;
         }
     }
 
@@ -1080,6 +1084,7 @@ export default class GameLevel extends Scene {
             this.touchedEndCheckPoint = true;
             this.storyLoader("shattered_sword_assets/jsons/story.json");
             this.endTimer();
+            this.levelEnded = true;
         }
     }
 
@@ -1092,7 +1097,7 @@ export default class GameLevel extends Scene {
     }
 
     protected goToNextLevel() {
-        console.log("goToNextLevel")
+        // this.sceneManager.changeToScene(Porcelain);
     }
 
 
@@ -1210,6 +1215,9 @@ export default class GameLevel extends Scene {
             this.story = undefined;
             this.storytextLabel = undefined;
             // this.storyLayer = undefined;
+            if (this.levelEnded) {
+                this.goToNextLevel();
+            }
         }
     }
 

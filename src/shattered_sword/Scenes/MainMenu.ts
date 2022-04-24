@@ -21,9 +21,6 @@ export default class MainMenu extends Scene {
     private about: Layer;
     private control: Layer;
     // private rmg: RandomMapGenerator;
-    
-
-    animatedSprite: AnimatedSprite;
 
     loadScene(): void {
         // Load the menu song
@@ -33,24 +30,6 @@ export default class MainMenu extends Scene {
     //TODO 
     
     startScene(): void{
-        // this.config = new ConfigManager();
-        // this.save = new SaveManager();
-        // console.log(this.config.getVolume());
-        // this.config.setVolume(100);
-        // console.log(this.config.getVolume());
-        // console.log(this.save.getLevel());
-        // this.save.setLevel(10);
-
-        // console.log(this.save.getLevel());
-        
-        // this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", 114514);
-        // this.rmg.getMap();
-
-
-
-        // Scene has started, so start playing music
-        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menu", loop: true, holdReference: true});
-
         const center = this.viewport.getCenter();
 
         // The main menu
