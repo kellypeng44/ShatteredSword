@@ -177,6 +177,10 @@ export default class GameLevel extends Scene {
         this.randomSeed = Math.floor(Math.random() * 10000000000);
     }
 
+    unloadScene(): void {
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
+     }
+
     startScene(): void {
         this.add.tilemap("map", new Vec2(2, 2));
         console.log("width,height:" + this.map.width, this.map.height);
@@ -1021,7 +1025,6 @@ export default class GameLevel extends Scene {
      * Returns the player to spawn
      */
     protected respawnPlayer(): void {
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
         InputWrapper.enableInput();
         this.player.position.copy(this.startpos);
         (<PlayerController>this.player._ai).CURRENT_HP = (<PlayerController>this.player._ai).MAX_HP + (<PlayerController>this.player._ai).CURRENT_BUFFS.hp;
