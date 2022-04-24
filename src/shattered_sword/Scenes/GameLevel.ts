@@ -160,6 +160,7 @@ export default class GameLevel extends Scene {
         this.load.audio("hurt", "shattered_sword_assets/sounds/hurt.wav");
         this.load.audio("die", "shattered_sword_assets/sounds/die.wav");
         this.load.audio("level_up","shattered_sword_assets/sounds/level_up.wav");
+        this.load.audio("level_music","shattered_sword_assets/sounds/bgm1.mp3")
 
 
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
@@ -253,12 +254,11 @@ export default class GameLevel extends Scene {
         this.levelTransitionScreen.tweens.play("fadeOut");
         */
 
-        //TODO - uncomment when done testing
-        // Initially disable player movement
-        //Input.disableInput();
         this.gameStateStack = new Stack();
         this.setGameState(GameState.GAMING);
         InputWrapper.enableInput();
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
     }
 
 
