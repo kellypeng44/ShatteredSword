@@ -998,8 +998,6 @@ export default class GameLevel extends Scene {
                 //damage the player 
                 (<PlayerController>this.player._ai).damage(10); //10 collision dmg for now
         }
-                
-        
 
     }
 
