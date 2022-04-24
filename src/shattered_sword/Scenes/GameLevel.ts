@@ -287,27 +287,25 @@ export default class GameLevel extends Scene {
 
                     case Player_Events.GIVE_BUFF:
                         this.buffs = (<PlayerController>this.player._ai).generateBuffs();
-                        if(this.buffs[0].string !== undefined){
-                            //this.buffButton1.text = this.buffs[0].string;
-                            this.buffLabel1.text = this.buffs[0].string;
-                        }
-                        else{
-                            //this.buffButton1.text = "Increase "+this.buffs[0].type + " by "+this.buffs[0].value;
+                        if(this.buffs[0].string === undefined){
                             this.buffLabel1.text = "Increase "+this.buffs[0].type + "\n by \n"+this.buffs[0].value;
                         }
-                        
-                        if(this.buffs[1].string !== undefined){
-                            this.buffLabel2.text = this.buffs[1].string;
-                        }
                         else{
+                            this.buffLabel1.text = this.buffs[0].string;
+                        }
+                        
+                        if(this.buffs[1].string === undefined){
                             this.buffLabel2.text = "Increase "+this.buffs[1].type + "\n by \n"+this.buffs[1].value;
                         }
+                        else{
+                            this.buffLabel2.text = this.buffs[1].string;
+                        }
                         
-                        if(this.buffs[2].string !== undefined){
-                            this.buffLabel3.text = this.buffs[2].string;
+                        if(this.buffs[2].string === undefined){
+                            this.buffLabel3.text = "Increase "+this.buffs[2].type + "\n by \n"+this.buffs[2].value;
                         }
                         else{
-                            this.buffLabel3.text = "Increase "+this.buffs[2].type + "\n by \n"+this.buffs[2].value;
+                            this.buffLabel3.text = this.buffs[2].string;
                         }
                         
                         //pause game here 

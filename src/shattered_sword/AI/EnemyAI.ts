@@ -282,21 +282,6 @@ export default class EnemyAI extends StateMachineGoapAI implements BattlerAI {
         }
 
 
-        //TODO - GOAP NOT WORKING, ATTACK WORKAROUND
-        if(this.getPlayerPosition() ==  null){
-            return;
-        }
-        let distance = this.owner.position.distanceTo(this.getPlayerPosition());
-        if( distance <= 20){
-            if( this.direction ==  Math.sign(this.getPlayerPosition().x -this.owner.position.x) ){
-                let dir = this.getPlayerPosition().clone().sub(this.owner.position).normalize();
-                if(this.attackTimer.isStopped()){
-                    this.weapon.use(this.owner, "enemy", dir.scale(1,0))
-                    this.attackTimer.start();
-                }
-            }
-            
-        }
         
 
 
