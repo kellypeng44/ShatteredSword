@@ -6,6 +6,7 @@ import { Player_Events } from "../../sword_enums";
 import InputWrapper from "../../Tools/InputWrapper";
 import { PlayerStates } from "../PlayerController";
 import InAir from "./InAir";
+import PlayerState from "./PlayerState";
 
 export default class Jump extends InAir {
 	owner: AnimatedSprite;
@@ -17,11 +18,16 @@ export default class Jump extends InAir {
 	
 
 	update(deltaT: number): void {
-		if (this.parent.invincible) {
-			this.owner.animation.playIfNotAlready("HURT");
+		if (!PlayerState.dashTimer.isStopped()) {
+			this.owner.animation.playIfNotAlready("DASH");
 		}
 		else {
-			this.owner.animation.playIfNotAlready("JUMP", true);
+			if (this.parent.invincible) {
+				this.owner.animation.playIfNotAlready("HURT");
+			}
+			else {
+				this.owner.animation.playIfNotAlready("JUMP", true);
+			}
 		}
 
 

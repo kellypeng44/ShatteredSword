@@ -310,23 +310,31 @@
 			"frames": [
 				{
 					"index": 46,
-					"duration": 5
+					"duration": 1
 				},
 				{
 					"index": 47,
-					"duration": 5
+					"duration": 1
 				},
 				{
 					"index": 48,
-					"duration": 5
+					"duration": 1
 				},
 				{
 					"index": 49,
-					"duration": 5
+					"duration": 2
 				},
 				{
-					"index": 50,
-					"duration": 10
+					"index": 48,
+					"duration": 1
+				},
+				{
+					"index": 47,
+					"duration": 1
+				},
+				{
+					"index": 46,
+					"duration": 1
 				}
 			]
 		}

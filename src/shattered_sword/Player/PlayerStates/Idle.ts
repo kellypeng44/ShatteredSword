@@ -1,6 +1,7 @@
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { PlayerStates } from "../PlayerController";
 import OnGround from "./OnGround";
+import PlayerState from "./PlayerState";
 
 export default class Idle extends OnGround {
 	owner: AnimatedSprite;
@@ -13,7 +14,13 @@ export default class Idle extends OnGround {
 	update(deltaT: number): void {
 		
         //("idle anim");
-        this.owner.animation.playIfNotAlready("IDLE", true);
+		if (!PlayerState.dashTimer.isStopped()) {
+			console.log("Playing dash");
+			this.owner.animation.playIfNotAlready("DASH");
+		}
+		else {
+        	this.owner.animation.playIfNotAlready("IDLE", true);
+		}
 
 		let dir = this.getInputDirection();
 

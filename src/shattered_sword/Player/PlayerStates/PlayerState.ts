@@ -24,7 +24,7 @@ export default abstract class PlayerState extends State {
 		this.owner = owner;
 		this.positionTimer = new Timer(250);
 		this.positionTimer.start();
-		PlayerState.dashTimer = new Timer(50);
+		PlayerState.dashTimer = new Timer(100);
 		PlayerState.dashCoolDownTimer = new Timer(600);
 
 	}

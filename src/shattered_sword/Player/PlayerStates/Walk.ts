@@ -3,6 +3,7 @@ import { Player_Events } from "../../sword_enums";
 import InputWrapper from "../../Tools/InputWrapper";
 import { PlayerStates } from "../PlayerController";
 import OnGround from "./OnGround";
+import PlayerState from "./PlayerState";
 
 export default class Walk extends OnGround {
 	owner: AnimatedSprite;
@@ -14,13 +15,17 @@ export default class Walk extends OnGround {
 
 
 	update(deltaT: number): void {
-		if (this.parent.invincible) {
-			this.owner.animation.playIfNotAlready("HURT");
+		if (!PlayerState.dashTimer.isStopped()) {
+			this.owner.animation.playIfNotAlready("DASH");
 		}
 		else {
-			this.owner.animation.playIfNotAlready("WALK", true);
+			if (this.parent.invincible) {
+				this.owner.animation.playIfNotAlready("HURT");
+			}
+			else {
+				this.owner.animation.playIfNotAlready("WALK", true);
+			}
 		}
-
 		let dir = this.getInputDirection();
 
 		if(dir.isZero()){

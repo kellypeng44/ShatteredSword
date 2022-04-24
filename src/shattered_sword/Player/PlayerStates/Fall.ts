@@ -2,6 +2,7 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import InAir from "./InAir";
 import InputWrapper from "../../Tools/InputWrapper";
+import PlayerState from "./PlayerState";
 
 export default class Fall extends InAir {
     owner: AnimatedSprite;
@@ -11,11 +12,16 @@ export default class Fall extends InAir {
 	}
 
     update(deltaT: number): void {
-        if (this.parent.invincible) {
-			this.owner.animation.playIfNotAlready("HURT");
+		if (!PlayerState.dashTimer.isStopped()) {
+			this.owner.animation.playIfNotAlready("DASH");
 		}
 		else {
-			this.owner.animation.playIfNotAlready("FALL", true);
+			if (this.parent.invincible) {
+				this.owner.animation.playIfNotAlready("HURT");
+			}
+			else {
+				this.owner.animation.playIfNotAlready("FALL", true);
+			}
 		}
 		//TODO - testing doublejump, may have to move to InAir instead
 		// If we jump, move to the Jump state, give a burst of upwards velocity
