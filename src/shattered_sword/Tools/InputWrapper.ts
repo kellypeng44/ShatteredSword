@@ -103,15 +103,25 @@ export default class InputWrapper {
         return false;
     }
 
-    static isSpawnJustPressed(): boolean {
-        if (InputWrapper.gameState != GameState.GAMING) {
+    static isBuff1JustPresed(): boolean{
+        if (InputWrapper.gameState != GameState.BUFF) {
             return false;
         }
-        
-        if (Input.isJustPressed("spawn")) {
-            return true;
+        return Input.isJustPressed("buff1");
+    }
+
+    static isBuff2JustPresed(): boolean{
+        if (InputWrapper.gameState != GameState.BUFF) {
+            return false;
         }
-        return false;
+        return Input.isJustPressed("buff2");
+    }
+
+    static isBuff3JustPresed(): boolean{
+        if (InputWrapper.gameState != GameState.BUFF) {
+            return false;
+        }
+        return Input.isJustPressed("buff3");
     }
 
     static isPauseJustPressed(): boolean {

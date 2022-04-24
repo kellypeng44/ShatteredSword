@@ -3,12 +3,14 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import { GameState } from "../sword_enums";
 import InputWrapper from "../Tools/InputWrapper";
 import MainMenu from "./MainMenu";
 
 export default class GameOver extends Scene {
 
     startScene() {
+        InputWrapper.setState(GameState.PAUSE);
         const center = this.viewport.getCenter();
 
         this.addUILayer("primary");

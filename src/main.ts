@@ -27,7 +27,9 @@ import WeaponTypeRegistry from "./shattered_sword/Registry/WeaponTypeRegistry";
             {name: "inventory", keys: ["i","b"]},
             {name: "pause", keys: ["escape"]},    
             {name: "tab", keys: ["tab"]},
-            {name: "spawn", keys: ["q"]}        //debug feature to test enemy spawning, press q to spawn enemy at current location 
+            {name: "buff1", keys: ["1"]},
+            {name: "buff2", keys: ["2"]},
+            {name: "buff3", keys: ["3"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                      // Whether to show debug messages. You can change this to true if you want

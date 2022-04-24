@@ -418,6 +418,16 @@ export default class GameLevel extends Scene {
             }
         }
 
+        if (InputWrapper.isBuff1JustPresed()) {
+            this.emitter.fireEvent("buff1");
+        }
+        if (InputWrapper.isBuff2JustPresed()) {
+            this.emitter.fireEvent("buff2");
+        }
+        if (InputWrapper.isBuff3JustPresed()) {
+            this.emitter.fireEvent("buff3");
+        }
+
         //update health UI 
         let playerAI = (<PlayerController>this.player.ai);
         this.healthLabel.text = "Health: "+ Math.round(playerAI.CURRENT_HP) +'/' + Math.round(playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp);
@@ -462,36 +472,6 @@ export default class GameLevel extends Scene {
 		const baseViewportSize = this.viewport.getHalfSize().scaled(2);
         //check position of player
         this.playerFalloff(viewportCenter, baseViewportSize);
-        
-        // Update player safe position
-        // if (this.player.onGround) {
-        //     this.playerSpawn = this.player.position.clone();
-        // }
-
-        //TODO - this is for testing
-        /*
-        if(InputWrapper.isSpawnJustPressed()){
-            console.log("trying to spawn enemy");
-            this.addEnemy("test_dummy",this.player.position,{player: this.player, 
-                                health :100,
-                                tilemap: "Main",
-                                //actions:actions,
-                                goal: Statuses.REACHED_GOAL,
-                                actions: [new AttackAction(3, [Statuses.IN_RANGE], [Statuses.REACHED_GOAL]),
-                                new Move(2, [], [Statuses.IN_RANGE], {inRange: 60})],
-                                status : [Statuses.CAN_RETREAT, Statuses.CAN_BERSERK],
-                                weapon : this.createWeapon("knife")
-                                });
-        }
-        */
-
-        // if (InputWrapper.isInventoryJustPressed()) {
-        //     console.log("LoadingStory");
-        //     this.storyLoader("shattered_sword_assets/jsons/story.json");
-        // }
-
-
-
     }
 
     // TODO put UI changes in here
