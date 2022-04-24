@@ -359,7 +359,9 @@ export default class GameLevel extends Scene {
                             this.respawnPlayer();
                         }
                         else{ //no more lives
+                            this.viewport.setZoomLevel(1);
                             this.sceneManager.changeToScene(GameOver, {});
+                            InputWrapper.enableInput();
                         }
                         break;
                     case "startStory":
