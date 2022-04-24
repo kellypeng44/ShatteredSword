@@ -50,7 +50,8 @@ export class RoomTemplate {
     topLayer: Array<number>;
     entrances: Array<Entrance>;
     sprites?: Array<Sprite>;
-    checkPoint?: [number, number, number, number];
+    startCheckPoint?: [number, number, number, number];
+    endCheckPoint?: [number, number, number, number];
 }
 
 export class Corner {
