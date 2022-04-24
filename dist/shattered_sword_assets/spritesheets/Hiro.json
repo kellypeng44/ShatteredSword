@@ -3,7 +3,7 @@
 	"spriteSheetImage": "Hiro.png",
 	"spriteWidth": 64,
 	"spriteHeight": 64,
-	"columns": 7,
+	"columns": 8,
 	"rows": 7,
 	"durationType": "time",
 	"animations": [		
@@ -75,12 +75,12 @@
 			]
 		},
 		{
-			"name": "JUMP",
+			"name": "JUMP2",
 			"repeat": false,
 			"frames": [
 				{
 					"index": 30,
-					"duration": 10
+					"duration": 5
 				},
 				{
 					"index": 31,
@@ -96,12 +96,12 @@
 				},
 				{
 					"index": 30,
-					"duration": 10
+					"duration": 5
 				}
 			]
 		},
 		{
-			"name": "JUMP_RIGHT",
+			"name": "JUMP",
 			"repeat": false,
 			"frames": [
 				{
@@ -300,6 +300,32 @@
 			"frames": [
 				{
 					"index": 43,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "DASH",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 46,
+					"duration": 5
+				},
+				{
+					"index": 47,
+					"duration": 5
+				},
+				{
+					"index": 48,
+					"duration": 5
+				},
+				{
+					"index": 49,
+					"duration": 5
+				},
+				{
+					"index": 50,
 					"duration": 10
 				}
 			]
