@@ -8,31 +8,27 @@ export default class Attack extends EnemyState {
     protected attacked: string;
 
     onEnter(options: Record<string, any>): void {
-        let event = this.owner.id+"charged";
-        (<AnimatedSprite>this.owner).animation.play("DYING", false, event);
-        this.receiver.subscribe(event);
+        this.parent.attackTimer.start();
+        this.parent.velocity.x = 0;
+        this.charged = this.owner.id+"charged";
+        this.attacked = this.owner.id+"attacked";
+        (<AnimatedSprite>this.owner).animation.play("DYING", false, this.charged);
+        this.receiver.subscribe(this.charged);
+        this.receiver.subscribe(this.attacked);
     }
 
     update(deltaT: number): void {
         while (this.receiver.hasNextEvent()) {
-            this.receiver.getNextEvent();
-
+            let event = this.receiver.getNextEvent().type;
+            switch (event) {
+                case this.charged:
+                    (<AnimatedSprite>this.owner).animation.play("ATTACK", false, this.attacked);
+                    break;
+                case this.attacked:
+                    this.finished(EnemyStates.ALERT);
+                    break;
+            }
         }
-        let position = this.parent.getPlayerPosition();
-        if (position) {
-            this.parent.velocity.x = this.parent.maxSpeed * Math.sign(position.x - this.owner.position.x);
-        }
-        else {
-            this.parent.velocity.x = 0;
-            this.finished(EnemyStates.PATROL);
-        }
-
-        this.parent.direction = this.parent.velocity.x >= 0 ? 1 : -1;
-        if (!this.canWalk()) {
-            this.parent.velocity.x = 0;
-        }
-
-        (<Sprite>this.owner).invertX = this.parent.direction === 1 ? true : false ;
         super.update(deltaT);
     }
 
