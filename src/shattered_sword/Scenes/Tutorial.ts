@@ -39,14 +39,13 @@ export default class Tutorial extends GameLevel {
         //spawn snake()
         if(Math.random() < .0001){
             console.log("RANDOM SNAKE!");
-            this.addEnemy("Snake", this.player.position.clone().add(new Vec2(0,-320)),{
+            this.addEnemy("Snake", this.player.position.clone().add(new Vec2(0,-320)), EnemyAI, {
                 player: this.player,
                         health: 50,
                         tilemap: "Main",
                         size: new Vec2(14,10),
                         offset : new Vec2(0, 22),
                         exp: 50,
-                        weapon : this.createWeapon("knife")
             })
         }
     }
