@@ -143,6 +143,10 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         let start = this.owner.position.clone();
         let delta = pos.clone().sub(start);
 
+        if (delta.mag() >= 640) {
+            return null;
+        }
+
         // Iterate through the tilemap region until we find a collision
         let minX = Math.min(start.x, pos.x);
         let maxX = Math.max(start.x, pos.x);
