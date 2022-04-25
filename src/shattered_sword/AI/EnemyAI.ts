@@ -253,7 +253,12 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         if (this.bleedStat) {
             this.bleedStat.position = this.poisonStat.position.clone().add(new Vec2(30, 0));
             this.bleedStat.visible = this.bleedCounter > 0;
-        }   
+        }
+
+        if (this.owner.position.y > this.tilemap.getDimensions().y * this.tilemap.getTileSize().y) {
+            this.CURRENT_HP = -1;
+            this.emitter.fireEvent(Player_Events.ENEMY_KILLED, {owner: this.owner.id, ai:this});
+        }
     }
 }
 

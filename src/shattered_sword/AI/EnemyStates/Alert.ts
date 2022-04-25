@@ -9,10 +9,6 @@ export default class Alert extends EnemyState {
     }
 
     update(deltaT: number): void {
-        if(!this.canWalk()){
-            this.parent.direction *= -1;
-        }
-
         let position = this.parent.getPlayerPosition();
         if (position) {
             this.parent.velocity.x = this.parent.maxSpeed * Math.sign(position.x - this.owner.position.x);
@@ -22,7 +18,12 @@ export default class Alert extends EnemyState {
             this.finished(EnemyStates.PATROL);
         }
 
-        (<Sprite>this.owner).invertX = this.parent.velocity.x > 0 ? true : false ;
+        this.parent.direction = this.parent.velocity.x >= 0 ? 1 : -1;
+        if (!this.canWalk()) {
+            this.parent.velocity.x = 0;
+        }
+
+        (<Sprite>this.owner).invertX = this.parent.direction === 1 ? true : false ;
         super.update(deltaT);
     }
 
