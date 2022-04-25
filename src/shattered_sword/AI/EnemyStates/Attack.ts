@@ -12,9 +12,6 @@ export default class Alert extends EnemyState {
         let position = this.parent.getPlayerPosition();
         if (position) {
             this.parent.velocity.x = this.parent.maxSpeed * Math.sign(position.x - this.owner.position.x);
-            if (this.parent.attackTimer.isStopped()) {
-                this.finished(EnemyStates.ATTACK);
-            }
         }
         else {
             this.parent.velocity.x = 0;

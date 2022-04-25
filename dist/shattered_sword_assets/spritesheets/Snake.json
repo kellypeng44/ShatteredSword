@@ -54,7 +54,7 @@
          ]
       },
       {
-         "name": "walk",
+         "name": "WALK",
          "repeat": true,
          "frames": [
             {

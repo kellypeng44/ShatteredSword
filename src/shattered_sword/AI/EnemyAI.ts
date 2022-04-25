@@ -4,12 +4,11 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import NavigationPath from "../../Wolfie2D/Pathfinding/NavigationPath";
-import Weapon from "../GameSystems/items/Weapon";
 import BattlerAI from "./BattlerAI";
 
 import Patrol from "./EnemyStates/Patrol";
 import Alert from "./EnemyStates/Alert";
+import Attack from "./EnemyStates/Attack";
 import { GameState, Statuses } from "../sword_enums";
 
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
@@ -35,23 +34,11 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
 
     maxSpeed: number = 40;
 
-    /** The weapon this AI has */
-    weapon: Weapon;
-
     /** A reference to the player object */
     player: GameNode;
 
     // The current known position of the player
     playerPos: Vec2;
-
-    // The last known position of the player
-    lastPlayerPos: Vec2;
-
-    // Path to player
-    //path: NavigationPath;
-
-    // Path away from player
-    retreatPath: NavigationPath;
 
     tilemap: OrthogonalTilemap;
 
@@ -85,12 +72,11 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
          // Patrol mode
         this.addState(EnemyStates.PATROL, new Patrol(this, owner));
         this.addState(EnemyStates.ALERT, new Alert(this, owner));
+        this.addState(EnemyStates.ATTACK, new Attack(this, owner));
         
         this.maxHealth = options.health;
 
         this.CURRENT_HP = options.health;
-
-        this.weapon = options.weapon;
 
         this.player = options.player;
 
@@ -190,7 +176,6 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
                 }
             }
         }
-
         return pos;
     }
     
