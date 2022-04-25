@@ -64,6 +64,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
 
     attackTimer : Timer;
     isAttaking: boolean = false;
+    damageTimer: Timer;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void { 
@@ -96,6 +97,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         this.poisonTimer = new Timer(1000);
 
         this.attackTimer = new Timer(2500);
+        this.damageTimer = new Timer(400);
     }
 
     damage(damage: number): void {
@@ -136,6 +138,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
             
             this.emitter.fireEvent(Player_Events.ENEMY_KILLED, {owner: this.owner.id, ai:this});
         }
+        this.damageTimer.start();
     }
 
     collideWithPlayer(player: PlayerController): void {

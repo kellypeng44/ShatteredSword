@@ -27,6 +27,9 @@ export default abstract class EnemyState extends State {
   }
 
   update(deltaT: number): void {
+    if (!this.parent.damageTimer.isStopped()) {
+      this.parent.velocity.x = 0;
+    }
     // Do gravity
     this.parent.velocity.y += this.gravity * deltaT;
     this.owner.move(this.parent.velocity.scaled(deltaT));
