@@ -8,7 +8,7 @@ import BattlerAI from "./BattlerAI";
 
 import Patrol from "./EnemyStates/Patrol";
 import Alert from "./EnemyStates/Alert";
-import Attack from "./EnemyStates/Attack";
+import SlimeAttack from "./EnemyStates/SlimeAttack";
 import { GameState, Statuses } from "../sword_enums";
 
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
@@ -73,7 +73,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
          // Patrol mode
         this.addState(EnemyStates.PATROL, new Patrol(this, owner));
         this.addState(EnemyStates.ALERT, new Alert(this, owner));
-        this.addState(EnemyStates.ATTACK, new Attack(this, owner));
+        this.addState(EnemyStates.ATTACK, new SlimeAttack(this, owner));
         
         this.maxHealth = options.health;
 
@@ -140,6 +140,10 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
 
     collideWithPlayer(player: PlayerController): void {
         player.damage(10);
+    }
+
+    canAttack(position: Vec2): boolean {
+        return this.attackTimer.isStopped() && this.owner.position.distanceTo(position)<=32;
     }
 
     //TODO - need to modify for side view

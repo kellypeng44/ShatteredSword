@@ -13,7 +13,7 @@ export default class Alert extends EnemyState {
         if (position) {
             this.parent.velocity.x = this.parent.maxSpeed * Math.sign(position.x - this.owner.position.x);
             this.parent.direction = this.parent.velocity.x >= 0 ? 1 : -1;
-            if (this.parent.attackTimer.isStopped() && this.owner.position.distanceTo(position)<=32) {
+            if (this.parent.canAttack(position)) {
                 this.finished(EnemyStates.ATTACK);
             }
         }

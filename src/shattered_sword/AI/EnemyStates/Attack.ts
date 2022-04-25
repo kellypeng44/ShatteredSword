@@ -20,17 +20,6 @@ export default class Attack extends EnemyState {
     }
 
     update(deltaT: number): void {
-        while (this.receiver.hasNextEvent()) {
-            let event = this.receiver.getNextEvent().type;
-            switch (event) {
-                case this.charged:
-                    (<AnimatedSprite>this.owner).animation.play("ATTACK", false, this.attacked);
-                    break;
-                case this.attacked:
-                    this.finished(EnemyStates.ALERT);
-                    break;
-            }
-        }
         super.update(deltaT);
     }
 
