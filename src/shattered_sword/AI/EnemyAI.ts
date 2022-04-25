@@ -63,6 +63,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
     bleedStat: Sprite;
 
     attackTimer : Timer;
+    isAttaking: boolean = false;
 
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void { 
@@ -105,7 +106,10 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
         this.CURRENT_HP -= damage;
         //TODO -
-        this.owner.animation.play("HURT",false);
+        if (!this.isAttaking) {
+            this.owner.animation.play("HURT",false);
+        }
+        
         console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
 
         // If health goes below 0, disable AI and fire enemyDied event
@@ -132,6 +136,10 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
             
             this.emitter.fireEvent(Player_Events.ENEMY_KILLED, {owner: this.owner.id, ai:this});
         }
+    }
+
+    collideWithPlayer(player: PlayerController): void {
+        player.damage(10);
     }
 
     //TODO - need to modify for side view
@@ -181,9 +189,6 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         }
         return pos;
     }
-    
-
-    
 
     /**
      * gets the position of the player

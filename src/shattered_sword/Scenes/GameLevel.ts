@@ -950,7 +950,7 @@ export default class GameLevel extends Scene {
         }
         if(typeof enemy != undefined && typeof player != undefined){
                 //damage the player 
-                (<PlayerController>this.player._ai).damage(10); //10 collision dmg for now
+                (<EnemyAI>enemy._ai).collideWithPlayer(<PlayerController>this.player._ai);
         }
 
     }

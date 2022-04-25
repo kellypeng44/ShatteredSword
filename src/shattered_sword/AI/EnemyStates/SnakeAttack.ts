@@ -1,5 +1,4 @@
 import EnemyAI, { EnemyStates } from "../EnemyAI";
-import EnemyState from "./EnemyState";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
