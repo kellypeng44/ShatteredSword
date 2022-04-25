@@ -3,8 +3,10 @@
    "spriteSheetImage": "Snake.png",
    "spriteWidth": 32,
    "spriteHeight": 32,
+   "width": 160,
+   "height": 160,
    "columns": 5,
-   "rows": 4,
+   "rows": 5,
    "durationType": "time",
    "animations": [
       {
@@ -80,7 +82,7 @@
          ]
       },
       {
-         "name": "ATTACK",
+         "name": "CHARGE",
          "repeat": false,
          "frames": [
             {
@@ -89,19 +91,33 @@
             },
             {
                "index": 5,
-               "duration": 5
+               "duration": 10
             },
             {
                "index": 6,
-               "duration": 5
+               "duration": 10
             },
             {
                "index": 7,
-               "duration": 5
+               "duration": 10
             },
             {
                "index": 8,
-               "duration": 5
+               "duration": 10
+            },
+            {
+               "index": 7,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "ATTACK",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 10
             },
             {
                "index": 9,
@@ -113,6 +129,14 @@
             },
             {
                "index": 11,
+               "duration": 5
+            },
+            {
+               "index": 12,
+               "duration": 5
+            },
+            {
+               "index": 13,
                "duration": 10
             }
 
@@ -127,24 +151,16 @@
                "duration": 10
             },
             {
-               "index": 12,
-               "duration": 5
-            },
-            {
-               "index": 13,
-               "duration": 5
-            },
-            {
                "index": 14,
                "duration": 5
             },
             {
                "index": 15,
-               "duration": 10
+               "duration": 5
             },
             {
                "index": 16,
-               "duration": 10
+               "duration": 5
             },
             {
                "index": 17,
@@ -152,6 +168,14 @@
             },
             {
                "index": 18,
+               "duration": 10
+            },
+            {
+               "index": 19,
+               "duration": 10
+            },
+            {
+               "index": 20,
                "duration": 10
             }
          ]
@@ -165,24 +189,16 @@
                "duration": 10
             },
             {
-               "index": 12,
-               "duration": 5
-            },
-            {
-               "index": 13,
-               "duration": 5
-            },
-            {
                "index": 14,
                "duration": 5
             },
             {
                "index": 15,
-               "duration": 10
+               "duration": 5
             },
             {
                "index": 16,
-               "duration": 10
+               "duration": 5
             },
             {
                "index": 17,
@@ -190,6 +206,14 @@
             },
             {
                "index": 18,
+               "duration": 10
+            },
+            {
+               "index": 19,
+               "duration": 10
+            },
+            {
+               "index": 20,
                "duration": 10
             }
          ]
@@ -199,7 +223,7 @@
          "repeat": true,
          "frames": [
             {
-               "index": 18,
+               "index": 21,
                "duration": 10
             }
          ]

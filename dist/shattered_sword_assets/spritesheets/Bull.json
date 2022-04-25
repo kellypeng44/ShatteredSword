@@ -1,8 +1,10 @@
 {
    "name" : "Bull",
    "spriteSheetImage": "Bull.png",
-   "spriteWidth": 256,
+   "spriteWidth": 64,
    "spriteHeight": 64,
+   "width": 256,
+   "height": 64,
    "columns": 4,
    "rows": 1,
    "durationType": "time",
