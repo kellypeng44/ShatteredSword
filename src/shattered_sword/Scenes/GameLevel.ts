@@ -822,7 +822,7 @@ export default class GameLevel extends Scene {
      * @param aiOptions The options for the Enemy AI
      */
     
-    protected addEnemy(spriteKey: string, tilePos: Vec2, aiOptions: Record<string, any>): void {
+    protected addEnemy<T extends EnemyAI>(spriteKey: string, tilePos: Vec2, ai: new() => T, aiOptions: Record<string, any>): void {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
         //enemy.position.set(tilePos.x*32, tilePos.y*32);
         enemy.position.copy(tilePos);
@@ -849,7 +849,7 @@ export default class GameLevel extends Scene {
             enemy.colliderOffset.set(0, 6);
         }
 
-        enemy.addAI(EnemyAI, aiOptions); //TODO - add individual enemy AI
+        enemy.addAI(ai, aiOptions); //TODO - add individual enemy AI
         (<EnemyAI>enemy._ai).healthBar = <Rect>this.add.graphic(GraphicType.RECT, "primary", {position: enemy.collisionShape.center.clone().add(new Vec2(0, -((<AABB>enemy.collisionShape).hh+5))), size: new Vec2((<AABB>enemy.collisionShape).hw*3, 5)});
         (<EnemyAI>enemy._ai).healthBar.borderColor = Color.BLACK;
         (<EnemyAI>enemy._ai).healthBar.borderWidth = 1;
@@ -878,11 +878,10 @@ export default class GameLevel extends Scene {
         for (let enemy of enemies) {
             switch (enemy.type) {
                 case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
-                    this.addEnemy("Snake", enemy.position.scale(32), {
+                    this.addEnemy("Snake", enemy.position.scale(32), EnemyAI, {
                         player: this.player,
                         health: 50,
                         tilemap: "Main",
-                        goal: Statuses.REACHED_GOAL,
                         size: new Vec2(14,10),
                         offset : new Vec2(0, 22),
                         exp: 50,
@@ -890,7 +889,7 @@ export default class GameLevel extends Scene {
                     })
                     break;
                 case "Tiger":       //Tiger can be miniboss for now? 
-                    this.addEnemy("Tiger", enemy.position.scale(32), {
+                    this.addEnemy("Tiger", enemy.position.scale(32), EnemyAI, {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",
@@ -900,7 +899,7 @@ export default class GameLevel extends Scene {
                     break;
 
                 case "remus_werewolf":       
-                    this.addEnemy("remus_werewolf", enemy.position.scale(32), {
+                    this.addEnemy("remus_werewolf", enemy.position.scale(32), EnemyAI, {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",
@@ -910,7 +909,7 @@ export default class GameLevel extends Scene {
                     })
                     break;
                 case "black_pudding":       
-                    this.addEnemy("black_pudding", enemy.position.scale(32), {
+                    this.addEnemy("black_pudding", enemy.position.scale(32), EnemyAI, {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",

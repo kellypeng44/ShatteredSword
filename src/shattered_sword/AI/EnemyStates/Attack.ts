@@ -1,6 +1,5 @@
 import EnemyAI, { EnemyStates } from "../EnemyAI";
 import EnemyState from "./EnemyState";
-import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 export default class Attack extends EnemyState {
@@ -12,6 +11,8 @@ export default class Attack extends EnemyState {
         this.parent.velocity.x = 0;
         this.charged = this.owner.id+"charged";
         this.attacked = this.owner.id+"attacked";
+
+        // TODO replace DYING with CHARGING
         (<AnimatedSprite>this.owner).animation.play("DYING", false, this.charged);
         this.receiver.subscribe(this.charged);
         this.receiver.subscribe(this.attacked);

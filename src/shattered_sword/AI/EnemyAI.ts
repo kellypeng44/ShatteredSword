@@ -80,15 +80,14 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
 
         this.player = options.player;
 
+        this.exp_val = options.exp;
+
         //TODO - get correct tilemap
         this.tilemap = <OrthogonalTilemap>this.owner.getScene().getLayer("Wall").getItems()[0];
         // Initialize to the default state
         this.initialize(EnemyStates.PATROL);
 
         this.direction = 1; //default moving to the right
-
-        //exp value
-        this.exp_val = options.exp;
 
         //TODO - dots every 1 sec? can change
         this.burnTimer = new Timer(1000);
