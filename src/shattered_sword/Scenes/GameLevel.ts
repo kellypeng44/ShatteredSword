@@ -20,6 +20,7 @@ import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
 import Weapon from "../GameSystems/items/Weapon";
 import BattleManager from "../GameSystems/BattleManager";
 import EnemyAI from "../AI/EnemyAI";
+import SnakeAI from "../AI/SnakeAI";
 import BattlerAI from "../AI/BattlerAI";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Item from "../GameSystems/items/Item";
@@ -878,7 +879,7 @@ export default class GameLevel extends Scene {
         for (let enemy of enemies) {
             switch (enemy.type) {
                 case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
-                    this.addEnemy("Snake", enemy.position.scale(32), EnemyAI, {
+                    this.addEnemy("Snake", enemy.position.scale(32), SnakeAI, {
                         player: this.player,
                         health: 50,
                         tilemap: "Main",

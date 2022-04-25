@@ -1,18 +1,8 @@
-import { TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import Debug from "../../Wolfie2D/Debug/Debug";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import RandomMapGenerator from "../Tools/RandomMapGenerator";
 import GameLevel from "./GameLevel";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import Color from "../../Wolfie2D/Utils/Color";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import { Statuses } from "../sword_enums";
-import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
-import EnemyAI from "../AI/EnemyAI";
-import BattlerAI from "../AI/BattlerAI";
+import SnakeAI from "../AI/SnakeAI";
 import Porcelain from "./Porcelain";
-import MainMenu from "./MainMenu";
 
 export default class Tutorial extends GameLevel {
     loadScene(): void {
@@ -39,7 +29,7 @@ export default class Tutorial extends GameLevel {
         //spawn snake()
         if(Math.random() < .0001){
             console.log("RANDOM SNAKE!");
-            this.addEnemy("Snake", this.player.position.clone().add(new Vec2(0,-320)), EnemyAI, {
+            this.addEnemy("Snake", this.player.position.clone().add(new Vec2(0,-320)), SnakeAI, {
                 player: this.player,
                         health: 50,
                         tilemap: "Main",
