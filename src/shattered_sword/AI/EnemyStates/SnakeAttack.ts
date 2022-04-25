@@ -1,25 +1,16 @@
 import EnemyAI, { EnemyStates } from "../EnemyAI";
 import EnemyState from "./EnemyState";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Shape from "../../../Wolfie2D/DataTypes/Shapes/Shape";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
+import Attack from "./Attack";
 
-export default class Attack extends EnemyState {
+export default class SnakeAttack extends Attack {
     protected charged: string;
     protected attacked: string;
 
     onEnter(options: Record<string, any>): void {
-        this.parent.attackTimer.start();
-        this.parent.velocity.x = 0;
-        this.charged = this.owner.id+"charged";
-        this.attacked = this.owner.id+"attacked";
-
-        // TODO replace DYING with CHARGING
-        (<AnimatedSprite>this.owner).animation.play("DYING", false, this.charged);
-        this.receiver.subscribe(this.charged);
-        this.receiver.subscribe(this.attacked);
+        super.onEnter(options);
     }
 
     update(deltaT: number): void {
@@ -36,7 +27,6 @@ export default class Attack extends EnemyState {
                     break;
             }
         }
-        console.log(this.parent.direction);
         (<Sprite>this.owner).invertX = this.parent.direction === 1 ? true : false ;
     }
 
