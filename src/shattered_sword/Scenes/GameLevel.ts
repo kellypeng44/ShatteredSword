@@ -885,7 +885,6 @@ export default class GameLevel extends Scene {
                         size: new Vec2(14,10),
                         offset : new Vec2(0, 22),
                         exp: 50,
-                        weapon : this.createWeapon("knife"),
                     })
                     break;
                 case "Tiger":       //Tiger can be miniboss for now? 
@@ -894,7 +893,6 @@ export default class GameLevel extends Scene {
                         health: 200,
                         tilemap: "Main",
                         exp: 100,
-                        weapon : this.createWeapon("knife"),
                     })
                     break;
 
@@ -903,9 +901,7 @@ export default class GameLevel extends Scene {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",
-                        //actions:actions,
                         exp: 50,
-                        weapon : this.createWeapon("knife"),
                     })
                     break;
                 case "black_pudding":       
