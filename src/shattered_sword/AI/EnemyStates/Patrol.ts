@@ -24,6 +24,9 @@ export default class Patrol extends EnemyState {
         this.parent.velocity.x = this.parent.direction * this.parent.speed;
         (<Sprite>this.owner).invertX = this.parent.direction === 1 ? true : false ;
 
+        if (this.parent.getPlayerPosition()) {
+            this.finished(EnemyStates.ALERT);
+        }
         super.update(deltaT);
     }
 

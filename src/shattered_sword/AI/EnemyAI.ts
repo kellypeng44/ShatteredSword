@@ -9,6 +9,7 @@ import Weapon from "../GameSystems/items/Weapon";
 import BattlerAI from "./BattlerAI";
 
 import Patrol from "./EnemyStates/Patrol";
+import Alert from "./EnemyStates/Alert";
 import { GameState, Statuses } from "../sword_enums";
 
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
@@ -31,6 +32,8 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
 
     /** The default movement speed of this AI */
     speed: number = 20;
+
+    maxSpeed: number = 40;
 
     /** The weapon this AI has */
     weapon: Weapon;
@@ -81,7 +84,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         //add states
          // Patrol mode
         this.addState(EnemyStates.PATROL, new Patrol(this, owner));
-        // this.addState(EnemyStates.ALERT,)
+        this.addState(EnemyStates.ALERT, new Alert(this, owner));
         
         this.maxHealth = options.health;
 
