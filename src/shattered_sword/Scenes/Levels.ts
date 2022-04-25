@@ -12,7 +12,8 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import MainMenu from "./MainMenu";
 import Tutorial from "./Tutorial";
-import Porcelain from "./Porcelain"
+import Porcelain from "./Porcelain";
+import Greatwall from './Greatwall';
 
 
 export default class Levels extends Scene {
@@ -40,7 +41,14 @@ export default class Levels extends Scene {
         porcelain.backgroundColor = Color.TRANSPARENT;
         porcelain.onClickEventId = "porcelain";
 
-        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 50), text: "Back"});
+        const greatwall = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 50), text: "greatwall"});
+        greatwall.size.set(200, 50);
+        greatwall.borderWidth = 2;
+        greatwall.borderColor = Color.WHITE;
+        greatwall.backgroundColor = Color.TRANSPARENT;
+        greatwall.onClickEventId = "greatwall";
+
+        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 100), text: "Back"});
         back.size.set(200, 50);
         back.borderWidth = 2;
         back.borderColor = Color.WHITE;
@@ -49,6 +57,7 @@ export default class Levels extends Scene {
         
         this.receiver.subscribe("tutorial");
         this.receiver.subscribe("porcelain");
+        this.receiver.subscribe("greatwall");
         this.receiver.subscribe("back");
     }
 
@@ -88,6 +97,22 @@ export default class Levels extends Scene {
                 }
                 this.sceneManager.changeToScene(Porcelain, {}, sceneOptions);
             }
+
+            if(event.type === "greatwall"){
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemies"],
+                        collisions:
+                        [
+                            [0, 1, 1],
+                            [1, 0, 0],
+                            [1, 0, 0]
+                        ]
+                    }
+                }
+                this.sceneManager.changeToScene(Greatwall, {}, sceneOptions);
+            }
+
             if(event.type === "back"){
                 this.sceneManager.changeToScene(MainMenu, {});
             }
