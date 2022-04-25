@@ -3,12 +3,21 @@ import EnemyState from "./EnemyState";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
-export default class Alert extends EnemyState {
+export default class Attack extends EnemyState {
+    protected charged: string;
+    protected attacked: string;
+
     onEnter(options: Record<string, any>): void {
-        (<AnimatedSprite>this.owner).animation.playIfNotAlready("WALK", true);
+        let event = this.owner.id+"charged";
+        (<AnimatedSprite>this.owner).animation.play("DYING", false, event);
+        this.receiver.subscribe(event);
     }
 
     update(deltaT: number): void {
+        while (this.receiver.hasNextEvent()) {
+            this.receiver.getNextEvent();
+
+        }
         let position = this.parent.getPlayerPosition();
         if (position) {
             this.parent.velocity.x = this.parent.maxSpeed * Math.sign(position.x - this.owner.position.x);

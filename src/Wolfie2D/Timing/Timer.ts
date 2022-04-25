@@ -1,3 +1,5 @@
+import { GameState } from "../../shattered_sword/sword_enums";
+import InputWrapper from "../../shattered_sword/Tools/InputWrapper";
 import Updateable from "../DataTypes/Interfaces/Updateable";
 import MathUtils from "../Utils/MathUtils";
 import TimerManager from "./TimerManager";
@@ -70,7 +72,7 @@ export default class Timer implements Updateable {
     }
 
     update(deltaT: number){
-        if(this.state === TimerState.ACTIVE){
+        if(this.state === TimerState.ACTIVE && InputWrapper.getState() === GameState.GAMING){
             this.timeLeft -= deltaT*1000;
 
             if(this.timeLeft <= 0){
