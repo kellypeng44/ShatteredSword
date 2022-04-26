@@ -688,8 +688,8 @@ export default class GameLevel extends Scene {
         this.pauseSubmit.onClickEventId = "cheat";
         this.pauseSubmit.borderWidth = 3;
 
-        this.mainMenuButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x ), Math.floor(this.viewport.getHalfSize().y + 140)), text:"Main Menu"});
-        this.mainMenuButton.size.set(180,100);
+        this.mainMenuButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x ), Math.floor(this.viewport.getHalfSize().y + 150)), text:"Main Menu"});
+        this.mainMenuButton.size.set(180,50);
         this.mainMenuButton.borderWidth = 5;
         this.mainMenuButton.borderColor = Color.BLACK;
         this.mainMenuButton.backgroundColor = Color.WHITE;

@@ -109,7 +109,7 @@
                 {
                     "type": "loadSprite",
                     "key": "logo",
-                    "path": "shattered_sword_assets/images/Logo.png",
+                    "path": "shattered_sword_assets/images/logo.png",
                     "positon": [
                         330,
                         150
