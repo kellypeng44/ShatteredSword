@@ -44,11 +44,11 @@
         },
         {
             "speaker": "",
-            "content": "Press X to attack",
+            "content": "Press X or J to attack",
             "actions": [
                 {
                     "type": "hideSprite",
-                    "key": "rightleft"
+                    "key": "jump"
                 },
                 {
                     "type": "loadSprite",
@@ -67,7 +67,7 @@
         },
         {
             "speaker": "",
-            "content": "Press C to dash",
+            "content": "Press C or K to dash",
             "actions": [
                 {
                     "type": "hideSprite",
