@@ -10,7 +10,8 @@ export enum Player_Events {
     ENEMY_KILLED = "EnemyKilled",
     PLAYER_HIT_ENEMY = "PlayerHitEnemy",
     BOSS_KILLED = "BossKilled",
-    GIVE_BUFF = "GiveBuff",
+    GIVE_REGULAR_BUFF = "GiveRegularBuff",
+    GIVE_SPECIAL_BUFF = "GiveSpecialBuff",
     PLAYER_COLLIDE = "PlayerCollide"
 }
 export enum Damage_Type {

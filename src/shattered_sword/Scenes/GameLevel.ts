@@ -293,8 +293,35 @@ export default class GameLevel extends Scene {
                         //this.emitter.fireEvent(Player_Events.GIVE_BUFF);
                         break;
 
-                    case Player_Events.GIVE_BUFF:
+                    case Player_Events.GIVE_REGULAR_BUFF:
                         this.buffs = (<PlayerController>this.player._ai).generateRegularBuffs();
+                        if(this.buffs[0].string === undefined){
+                            this.buffLabel1.text = "\n\nIncrease "+this.buffs[0].type + "\n by "+this.buffs[0].value;
+                        }
+                        else{
+                            this.buffLabel1.text = this.buffs[0].string;
+                        }
+                        
+                        if(this.buffs[1].string === undefined){
+                            this.buffLabel2.text = "\n\nIncrease "+this.buffs[1].type + "\n by "+this.buffs[1].value;
+                        }
+                        else{
+                            this.buffLabel2.text = this.buffs[1].string;
+                        }
+                        
+                        if(this.buffs[2].string === undefined){
+                            this.buffLabel3.text = "\n\nIncrease "+this.buffs[2].type + "\n by "+this.buffs[2].value;
+                        }
+                        else{
+                            this.buffLabel3.text = this.buffs[2].string;
+                        }
+                        
+                        //pause game here 
+                        this.setGameState(GameState.BUFF);
+                        this.buffLayer.enable();
+                        break;
+                    case Player_Events.GIVE_SPECIAL_BUFF:
+                        this.buffs = (<PlayerController>this.player._ai).generateSpecialBuffs();
                         if(this.buffs[0].string === undefined){
                             this.buffLabel1.text = "\n\nIncrease "+this.buffs[0].type + "\n by "+this.buffs[0].value;
                         }
@@ -497,7 +524,8 @@ export default class GameLevel extends Scene {
             Player_Events.LEVEL_START,
             Player_Events.LEVEL_END,
             Player_Events.PLAYER_KILLED,
-            Player_Events.GIVE_BUFF,
+            Player_Events.GIVE_REGULAR_BUFF,
+            Player_Events.GIVE_SPECIAL_BUFF
         ]);
         this.receiver.subscribe("buff1");
         this.receiver.subscribe("buff2");
