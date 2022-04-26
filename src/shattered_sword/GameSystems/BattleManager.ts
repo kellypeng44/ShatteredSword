@@ -19,11 +19,17 @@ export default class BattleManager {
             if(this.enemies.length != 0){
                 for (let enemy of this.enemies) {
                     if (weapon.hits(enemy.owner)) {
-                        enemy.damage(Math.round(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/100));
+                        let player = (<PlayerController>this.players[0]);
+
+                        if(player.fullHpBonus){
+                            enemy.damage(Math.round( weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/10));
+                        }
+                        else{
+                            enemy.damage(Math.round(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/100));
+                        }
                         //console.log("enemy took dmg");
                         
                         //add checking for each onhit buff here
-                        let player = (<PlayerController>this.players[0]);
                         
                         //DOTS
                         if(player.hasBleed){
@@ -36,9 +42,7 @@ export default class BattleManager {
                             (<EnemyAI>enemy).burnCounter =5 ;
                         }
 
-                        if(player.hasDoubleStrike){
-                            enemy.damage(Math.round(weapon.type.damage * (<PlayerController>this.players[0]).CURRENT_ATK/200));
-                        }
+                        
                         if(player.hasLifesteal){
                             player.addHealth(Math.round(weapon.type.damage * player.CURRENT_ATK/100 * player.lifestealratio));
                         }

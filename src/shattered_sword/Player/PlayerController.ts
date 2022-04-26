@@ -36,13 +36,14 @@ export enum PlayerStates {
 }
 
 export enum BuffType {
-    ATK  = "attack",
+    FLAT_ATK  = "attack",
+    PERCENT_ATK = "percent_attack",
     DEF = "defence",
-    HEALTH = "health",
+    FLAT_HEALTH = "health",
+    PERCENT_HEALTH = "percent_health",
     SPEED = "speed",
     RANGE = "range",
     ATKSPEED = "attackspeed",
-    DOUBLESTRIKE = "doublestrike",
     POISON = "poison",
     BLEED = "bleed",
     BURN = "burn",
@@ -53,7 +54,7 @@ export enum BuffType {
     LIFESTEALBUFF = "lifestealbuff",
     EXTRALIFE= "extralife",
     ONESHOT = "oneshot",
-    JUMP = "jump"
+    FULLHPBONUSDMG = "fullhpbonusdmg"
 }
 
 
@@ -124,15 +125,16 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     hasBurn : Boolean = false;
     hasShield : Boolean = false;
     shieldDamage : number = 1;
-    hasDoubleStrike : Boolean = false;
     hasLifesteal : Boolean = false;
     lifestealratio : number = 0; //percent of damage to steal
     hasOneShot: Boolean = false;
     extraDotDmg : number =0;
     lives: number = 1;
     cooldownMultiplier : number = 1;
+    fullHpBonus: Boolean = false;
 
     //TODO - add new buffs here
+    /*
     CURRENT_BUFFS: {
         atk: number;    //flat value to add to weapon
         hp: number;     //flat value 
@@ -140,6 +142,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         speed: number;  //flat value
         range:number;   //range will be a multiplier value: 1.5 = 150% range
     }
+    */
     
 
 
@@ -155,7 +158,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         this.lookDirection = new Vec2();
 
-        this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
+        //this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
        
         
         //i frame timer
@@ -302,8 +305,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
      */
     addHealth(health : number){
         this.CURRENT_HP += health;
-        if(this.CURRENT_HP > this.MAX_HP + this.CURRENT_BUFFS.hp){
-            this.CURRENT_HP = this.MAX_HP + this.CURRENT_BUFFS.hp;
+        if(this.CURRENT_HP > this.MAX_HP ){
+            this.CURRENT_HP = this.MAX_HP ;
         }
     }
 
@@ -322,13 +325,44 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.emitter.fireEvent(Player_Events.GIVE_BUFF);
         }
     }
-    //TODO - balance buff value generation 
+    
+
     /**
-     * returns an array of three randomly generated buffs 
+     * generates an array of regular buffs
      * @param val optional value to give buff
-     * @returns array of three Buffs
+     * @returns array of three buffs
      */
-    generateBuffs( val? : number) : Buff[]{
+    generateRegularBuffs( val? : number) : Buff[]{
+
+        //random number from 5 to 15 if no value given
+        let num = Math.floor(Math.random() *10) +5;
+        num = Math.round(num);
+        if(typeof val !== 'undefined'){
+            num = val;
+        }
+
+        let buffs = new Array();
+        buffs.push({type:BuffType.FLAT_ATK, value:num, category: BuffCategory.EXTRA},
+            {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
+            {type:BuffType.FLAT_HEALTH, value:num, category: BuffCategory.SHIELD},
+            {type:BuffType.RANGE, value:num/10, category: BuffCategory.ATTACK},
+            {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
+        );
+        
+        
+        //shuffle pool of buffs
+        buffs.sort(() => 0.5 - Math.random());
+        // Get sub-array of first 3 elements after shuffled
+        let selected = buffs.slice(0, 3); //3 buff categories
+        return selected;
+    }
+
+    /**
+     * generates an array of special buffs
+     * @param val optional value to give the buff
+     * @returns array of 3 Buffs
+     */
+    generateSpecialBuffs( val? : number) : Buff[]{
         //shuffle pool of buff categories 
         PlayerController.buffPool.sort(() => 0.5 - Math.random());
 
@@ -339,64 +373,62 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if(typeof val !== 'undefined'){
             num = val;
         }
-        
+
         //TODO - implement better buff genertion - some buffs dont want multiple of
         let attackBuffs : Buff[] = [
-            {type:BuffType.RANGE, value:num/10, category: BuffCategory.ATTACK},
-            {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
+            {type:BuffType.PERCENT_ATK, value:num/100, category: BuffCategory.ATTACK, string:"\n\nIncrease Attack \nby"+num+"%"}
         ];
-        if(!this.hasDoubleStrike){
-            attackBuffs.push({type:BuffType.DOUBLESTRIKE, value:num, category: BuffCategory.ATTACK, string:"your attacks are \nfollowed by a \nweaker strike"});
-        }
 
         let dotBuffs : Buff[] = [
         ];
         if(!this.hasBleed){
-            dotBuffs.push({type:BuffType.BLEED, value:1, category: BuffCategory.DOT, string: "Your hits \napply Bleed"});
+            dotBuffs.push({type:BuffType.BLEED, value:1, category: BuffCategory.DOT, string: "\n\nYour hits \napply Bleed"});
         }
         if(!this.hasBurn){
-            dotBuffs.push({type:BuffType.BURN, value:1, category: BuffCategory.DOT, string: "Your hits \napply Burn"});
+            dotBuffs.push({type:BuffType.BURN, value:1, category: BuffCategory.DOT, string: "\n\nYour hits \napply Burn"});
         }
         if(!this.hasPoison){
-            dotBuffs.push({type:BuffType.POISON, value:1, category: BuffCategory.DOT, string: "Your hits \napply poison"});
+            dotBuffs.push({type:BuffType.POISON, value:1, category: BuffCategory.DOT, string: "\n\nYour hits \napply poison"});
         }
 
         //only add extra dot if at least one dot is acquired
         for(let i=dotBuffs.length; i< 3 ; i++){
-            dotBuffs.push({type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "increase your \nDOT damage"});
+            dotBuffs.push({type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "\n\nIncrease your \nDOT damage"});
         }
 
         
         let shieldBuffs : Buff[] = [
-            {type:BuffType.HEALTH, value:num, category: BuffCategory.SHIELD},
+            {type:BuffType.PERCENT_HEALTH, value:num/100, category: BuffCategory.SHIELD, string: "\n\nIncrease max hp \nby "+num+"%"},
         ];
         //if player doesnt have shield buff, give them the option, otherwise give buff shield option
         if(!this.hasShield){
-            shieldBuffs.push({type:BuffType.SHIELD, value:1, category: BuffCategory.SHIELD, string: "Gain Shield \nWhen Damaged \n Shields return \nthe damage taken \nto attacker"});
+            shieldBuffs.push({type:BuffType.SHIELD, value:1, category: BuffCategory.SHIELD, string: "\n\nGain Shield \nWhen Damaged \n Shields return \nthe damage taken \nto attacker"});
         }
         else{
-            shieldBuffs.push({type:BuffType.SHIELD_DMG, value:num, category: BuffCategory.SHIELD, string: "increase damage \nreturned by shield"});
+            shieldBuffs.push({type:BuffType.SHIELD_DMG, value:num, category: BuffCategory.SHIELD, string: "\n\nIncrease damage \nreturned by shield"});
         }
 
 
         let healthBuffs : Buff[] = [
-            {type:BuffType.DEF, value: num/10, category: BuffCategory.HEALTH, string: "decrease damage by"+num/10+"%"}
+            {type:BuffType.DEF, value: num/100, category: BuffCategory.HEALTH, string: "\n\nDecrease damage \ntaken by "+num+"%"}
         ];
+        if(!this.fullHpBonus){
+            healthBuffs.push({type:BuffType.FULLHPBONUSDMG, value:1, category:BuffCategory.HEALTH, string:"\n\nDeal 10x damage \n when at full HP"})
+
+        }
         if(!this.hasLifesteal){
-            healthBuffs.push({type:BuffType.LIFESTEAL, value:1, category: BuffCategory.HEALTH, string:"Gain lifesteal"});
+            healthBuffs.push({type:BuffType.LIFESTEAL, value:1, category: BuffCategory.HEALTH, string:"\n\nGain lifesteal"});
         }
         else{
-            healthBuffs.push({type:BuffType.LIFESTEALBUFF, value:num/10, category: BuffCategory.HEALTH, string:"Increase Lifesteal \nstrength by "+ num+ "%"});
+            healthBuffs.push({type:BuffType.LIFESTEALBUFF, value:num/100, category: BuffCategory.HEALTH, string:"\n\nIncrease Lifesteal \nstrength by "+ num+ "%"});
         }
 
 
         let extraBuffs : Buff[] = [
-            {type:BuffType.EXTRALIFE, value:1, category: BuffCategory.EXTRA, string: "Gain an \nExtra Life"},
-            {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
-            {type:BuffType.ATK, value:num, category: BuffCategory.EXTRA}
+            {type:BuffType.EXTRALIFE, value:1, category: BuffCategory.EXTRA, string: "\n\nGain an \nExtra Life"},
         ];
         if(!this.hasOneShot){   //only add oneshot buff if it isnt already included 
-            extraBuffs.push({type:BuffType.ONESHOT, value:1, category: BuffCategory.EXTRA, string: "Your hits hurt \n100x more but \nyour max health \nis set to 1 "});
+            extraBuffs.push({type:BuffType.ONESHOT, value:1, category: BuffCategory.EXTRA, string: "\n\nYour hits hurt \n100x more but \nyour max health \nis set to 1 "});
         };
 
 
@@ -407,7 +439,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 case BuffCategory.ATTACK:
                     attackBuffs.sort(() => 0.5 - Math.random());
                     if(attackBuffs.length == 0){
-                        selected.push({type:BuffType.RANGE, value:num/10, category: BuffCategory.ATTACK});
+                        selected.push({type:BuffType.PERCENT_HEALTH, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease attack \nby"+num+"%"});
                     }
                     else{
                         selected.push(attackBuffs.pop());
@@ -416,7 +448,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 case BuffCategory.DOT:
                     dotBuffs.sort(() => 0.5 - Math.random());
                     if(dotBuffs.length == 0){
-                        selected.push({type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "increase your \nDOT damage"});
+                        selected.push({type:BuffType.EXTRA_DOT, value:num, category: BuffCategory.DOT, string: "\n\nIncrease your \nDOT damage"});
                     }
                     else{
                         selected.push(dotBuffs.pop());
@@ -425,7 +457,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 case BuffCategory.EXTRA:
                     extraBuffs.sort(() => 0.5 - Math.random());
                     if(extraBuffs.length ==0 ){
-                        selected.push({type:BuffType.EXTRALIFE, value:1, category: BuffCategory.EXTRA, string: "Gain an \nExtra Life"});
+                        selected.push({type:BuffType.EXTRALIFE, value:1, category: BuffCategory.EXTRA, string: "\n\nGain an \nExtra Life"});
                     }
                     else{
                         selected.push(extraBuffs.pop());
@@ -434,7 +466,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 case BuffCategory.HEALTH:
                     healthBuffs.sort(() => 0.5 - Math.random());
                     if(healthBuffs.length == 0){
-                        selected.push({type:BuffType.DEF, value: num/10, category: BuffCategory.HEALTH, string: "decrease damage\n taken by "+num*10+"%"});
+                        selected.push({type:BuffType.DEF, value: num/100, category: BuffCategory.HEALTH, string: "\n\nDecrease damage\n taken by "+num+"%"});
                     }
                     else{
                         selected.push(healthBuffs.pop());
@@ -443,7 +475,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 case BuffCategory.SHIELD:
                     shieldBuffs.sort(() => 0.5 - Math.random());
                     if(shieldBuffs.length ==0 ){
-                        selected.push({type:BuffType.HEALTH, value:num, category: BuffCategory.SHIELD});
+                        selected.push({type:BuffType.FLAT_HEALTH, value:num, category: BuffCategory.SHIELD});
                     }
                     else{
                         selected.push(shieldBuffs.pop());
@@ -455,43 +487,61 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         return selected;
     }
 
+
+
+    
     /**
 	 * Add given buff to the player
 	 * @param buff Given buff
+     * @param init whether or not this is being used during the initialization of the player
 	 */
-    addBuff(buff: Buff): void {
+    addBuff(buff: Buff, init? :Boolean ): void {
         
-        //increase weight of selected buff category
-        PlayerController.buffPool.push(buff.category);
-        //add buff to array of applied buffs 
-        PlayerController.appliedBuffs.push(buff);
+        
+        //add buff to array of applied buffs if not being used to init
+        if(init === undefined){
+            //increase weight of selected buff category
+            PlayerController.buffPool.push(buff.category);
+            PlayerController.appliedBuffs.push(buff);
+        }
+        else if (!init){
+            //increase weight of selected buff category
+            PlayerController.buffPool.push(buff.category);
+            PlayerController.appliedBuffs.push(buff);
+        }
         // TODO
         let item = this.inventory.getItem();
         switch(buff.type){
-            case BuffType.HEALTH:
-                this.CURRENT_BUFFS.hp += buff.value;
+            case BuffType.FLAT_HEALTH:
+                //this.CURRENT_BUFFS.hp += buff.value;
                 this.CURRENT_HP += buff.value;
+                this.MAX_HP += buff.value;
                 break;
-            case BuffType.ATK:
-                //TODO - decide what to do with atk stat
-                this.CURRENT_BUFFS.atk += buff.value;
+            case BuffType.PERCENT_HEALTH:
+                this.CURRENT_HP *= (1+buff.value);
+                this.MAX_HP *= (1+buff.value) ;
+                this.CURRENT_HP = Math.round(this.CURRENT_HP);
+                this.MAX_HP = Math.round(this.MAX_HP);
+                break;
+            case BuffType.FLAT_ATK:
                 this.CURRENT_ATK +=buff.value;
                 break;
+            case BuffType.PERCENT_ATK:
+                this.CURRENT_ATK *=buff.value;
+                this.CURRENT_ATK = Math.round(this.CURRENT_ATK);
+                break;
             case BuffType.SPEED:
-                this.CURRENT_BUFFS.speed += buff.value;
                 this.speed += buff.value;
                 break;
             case BuffType.DEF:
                 this.damage_multiplier *= (1-buff.value);
                 break;
             case BuffType.RANGE:
-                this.CURRENT_BUFFS.range += buff.value;
+                //this.CURRENT_BUFFS.range += buff.value;
                 if (item) {
                     (<Weapon>item).EXTRA_RANGE += buff.value;
                 }
                 break;
-
-            //TODO 
             case BuffType.BLEED:
                 this.hasBleed = true;
                 break;
@@ -515,11 +565,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                     (<Weapon>item).cooldownTimer = new Timer((<Weapon>item).cooldown * this.cooldownMultiplier )
                 }
                 break;
-            case BuffType.DOUBLESTRIKE:
-                //TODO - 
-                break;
             case BuffType.SHIELD_DMG:
-                this.shieldDamage += buff.value/10 ;
+                this.shieldDamage += buff.value ;
                 break;
             case BuffType.EXTRALIFE:
                 this.lives ++;
@@ -535,6 +582,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.MAX_HP = 1;
                 this.CURRENT_HP = 1;
                 this.CURRENT_ATK *= 100;
+                break;
+            case BuffType.FULLHPBONUSDMG:
+                this.fullHpBonus = true;
                 break;
         }
     }

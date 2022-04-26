@@ -32,7 +32,7 @@ export default class Walk extends OnGround {
 			this.finished(PlayerStates.IDLE);
 		} 
 		
-		this.parent.velocity.x = dir.x * (this.parent.speed + this.parent.CURRENT_BUFFS.speed);
+		this.parent.velocity.x = dir.x * (this.parent.speed );
 		
 		super.update(deltaT);
 	}

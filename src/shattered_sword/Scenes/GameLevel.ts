@@ -159,6 +159,7 @@ export default class GameLevel extends Scene {
         this.load.audio("hurt", "shattered_sword_assets/sounds/hurt.wav");
         this.load.audio("die", "shattered_sword_assets/sounds/die.wav");
         this.load.audio("level_up","shattered_sword_assets/sounds/level_up.wav");
+        //神社（じんじゃ）祭（まつり）　by Second Dimension Imagination Group
         this.load.audio("level_music","shattered_sword_assets/sounds/bgm1.mp3")
 
 
@@ -193,10 +194,7 @@ export default class GameLevel extends Scene {
 
         this.startpos = this.rmg.getPlayer().scale(32);
 
-        
 
-        //call super after extending story with scene
-       
         
         // Do the game level standard initializations
         this.initViewport();
@@ -225,37 +223,11 @@ export default class GameLevel extends Scene {
         //this.initializeEnemies();
         this.battleManager.setEnemies(this.enemies.map(enemy => <BattlerAI>enemy._ai));
 
-        
-      
-        // Initialize the timers
-        /*
-        this.respawnTimer = new Timer(1000, () => {
-            if(GameLevel.livesCount === 0){
-                this.sceneManager.changeToScene(MainMenu);
-            } else {
-                this.respawnPlayer();
-                this.player.enablePhysics();
-                this.player.unfreeze();
-            }
-        });
-        */
 
         let enemies = this.rmg.getEnemies();
         //may have to move this to start scene in gameLevel
         this.initializeEnemies(enemies);
 
-        /*
-        this.levelTransitionTimer = new Timer(500);
-        this.levelEndTimer = new Timer(3000, () => {
-            // After the level end timer ends, fade to black and then go to the next scene
-            this.levelTransitionScreen.tweens.play("fadeIn");
-        });
-        */
-
-        // Start the black screen fade out
-        /*
-        this.levelTransitionScreen.tweens.play("fadeOut");
-        */
 
         this.gameStateStack = new Stack();
         this.setGameState(GameState.GAMING);
@@ -325,23 +297,23 @@ export default class GameLevel extends Scene {
                         break;
 
                     case Player_Events.GIVE_BUFF:
-                        this.buffs = (<PlayerController>this.player._ai).generateBuffs();
+                        this.buffs = (<PlayerController>this.player._ai).generateRegularBuffs();
                         if(this.buffs[0].string === undefined){
-                            this.buffLabel1.text = "Increase "+this.buffs[0].type + "\n by \n"+this.buffs[0].value;
+                            this.buffLabel1.text = "\n\nIncrease "+this.buffs[0].type + "\n by "+this.buffs[0].value;
                         }
                         else{
                             this.buffLabel1.text = this.buffs[0].string;
                         }
                         
                         if(this.buffs[1].string === undefined){
-                            this.buffLabel2.text = "Increase "+this.buffs[1].type + "\n by \n"+this.buffs[1].value;
+                            this.buffLabel2.text = "\n\nIncrease "+this.buffs[1].type + "\n by "+this.buffs[1].value;
                         }
                         else{
                             this.buffLabel2.text = this.buffs[1].string;
                         }
                         
                         if(this.buffs[2].string === undefined){
-                            this.buffLabel3.text = "Increase "+this.buffs[2].type + "\n by \n"+this.buffs[2].value;
+                            this.buffLabel3.text = "\n\nIncrease "+this.buffs[2].type + "\n by "+this.buffs[2].value;
                         }
                         else{
                             this.buffLabel3.text = this.buffs[2].string;
@@ -431,7 +403,7 @@ export default class GameLevel extends Scene {
 
         //update health UI 
         let playerAI = (<PlayerController>this.player.ai);
-        this.healthLabel.text = "Health: "+ Math.round(playerAI.CURRENT_HP) +'/' + Math.round(playerAI.MAX_HP +playerAI.CURRENT_BUFFS.hp);
+        this.healthLabel.text = "Health: "+ Math.round(playerAI.CURRENT_HP) +'/' + Math.round(playerAI.MAX_HP );
         this.healthBar.size.set(playerAI.MAX_HP*1.5, 10);
         this.healthBar.position.set(playerAI.MAX_HP*0.75+20, 20);
         this.healthBar.fillWidth = playerAI.CURRENT_HP*1.5;
@@ -607,65 +579,6 @@ export default class GameLevel extends Scene {
         this.seedLabel.font = "PixelSimple";
       
 
-        // End of level label (start off screen)
-        /*
-        this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(-300, 200), text: "Level Complete"});
-        this.levelEndLabel.size.set(1200, 60);
-        this.levelEndLabel.borderRadius = 0;
-        this.levelEndLabel.backgroundColor = new Color(34, 32, 52);
-        this.levelEndLabel.textColor = Color.WHITE;
-        this.levelEndLabel.fontSize = 48;
-        this.levelEndLabel.font = "PixelSimple";
-
-        // Add a tween to move the label on screen
-        this.levelEndLabel.tweens.add("slideIn", {
-            startDelay: 0,
-            duration: 1000,
-            effects: [
-                {
-                    property: TweenableProperties.posX,
-                    start: -300,
-                    end: 300,
-                    ease: EaseFunctionType.OUT_SINE
-                }
-            ]
-        });
-        */
-
-        /*
-        this.levelTransitionScreen = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(300, 200), size: new Vec2(600, 400)});
-        this.levelTransitionScreen.color = new Color(34, 32, 52);
-        this.levelTransitionScreen.alpha = 1;
-
-        this.levelTransitionScreen.tweens.add("fadeIn", {
-            startDelay: 0,
-            duration: 1000,
-            effects: [
-                {
-                    property: TweenableProperties.alpha,
-                    start: 0,
-                    end: 1,
-                    ease: EaseFunctionType.IN_OUT_QUAD
-                }
-            ],
-            onEnd: Player_Events.LEVEL_END
-        });
-
-        this.levelTransitionScreen.tweens.add("fadeOut", {
-            startDelay: 0,
-            duration: 1000,
-            effects: [
-                {
-                    property: TweenableProperties.alpha,
-                    start: 1,
-                    end: 0,
-                    ease: EaseFunctionType.IN_OUT_QUAD
-                }
-            ],
-            onEnd: Player_Events.LEVEL_START
-        });
-        */
-
 
         this.add.sprite("black", "pause");
         this.add.sprite("black", "story");
@@ -707,7 +620,7 @@ export default class GameLevel extends Scene {
         this.buffLabel3 = <Label>this.add.uiElement(UIElementType.LABEL, "buffLayer", {position: new Vec2(this.buffButton3.position.x, this.buffButton3.position.y - 40), text:"buffLabel3"});
         this.buffLabel3.fontSize = 20;
 
-        this.buffs =  (<PlayerController>this.player._ai).generateBuffs();
+        this.buffs =  (<PlayerController>this.player._ai).generateRegularBuffs();
 
         this.buffLayer.disable();
 
@@ -981,7 +894,7 @@ export default class GameLevel extends Scene {
     protected respawnPlayer(): void {
         InputWrapper.enableInput();
         this.player.position.copy(this.startpos);
-        (<PlayerController>this.player._ai).CURRENT_HP = (<PlayerController>this.player._ai).MAX_HP + (<PlayerController>this.player._ai).CURRENT_BUFFS.hp;
+        (<PlayerController>this.player._ai).CURRENT_HP = (<PlayerController>this.player._ai).MAX_HP ;
         //(<PlayerController>this.player._ai).lives --;
 
     }

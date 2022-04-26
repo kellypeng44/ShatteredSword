@@ -15,7 +15,7 @@ export default abstract class InAir extends PlayerState {
 			(<Sprite>this.owner).invertX = MathUtils.sign(dir.x) < 0;
 		}
         
-		this.parent.velocity.x += dir.x * (this.parent.speed+this.parent.CURRENT_BUFFS.speed)/3.5 - 0.3*this.parent.velocity.x;
+		this.parent.velocity.x += dir.x * (this.parent.speed)/3.5 - 0.3*this.parent.velocity.x;
 
 
         if(this.owner.onGround){
