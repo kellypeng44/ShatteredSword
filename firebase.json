@@ -6,10 +6,22 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "redirects": [{
-      "source": "/benchmark2",
-      "destination": "/benchmark2.html",
-      "type": 301
-    }]
+    "redirects": [
+      {
+        "source": "/benchmark1",
+        "destination": "/ShatteredSwordGameDesignDocument.html",
+        "type": 301
+      },
+      {
+        "source": "/benchmark2",
+        "destination": "/benchmark2.html",
+        "type": 301
+      },
+      {
+        "source": "/benchmark3",
+        "destination": "/banchmark3.html",
+        "type": 301
+      }
+  ]
   }
 }

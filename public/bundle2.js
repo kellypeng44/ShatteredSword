@@ -11491,11 +11491,11 @@ class WeaponTemplateRegistry extends Registry_1.default {
         const rm = ResourceManager_1.default.getInstance();
         //TODO - 
         // Load sprites for each weapon 
-        //rm.image("something", "shattered_sword_assets/sprites/something.png");
-        rm.image("knife", "shattered_sword_assets/sprites/knife.png");
+        //rm.image("something", "shattered_sword_assets2/sprites/something.png");
+        rm.image("knife", "shattered_sword_assets2/sprites/knife.png");
         // Load spritesheets
-        //rm.spritesheet("weapon anim", "shattered_sword_assets/spritesheets/weapon anim.json");
-        rm.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
+        //rm.spritesheet("weapon anim", "shattered_sword_assets2/spritesheets/weapon anim.json");
+        rm.spritesheet("slice", "shattered_sword_assets2/spritesheets/slice.json");
         // Register default types
         //this.registerItem("itemtype", itemTypefile);
         this.registerItem("slice", Slice_1.default);
@@ -11553,15 +11553,15 @@ class GameLevel extends Scene_1.default {
         //can load player sprite here
         //can load enemy sprite here
         // Load the scene info
-        this.load.object("weaponData", "shattered_sword_assets/data/weaponData.json");
+        this.load.object("weaponData", "shattered_sword_assets2/data/weaponData.json");
         // Load in the enemy info
-        //this.load.object("enemyData", "shattered_sword_assets/data/enemy.json");
+        //this.load.object("enemyData", "shattered_sword_assets2/data/enemy.json");
         // Load in item info
-        //this.load.object("itemData", "shattered_sword_assets/data/items.json");
-        this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
-        this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
-        this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
-        this.load.spritesheet("test_dummy", "shattered_sword_assets/spritesheets/test_dummy.json");
+        //this.load.object("itemData", "shattered_sword_assets2/data/items.json");
+        this.load.image("knife", "shattered_sword_assets2/sprites/knife.png");
+        this.load.spritesheet("slice", "shattered_sword_assets2/spritesheets/slice.json");
+        this.load.image("inventorySlot", "shattered_sword_assets2/sprites/inventory.png");
+        this.load.spritesheet("test_dummy", "shattered_sword_assets2/spritesheets/test_dummy.json");
     }
     startScene() {
         // Do the game level standard initializations
@@ -11978,7 +11978,7 @@ const Levels_1 = require("./Levels");
 class MainMenu extends Scene_1.default {
     loadScene() {
         // Load the menu song
-        //this.load.audio("menu", "shattered_sword_assets/music/menu.mp3");
+        //this.load.audio("menu", "shattered_sword_assets2/music/menu.mp3");
     }
     //TODO 
     startScene() {
@@ -11990,7 +11990,7 @@ class MainMenu extends Scene_1.default {
         // console.log(this.save.getLevel());
         // this.save.setLevel(10);
         // console.log(this.save.getLevel());
-        // this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", 114514);
+        // this.rmg = new RandomMapGenerator("shattered_sword_assets2/jsons/forest_template.json", 114514);
         // this.rmg.getMap();
         // Scene has started, so start playing music
         //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menu", loop: true, holdReference: true});
@@ -12295,7 +12295,7 @@ class SceneWithStory extends Scene_1.default {
             let event = this.receiver.getNextEvent();
             // Testing code            
             if (event.type === "loadStory" && this.currentMode === Mode.GAME_MODE) {
-                this.storyLoader("shattered_sword_assets/jsons/story.json");
+                this.storyLoader("shattered_sword_assets2/jsons/story.json");
             }
         }
         // Testing code
@@ -12316,15 +12316,15 @@ class Tutorial extends GameLevel_1.default {
     loadScene() {
         super.loadScene();
         // Load resources
-        // this.load.tilemap("forest1", "shattered_sword_assets/tilemaps/Tutorial.json");
+        // this.load.tilemap("forest1", "shattered_sword_assets2/tilemaps/Tutorial.json");
         // let map = localStorage.getItem("map");
         this.randomSeed = Math.floor(Math.random() * 10000000000);
-        let rmg = new RandomMapGenerator_1.default("shattered_sword_assets/jsons/forest_template.json", this.randomSeed);
+        let rmg = new RandomMapGenerator_1.default("shattered_sword_assets2/jsons/forest_template.json", this.randomSeed);
         this.map = rmg.getMap();
         this.load.tilemapFromObject("forest1", this.map);
-        this.load.spritesheet("player", "shattered_sword_assets/spritesheets/Hiro.json");
+        this.load.spritesheet("player", "shattered_sword_assets2/spritesheets/Hiro.json");
         // TODO - change when done testing
-        this.load.spritesheet("slice", "shattered_sword_assets/spritesheets/slice.json");
+        this.load.spritesheet("slice", "shattered_sword_assets2/spritesheets/slice.json");
         //load music here
     }
     startScene() {
