@@ -12,6 +12,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Levels from "./Levels";
 import RandomMapGenerator from "../Tools/RandomMapGenerator";
 import GameLevel from "./GameLevel";
+import InputWrapper from "../Tools/InputWrapper";
 
 export default class MainMenu extends Scene {
     protected config: ConfigManager;
@@ -32,6 +33,7 @@ export default class MainMenu extends Scene {
     
     startScene(): void{
         GameLevel.gameTimer = 0;
+        InputWrapper.randomSeed = undefined;
         const center = this.viewport.getCenter();
 
         // The main menu
