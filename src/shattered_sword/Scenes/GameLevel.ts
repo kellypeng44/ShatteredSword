@@ -237,6 +237,7 @@ export default class GameLevel extends Scene {
 
 
     updateScene(deltaT: number){
+
         if (this.gameStateStack.peek() === GameState.GAMING) {
             if (this.gameStarted) {
                 GameLevel.gameTimer += deltaT;
@@ -420,6 +421,7 @@ export default class GameLevel extends Scene {
             }
         }
         if (InputWrapper.isPauseJustPressed()) {
+            this.pauseText.text = (<PlayerController>this.player._ai).toString();
             if (this.gameStateStack.peek() === GameState.GAMING) {
                 this.setGameState(GameState.PAUSE);
                 this.pauseLayer.enable();

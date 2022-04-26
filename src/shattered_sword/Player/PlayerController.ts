@@ -625,7 +625,20 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         
 
     toString(): string{
-        return "";
+        let s = "HP: " + this.CURRENT_HP +"/"+this.MAX_HP+
+                "\nATK: " + this.CURRENT_ATK +
+                "\nSpeed: " + this.speed +
+                "\nDamage Ratio: " + this.damage_multiplier +
+                "\nEnemies Killed: " + this.enemiesKilled + 
+                "\nSword Effects:" +
+                (this.hasBleed ? "\n  Bleed," : "  ") + 
+                (this.hasBurn ? " Burn," : "") + 
+                (this.hasPoison ? " Poison," : "") + 
+                (this.hasShield ? " Shield," :"") + 
+                (this.fullHpBonus ? " FullHealth deal x10 Dmg" : "") +
+                (this.hasLifesteal ? " Lifesteal," : "") +
+                (this.hasOneShot ? " Atk x 100, maxhp set to 1" : "") ;
+        return s;
     }
 
 }
