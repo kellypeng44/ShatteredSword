@@ -21,6 +21,7 @@ import Weapon from "../GameSystems/items/Weapon";
 import BattleManager from "../GameSystems/BattleManager";
 import EnemyAI from "../AI/EnemyAI";
 import SnakeAI from "../AI/SnakeAI";
+import SlimeAI from "../AI/SlimeAI";
 import BattlerAI from "../AI/BattlerAI";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Item from "../GameSystems/items/Item";
@@ -907,7 +908,7 @@ export default class GameLevel extends Scene {
                     })
                     break;
                 case "black_pudding":       
-                    this.addEnemy("black_pudding", enemy.position.scale(32), EnemyAI, {
+                    this.addEnemy("black_pudding", enemy.position.scale(32), SlimeAI, {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",
