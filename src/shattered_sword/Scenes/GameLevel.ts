@@ -40,6 +40,7 @@ import GameOver from "./GameOver";
 import Porcelain from "./Porcelain";
 import Tutorial from "./Tutorial";
 import Greatwall from "./Greatwall";
+import MainMenu from "./MainMenu";
 
 //  TODO
 /**
@@ -125,6 +126,7 @@ export default class GameLevel extends Scene {
     protected pauseInput: TextInput;
     protected pauseSubmit: Label;
     protected pauseCheatText: Label;
+    protected mainMenuButton: Button;
 
     protected rmg: RandomMapGenerator;
     protected map: TiledTilemapData;
@@ -406,6 +408,11 @@ export default class GameLevel extends Scene {
             if (event.type === "cheat") {
                 this.enableCheat();
             }
+            if(event.type === "MainMenu"){
+                this.viewport.setZoomLevel(1);
+                this.sceneManager.changeToScene(MainMenu, {});
+                InputWrapper.enableInput();
+            }
         }
         if (this.gameStateStack.peek() === GameState.STORY) {
             if (InputWrapper.isNextJustPressed() && this.gameStateStack.peek() === GameState.STORY) {
@@ -543,6 +550,7 @@ export default class GameLevel extends Scene {
         this.receiver.subscribe("startTimer");
         this.receiver.subscribe("endStory");
         this.receiver.subscribe("nextLevel");
+        this.receiver.subscribe("MainMenu");
     }
 
     // TODO - 
@@ -677,6 +685,16 @@ export default class GameLevel extends Scene {
         this.pauseSubmit.backgroundColor = Color.WHITE;
         this.pauseSubmit.onClickEventId = "cheat";
         this.pauseSubmit.borderWidth = 3;
+
+        this.mainMenuButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(Math.floor(this.viewport.getHalfSize().x ), Math.floor(this.viewport.getHalfSize().y + 140)), text:"Main Menu"});
+        this.mainMenuButton.size.set(180,100);
+        this.mainMenuButton.borderWidth = 5;
+        this.mainMenuButton.borderColor = Color.BLACK;
+        this.mainMenuButton.backgroundColor = Color.WHITE;
+        this.mainMenuButton.textColor = Color.BLACK;
+        this.mainMenuButton.onClickEventId = "MainMenu";
+        this.mainMenuButton.fontSize = 20;
+        
 
         this.livesCountLabel =  <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(this.viewport.getHalfSize().x*2 - 100, 30), text:"Lives: "});
         this.livesCountLabel.textColor = Color.YELLOW;
