@@ -9,12 +9,12 @@
                     "key": "sword",
                     "path": "shattered_sword_assets/images/story1.png",
                     "positon": [
-                        600,
-                        250
+                        300,
+                        150
                     ],
                     "scale": [
-                        8,
-                        8
+                        4,
+                        4
                     ]
                 }
             ]
@@ -32,12 +32,12 @@
                     "key": "sword_shattered",
                     "path": "shattered_sword_assets/images/story2.png",
                     "positon": [
-                        600,
-                        250
+                        300,
+                        150
                     ],
                     "scale": [
-                        8,
-                        8
+                        4,
+                        4
                     ]
                 }
             ]
@@ -55,12 +55,12 @@
                     "key": "hiro_appear",
                     "path": "shattered_sword_assets/images/story3.png",
                     "positon": [
-                        630,
-                        300
+                        300,
+                        150
                     ],
                     "scale": [
-                        7,
-                        7
+                        4,
+                        4
                     ]
                 }
             ]
@@ -78,12 +78,12 @@
                     "key": "hiro_sword",
                     "path": "shattered_sword_assets/images/story4.png",
                     "positon": [
-                        630,
-                        300
+                        300,
+                        150
                     ],
                     "scale": [
-                        7,
-                        7
+                        4,
+                        4
                     ]
                 }
             ]
@@ -111,12 +111,12 @@
                     "key": "logo",
                     "path": "shattered_sword_assets/images/Logo.png",
                     "positon": [
-                        650,
-                        300
+                        330,
+                        150
                     ],
                     "scale": [
-                        1,
-                        1
+                        0.5,
+                        0.5
                     ]
                 }
             ]
