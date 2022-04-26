@@ -216,17 +216,18 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         if(this.burnTimer.isStopped() && this.burnCounter >0){
             this.burnCounter --;
             this.burnTimer.start();
-            this.damage(5 + (<PlayerController>this.player._ai).extraDotDmg + (<PlayerController>this.player._ai).CURRENT_ATK * .2);
+            this.damage(12 + (<PlayerController>this.player._ai).extraDotDmg );
         }
         if(this.poisonTimer.isStopped() && this.poisonCounter >0){
             this.poisonCounter --;
             this.poisonTimer.start();
-            this.damage(5 + (<PlayerController>this.player._ai).extraDotDmg + (<PlayerController>this.player._ai).CURRENT_ATK * .2);
+            this.damage( Math.round(this.CURRENT_HP/20) + (<PlayerController>this.player._ai).extraDotDmg );
         }
+
         if(this.bleedTimer.isStopped() && this.bleedCounter >0){
             this.bleedCounter --;
             this.bleedTimer.start();
-            this.damage(5 + (<PlayerController>this.player._ai).extraDotDmg + (<PlayerController>this.player._ai).CURRENT_ATK * .08);
+            this.damage(3 +Math.round(this.CURRENT_HP/33) + (<PlayerController>this.player._ai).extraDotDmg );
         }
 
         if (this.healthBar) {

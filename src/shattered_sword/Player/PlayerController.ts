@@ -366,7 +366,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         buffs.push({type:BuffType.FLAT_ATK, value:num, category: BuffCategory.EXTRA},
             {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
             {type:BuffType.FLAT_HEALTH, value:num, category: BuffCategory.SHIELD},
-            {type:BuffType.RANGE, value:num/10, category: BuffCategory.ATTACK},
+            {type:BuffType.RANGE, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease range \nby "+num/100+"%"},
             {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
         );
         
@@ -560,7 +560,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.damage_multiplier *= (1-buff.value);
                 break;
             case BuffType.RANGE:
-                //this.CURRENT_BUFFS.range += buff.value;
+                
                 if (item) {
                     (<Weapon>item).EXTRA_RANGE += buff.value;
                 }
