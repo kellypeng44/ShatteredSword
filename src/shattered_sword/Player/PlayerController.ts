@@ -236,6 +236,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             // If there is an item in the current slot, use it
             if (item) {
                 item.use(this.owner, "player", this.lookDirection);
+                //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sword", loop: false, holdReference: false});
             }
         }
 
