@@ -7,8 +7,8 @@
             "displayName": "Knife",
             "animationSprite": "slice",
             "spriteKey": "knife",
-            "damage": 40,
-            "cooldown": 300,
+            "damage": 50,
+            "cooldown": 500,
             "useVolume": 0
         }
     ]

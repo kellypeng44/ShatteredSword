@@ -2,7 +2,7 @@
     "texts": [
         {
             "speaker": "",
-            "content": "There's a the legendary royal greatsword that is the only weapon powerful enough to slay the monster",
+            "content": "There was the legendary royal greatsword that would grant great power to its wielder",
             "actions": [
                 {
                     "type": "loadSprite",
@@ -21,7 +21,7 @@
         },
         {
             "speaker": "",
-            "content": "But the monster shattered it into 6 pieces",
+            "content": "But an evil monster shattered it into 6 pieces",
             "actions": [
                 {
                     "type": "hideSprite",
@@ -44,7 +44,7 @@
         },
         {
             "speaker": "",
-            "content": "Hiro is the only prince from the kingdom",
+            "content": "Hiro is the only surviving prince from the kingdom destroyed by the monster",
             "actions": [
                 {
                     "type": "hideSprite",
@@ -90,7 +90,7 @@
         },
         {
             "speaker": "Hiro",
-            "content": "I should go on the journey to collect the pieces of the sword... and kill the monster!",
+            "content": "I must go on the journey to collect the pieces of the sword... and kill the monster!",
             "actions": [
                 {
                     "type": "showSprite",
