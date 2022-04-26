@@ -27,21 +27,21 @@ export default class Levels extends Scene {
         this.primary = this.addUILayer("primary");
 
         
-        const tutorial = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 100), text: "tutorial "});
+        const tutorial = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 100), text: "Start Game"});
         tutorial.size.set(200, 50);
         tutorial.borderWidth = 2;
         tutorial.borderColor = Color.WHITE;
         tutorial.backgroundColor = Color.TRANSPARENT;
-        tutorial.onClickEventId = "tutorial";
+        tutorial.onClickEventId = "start";
 
-        const porcelain = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y), text: "porcelain"});
+        const porcelain = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y), text: "porcelain(Test)"});
         porcelain.size.set(200, 50);
         porcelain.borderWidth = 2;
         porcelain.borderColor = Color.WHITE;
         porcelain.backgroundColor = Color.TRANSPARENT;
         porcelain.onClickEventId = "porcelain";
 
-        const greatwall = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 100), text: "greatwall"});
+        const greatwall = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 100), text: "greatwall(Test)"});
         greatwall.size.set(200, 50);
         greatwall.borderWidth = 2;
         greatwall.borderColor = Color.WHITE;
@@ -55,7 +55,7 @@ export default class Levels extends Scene {
         back.backgroundColor = Color.TRANSPARENT;
         back.onClickEventId = "back";
         
-        this.receiver.subscribe("tutorial");
+        this.receiver.subscribe("start");
         this.receiver.subscribe("porcelain");
         this.receiver.subscribe("greatwall");
         this.receiver.subscribe("back");
@@ -68,7 +68,7 @@ export default class Levels extends Scene {
             console.log(event);
 
 
-            if(event.type === "tutorial"){
+            if(event.type === "start"){
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemies"],
