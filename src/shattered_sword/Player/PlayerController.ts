@@ -322,7 +322,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.MAX_EXP += 50; //increase max exp needed for level up
             this.level++ ;
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_up", loop: false, holdReference: false});
-            this.emitter.fireEvent(Player_Events.GIVE_BUFF);
+            this.emitter.fireEvent(Player_Events.GIVE_REGULAR_BUFF);
         }
     }
     
@@ -369,7 +369,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         // Get sub-array of first 3 elements after shuffled
         let shuffled = PlayerController.buffPool.slice(0, 3); //3 buff categories
 
-        let num = parseFloat(Math.random().toPrecision(1)) * 10;    //random number from 1 to 10 if no value given
+        //random number from 5 to 15 if no value given
+        let num = Math.floor(Math.random() *10) +5;
+        num = Math.round(num);
         if(typeof val !== 'undefined'){
             num = val;
         }
