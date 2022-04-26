@@ -7,7 +7,7 @@ import InputWrapper from "../../Tools/InputWrapper";
 import { PlayerStates } from "../PlayerController";
 import InAir from "./InAir";
 import PlayerState from "./PlayerState";
-
+import { GameState } from "../../sword_enums";
 export default class Jump extends InAir {
 	owner: AnimatedSprite;
 
@@ -19,7 +19,9 @@ export default class Jump extends InAir {
 
 	update(deltaT: number): void {
 		if (!PlayerState.dashTimer.isStopped()) {
-			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "dash", loop: false, holdReference: false});
+			if(InputWrapper.getState() === GameState.GAMING){
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "dash", loop: false, holdReference: false});
+			}
 			this.owner.animation.playIfNotAlready("DASH");
 		}
 		else {
