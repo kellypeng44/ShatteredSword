@@ -382,16 +382,25 @@ export default class GameLevel extends Scene {
                         (<PlayerController>this.player._ai).addBuff(this.buffs[0]);
                         this.buffLayer.disable();
                         this.setGameState();
+                        if (this.levelEnded) {
+                            this.goToNextLevel();
+                        }
                         break;
                     case "buff2":
                         (<PlayerController>this.player._ai).addBuff(this.buffs[1]);
                         this.buffLayer.disable();
                         this.setGameState();
+                        if (this.levelEnded) {
+                            this.goToNextLevel();
+                        }
                         break;
                     case "buff3":
                         (<PlayerController>this.player._ai).addBuff(this.buffs[2]);
                         this.buffLayer.disable();
                         this.setGameState();
+                        if (this.levelEnded) {
+                            this.goToNextLevel();
+                        }
                         break;
                 }
             }
@@ -1090,7 +1099,7 @@ export default class GameLevel extends Scene {
             this.storytextLabel = undefined;
             // this.storyLayer = undefined;
             if (this.levelEnded) {
-                this.goToNextLevel();
+                this.emitter.fireEvent(Player_Events.GIVE_SPECIAL_BUFF, {});
             }
         }
     }
