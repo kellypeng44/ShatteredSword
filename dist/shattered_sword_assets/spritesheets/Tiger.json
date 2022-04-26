@@ -13,7 +13,7 @@
          "frames": [
             {
                "index": 0,
-               "duration": 150
+               "duration": 10
             }
 
          ]
@@ -24,19 +24,19 @@
          "frames": [
             {
                "index": 1,
-               "duration": 150
+               "duration": 10
             },
             {
                "index": 2,
-               "duration": 150
+               "duration": 10
             },
             {
                "index": 3,
-               "duration": 150
+               "duration": 10
             },
             {
-               "index": 4,
-               "duration": 150
+               "index": 2,
+               "duration": 10
             }
          ]
       },
@@ -46,19 +46,19 @@
          "frames": [
             {
                "index": 1,
-               "duration": 150
+               "duration": 10
             },
             {
                "index": 2,
-               "duration": 150
+               "duration": 10
             },
             {
                "index": 3,
-               "duration": 150
+               "duration": 10
             },
             {
-               "index": 4,
-               "duration": 150
+               "index": 2,
+               "duration": 10
             }
          ]
       },
@@ -67,21 +67,43 @@
          "repeat": true,
          "frames": [
             {
+               "index": 4,
+               "duration": 10
+            },
+            {
                "index": 5,
-               "duration": 150
+               "duration": 10
             },
             {
                "index": 6,
-               "duration": 150
+               "duration": 10
             },
+            {
+               "index": 5,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "CHARGE",
+         "repeat": false,
+         "frames": [
             {
                "index": 7,
-               "duration": 150
-            },
+               "duration": 20
+            }
+
+         ]
+      },
+      {
+         "name": "ATTACK",
+         "repeat": false,
+         "frames": [
             {
                "index": 8,
-               "duration": 150
+               "duration": 20
             }
+
          ]
       }
    ]
