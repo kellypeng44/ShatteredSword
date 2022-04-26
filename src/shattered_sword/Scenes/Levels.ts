@@ -27,7 +27,7 @@ export default class Levels extends Scene {
         this.primary = this.addUILayer("primary");
 
         
-        const tutorial = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 50), text: "tutorial "});
+        const tutorial = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 100), text: "tutorial "});
         tutorial.size.set(200, 50);
         tutorial.borderWidth = 2;
         tutorial.borderColor = Color.WHITE;
@@ -41,14 +41,14 @@ export default class Levels extends Scene {
         porcelain.backgroundColor = Color.TRANSPARENT;
         porcelain.onClickEventId = "porcelain";
 
-        const greatwall = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 50), text: "greatwall"});
+        const greatwall = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 100), text: "greatwall"});
         greatwall.size.set(200, 50);
         greatwall.borderWidth = 2;
         greatwall.borderColor = Color.WHITE;
         greatwall.backgroundColor = Color.TRANSPARENT;
         greatwall.onClickEventId = "greatwall";
 
-        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 100), text: "Back"});
+        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 200), text: "Back"});
         back.size.set(200, 50);
         back.borderWidth = 2;
         back.borderColor = Color.WHITE;
