@@ -163,7 +163,7 @@ export default class GameLevel extends Scene {
         this.load.audio("level_up","shattered_sword_assets/sounds/level_up.wav");
         //神社（じんじゃ）祭（まつり）　by Second Dimension Imagination Group
         this.load.audio("level_music","shattered_sword_assets/sounds/bgm1.mp3");
-        this.load.audio("sword","shattered_sword_assets/sounds/sword_ding.m4a");
+        this.load.audio("sword","shattered_sword_assets/sounds/sword_ding1.m4a");
 
 
 
