@@ -4,7 +4,7 @@ import MainMenu from "./shattered_sword/Scenes/MainMenu";
 import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
 import WeaponTemplateRegistry from "./shattered_sword/Registry/WeaponRegistry";
 import WeaponTypeRegistry from "./shattered_sword/Registry/WeaponTypeRegistry";
-
+import SplashScreen from "./shattered_sword/Scenes/SplashScreen";
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
     // Run any tests
@@ -47,7 +47,7 @@ import WeaponTypeRegistry from "./shattered_sword/Registry/WeaponTypeRegistry";
     const game = new Game(options);
 
     // Start our game
-    game.start(MainMenu, {});   
+    game.start(SplashScreen, {});   
     //TODO - change to splash screen once available
     //game.start(SplashScreen,{});
 })();

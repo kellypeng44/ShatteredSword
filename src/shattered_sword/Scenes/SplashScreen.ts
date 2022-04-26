@@ -11,9 +11,9 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Levels from "./Levels";
 import InputWrapper from "../Tools/InputWrapper";
+import MainMenu from "./MainMenu";
 
-
-export default class MainMenu extends Scene {
+export default class SplashScreen extends Scene {
     protected config: ConfigManager;
     protected save: SaveManager;
 
@@ -22,8 +22,8 @@ export default class MainMenu extends Scene {
 
     loadScene(): void {
         //load images
-        //this.load.image("logo", "shattered_sword_assets/images/Shattered_Sword_Logo.png");
-        //this.load.image("backgroundImage", "shattered_sword_assets/images/Background.png");
+        this.load.image("logo", "shattered_sword_assets/images/black.png");
+        this.load.image("backgroundImage", "shattered_sword_assets/images/logo.png");
         // Load the menu song
         //this.load.audio("menu", "assets/music/menu.mp3");
     }
@@ -70,6 +70,10 @@ export default class MainMenu extends Scene {
 
     
     updateScene(){
+        if (InputWrapper.isLeftMouseJustPressed()) {  //if left click
+            this.sceneManager.changeToScene(MainMenu, {}, {});
+            
+        }
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
             console.log(event);
