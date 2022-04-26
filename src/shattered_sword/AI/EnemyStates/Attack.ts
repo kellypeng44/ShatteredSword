@@ -14,7 +14,7 @@ export default class Attack extends EnemyState {
         this.attacked = this.owner.id+"attacked";
 
         // TODO replace DYING with CHARGING
-        (<AnimatedSprite>this.owner).animation.play("DYING", false, this.charged);
+        (<AnimatedSprite>this.owner).animation.play("CHARGE", false, this.charged);
         this.receiver.subscribe(this.charged);
         this.receiver.subscribe(this.attacked);
     }
