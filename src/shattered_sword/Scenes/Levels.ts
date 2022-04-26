@@ -14,6 +14,7 @@ import MainMenu from "./MainMenu";
 import Tutorial from "./Tutorial";
 import Porcelain from "./Porcelain";
 import Greatwall from './Greatwall';
+import InputWrapper from "../Tools/InputWrapper";
 
 
 export default class Levels extends Scene {
@@ -69,6 +70,7 @@ export default class Levels extends Scene {
 
 
             if(event.type === "start"){
+                InputWrapper.randomSeed = Math.floor(Math.random() * 10000000000).toString();;
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemies"],

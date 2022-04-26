@@ -3,6 +3,7 @@ import {GameState} from "../sword_enums";
 
 export default class InputWrapper {
     private static gameState: GameState = GameState.GAMING;
+    static randomSeed: string;
 
     static isUpPressed(): boolean {
         if (InputWrapper.gameState != GameState.GAMING) {

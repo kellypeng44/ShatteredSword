@@ -11,11 +11,12 @@ import { Statuses } from "../sword_enums";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import EnemyAI from "../AI/EnemyAI";
 import BattlerAI from "../AI/BattlerAI";
+import InputWrapper from "../Tools/InputWrapper";
 
 export default class Porcelain extends GameLevel {
     loadScene(): void {
         super.loadScene();
-        this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/porcelain_template.json", this.randomSeed);
+        this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/porcelain_template.json", InputWrapper.randomSeed);
         this.map = this.rmg.getMap();
         console.log(this.map);
         this.load.tilemapFromObject("map", this.map);

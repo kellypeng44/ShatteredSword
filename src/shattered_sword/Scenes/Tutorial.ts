@@ -3,11 +3,12 @@ import RandomMapGenerator from "../Tools/RandomMapGenerator";
 import GameLevel from "./GameLevel";
 import SnakeAI from "../AI/SnakeAI";
 import Porcelain from "./Porcelain";
+import InputWrapper from "../Tools/InputWrapper";
 
 export default class Tutorial extends GameLevel {
     loadScene(): void {
         super.loadScene();
-        this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", this.randomSeed);
+        this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/forest_template.json", InputWrapper.randomSeed);
         this.map = this.rmg.getMap();
         this.load.tilemapFromObject("map", this.map);
 

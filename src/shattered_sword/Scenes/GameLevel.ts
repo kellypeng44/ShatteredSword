@@ -126,7 +126,6 @@ export default class GameLevel extends Scene {
     protected pauseSubmit: Label;
     protected pauseCheatText: Label;
 
-    protected randomSeed: number;
     protected rmg: RandomMapGenerator;
     protected map: TiledTilemapData;
 
@@ -175,8 +174,6 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("test_dummy","shattered_sword_assets/spritesheets/test_dummy.json")
         this.enemies = new Array();
         this.battleManager = new BattleManager();
-
-        this.randomSeed = Math.floor(Math.random() * 10000000000);
     }
 
     unloadScene(): void {
@@ -572,7 +569,7 @@ export default class GameLevel extends Scene {
 
         //seed label
         //worldsize.x doesnt work how i want it to
-        this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(70, Math.floor(this.viewport.getHalfSize().y*2 - 30)), text: "Seed: "+ this.randomSeed });
+        this.seedLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(70, Math.floor(this.viewport.getHalfSize().y*2 - 30)), text: "Seed: "+ InputWrapper.randomSeed });
         this.seedLabel.size.set(200, 50);
         this.seedLabel.setHAlign(HAlign.LEFT);
         this.seedLabel.textColor = Color.BLACK;
