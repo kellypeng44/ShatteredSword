@@ -19,6 +19,7 @@ export default class BattleManager {
             if(this.enemies.length != 0){
                 for (let enemy of this.enemies) {
                     if (weapon.hits(enemy.owner)) {
+
                         let player = (<PlayerController>this.players[0]);
 
                         if(player.fullHpBonus){

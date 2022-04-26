@@ -45,4 +45,12 @@ export default class Tutorial extends GameLevel {
         this.viewport.setZoomLevel(1);
         this.sceneManager.changeToScene(Porcelain);
     }
+
+    protected playStartStory(): void {
+        if (!this.touchedStartCheckPoint) {
+            this.touchedStartCheckPoint = true;
+            this.storyLoader("shattered_sword_assets/jsons/level1story.json");
+            this.startTimer();
+        }
+    }
 }

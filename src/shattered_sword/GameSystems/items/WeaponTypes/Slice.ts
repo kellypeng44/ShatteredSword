@@ -37,6 +37,7 @@ export default class Slice extends WeaponType {
         // Play the slice animation w/o loop, but queue the normal animation
         sliceSprite.animation.play("SLICE");
         sliceSprite.animation.queue("NORMAL", true);
+        
     }
 
     createRequiredAssets(scene: Scene): [AnimatedSprite] {

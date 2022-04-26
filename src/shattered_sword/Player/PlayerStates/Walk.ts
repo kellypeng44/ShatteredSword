@@ -4,6 +4,7 @@ import InputWrapper from "../../Tools/InputWrapper";
 import { PlayerStates } from "../PlayerController";
 import OnGround from "./OnGround";
 import PlayerState from "./PlayerState";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class Walk extends OnGround {
 	owner: AnimatedSprite;
@@ -16,6 +17,7 @@ export default class Walk extends OnGround {
 
 	update(deltaT: number): void {
 		if (!PlayerState.dashTimer.isStopped()) {
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "dash", loop: false, holdReference: false});
 			this.owner.animation.playIfNotAlready("DASH");
 		}
 		else {

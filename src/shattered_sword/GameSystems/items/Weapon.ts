@@ -7,7 +7,7 @@ import BattleManager from "../BattleManager";
 import Item from "./Item";
 import WeaponType from "./WeaponTypes/WeaponType";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class Weapon extends Item {
     /** The type of this weapon */
@@ -74,7 +74,9 @@ export default class Weapon extends Item {
     
         // Reset the cooldown timer
         this.cooldownTimer.start();
-
+        //TODO - may have to move elsewhere
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sword", loop: false, holdReference: false});
+        
         return true;
     }
 

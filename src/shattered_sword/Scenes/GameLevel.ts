@@ -159,9 +159,12 @@ export default class GameLevel extends Scene {
         this.load.audio("jump", "shattered_sword_assets/sounds/jump2.wav");
         this.load.audio("hurt", "shattered_sword_assets/sounds/hurt.wav");
         this.load.audio("die", "shattered_sword_assets/sounds/die.wav");
+        this.load.audio("dash", "shattered_sword_assets/sounds/dash.wav");
         this.load.audio("level_up","shattered_sword_assets/sounds/level_up.wav");
         //神社（じんじゃ）祭（まつり）　by Second Dimension Imagination Group
-        this.load.audio("level_music","shattered_sword_assets/sounds/bgm1.mp3")
+        this.load.audio("level_music","shattered_sword_assets/sounds/bgm1.mp3");
+        this.load.audio("sword","shattered_sword_assets/sounds/sword_ding.m4a");
+
 
 
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
@@ -976,7 +979,7 @@ export default class GameLevel extends Scene {
     protected playStartStory() {
         if (!this.touchedStartCheckPoint) {
             this.touchedStartCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/level1story.json");
+            this.storyLoader("shattered_sword_assets/jsons/story.json");
             this.startTimer();
         }
     }
