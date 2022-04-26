@@ -133,17 +133,16 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     cooldownMultiplier : number = 1;
     fullHpBonus: Boolean = false;
 
-    //TODO - add new buffs here
-    /*
-    CURRENT_BUFFS: {
-        atk: number;    //flat value to add to weapon
-        hp: number;     //flat value 
-        def: number;    //flat value
-        speed: number;  //flat value
-        range:number;   //range will be a multiplier value: 1.5 = 150% range
-    }
-    */
-    
+    poisonTimer : Timer;
+    poisonCounter : number = 0;
+
+    burnTimer : Timer ;
+    burnCounter : number =0;
+
+    bleedTimer : Timer;
+    bleedCounter :number = 0;
+
+    enemiesKilled : number =0;
 
 
     //TODO - get the correct tilemap
@@ -157,9 +156,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.inventory  = options.inventory;
 
         this.lookDirection = new Vec2();
-
-        //this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
-       
         
         //i frame timer
         PlayerController.invincibilityTimer = new Timer(2000);
@@ -173,6 +169,11 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             PlayerController.buffPool.push(BuffCategory.SHIELD);
             PlayerController.buffPool.push(BuffCategory.HEALTH);
         }
+
+        //initialize dot timers
+        this.burnTimer = new Timer(1000);
+        this.bleedTimer = new Timer(1000);
+        this.poisonTimer = new Timer(1000);
 
         //to test the buffs
         //this.addBuff( {type:BuffType.HEALTH, value:1} );
@@ -236,6 +237,23 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             if (item) {
                 item.use(this.owner, "player", this.lookDirection);
             }
+        }
+
+        //check dot effects
+        if(this.burnTimer.isStopped() && this.burnCounter >0){
+            this.burnCounter --;
+            this.burnTimer.start();
+            this.damage(5);
+        }
+        if(this.poisonTimer.isStopped() && this.poisonCounter >0){
+            this.poisonCounter --;
+            this.poisonTimer.start();
+            this.damage( Math.round(this.CURRENT_HP/33) );
+        }
+        if(this.bleedTimer.isStopped() && this.bleedCounter >0){
+            this.bleedCounter --;
+            this.bleedTimer.start();
+            this.damage( 2 + Math.round(this.CURRENT_HP/50) );
         }
         
 	}
@@ -345,7 +363,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         buffs.push({type:BuffType.FLAT_ATK, value:num, category: BuffCategory.EXTRA},
             {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
             {type:BuffType.FLAT_HEALTH, value:num, category: BuffCategory.SHIELD},
-            {type:BuffType.RANGE, value:num/10, category: BuffCategory.ATTACK},
+            {type:BuffType.RANGE, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease range \nby "+num+"%"},
             {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
         );
         
@@ -539,7 +557,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.damage_multiplier *= (1-buff.value);
                 break;
             case BuffType.RANGE:
-                //this.CURRENT_BUFFS.range += buff.value;
+                
                 if (item) {
                     (<Weapon>item).EXTRA_RANGE += buff.value;
                 }
