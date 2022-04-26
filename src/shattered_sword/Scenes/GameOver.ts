@@ -11,6 +11,7 @@ export default class GameOver extends Scene {
 
     startScene() {
         InputWrapper.setState(GameState.PAUSE);
+        InputWrapper.randomSeed = undefined;
         const center = this.viewport.getCenter();
 
         this.addUILayer("primary");
