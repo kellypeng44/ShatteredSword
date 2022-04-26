@@ -15,10 +15,12 @@ import Tutorial from "./Tutorial";
 import Porcelain from "./Porcelain";
 import Greatwall from './Greatwall';
 import InputWrapper from "../Tools/InputWrapper";
+import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 
 
 export default class Levels extends Scene {
     private primary: Layer;
+    private seedInput: TextInput;
     // TODO
     loadScene(){}
     startScene(){
@@ -27,13 +29,19 @@ export default class Levels extends Scene {
         // The main menu
         this.primary = this.addUILayer("primary");
 
+
+        const seedHint = <Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(center.x, center.y - 200), text: "Enter seed or leave it blank to randomly generate one"});
+        seedHint.textColor = Color.WHITE;
         
-        const tutorial = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 100), text: "Start Game"});
-        tutorial.size.set(200, 50);
-        tutorial.borderWidth = 2;
-        tutorial.borderColor = Color.WHITE;
-        tutorial.backgroundColor = Color.TRANSPARENT;
-        tutorial.onClickEventId = "start";
+        this.seedInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "primary", {position: new Vec2(center.x, center.y - 150), text: ""})
+        this.seedInput.size.set(200, 50);
+        
+        const start = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y - 100), text: "Start Game"});
+        start.size.set(200, 50);
+        start.borderWidth = 2;
+        start.borderColor = Color.WHITE;
+        start.backgroundColor = Color.TRANSPARENT;
+        start.onClickEventId = "start";
 
         const porcelain = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y), text: "porcelain(Test)"});
         porcelain.size.set(200, 50);
@@ -70,7 +78,13 @@ export default class Levels extends Scene {
 
 
             if(event.type === "start"){
-                InputWrapper.randomSeed = Math.floor(Math.random() * 10000000000).toString();;
+                if (this.seedInput.text) {
+                    InputWrapper.randomSeed = this.seedInput.text;
+                    this.seedInput.text = "";
+                }
+                else {
+                    InputWrapper.randomSeed = Math.floor(Math.random() * 10000000000).toString();
+                }
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemies"],
