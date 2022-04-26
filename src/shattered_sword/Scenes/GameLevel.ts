@@ -976,7 +976,7 @@ export default class GameLevel extends Scene {
     protected playStartStory() {
         if (!this.touchedStartCheckPoint) {
             this.touchedStartCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/level1story.json");
+            this.storyLoader("shattered_sword_assets/jsons/story.json");
             this.startTimer();
         }
     }

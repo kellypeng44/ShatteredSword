@@ -22,8 +22,8 @@ export default class SplashScreen extends Scene {
 
     loadScene(): void {
         //load images
-        this.load.image("logo", "shattered_sword_assets/images/black.png");
         this.load.image("backgroundImage", "shattered_sword_assets/images/logo.png");
+        this.load.image("logo", "shattered_sword_assets/images/brown.png");
         // Load the menu song
         //this.load.audio("menu", "assets/music/menu.mp3");
     }
