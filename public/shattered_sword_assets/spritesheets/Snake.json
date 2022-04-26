@@ -1,0 +1,232 @@
+{
+   "name" : "Snake",
+   "spriteSheetImage": "Snake.png",
+   "spriteWidth": 32,
+   "spriteHeight": 32,
+   "width": 160,
+   "height": 160,
+   "columns": 5,
+   "rows": 5,
+   "durationType": "time",
+   "animations": [
+      {
+         "name": "IDLE",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 10
+            },
+            {
+               "index": 1,
+               "duration": 10
+            },
+            {
+               "index": 2,
+               "duration": 10
+            },
+            {
+               "index": 3,
+               "duration": 5
+            },
+            {
+               "index": 4,
+               "duration": 5
+            },
+            {
+               "index": 3,
+               "duration": 5
+            },
+            {
+               "index": 4,
+               "duration": 5
+            },
+            {
+               "index": 3,
+               "duration": 5
+            },
+            {
+               "index": 2,
+               "duration": 10
+            },
+            {
+               "index": 1,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "WALK",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 10
+            },
+            {
+               "index": 1,
+               "duration": 10
+            },
+            {
+               "index": 2,
+               "duration": 10
+            },
+            {
+               "index": 3,
+               "duration": 5
+            },
+            {
+               "index": 4,
+               "duration": 5
+            }
+         ]
+      },
+      {
+         "name": "CHARGE",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 10
+            },
+            {
+               "index": 5,
+               "duration": 10
+            },
+            {
+               "index": 6,
+               "duration": 10
+            },
+            {
+               "index": 7,
+               "duration": 10
+            },
+            {
+               "index": 8,
+               "duration": 10
+            },
+            {
+               "index": 7,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "ATTACK",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 10
+            },
+            {
+               "index": 9,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 11,
+               "duration": 5
+            },
+            {
+               "index": 12,
+               "duration": 5
+            },
+            {
+               "index": 13,
+               "duration": 10
+            }
+
+         ]
+      },
+      {
+         "name": "DYING",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 10
+            },
+            {
+               "index": 14,
+               "duration": 5
+            },
+            {
+               "index": 15,
+               "duration": 5
+            },
+            {
+               "index": 16,
+               "duration": 5
+            },
+            {
+               "index": 17,
+               "duration": 10
+            },
+            {
+               "index": 18,
+               "duration": 10
+            },
+            {
+               "index": 19,
+               "duration": 10
+            },
+            {
+               "index": 20,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "HURT",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 10
+            },
+            {
+               "index": 14,
+               "duration": 5
+            },
+            {
+               "index": 15,
+               "duration": 5
+            },
+            {
+               "index": 16,
+               "duration": 5
+            },
+            {
+               "index": 17,
+               "duration": 10
+            },
+            {
+               "index": 18,
+               "duration": 10
+            },
+            {
+               "index": 19,
+               "duration": 10
+            },
+            {
+               "index": 20,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "DEAD",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 21,
+               "duration": 10
+            }
+         ]
+      }
+   ]
+}

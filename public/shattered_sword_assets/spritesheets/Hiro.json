@@ -1,0 +1,342 @@
+{
+	"name" : "Hiro",
+	"spriteSheetImage": "Hiro.png",
+	"spriteWidth": 64,
+	"spriteHeight": 64,
+	"columns": 8,
+	"rows": 7,
+	"durationType": "time",
+	"animations": [		
+		{
+			"name": "IDLE",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 0,
+					"duration": 10
+				},
+				{
+					"index": 1,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "WALK",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 4,
+					"duration": 5
+				},
+				{
+					"index": 5,
+					"duration": 5
+				},
+				{
+					"index": 6,
+					"duration": 5
+				},
+				{
+					"index": 7,
+					"duration": 5
+				},
+				{
+					"index": 8,
+					"duration": 5
+				},
+				{
+					"index": 9,
+					"duration": 5
+				},
+				{
+					"index": 10,
+					"duration": 5
+				},
+				{
+					"index": 11,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "FALL",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 44,
+					"duration": 10
+				},
+				{
+					"index": 45,
+					"duration": 10
+				}
+
+			]
+		},
+		{
+			"name": "JUMP2",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 30,
+					"duration": 5
+				},
+				{
+					"index": 31,
+					"duration": 5
+				},
+				{
+					"index": 32,
+					"duration": 10
+				},
+				{
+					"index": 31,
+					"duration": 5
+				},
+				{
+					"index": 30,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "JUMP",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 20,
+					"duration": 10
+				},
+				{
+					"index": 21,
+					"duration": 10
+				},
+				{
+					"index": 22,
+					"duration": 10
+				},
+				{
+					"index": 23,
+					"duration": 10
+				},
+				{
+					"index": 24,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "JUMP_LEFT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 25,
+					"duration": 10
+				},
+				{
+					"index": 26,
+					"duration": 10
+				},
+				{
+					"index": 27,
+					"duration": 10
+				},
+				{
+					"index": 28,
+					"duration": 10
+				},
+				{
+					"index": 29,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "ATTACK",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 33,
+					"duration": 10
+				},
+				{
+					"index": 34,
+					"duration": 5
+				},
+				{
+					"index": 35,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "ATTACK_RIGHT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 33,
+					"duration": 10
+				},
+				{
+					"index": 34,
+					"duration": 5
+				},
+				{
+					"index": 35,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "ATTACK_LEFT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 36,
+					"duration": 10
+				},
+				{
+					"index": 37,
+					"duration": 5
+				},
+				{
+					"index": 38,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "HURT",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				},
+				{
+					"index": 0,
+					"duration": 5
+				},
+				{
+					"index": 39,
+					"duration": 5
+				}
+			]
+		},
+		{
+			"name": "DYING",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 0,
+					"duration": 10
+				},
+				{
+					"index": 40,
+					"duration": 5
+				},
+				{
+					"index": 41,
+					"duration": 5
+				},
+				{
+					"index": 42,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "DEAD",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 43,
+					"duration": 10
+				}
+			]
+		},
+		{
+			"name": "DASH",
+			"repeat": false,
+			"frames": [
+				{
+					"index": 46,
+					"duration": 1
+				},
+				{
+					"index": 47,
+					"duration": 1
+				},
+				{
+					"index": 48,
+					"duration": 1
+				},
+				{
+					"index": 49,
+					"duration": 2
+				},
+				{
+					"index": 48,
+					"duration": 1
+				},
+				{
+					"index": 47,
+					"duration": 1
+				},
+				{
+					"index": 46,
+					"duration": 1
+				}
+			]
+		}
+	]
+}

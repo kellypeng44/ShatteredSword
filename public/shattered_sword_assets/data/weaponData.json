@@ -1,0 +1,15 @@
+{
+    "numWeapons": 1,
+    "weapons": [
+        {
+            "weaponType": "slice",
+            "name": "knife",
+            "displayName": "Knife",
+            "animationSprite": "slice",
+            "spriteKey": "knife",
+            "damage": 50,
+            "cooldown": 500,
+            "useVolume": 0
+        }
+    ]
+}

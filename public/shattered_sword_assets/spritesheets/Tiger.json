@@ -1,0 +1,110 @@
+{
+   "name" : "Tiger",
+   "spriteSheetImage": "Tiger.png",
+   "spriteWidth": 64,
+   "spriteHeight": 64,
+   "columns": 3,
+   "rows": 3,
+   "durationType": "time",
+   "animations": [
+      {
+         "name": "IDLE",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 10
+            }
+
+         ]
+      },
+      {
+         "name": "WALK",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 1,
+               "duration": 10
+            },
+            {
+               "index": 2,
+               "duration": 10
+            },
+            {
+               "index": 3,
+               "duration": 10
+            },
+            {
+               "index": 2,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "WALK_RIGHT",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 1,
+               "duration": 10
+            },
+            {
+               "index": 2,
+               "duration": 10
+            },
+            {
+               "index": 3,
+               "duration": 10
+            },
+            {
+               "index": 2,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "WALK_LEFT",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 4,
+               "duration": 10
+            },
+            {
+               "index": 5,
+               "duration": 10
+            },
+            {
+               "index": 6,
+               "duration": 10
+            },
+            {
+               "index": 5,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "CHARGE",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 7,
+               "duration": 20
+            }
+
+         ]
+      },
+      {
+         "name": "ATTACK",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 8,
+               "duration": 20
+            }
+
+         ]
+      }
+   ]
+}

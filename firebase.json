@@ -19,7 +19,7 @@
       },
       {
         "source": "/benchmark3",
-        "destination": "/banchmark3.html",
+        "destination": "/benchmark3.html",
         "type": 301
       }
   ]

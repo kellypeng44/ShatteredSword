@@ -1,0 +1,102 @@
+{
+    "texts": [
+        {
+            "speaker": "",
+            "content": "Press A/LEFT to go LEFT and D/RIGHT to go right",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "rightleft",
+                    "path": "shattered_sword_assets/images/guide1.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Press Z or space to jump, double-click to double-jump",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "rightleft"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "jump",
+                    "path": "shattered_sword_assets/images/guide2.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Press X or J to attack",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "jump"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "attack",
+                    "path": "shattered_sword_assets/images/guide3.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Press C or K to dash",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "attack"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "dash",
+                    "path": "shattered_sword_assets/images/guide4.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "dash"
+                }
+            ]
+        }
+    ]
+}
