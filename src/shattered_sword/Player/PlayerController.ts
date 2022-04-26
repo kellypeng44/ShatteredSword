@@ -142,7 +142,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     bleedTimer : Timer;
     bleedCounter :number = 0;
 
-    
+    enemiesKilled : number =0;
 
 
     //TODO - get the correct tilemap
@@ -156,9 +156,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         this.inventory  = options.inventory;
 
         this.lookDirection = new Vec2();
-
-        //this.CURRENT_BUFFS = {hp:0, atk:0, def:0, speed:0, range:0};
-       
         
         //i frame timer
         PlayerController.invincibilityTimer = new Timer(2000);
@@ -246,17 +243,17 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if(this.burnTimer.isStopped() && this.burnCounter >0){
             this.burnCounter --;
             this.burnTimer.start();
-            this.damage(10);
+            this.damage(5);
         }
         if(this.poisonTimer.isStopped() && this.poisonCounter >0){
             this.poisonCounter --;
             this.poisonTimer.start();
-            this.damage( Math.round(this.CURRENT_HP/20) );
+            this.damage( Math.round(this.CURRENT_HP/33) );
         }
         if(this.bleedTimer.isStopped() && this.bleedCounter >0){
             this.bleedCounter --;
             this.bleedTimer.start();
-            this.damage( 2 + Math.round(this.CURRENT_HP/33) );
+            this.damage( 2 + Math.round(this.CURRENT_HP/50) );
         }
         
 	}
@@ -366,7 +363,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         buffs.push({type:BuffType.FLAT_ATK, value:num, category: BuffCategory.EXTRA},
             {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
             {type:BuffType.FLAT_HEALTH, value:num, category: BuffCategory.SHIELD},
-            {type:BuffType.RANGE, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease range \nby "+num/100+"%"},
+            {type:BuffType.RANGE, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease range \nby "+num+"%"},
             {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
         );
         
