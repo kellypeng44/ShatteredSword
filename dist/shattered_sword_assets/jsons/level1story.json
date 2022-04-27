@@ -2,8 +2,31 @@
     "texts": [
         {
             "speaker": "",
+            "content": "Press enter or space or J or X to continue",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "storymode",
+                    "path": "shattered_sword_assets/images/guide0.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
             "content": "Press A/LEFT to go LEFT and D/RIGHT to go right",
             "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "storymode"
+                },
                 {
                     "type": "loadSprite",
                     "key": "rightleft",
