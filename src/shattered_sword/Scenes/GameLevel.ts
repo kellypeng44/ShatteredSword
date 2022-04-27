@@ -295,7 +295,7 @@ export default class GameLevel extends Scene {
                             (<PlayerController>this.player._ai).giveExp(event.data.get("ai").exp_val);
                         }
                         node.destroy(); //destroy enemy node
-                        (<PlayerController>this.player._ai).enemiesKilled++ ;
+                        PlayerController.enemiesKilled++ ;
                         break;
 
                     case Player_Events.GIVE_REGULAR_BUFF:

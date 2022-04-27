@@ -142,7 +142,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     bleedTimer : Timer;
     bleedCounter :number = 0;
 
-    enemiesKilled : number =0;
+    static enemiesKilled : number =0;
 
 
     //TODO - get the correct tilemap
@@ -181,6 +181,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         //this.addBuff({type:BuffType.BLEED, value:1, category:BuffCategory.DOT});
         //this.addBuff({type:BuffType.POISON, value:1, category:BuffCategory.DOT});
         
+        if(PlayerController.appliedBuffs.length != 0){
+            PlayerController.appliedBuffs.forEach(buff => this.addBuff(buff,true));
+        }
         
     }
 
@@ -397,7 +400,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         //TODO - implement better buff genertion - some buffs dont want multiple of
         let attackBuffs : Buff[] = [
-            {type:BuffType.PERCENT_ATK, value:num/100, category: BuffCategory.ATTACK, string:"\n\nIncrease Attack \nby"+num+"%"}
+            {type:BuffType.PERCENT_ATK, value:num/100, category: BuffCategory.ATTACK, string:"\n\nIncrease Attack \nby "+num+"%"}
         ];
 
         let dotBuffs : Buff[] = [
@@ -460,7 +463,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 case BuffCategory.ATTACK:
                     attackBuffs.sort(() => 0.5 - Math.random());
                     if(attackBuffs.length == 0){
-                        selected.push({type:BuffType.PERCENT_HEALTH, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease attack \nby"+num+"%"});
+                        selected.push({type:BuffType.PERCENT_HEALTH, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease Attack \nby "+num+"%"});
                     }
                     else{
                         selected.push(attackBuffs.pop());
@@ -630,7 +633,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 "\nATK: " + this.CURRENT_ATK +
                 "\nSpeed: " + this.speed +
                 "\nDamage Ratio: " + this.damage_multiplier +
-                "\nEnemies Killed: " + this.enemiesKilled + 
+                "\nEnemies Killed: " + PlayerController.enemiesKilled + 
                 "\nSword Effects:" +
                 (this.hasBleed ? "\n  Bleed," : "  ") + 
                 (this.hasBurn ? " Burn," : "") + 
