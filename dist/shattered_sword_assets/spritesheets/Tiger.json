@@ -3,7 +3,7 @@
    "spriteSheetImage": "Tiger.png",
    "spriteWidth": 64,
    "spriteHeight": 64,
-   "columns": 3,
+   "columns": 4,
    "rows": 3,
    "durationType": "time",
    "animations": [
@@ -104,6 +104,54 @@
                "duration": 20
             }
 
+         ]
+      },
+      {
+         "name": "HURT",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 0,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 0,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 0,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            }
+         ]
+      },
+      {
+         "name": "DEAD",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 10,
+               "duration": 10
+            }
          ]
       }
    ]
