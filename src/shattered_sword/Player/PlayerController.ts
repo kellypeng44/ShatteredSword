@@ -259,7 +259,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.bleedTimer.start();
             this.damage( 2 + Math.round(this.CURRENT_HP/50) );
         }
-        
 	}
 
     
@@ -318,7 +317,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
      * @param shield amount of shield to add to player
      */
     addShield(shield : number){
-        this.CURRENT_SHIELD = (this.CURRENT_SHIELD + shield) % this.MAX_SHIELD;
+        this.CURRENT_SHIELD += shield;
     }
 
     /**
