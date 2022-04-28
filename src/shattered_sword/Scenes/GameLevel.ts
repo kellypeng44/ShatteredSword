@@ -469,7 +469,7 @@ export default class GameLevel extends Scene {
         // this.healthLabel.sizeToText();
 
         //update shield ui
-        this.shieldLabel.text = "Shield: "+ Math.round(playerAI.CURRENT_SHIELD) +'/' + Math.round(playerAI.MAX_SHIELD);
+        this.shieldLabel.text = "Shield: "+ Math.round(playerAI.CURRENT_SHIELD);
         this.shieldBar.size.set(playerAI.CURRENT_SHIELD*1.5, 10);
         this.shieldBar.position.set(playerAI.CURRENT_SHIELD*0.75+20, 50);
         // this.shieldLabel.sizeToText();
