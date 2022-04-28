@@ -838,6 +838,8 @@ export default class GameLevel extends Scene {
         (<EnemyAI>enemy._ai).bleedStat = this.add.sprite("bleeding", "primary");
         (<EnemyAI>enemy._ai).bleedStat.position = (<EnemyAI>enemy._ai).poisonStat.position.clone().add(new Vec2(30, 0));
         (<EnemyAI>enemy._ai).bleedStat.scale.set(1, 1);
+        (<EnemyAI>enemy._ai).physicWidth = enemy.collisionShape.hw;
+        (<EnemyAI>enemy._ai).physicHeight = enemy.collisionShape.hh;
         enemy.setGroup("Enemy");
         enemy.setTrigger("player", Player_Events.PLAYER_COLLIDE, null);
 

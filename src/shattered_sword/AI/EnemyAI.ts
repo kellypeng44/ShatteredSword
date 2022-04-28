@@ -66,6 +66,9 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
     isAttaking: boolean = false;
     damageTimer: Timer;
 
+    physicWidth: number;
+    physicHeight: number;
+
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void { 
         this.owner = owner;
@@ -231,8 +234,8 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         }
 
         if (this.healthBar) {
-            this.healthBar.position = this.owner.collisionShape.center.clone().add(new Vec2(0, -((<AABB>this.owner.collisionShape).hh+5)));
-            this.healthBar.fillWidth = this.CURRENT_HP/this.maxHealth * this.owner.collisionShape.hw * 3;
+            this.healthBar.position = this.owner.collisionShape.center.clone().add(new Vec2(0, -(this.physicHeight+5)));
+            this.healthBar.fillWidth = this.CURRENT_HP/this.maxHealth * this.physicWidth * 3;
             if (this.CURRENT_HP/this.maxHealth >= 2/3) {
                 this.healthBar.color = Color.GREEN;
             }
@@ -244,7 +247,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
             }
         }
         if (this.poisonStat) {
-            this.poisonStat.position = this.owner.collisionShape.center.clone().add(new Vec2(-((<AABB>this.owner.collisionShape).hw)*1.5+10, -((<AABB>this.owner.collisionShape).hh+15)));
+            this.poisonStat.position = this.owner.collisionShape.center.clone().add(new Vec2(-(this.physicWidth)*1.5+10, -(this.physicHeight+15)));
             this.poisonStat.visible = this.poisonCounter > 0;
         }
         if (this.burnStat) {
