@@ -22,12 +22,15 @@ export default class TigerAttack extends Attack {
             let event = this.receiver.getNextEvent().type;
             switch (event) {
                 case this.charged:
+                    this.parent.isCharging = false;
+                    this.parent.isAttaking = true;
                     (<AnimatedSprite>this.owner).animation.play("ATTACK", true);
                     this.velocity = (this.parent.getPlayerPosition().x - this.owner.position.x)/2;
                     this.parent.direction = this.velocity >= 0 ? 1 : 0;
                     this.attacking = true;
                     break;
                 case this.attacked:
+                    this.parent.isAttaking = false;
                     this.finished(EnemyStates.ALERT);
                     break;
             }

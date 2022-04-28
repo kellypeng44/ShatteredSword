@@ -10,10 +10,13 @@ export default class SnakeAttack extends Attack {
             let event = this.receiver.getNextEvent().type;
             switch (event) {
                 case this.charged:
+                    this.parent.isCharging = false;
+                    this.parent.isAttaking = true;
                     (<AnimatedSprite>this.owner).animation.play("ATTACK", false, this.attacked);
                     (<AABB>this.owner.collisionShape).halfSize.x += 3.5;
                     break;
                 case this.attacked:
+                    this.parent.isAttaking = false;
                     (<AABB>this.owner.collisionShape).halfSize.x -= 3.5;
                     this.finished(EnemyStates.ALERT);
                     break;

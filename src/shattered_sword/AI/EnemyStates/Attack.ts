@@ -9,7 +9,7 @@ export default class Attack extends EnemyState {
     onEnter(options: Record<string, any>): void {
         this.parent.attackTimer.start();
         this.parent.velocity.x = 0;
-        this.parent.isAttaking = true;
+        this.parent.isCharging = true;
         this.charged = this.owner.id+"charged";
         this.attacked = this.owner.id+"attacked";
 
@@ -20,11 +20,12 @@ export default class Attack extends EnemyState {
     }
 
     update(deltaT: number): void {
+        this.finished(EnemyStates.ALERT);
         super.update(deltaT);
     }
 
     onExit(): Record<string, any> {
-        this.parent.isAttaking = false;
+        this.parent.isCharging = false;
         (<AnimatedSprite>this.owner).animation.stop();
         return null;
     }
