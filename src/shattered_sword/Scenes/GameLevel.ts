@@ -463,6 +463,9 @@ export default class GameLevel extends Scene {
             this.healthBar.color = Color.RED;
             this.healthLabel.textColor = Color.RED;
         }
+        this.poisonStat.visible = playerAI.poisonCounter > 0 ? true : false;
+        this.burnStat.visible = playerAI.burnCounter > 0 ? true : false;
+        this.bleedStat.visible = playerAI.bleedCounter > 0 ? true : false;
         // this.healthLabel.sizeToText();
 
         //update shield ui
@@ -575,15 +578,15 @@ export default class GameLevel extends Scene {
         this.healthBar.borderWidth = 3;
         this.healthBar.color = Color.GREEN;
 
-        // this.poisonStat = this.add.sprite("poisoning", "UI");
-        // this.poisonStat.position.set(55, 25);
-        // this.poisonStat.scale.set(0.3, 0.3);
-        // this.burnStat = this.add.sprite("burning", "UI");
-        // this.burnStat.position.set(70, 25);
-        // this.burnStat.scale.set(0.3, 0.3);
-        // this.bleedStat = this.add.sprite("bleeding", "UI");
-        // this.bleedStat.position.set(85, 25);
-        // this.bleedStat.scale.set(0.3, 0.3);
+        this.poisonStat = this.add.sprite("poisoning", "UI");
+        this.poisonStat.position.set(25, 8);
+        this.poisonStat.scale.set(1, 1);
+        this.burnStat = this.add.sprite("burning", "UI");
+        this.burnStat.position.set(40, 8);
+        this.burnStat.scale.set(1, 1);
+        this.bleedStat = this.add.sprite("bleeding", "UI");
+        this.bleedStat.position.set(55, 8);
+        this.bleedStat.scale.set(1, 1);
 
         this.shieldLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(70, 65), text: "shield: "+ (<PlayerController>this.player.ai).CURRENT_SHIELD });
         this.shieldLabel.size.set(200, 50);
