@@ -17,6 +17,10 @@ export default class TigerAI extends EnemyAI {
         return null;
     }
 
+    canAttack(position: Vec2): boolean {
+        return this.attackTimer.isStopped();
+    }
+
     collideWithPlayer(player: PlayerController): void {
         player.damage(10);
         if (this.isAttaking && !player.invincible && !player.godMode) {

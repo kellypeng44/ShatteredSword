@@ -12,6 +12,10 @@ export default class BullAI extends EnemyAI {
         this.attackTimer = new Timer(4000);
     }
 
+    canAttack(position: Vec2): boolean {
+        return this.attackTimer.isStopped();
+    }
+
     collideWithPlayer(player: PlayerController): void {
         player.damage(10);
         if (this.isAttaking && !player.invincible && !player.godMode) {
