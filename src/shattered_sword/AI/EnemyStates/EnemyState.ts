@@ -31,7 +31,15 @@ export default abstract class EnemyState extends State {
       this.parent.velocity.x = 0;
     }
     // Do gravity
-    this.parent.velocity.y += this.gravity * deltaT;
+    if (this.owner.onGround) {
+      this.parent.velocity.y = 0;
+    }
+    else if (this.owner.onCeiling) {
+      this.parent.velocity.y += this.gravity * deltaT * 2;
+    }
+    else {
+      this.parent.velocity.y += this.gravity * deltaT;
+    }
     this.owner.move(this.parent.velocity.scaled(deltaT));
   }
 }

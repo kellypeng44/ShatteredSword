@@ -19,11 +19,6 @@ export default class Attack extends EnemyState {
         this.receiver.subscribe(this.attacked);
     }
 
-    update(deltaT: number): void {
-        this.finished(EnemyStates.ALERT);
-        super.update(deltaT);
-    }
-
     onExit(): Record<string, any> {
         this.parent.isCharging = false;
         (<AnimatedSprite>this.owner).animation.stop();

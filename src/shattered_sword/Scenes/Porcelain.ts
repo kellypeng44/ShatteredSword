@@ -20,6 +20,7 @@ export default class Porcelain extends GameLevel {
         this.map = this.rmg.getMap();
         console.log(this.map);
         this.load.tilemapFromObject("map", this.map);
+        this.load.spritesheet("Tiger","shattered_sword_assets/spritesheets/Tiger.json");
 
         // //load enemies
         // this.load.spritesheet("Snake","shattered_sword_assets/spritesheets/Snake.json");

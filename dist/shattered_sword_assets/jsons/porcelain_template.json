@@ -40,6 +40,12 @@
             "type": "player",
             "x": 5,
             "y": 10
+         },
+         {
+               "type": "Tiger",
+               "x": 3,
+               "y": 7,
+               "possibility": 1
          }
       ]
 

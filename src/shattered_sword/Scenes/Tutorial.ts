@@ -14,7 +14,6 @@ export default class Tutorial extends GameLevel {
 
         //load enemies
         this.load.spritesheet("Snake","shattered_sword_assets/spritesheets/Snake.json");
-        this.load.spritesheet("Tiger","shattered_sword_assets/spritesheets/Tiger.json");
 
         //can load enemy sprite here
         //sprites obtained from cse380 sprite wesbite

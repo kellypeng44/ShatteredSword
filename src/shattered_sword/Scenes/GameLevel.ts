@@ -22,6 +22,7 @@ import BattleManager from "../GameSystems/BattleManager";
 import EnemyAI from "../AI/EnemyAI";
 import SnakeAI from "../AI/SnakeAI";
 import SlimeAI from "../AI/SlimeAI";
+import TigerAI from "../AI/TigerAI";
 import BattlerAI from "../AI/BattlerAI";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Item from "../GameSystems/items/Item";
@@ -865,10 +866,13 @@ export default class GameLevel extends Scene {
                     })
                     break;
                 case "Tiger":       //Tiger can be miniboss for now? 
-                    this.addEnemy("Tiger", enemy.position.scale(32), EnemyAI, {
+                    this.addEnemy("Tiger", enemy.position.scale(32), TigerAI, {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",
+                        scale: 1.5,
+                        size: new Vec2(30,18),
+                        offset : new Vec2(0, 27),
                         exp: 100,
                     })
                     break;
