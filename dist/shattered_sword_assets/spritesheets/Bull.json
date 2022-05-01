@@ -5,7 +5,7 @@
    "spriteHeight": 64,
    "width": 256,
    "height": 64,
-   "columns": 4,
+   "columns": 13,
    "rows": 1,
    "durationType": "time",
    "animations": [
@@ -27,6 +27,94 @@
             },
             {
                "index": 1,
+               "duration": 20
+            }
+         ]
+      },
+      {
+         "name": "CHARGE",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 20
+            }
+         ]
+      },
+      {
+         "name": "ATTACK",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 4,
+               "duration": 10
+            },
+            {
+               "index": 5,
+               "duration": 10
+            },
+            {
+               "index": 6,
+               "duration": 10
+            },
+            {
+               "index": 7,
+               "duration": 10
+            },
+            {
+               "index": 8,
+               "duration": 10
+            },
+            {
+               "index": 9,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "CHARGE",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 11,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 11,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 11,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 11,
+               "duration": 5
+            }
+         ]
+      },
+      {
+         "name": "DEAD",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 12,
                "duration": 20
             }
          ]
