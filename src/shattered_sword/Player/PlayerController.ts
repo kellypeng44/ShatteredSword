@@ -160,30 +160,33 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         //i frame timer
         PlayerController.invincibilityTimer = new Timer(2000);
 
-        //initialize the buff pool - each has same weight at first 
+        //initialize the buff pool - each has weight of 2 at first 
         PlayerController.buffPool = new Array();
-        for( let i=0 ; i< 4; i++){
+        for( let i=0 ; i< 2; i++){
             PlayerController.buffPool.push(BuffCategory.ATTACK);
-            PlayerController.buffPool.push(BuffCategory.EXTRA);
             PlayerController.buffPool.push(BuffCategory.DOT);
             PlayerController.buffPool.push(BuffCategory.SHIELD);
             PlayerController.buffPool.push(BuffCategory.HEALTH);
         }
+        PlayerController.buffPool.push(BuffCategory.EXTRA); //only give EXTRA category a weight of 1
+
 
         //initialize dot timers
         this.burnTimer = new Timer(1000);
         this.bleedTimer = new Timer(1000);
         this.poisonTimer = new Timer(1000);
 
+        if(PlayerController.appliedBuffs.length != 0){
+            PlayerController.appliedBuffs.forEach(buff => this.addBuff(buff,true));
+        }
+        
+
+        
         //to test the buffs
         //this.addBuff( {type:BuffType.HEALTH, value:1} );
         //this.addBuff({type:BuffType.BURN, value:1, category:BuffCategory.DOT});
         //this.addBuff({type:BuffType.BLEED, value:1, category:BuffCategory.DOT});
         //this.addBuff({type:BuffType.POISON, value:1, category:BuffCategory.DOT});
-        
-        if(PlayerController.appliedBuffs.length != 0){
-            PlayerController.appliedBuffs.forEach(buff => this.addBuff(buff,true));
-        }
         
     }
 
@@ -364,7 +367,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         let buffs = new Array();
         buffs.push({type:BuffType.FLAT_ATK, value:num, category: BuffCategory.EXTRA},
-            {type:BuffType.SPEED, value:num, category: BuffCategory.EXTRA},
+            {type:BuffType.SPEED, value:num * 2, category: BuffCategory.EXTRA},
             {type:BuffType.FLAT_HEALTH, value:num, category: BuffCategory.SHIELD},
             {type:BuffType.RANGE, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease range \nby "+num+"%"},
             {type:BuffType.ATKSPEED, value:num, category: BuffCategory.ATTACK},
@@ -555,6 +558,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 break;
             case BuffType.SPEED:
                 this.speed += buff.value;
+                this.MIN_SPEED += buff.value;
                 break;
             case BuffType.DEF:
                 this.damage_multiplier *= (1-buff.value);
@@ -593,6 +597,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 break;
             case BuffType.EXTRALIFE:
                 this.lives ++;
+                PlayerController.appliedBuffs.pop(); //pop- dont want to give extra life in next lvl
                 break;
             case BuffType.LIFESTEAL:
                 this.hasLifesteal = true;
