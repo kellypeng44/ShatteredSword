@@ -41,6 +41,7 @@ import GameOver from "./GameOver";
 import Porcelain from "./Porcelain";
 import Tutorial from "./Tutorial";
 import Greatwall from "./Greatwall";
+import Snow from "./Snow";
 import MainMenu from "./MainMenu";
 
 //  TODO

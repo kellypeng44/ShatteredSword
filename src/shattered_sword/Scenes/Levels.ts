@@ -14,6 +14,7 @@ import MainMenu from "./MainMenu";
 import Tutorial from "./Tutorial";
 import Porcelain from "./Porcelain";
 import Greatwall from './Greatwall';
+import Snow from './Snow';
 import InputWrapper from "../Tools/InputWrapper";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 
@@ -57,7 +58,14 @@ export default class Levels extends Scene {
         greatwall.backgroundColor = Color.TRANSPARENT;
         greatwall.onClickEventId = "greatwall";
 
-        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 200), text: "Back"});
+        const snow = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 200), text: "snow(Test)"});
+        snow.size.set(200, 50);
+        snow.borderWidth = 2;
+        snow.borderColor = Color.WHITE;
+        snow.backgroundColor = Color.TRANSPARENT;
+        snow.onClickEventId = "snow";
+
+        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 300), text: "Back"});
         back.size.set(200, 50);
         back.borderWidth = 2;
         back.borderColor = Color.WHITE;
@@ -67,6 +75,7 @@ export default class Levels extends Scene {
         this.receiver.subscribe("start");
         this.receiver.subscribe("porcelain");
         this.receiver.subscribe("greatwall");
+        this.receiver.subscribe("snow");
         this.receiver.subscribe("back");
     }
 
@@ -127,6 +136,21 @@ export default class Levels extends Scene {
                     }
                 }
                 this.sceneManager.changeToScene(Greatwall, {}, sceneOptions);
+            }
+
+            if(event.type === "snow"){
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemies"],
+                        collisions:
+                        [
+                            [0, 1, 1],
+                            [1, 0, 0],
+                            [1, 0, 0]
+                        ]
+                    }
+                }
+                this.sceneManager.changeToScene(Snow, {}, sceneOptions);
             }
 
             if(event.type === "back"){
