@@ -12,8 +12,10 @@ export enum Player_Events {
     BOSS_KILLED = "BossKilled",
     GIVE_REGULAR_BUFF = "GiveRegularBuff",
     GIVE_SPECIAL_BUFF = "GiveSpecialBuff",
-    PLAYER_COLLIDE = "PlayerCollide"
+    PLAYER_COLLIDE = "PlayerCollide",
+    UNLOAD_ASSET = "UnloadAsset"
 }
+
 export enum Damage_Type {
     NORMAL_DAMAGE = "NormalDamage",
     ENVIRONMENT_DAMAGE = "EnvironmentDamage",

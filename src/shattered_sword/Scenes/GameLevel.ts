@@ -23,6 +23,8 @@ import EnemyAI from "../AI/EnemyAI";
 import SnakeAI from "../AI/SnakeAI";
 import SlimeAI from "../AI/SlimeAI";
 import TigerAI from "../AI/TigerAI";
+import ArcherAI from "../AI/ArcherAI";
+import AssassinAI from "../AI/AssassinAi";
 import BattlerAI from "../AI/BattlerAI";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Item from "../GameSystems/items/Item";
@@ -170,6 +172,7 @@ export default class GameLevel extends Scene {
 
 
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
+        this.load.image("pistol","shattered_sword_assets/sprites/pistol.png");
         this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
         this.load.image("black", "shattered_sword_assets/images/black.png");
         this.load.image("poisoning", "shattered_sword_assets/images/poisoning.png");
@@ -271,6 +274,12 @@ export default class GameLevel extends Scene {
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
 
+            if(event.isType(Player_Events.UNLOAD_ASSET)){
+                console.log(event.data);
+                let asset = this.sceneGraph.getNode(event.data.get("node"));
+
+                asset.destroy();
+            }
             if (this.gameStateStack.peek() === GameState.GAMING) {
                 switch(event.type){
                     case Player_Events.PLAYER_COLLIDE:
@@ -854,8 +863,11 @@ export default class GameLevel extends Scene {
 
     //TODO - give each enemy unique weapon
     protected initializeEnemies( enemies: Enemy[]){
+
+     
         for (let enemy of enemies) {
             switch (enemy.type) {
+                
                 case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
                     this.addEnemy("Snake", enemy.position.scale(32), SnakeAI, {
                         player: this.player,
@@ -866,6 +878,7 @@ export default class GameLevel extends Scene {
                         exp: 50,
                     })
                     break;
+                    
                 case "Tiger":       //Tiger can be miniboss for now? 
                     this.addEnemy("Tiger", enemy.position.scale(32), TigerAI, {
                         player: this.player,
@@ -936,23 +949,6 @@ export default class GameLevel extends Scene {
 
     }
 
-    /**
-     * Increments the amount of life the player has
-     * @param amt The amount to add to the player life
-     */
-    /*
-    protected incPlayerLife(amt: number): void {
-        GameLevel.livesCount += amt;
-        this.livesCountLabel.text = "Lives: " + GameLevel.livesCount;
-        if (GameLevel.livesCount === 0){
-            InputWrapper.disableInput();
-            this.player.disablePhysics();
-            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
-            this.player.tweens.play("death");
-        }
-    }
-    */
-
 
     /**
      * Returns the player to spawn
@@ -978,9 +974,6 @@ export default class GameLevel extends Scene {
 			
 			this.player.position.set(this.playerSpawn.x,this.playerSpawn.y);
 
-            //TODO - decrease player health or can kill player here
-            //(<PlayerController>this.player._ai).CURRENT_HP *= .75;
-            //this.emitter.fireEvent(Player_Events.PLAYER_KILLED);
 		}
         
     }

@@ -3,7 +3,7 @@ import ResourceManager from "../../Wolfie2D/ResourceManager/ResourceManager";
 
 import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
 import Slice from "../GameSystems/items/WeaponTypes/Slice";
-
+import SemiAutoGun from "../GameSystems/items/WeaponTypes/SemiAutoGun";
 export default class WeaponTemplateRegistry extends Registry<WeaponConstructor> {
     
     public preload(): void {
@@ -13,6 +13,7 @@ export default class WeaponTemplateRegistry extends Registry<WeaponConstructor> 
         // Load sprites for each weapon 
         //rm.image("something", "shattered_sword_assets/sprites/something.png");
         rm.image("knife", "shattered_sword_assets/sprites/knife.png");
+        rm.image("pistol", "shattered_sword_assets/sprites/pistol.png");
 
         // Load spritesheets
         //rm.spritesheet("weapon anim", "shattered_sword_assets/spritesheets/weapon anim.json");
@@ -21,6 +22,7 @@ export default class WeaponTemplateRegistry extends Registry<WeaponConstructor> 
         // Register default types
         //this.registerItem("itemtype", itemTypefile);
         this.registerItem("slice", Slice);
+        this.registerItem("semiAutoGun", SemiAutoGun);
         
     }
 

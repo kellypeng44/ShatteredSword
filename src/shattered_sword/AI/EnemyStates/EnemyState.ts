@@ -27,7 +27,7 @@ export default abstract class EnemyState extends State {
   }
 
   update(deltaT: number): void {
-    if (!this.parent.damageTimer.isStopped() && !this.parent.isAttaking && !this.parent.isCharging) {
+    if (!this.parent.damageTimer.isStopped() && !this.parent.isAttacking && !this.parent.isCharging) {
       this.parent.velocity.x = 0;
     }
     // Do gravity

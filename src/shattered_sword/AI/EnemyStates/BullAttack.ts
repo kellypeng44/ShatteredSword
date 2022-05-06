@@ -14,7 +14,7 @@ export default class TigerAttack extends Attack {
     }
 
     update(deltaT: number): void {
-        if (this.runTimer.isStopped() && this.parent.isAttaking || !this.canWalk()) {
+        if (this.runTimer.isStopped() && this.parent.isAttacking || !this.canWalk()) {
             this.emitter.fireEvent(this.attacked);
         }
         while (this.receiver.hasNextEvent()) {
@@ -22,13 +22,13 @@ export default class TigerAttack extends Attack {
             switch (event) {
                 case this.charged:
                     this.parent.isCharging = false;
-                    this.parent.isAttaking = true;
+                    this.parent.isAttacking = true;
                     this.runTimer.start();
                     (<AnimatedSprite>this.owner).animation.play("ATTACK", true);
                     this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : 0;
                     break;
                 case this.attacked:
-                    this.parent.isAttaking = false;
+                    this.parent.isAttacking = false;
                     this.finished(EnemyStates.ALERT);
                     break;
             }

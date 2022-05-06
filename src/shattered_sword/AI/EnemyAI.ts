@@ -64,7 +64,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
 
     attackTimer : Timer;
     isCharging: boolean = false;
-    isAttaking: boolean = false;
+    isAttacking: boolean = false;
     damageTimer: Timer;
 
     physicWidth: number;
@@ -112,7 +112,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
         this.CURRENT_HP -= damage;
         //TODO -
-        if (!this.isAttaking && !this.isCharging) {
+        if (!this.isAttacking && !this.isCharging) {
             this.owner.animation.play("HURT",false);
         }
         
