@@ -44,6 +44,7 @@ import Porcelain from "./Porcelain";
 import Tutorial from "./Tutorial";
 import Greatwall from "./Greatwall";
 import Snow from "./Snow";
+import Market from "./Market";
 import MainMenu from "./MainMenu";
 
 //  TODO

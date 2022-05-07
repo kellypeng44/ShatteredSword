@@ -15,6 +15,7 @@ import Tutorial from "./Tutorial";
 import Porcelain from "./Porcelain";
 import Greatwall from './Greatwall';
 import Snow from './Snow';
+import Market from './Market';
 import InputWrapper from "../Tools/InputWrapper";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 
@@ -65,7 +66,14 @@ export default class Levels extends Scene {
         snow.backgroundColor = Color.TRANSPARENT;
         snow.onClickEventId = "snow";
 
-        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 300), text: "Back"});
+        const market = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 300), text: "market(Test)"});
+        market.size.set(200, 50);
+        market.borderWidth = 2;
+        market.borderColor = Color.WHITE;
+        market.backgroundColor = Color.TRANSPARENT;
+        market.onClickEventId = "market";
+
+        const back = this.add.uiElement(UIElementType.BUTTON, "primary", {position: new Vec2(center.x, center.y + 400), text: "Back"});
         back.size.set(200, 50);
         back.borderWidth = 2;
         back.borderColor = Color.WHITE;
@@ -76,6 +84,7 @@ export default class Levels extends Scene {
         this.receiver.subscribe("porcelain");
         this.receiver.subscribe("greatwall");
         this.receiver.subscribe("snow");
+        this.receiver.subscribe("market");
         this.receiver.subscribe("back");
     }
 
@@ -151,6 +160,21 @@ export default class Levels extends Scene {
                     }
                 }
                 this.sceneManager.changeToScene(Snow, {}, sceneOptions);
+            }
+
+            if(event.type === "market"){
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemies"],
+                        collisions:
+                        [
+                            [0, 1, 1],
+                            [1, 0, 0],
+                            [1, 0, 0]
+                        ]
+                    }
+                }
+                this.sceneManager.changeToScene(Market, {}, sceneOptions);
             }
 
             if(event.type === "back"){
