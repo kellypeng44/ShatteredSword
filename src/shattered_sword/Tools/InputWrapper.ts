@@ -56,6 +56,17 @@ export default class InputWrapper {
         return false;
     }
 
+    static isJumpPressed(): boolean {
+        if (InputWrapper.gameState != GameState.GAMING) {
+            return false;
+        }
+        
+        if (Input.isPressed("jump")) {
+            return true;
+        }
+        return false;
+    }
+
     /**
 	 * Returns whether or not the attack key is currently pressed
 	 * @returns True if the attack key is pressed, false otherwise

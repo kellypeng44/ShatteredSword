@@ -1,6 +1,7 @@
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
+import InputWrapper from "../../Tools/InputWrapper";
 import { PlayerStates } from "../PlayerController";
 import PlayerState from "./PlayerState";
 

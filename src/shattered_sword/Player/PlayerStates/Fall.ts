@@ -28,14 +28,10 @@ export default class Fall extends InAir {
 				this.owner.animation.playIfNotAlready("FALL", true);
 			}
 		}
-		//TODO - testing doublejump, may have to move to InAir instead
-		// If we jump, move to the Jump state, give a burst of upwards velocity
 		if( this.parent.airjumps>0 && InputWrapper.isJumpJustPressed()){
 			this.parent.airjumps --;
 			this.finished("jump");
-			this.parent.velocity.y = -600;	// basically jump height
 		} 
-
 		super.update(deltaT);
     }
     onExit(): Record<string, any> {

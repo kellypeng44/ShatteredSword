@@ -30,7 +30,6 @@ export default class OnGround extends PlayerState {
 		// If we jump, move to the Jump state, give a burst of upwards velocity
 		if(InputWrapper.isJumpJustPressed()){
 			this.finished("jump");
-			this.parent.velocity.y = -600;	// basically jump height
 			
 		} 
 		else if(!this.owner.onGround && InputWrapper.getState() === GameState.GAMING){
