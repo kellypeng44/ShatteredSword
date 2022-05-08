@@ -42,7 +42,18 @@ export default class Tutorial extends GameLevel {
 
     protected goToNextLevel(): void {
         this.viewport.setZoomLevel(1);
-        this.sceneManager.changeToScene(Porcelain);
+        let sceneOptions = {
+            physics: {
+                groupNames: ["ground", "player", "enemies"],
+                collisions:
+                [
+                    [0, 1, 1],
+                    [1, 0, 0],
+                    [1, 0, 0]
+                ]
+            }
+        }
+        this.sceneManager.changeToScene(Porcelain, {}, sceneOptions);
     }
 
     protected playStartStory(): void {

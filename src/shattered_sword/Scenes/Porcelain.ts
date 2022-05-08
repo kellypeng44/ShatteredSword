@@ -12,6 +12,7 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import EnemyAI from "../AI/EnemyAI";
 import BattlerAI from "../AI/BattlerAI";
 import InputWrapper from "../Tools/InputWrapper";
+import Greatwall from "./Greatwall";
 
 export default class Porcelain extends GameLevel {
     loadScene(): void {
@@ -32,5 +33,28 @@ export default class Porcelain extends GameLevel {
         // this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
 
         //load music here
+    }
+    protected goToNextLevel(): void {
+        this.viewport.setZoomLevel(1);
+        let sceneOptions = {
+            physics: {
+                groupNames: ["ground", "player", "enemies"],
+                collisions:
+                [
+                    [0, 1, 1],
+                    [1, 0, 0],
+                    [1, 0, 0]
+                ]
+            }
+        }
+        this.sceneManager.changeToScene(Greatwall, {}, sceneOptions);
+    }
+
+    protected playStartStory(): void {
+        if (!this.touchedStartCheckPoint) {
+            this.touchedStartCheckPoint = true;
+            this.storyLoader("shattered_sword_assets/jsons/level1story.json");
+            this.startTimer();
+        }
     }
 }

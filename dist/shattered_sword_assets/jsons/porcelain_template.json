@@ -47,8 +47,8 @@
                "y": 7,
                "possibility": 1
          }
-      ]
-
+      ],
+      "startCheckPoint": [24, 13, 4, 4]
    },
    "exit": {
       "width": 30,
@@ -72,7 +72,8 @@
             "width": 4,
             "alt_tile": [11, 11]
          }
-      ]
+      ],
+      "endCheckPoint": [20, 17, 10, 6]
    },
    "rooms": [
       {

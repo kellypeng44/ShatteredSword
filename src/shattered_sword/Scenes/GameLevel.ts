@@ -24,7 +24,7 @@ import SnakeAI from "../AI/SnakeAI";
 import SlimeAI from "../AI/SlimeAI";
 import TigerAI from "../AI/TigerAI";
 import ArcherAI from "../AI/ArcherAI";
-import AssassinAI from "../AI/AssassinAi";
+import AssassinAI from "../AI/AssassinAI";
 import BattlerAI from "../AI/BattlerAI";
 import InventoryManager from "../GameSystems/InventoryManager";
 import Item from "../GameSystems/items/Item";
