@@ -58,23 +58,26 @@ export default abstract class PlayerState extends State {
 	
 
 	update(deltaT: number): void {
-		// Do gravity
+		
 		
 		if (this.positionTimer.isStopped()){
 			this.emitter.fireEvent(Player_Events.PLAYER_MOVE, {position: this.owner.position.clone()});
 			this.positionTimer.start();
 		}
-		
 
-		if(InputWrapper.isDashJustPressed()){
-			this.doDash();
-		}
-		if (!PlayerState.dashTimer.isStopped()) {
-			this.parent.velocity.x = (<Sprite>this.owner).invertX ? -800 : 800;
-		}
 		if (InputWrapper.getState() === GameState.GAMING) {
+			// Do gravity
 			(<AnimatedSprite>this.parent.owner).animation.resume();
 			this.parent.velocity.y += this.gravity*deltaT;
+
+			// Do dash
+			if(InputWrapper.isDashJustPressed()){
+				this.doDash();
+			}
+			if (!PlayerState.dashTimer.isStopped()) {
+				this.parent.velocity.x = (<Sprite>this.owner).invertX ? -800 : 800;
+				this.parent.velocity.y = 0;
+			}
 			this.owner.move(this.parent.velocity.scaled(deltaT));
 		}
 		else {

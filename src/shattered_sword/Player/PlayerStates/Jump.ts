@@ -38,21 +38,22 @@ export default class Jump extends InAir {
 			}
 		}
 
-		
+		if(this.owner.onCeiling){
+			this.parent.velocity.y = 0;
+			this.finished(PlayerStates.FALL);
+		}
+		// If we're falling, go to the fall state
+		if(this.parent.velocity.y >= 0){
+			this.finished(PlayerStates.FALL);
+		}
+
 		if (!this.jumpTimer.isStopped() && !this.jumpTimer.isPaused() && InputWrapper.isJumpPressed()) {
 			this.parent.velocity.y = -400;
 		}
 		else {
 			this.jumpTimer.pause();
 		}
-
-		if(this.owner.onCeiling){
-			this.parent.velocity.y = 0;
-		}
-		// If we're falling, go to the fall state
-		if(this.parent.velocity.y >= 0){
-			this.finished(PlayerStates.FALL);
-		}
+		
 		super.update(deltaT);
 	}
 
