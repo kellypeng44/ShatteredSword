@@ -40,11 +40,6 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 import { TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
 import GameOver from "./GameOver";
-import Porcelain from "./Porcelain";
-import Tutorial from "./Tutorial";
-import Greatwall from "./Greatwall";
-import Snow from "./Snow";
-import Market from "./Market";
 import MainMenu from "./MainMenu";
 
 //  TODO

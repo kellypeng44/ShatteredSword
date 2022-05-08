@@ -57,4 +57,13 @@ export default class Porcelain extends GameLevel {
             this.startTimer();
         }
     }
+
+    protected playEndStory() {
+        if (!this.touchedEndCheckPoint) {
+            this.touchedEndCheckPoint = true;
+            this.storyLoader("shattered_sword_assets/jsons/story.json");
+            this.endTimer();
+            this.levelEnded = true;
+        }
+    }
 }

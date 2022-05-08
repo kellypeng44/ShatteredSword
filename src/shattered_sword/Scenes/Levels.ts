@@ -11,7 +11,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import MainMenu from "./MainMenu";
-import Tutorial from "./Tutorial";
+import Forest from "./Forest";
 import Porcelain from "./Porcelain";
 import Greatwall from './Greatwall';
 import Snow from './Snow';
@@ -114,7 +114,7 @@ export default class Levels extends Scene {
                         ]
                     }
                 }
-                this.sceneManager.changeToScene(Tutorial, {}, sceneOptions);
+                this.sceneManager.changeToScene(Forest, {}, sceneOptions);
             }
 
             if(event.type === "porcelain"){
