@@ -169,6 +169,7 @@ export default class GameLevel extends Scene {
 
         this.load.image("knife", "shattered_sword_assets/sprites/knife.png");
         this.load.image("pistol","shattered_sword_assets/sprites/pistol.png");
+        this.load.image("laserGun","shattered_sword_assets/sprites/laserGun.png")
         this.load.image("inventorySlot", "shattered_sword_assets/sprites/inventory.png");
         this.load.image("black", "shattered_sword_assets/images/black.png");
         this.load.image("poisoning", "shattered_sword_assets/images/poisoning.png");
@@ -555,7 +556,8 @@ export default class GameLevel extends Scene {
             Player_Events.LEVEL_END,
             Player_Events.PLAYER_KILLED,
             Player_Events.GIVE_REGULAR_BUFF,
-            Player_Events.GIVE_SPECIAL_BUFF
+            Player_Events.GIVE_SPECIAL_BUFF,
+            Player_Events.UNLOAD_ASSET
         ]);
         this.receiver.subscribe("buff1");
         this.receiver.subscribe("buff2");
@@ -860,10 +862,24 @@ export default class GameLevel extends Scene {
     //TODO - give each enemy unique weapon
     protected initializeEnemies( enemies: Enemy[]){
 
-     
+        let pistol = this.createWeapon("pistol");
+    
         for (let enemy of enemies) {
             switch (enemy.type) {
                 
+                /*
+                case "Snake":       
+                    this.addEnemy("Archer", enemy.position.scale(32), ArcherAI, {
+                        player: this.player,
+                        health: 50,
+                        tilemap: "Main",
+                        size: new Vec2(14,10),
+                        offset : new Vec2(0, 22),
+                        exp: 50,
+                        weapon: pistol
+                    })
+                    break;
+                */
                 case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
                     this.addEnemy("Snake", enemy.position.scale(32), SnakeAI, {
                         player: this.player,
@@ -874,7 +890,7 @@ export default class GameLevel extends Scene {
                         exp: 50,
                     })
                     break;
-                    
+                 
                 case "Tiger":       //Tiger can be miniboss for now? 
                     this.addEnemy("Tiger", enemy.position.scale(32), TigerAI, {
                         player: this.player,
@@ -1147,6 +1163,10 @@ export default class GameLevel extends Scene {
                             break;
                         case "SLD":
                             (<PlayerController>this.player._ai).CURRENT_SHIELD = parseInt(commands[2]);
+                            break;
+                        case "SPD":
+                            (<PlayerController>this.player._ai).speed = parseInt(commands[2]);
+                            (<PlayerController>this.player._ai).MIN_SPEED = parseInt(commands[2]);
                             break;
                         default:
                             break;

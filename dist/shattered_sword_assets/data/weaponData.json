@@ -1,5 +1,5 @@
 {
-    "numWeapons": 2,
+    "numWeapons": 3,
     "weapons": [
         {
             "weaponType": "slice",
@@ -16,10 +16,20 @@
             "name": "pistol",
             "displayName": "Pistol",
             "spriteKey": "pistol",
-            "damage": 2,
+            "damage": 15,
             "cooldown": 500,
             "useVolume": 320,
             "color": "#FFEEDD"
+        },
+        {
+            "weaponType": "laserGun",
+            "name": "laserGun",
+            "displayName": "laserGun",
+            "spriteKey": "laserGun",
+            "damage": 30,
+            "cooldown": 650,
+            "useVolume": 320,
+            "color": "#15E631"
         }
     ]
 }

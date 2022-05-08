@@ -15,7 +15,7 @@ export default class Slice extends WeaponType {
         this.useVolume = options.useVolume;
     }
 
-    doAnimation(attacker: GameNode, direction: Vec2, extraRange:number,sliceSprite: AnimatedSprite): void {
+    doAnimation(attacker: GameNode, direction: Vec2, sliceSprite: AnimatedSprite, extraRange:number): void {
         
         // Rotate this with the game node
         // TODO - need to rotate the anim properly

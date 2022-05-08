@@ -10,7 +10,7 @@ import { EaseFunctionType } from "../../../../Wolfie2D/Utils/EaseFunctions";
 import { Player_Events } from "../../../sword_enums";
 import WeaponType from "./WeaponType";
 
-export default class SemiAutoGun extends WeaponType {
+export default class laserGun extends WeaponType {
 
     color: Color;
     private hexColor: string;
@@ -72,11 +72,11 @@ export default class SemiAutoGun extends WeaponType {
     createRequiredAssets(scene: Scene): [Line] {
         let line = <Line>scene.add.graphic(GraphicType.LINE, "primary", {start: new Vec2(-1, 1), end: new Vec2(-1, -1)});
         line.color = this.color;
-        line.thickness = 5;
+        line.thickness = 25;
 
         line.tweens.add("fade", {
             startDelay: 0,
-            duration: 600,
+            duration: 800,
             effects: [
                 {
                     property: TweenableProperties.alpha,
@@ -96,8 +96,8 @@ export default class SemiAutoGun extends WeaponType {
     }
 
     clone(): WeaponType {
-        let newType = new SemiAutoGun();
-        newType.initialize({color: this.hexColor,damage: this.damage, cooldown: this.cooldown, displayName: this.displayName, spriteKey: this.spriteKey, useVolume: this.useVolume});
+        let newType = new laserGun();
+        newType.initialize({damage: this.damage, color: this.hexColor, cooldown: this.cooldown, displayName: this.displayName, spriteKey: this.spriteKey, useVolume: this.useVolume});
         return newType;
     }
 }

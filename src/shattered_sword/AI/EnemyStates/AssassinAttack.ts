@@ -21,11 +21,8 @@ export default class AssassinAttack extends Attack {
         this.owner.alpha = 1;  //unstealth to attack
         this.startPosition = this.owner.position;
         
-        
-        
         if(this.parent.getPlayerPosition() !==null)
             this.owner.position = this.parent.getPlayerPosition().clone().add(new Vec2( (<Sprite>this.parent.player).invertX ? 64 : -64 ,0));
-        
         
         this.pauseTimer.start();
         

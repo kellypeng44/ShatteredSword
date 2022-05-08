@@ -391,7 +391,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         PlayerController.buffPool.sort(() => 0.5 - Math.random());
 
         // Get sub-array of first 3 elements after shuffled
-        let shuffled = PlayerController.buffPool.slice(0, 3); //3 buff categories
+        //let shuffled = PlayerController.buffPool.slice(0, 3); //3 buff categories
+
+        let shuffled = new Set<BuffCategory>();
+        while(shuffled.size < 3){
+            shuffled.add(PlayerController.buffPool.slice(0,1)[0]);
+            PlayerController.buffPool.sort(() => 0.5 - Math.random());
+        }
+
 
         //random number from 5 to 15 if no value given
         let num = Math.floor(Math.random() *10) +5;
@@ -459,8 +466,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
 
         let selected = new Array();
-        while( shuffled.length != 0){
-            let cat = shuffled.pop();
+        for ( let cat of shuffled){
             switch(cat){
                 case BuffCategory.ATTACK:
                     attackBuffs.sort(() => 0.5 - Math.random());
@@ -532,7 +538,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
         else if (!init){
             //increase weight of selected buff category
-            PlayerController.buffPool.push(buff.category);
+            if(buff.category != BuffCategory.EXTRA)
+                PlayerController.buffPool.push(buff.category);
             PlayerController.appliedBuffs.push(buff);
         }
         // TODO

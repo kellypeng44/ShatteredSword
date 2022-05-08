@@ -70,6 +70,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
     physicWidth: number;
     physicHeight: number;
 
+    lastPlayerPosition: Vec2;
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void { 
         this.owner = owner;
@@ -198,6 +199,7 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
                 }
             }
         }
+        this.lastPlayerPosition = pos;
         return pos;
     }
 
@@ -206,7 +208,10 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
      * @returns position of the player if visible, else null
      */
     getPlayerPosition(): Vec2 {
-        return this.isPlayerVisible(this.player.position);
+        if(this.isPlayerVisible(this.player.position) == null){
+            return this.lastPlayerPosition;
+        }
+        return this.isPlayerVisible(this.player.position) ;
     }
 
     update(deltaT: number){
