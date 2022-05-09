@@ -22,9 +22,9 @@ export default class TigerAI extends EnemyAI {
     }
 
     collideWithPlayer(player: PlayerController): void {
-        player.damage(10);
         if (this.isAttacking && !player.invincible) {
             player.bleedCounter += 3;
         }
+        player.damage(10);
     }
 }

@@ -993,7 +993,6 @@ export default class GameLevel extends Scene {
                     break;
             }
         }
-
     }
 
     protected addCheckPoint(startingTile: Vec2, size: Vec2, enter: string, exit: string): Rect {

@@ -293,9 +293,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.CURRENT_SHIELD = newshield; //update shield value
             }
             else{
-                //i frame here
-                PlayerController.invincibilityTimer.start();
-                this.invincible = true;
                 //console.log("hurt anim");
                 (<AnimatedSprite>this.owner).animation.play("HURT" );
                 damage *= this.damage_multiplier;

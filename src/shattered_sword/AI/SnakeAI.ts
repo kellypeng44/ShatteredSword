@@ -10,9 +10,9 @@ export default class SnakeAI extends EnemyAI {
     }
 
     collideWithPlayer(player: PlayerController): void {
-        player.damage(10);
         if (this.isAttacking && !player.invincible ) {
             player.poisonCounter = 5;
         }
+        player.damage(10);
     }
 }
