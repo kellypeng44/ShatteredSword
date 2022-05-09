@@ -27,9 +27,15 @@ export default class InventoryManager {
 
         // Add layers
         this.slotLayer = slotLayer;
-        scene.addUILayer(this.slotLayer).setDepth(100);
+        let layer = scene.addUILayer(this.slotLayer);
+        layer.setDepth(100);
+        layer.setHidden(true);
+        
         this.itemLayer = itemLayer;
-        scene.addUILayer(this.itemLayer).setDepth(101);
+        layer = scene.addUILayer(this.itemLayer)
+        layer.setDepth(101);
+        layer.setHidden(true);
+        
 
         // Create the inventory slots
         for(let i = 0; i < size; i++){
@@ -47,6 +53,7 @@ export default class InventoryManager {
         this.selectedSlot = <Rect>scene.add.graphic(GraphicType.RECT, slotLayer, {position: this.position.clone(), size: this.slotSize.clone().inc(-2)});
         this.selectedSlot.color = Color.WHITE;
         this.selectedSlot.color.a = 0.2;
+        
     }
 
     getItem(): Item {

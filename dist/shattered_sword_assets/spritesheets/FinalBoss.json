@@ -3,9 +3,7 @@
    "spriteSheetImage": "FinalBoss.png",
    "spriteWidth": 80,
    "spriteHeight": 80,
-   "width": 1260,
-   "height": 80,
-   "columns": 16,
+   "columns": 19,
    "rows": 1,
    "durationType": "time",
    "animations": [
@@ -124,6 +122,24 @@
             {
                "index": 15,
                "duration": 20
+            }
+         ]
+      },
+      {
+         "name": "WALK",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 16,
+               "duration": 15
+            },
+            {
+               "index": 17,
+               "duration": 15
+            },
+            {
+               "index": 18,
+               "duration": 15
             }
          ]
       }
