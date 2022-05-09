@@ -14,6 +14,11 @@ export default class Start extends GameLevel {
         //load enemies
     }
 
+    startScene(): void {
+        super.startScene();
+        this.addCheckPoint(new Vec2(3, 13), new Vec2(10, 10), "endStory", "nextLevel");
+    }
+
     protected goToNextLevel(): void {
         this.viewport.setZoomLevel(1);
         let sceneOptions = {
@@ -28,14 +33,6 @@ export default class Start extends GameLevel {
             }
         }
         this.sceneManager.changeToScene(Forest, {}, sceneOptions);
-    }
-
-    protected playStartStory(): void {
-        if (!this.touchedStartCheckPoint) {
-            this.touchedStartCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/level1story.json");
-            this.startTimer();
-        }
     }
 
     protected playEndStory() {

@@ -15,6 +15,7 @@ import GameLevel from "./GameLevel";
 import InputWrapper from "../Tools/InputWrapper";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 import Forest from "./Forest";
+import Start from "./Start";
 
 export default class MainMenu extends Scene {
     protected config: ConfigManager;
@@ -194,7 +195,7 @@ export default class MainMenu extends Scene {
                             ]
                         }
                     }
-                    this.sceneManager.changeToScene(Forest, {}, sceneOptions);
+                    this.sceneManager.changeToScene(Start, {}, sceneOptions);
                 }
             }
 

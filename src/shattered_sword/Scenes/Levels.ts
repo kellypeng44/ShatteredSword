@@ -269,8 +269,6 @@ export default class Levels extends Scene {
             if(event.type === "back"){
                 this.sceneManager.changeToScene(MainMenu, {});
             }
-
-        
         }
     }
 
