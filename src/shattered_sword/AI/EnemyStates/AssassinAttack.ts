@@ -28,7 +28,7 @@ export default class AssassinAttack extends Attack {
 
 
         if(this.parent.getPlayerPosition() !==null)
-            this.owner.position = this.parent.getPlayerPosition().clone().add(new Vec2( (<Sprite>this.parent.player).invertX ? 32 : -32 ,0));
+            this.owner.position = this.parent.getPlayerPosition().clone().add(new Vec2( (<Sprite>this.parent.player).invertX ? 56 : -56 ,0));
         
         this.pauseTimer.start();
         
