@@ -30,7 +30,7 @@
                 {
                     "type": "loadSprite",
                     "key": "enemies",
-                    "path": "shattered_sword_assets/images/forest_story1.png",
+                    "path": "shattered_sword_assets/images/porcelain_story1.png",
                     "positon": [
                         300,
                         150
@@ -52,8 +52,8 @@
                 },
                 {
                     "type": "loadSprite",
-                    "key": "gap",
-                    "path": "shattered_sword_assets/images/forest_story2.png",
+                    "key": "jump",
+                    "path": "shattered_sword_assets/images/porcelain_story2.png",
                     "positon": [
                         300,
                         150
@@ -71,7 +71,7 @@
             "actions": [
                 {
                     "type": "hideSprite",
-                    "key": "gap"
+                    "key": "jump"
                 }
             ]
         }
