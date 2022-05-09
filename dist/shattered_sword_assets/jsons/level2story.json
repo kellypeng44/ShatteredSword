@@ -1,0 +1,79 @@
+{
+    "texts": [
+        {
+            "speaker": "",
+            "content": "Press enter or space or J or X to continue",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "storymode",
+                    "path": "shattered_sword_assets/images/guide0.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "In the room with porcelain, there are tigers and slimes.",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "storymode"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "enemies",
+                    "path": "shattered_sword_assets/images/forest_story1.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Hint: use double-jump to travel through different level of rooms!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "enemies"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "gap",
+                    "path": "shattered_sword_assets/images/forest_story2.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Good luck on your journey!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "gap"
+                }
+            ]
+        }
+    ]
+}
