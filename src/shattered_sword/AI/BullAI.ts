@@ -17,7 +17,7 @@ export default class BullAI extends EnemyAI {
     }
 
     collideWithPlayer(player: PlayerController): void {
-        if (this.isAttacking && !player.invincible) {
+        if (this.isAttacking ) {
             player.bleedCounter += 3;
         }
         player.damage(10);

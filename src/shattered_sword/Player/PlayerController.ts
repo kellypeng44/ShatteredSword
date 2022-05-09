@@ -180,8 +180,6 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             PlayerController.appliedBuffs.forEach(buff => this.addBuff(buff,true));
         }
         
-
-        
         //to test the buffs
         //this.addBuff( {type:BuffType.HEALTH, value:1} );
         //this.addBuff({type:BuffType.BURN, value:1, category:BuffCategory.DOT});
@@ -256,19 +254,22 @@ export default class PlayerController extends StateMachineAI implements BattlerA
 
         //check dot effects
         if(this.burnTimer.isStopped() && this.burnCounter >0){
+            console.log("player is burnt");
             this.burnCounter --;
             this.burnTimer.start();
-            this.damage(5);
+            this.dotDamage(5);
         }
         if(this.poisonTimer.isStopped() && this.poisonCounter >0){
+            console.log("player is poisoned");
             this.poisonCounter --;
             this.poisonTimer.start();
-            this.damage( Math.round(this.CURRENT_HP/33) );
+            this.dotDamage( Math.round(this.CURRENT_HP/33) );
         }
         if(this.bleedTimer.isStopped() && this.bleedCounter >0){
+            console.log("player is bleeding");
             this.bleedCounter --;
             this.bleedTimer.start();
-            this.damage( 2 + Math.round(this.MAX_HP/50) );
+            this.dotDamage( 2 + Math.round(this.MAX_HP/50) );
         }
 	}
 
@@ -296,7 +297,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 //console.log("hurt anim");
                 (<AnimatedSprite>this.owner).animation.play("HURT" );
                 damage *= this.damage_multiplier;
-                damage = parseFloat(damage.toPrecision(2));
+                damage = Math.round(damage);
                 this.CURRENT_HP -= damage;
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hurt", loop: false, holdReference: false});
 
@@ -311,7 +312,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         else{
             //console.log("player is invincible");
         }
-
+                                                    
         if(this.CURRENT_HP <= 0){
             this.lives --;
             (<AnimatedSprite>this.owner).animation.play("DYING");
@@ -319,6 +320,31 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.emitter.fireEvent(Player_Events.PLAYER_KILLED);
         }
     }
+
+    dotDamage(damage: number): void {
+        if (PlayerController.godMode) {
+            //console.log("godmode");
+            return;
+        }
+        
+        (<AnimatedSprite>this.owner).animation.play("HURT" );
+        damage *= this.damage_multiplier;
+        damage = Math.round(damage);
+        this.CURRENT_HP -= damage;
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hurt", loop: false, holdReference: false});
+    
+
+                                                    
+        if(this.CURRENT_HP <= 0){
+            this.lives --;
+            (<AnimatedSprite>this.owner).animation.play("DYING");
+            (<AnimatedSprite>this.owner).animation.queue("DEAD", true, Player_Events.PLAYER_KILLED);
+            this.emitter.fireEvent(Player_Events.PLAYER_KILLED);
+        }
+    }
+
+
+
 
     /**
      * gives the player a certain amount of shield
