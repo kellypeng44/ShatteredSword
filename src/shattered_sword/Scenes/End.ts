@@ -4,7 +4,7 @@ import GameLevel from "./GameLevel";
 import InputWrapper from "../Tools/InputWrapper";
 import Forest from "./Forest";
 
-export default class Start extends GameLevel {
+export default class End extends GameLevel {
     loadScene(): void {
         super.loadScene();
         this.rmg = new RandomMapGenerator("shattered_sword_assets/jsons/castle_template.json", InputWrapper.randomSeed);
@@ -12,6 +12,10 @@ export default class Start extends GameLevel {
         this.load.tilemapFromObject("map", this.map);
 
         //load enemies
+    }
+
+    updateScene(deltaT: number): void {
+        super.updateScene(deltaT);
     }
 
     protected goToNextLevel(): void {
@@ -33,7 +37,7 @@ export default class Start extends GameLevel {
     protected playStartStory(): void {
         if (!this.touchedStartCheckPoint) {
             this.touchedStartCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/level1story.json");
+            this.storyLoader("shattered_sword_assetsshattered_sword_assets/jsons/level1story.json");
             this.startTimer();
         }
     }

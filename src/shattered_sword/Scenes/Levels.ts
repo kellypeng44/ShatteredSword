@@ -17,6 +17,7 @@ import Porcelain from "./Porcelain";
 import Greatwall from './Greatwall';
 import Snow from './Snow';
 import Market from './Market';
+import End from './End'
 import InputWrapper from "../Tools/InputWrapper";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 
@@ -241,6 +242,28 @@ export default class Levels extends Scene {
                     }
                 }
                 this.sceneManager.changeToScene(Market, {}, sceneOptions);
+            }
+
+            if(event.type === "end"){
+                if (this.seedInput.text) {
+                    InputWrapper.randomSeed = this.seedInput.text;
+                    this.seedInput.text = "";
+                }
+                else {
+                    InputWrapper.randomSeed = Math.floor(Math.random() * 10000000000).toString();
+                }
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemies"],
+                        collisions:
+                        [
+                            [0, 1, 1],
+                            [1, 0, 0],
+                            [1, 0, 0]
+                        ]
+                    }
+                }
+                this.sceneManager.changeToScene(End, {}, sceneOptions);
             }
 
             if(event.type === "back"){
