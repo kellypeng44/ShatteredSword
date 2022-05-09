@@ -197,7 +197,7 @@ export default class MainMenu extends Scene {
                             ]
                         }
                     }
-                    this.sceneManager.changeToScene(Start, {}, sceneOptions);
+                    this.sceneManager.changeToScene(Forest, {}, sceneOptions);
                 }
             }
 
