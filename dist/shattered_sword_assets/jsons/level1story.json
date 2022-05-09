@@ -120,6 +120,58 @@
                     "key": "dash"
                 }
             ]
+        },
+        {
+            "speaker": "",
+            "content": "In this level, we're in a bamboo forest. Be careful with the snakes and slimes.",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "enemies",
+                    "path": "shattered_sword_assets/images/forest_story1.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Besides the enemies, watch out for the gaps.",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "enemies"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "gap",
+                    "path": "shattered_sword_assets/images/forest_story2.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Good luck on your journey!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "gap"
+                }
+            ]
         }
     ]
 }
