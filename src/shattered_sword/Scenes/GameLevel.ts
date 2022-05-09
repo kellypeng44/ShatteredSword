@@ -395,6 +395,7 @@ export default class GameLevel extends Scene {
                         this.startTimer();
                         break;
                     case "nextLevel":
+                        this.endTimer();
                         this.goToNextLevel();
                         break;
                 }

@@ -3,6 +3,7 @@ import RandomMapGenerator from "../Tools/RandomMapGenerator";
 import GameLevel from "./GameLevel";
 import InputWrapper from "../Tools/InputWrapper";
 import Forest from "./Forest";
+import GameFinish from "./GameFinish";
 
 export default class End extends GameLevel {
     loadScene(): void {
@@ -14,40 +15,21 @@ export default class End extends GameLevel {
         //load enemies
     }
 
-    updateScene(deltaT: number): void {
-        super.updateScene(deltaT);
+    startScene(): void {
+        super.startScene();
+        this.addCheckPoint(new Vec2(3, 13), new Vec2(10, 10), "startStory", "nextLevel");
     }
 
     protected goToNextLevel(): void {
         this.viewport.setZoomLevel(1);
-        let sceneOptions = {
-            physics: {
-                groupNames: ["ground", "player", "enemies"],
-                collisions:
-                [
-                    [0, 1, 1],
-                    [1, 0, 0],
-                    [1, 0, 0]
-                ]
-            }
-        }
-        this.sceneManager.changeToScene(Forest, {}, sceneOptions);
+        this.sceneManager.changeToScene(GameFinish);
     }
 
     protected playStartStory(): void {
         if (!this.touchedStartCheckPoint) {
             this.touchedStartCheckPoint = true;
-            this.storyLoader("shattered_sword_assetsshattered_sword_assets/jsons/level1story.json");
+            this.storyLoader("shattered_sword_assets/jsons/level1story.json");
             this.startTimer();
-        }
-    }
-
-    protected playEndStory() {
-        if (!this.touchedEndCheckPoint) {
-            this.touchedEndCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/story.json");
-            this.endTimer();
-            this.levelEnded = true;
         }
     }
 }

@@ -12,6 +12,7 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import EnemyAI from "../AI/EnemyAI";
 import BattlerAI from "../AI/BattlerAI";
 import InputWrapper from "../Tools/InputWrapper";
+import End from "./End";
 
 export default class Market extends GameLevel {
     loadScene(): void {
@@ -42,7 +43,7 @@ export default class Market extends GameLevel {
                 ]
             }
         }
-        this.sceneManager.changeToScene(Market, {}, sceneOptions);
+        this.sceneManager.changeToScene(End, {}, sceneOptions);
     }
 
     protected playStartStory(): void {
