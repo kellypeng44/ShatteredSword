@@ -66,10 +66,9 @@ export default class AssassinAttack extends Attack {
                 this.parent.velocity.x = 0;
               }
 
-            // Do gravity
-            if (this.owner.onGround) {
+            
             this.parent.velocity.y = 0;
-            }
+            
             this.owner.move(this.parent.velocity.scaled(deltaT));
     }
         

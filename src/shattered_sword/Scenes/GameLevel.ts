@@ -983,8 +983,8 @@ export default class GameLevel extends Scene {
                         health: 1000,
                         tilemap: "Main",
                         scale: 2,
-                        size: new Vec2(60,50),
-                        offset : new Vec2(0,30),
+                        size: new Vec2(60,31),
+                        offset : new Vec2(0,50),
                         exp: 75,
                         weapon: this.createWeapon("laserGun")
                     })

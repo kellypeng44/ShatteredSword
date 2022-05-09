@@ -12,6 +12,9 @@ export default class Start extends GameLevel {
         this.load.tilemapFromObject("map", this.map);
 
         //load enemies
+        this.load.spritesheet("Snake","shattered_sword_assets/spritesheets/Snake.json");
+        this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
+        this.load.spritesheet("FinalBoss","shattered_sword_assets/spritesheets/FinalBoss.json");
     }
 
     startScene(): void {
