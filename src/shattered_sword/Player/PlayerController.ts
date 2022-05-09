@@ -471,7 +471,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 case BuffCategory.ATTACK:
                     attackBuffs.sort(() => 0.5 - Math.random());
                     if(attackBuffs.length == 0){
-                        selected.push({type:BuffType.PERCENT_HEALTH, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease Attack \nby "+num+"%"});
+                        selected.push({type:BuffType.PERCENT_ATK, value:num/100, category: BuffCategory.ATTACK, string: "\n\nIncrease Attack \nby "+num+"%"});
                     }
                     else{
                         selected.push(attackBuffs.pop());
@@ -538,8 +538,9 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         }
         else if (!init){
             //increase weight of selected buff category
-            if(buff.category != BuffCategory.EXTRA)
+            if(buff.category != BuffCategory.EXTRA){
                 PlayerController.buffPool.push(buff.category);
+            }
             PlayerController.appliedBuffs.push(buff);
         }
         // TODO
