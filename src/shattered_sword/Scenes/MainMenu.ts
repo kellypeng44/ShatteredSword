@@ -55,7 +55,7 @@ export default class MainMenu extends Scene {
         this.seedInput.size.set(200, 50);
 
         // Add map button, and give it an event to emit on press
-        const map = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y - 100), text: "Start Game"});
+        const map = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y - 80), text: "Start Game"});
         map.size.set(200, 50);
         map.borderWidth = 2;
         map.borderColor = Color.WHITE;
