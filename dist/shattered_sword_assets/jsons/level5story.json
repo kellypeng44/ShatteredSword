@@ -21,7 +21,7 @@
         },
         {
             "speaker": "",
-            "content": "Hiro is now in a multi-level store. There're monsters and slimes in the store.",
+            "content": "Hiro is now in a multi-level store. There're monsters in the store.",
             "actions": [
                 {
                     "type": "hideSprite",
@@ -44,7 +44,7 @@
         },
         {
             "speaker": "",
-            "content": "Hint: the monster camouflaged into walls!",
+            "content": "Hint: The monsters camouflage into the walls and can teleport to you!",
             "actions": [
                 {
                     "type": "hideSprite",

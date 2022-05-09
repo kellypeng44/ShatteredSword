@@ -2,7 +2,7 @@
     "texts": [
         {
             "speaker": "",
-            "content": "Hiro collected one more piece of sword!",
+            "content": "Hiro collected one more sword shard!",
             "actions": [
                 {
                     "type": "loadSprite",
@@ -21,7 +21,7 @@
         },
         {
             "speaker": "",
-            "content": "Congrats! You can choose buff to gain from completing this level!",
+            "content": "Congrats! You can choose a buff to gain from completing this level!",
             "actions": [
                 {
                     "type": "hideSprite",
