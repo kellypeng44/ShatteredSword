@@ -1,0 +1,92 @@
+{
+    "name" : "FinalBoss",
+    "spriteSheetImage": "FinalBoss.png",
+    "spriteWidth": 80,
+    "spriteHeight": 80,
+    "width": 80,
+    "height": 80,
+    "columns": 1,
+    "rows": 1,
+    "durationType": "time",
+    "animations": [
+       {
+          "name": "IDLE",
+          "repeat": true,
+          "frames": [
+             {
+                "index": 0,
+                "duration": 20
+             }
+          ]
+       },
+       {
+          "name": "CHARGE",
+          "repeat": false,
+          "frames": [
+             {
+                "index": 0,
+                "duration": 20
+             }
+          ]
+       },
+       {
+          "name": "ATTACK",
+          "repeat": true,
+          "frames": [
+             {
+                "index": 0,
+                "duration": 10
+             }
+          ]
+       },
+       {
+          "name": "HURT",
+          "repeat": false,
+          "frames": [
+             {
+                "index": 0,
+                "duration": 5
+             },
+             {
+                "index": 0,
+                "duration": 5
+             },
+             {
+                "index": 0,
+                "duration": 5
+             },
+             {
+                "index": 0,
+                "duration": 5
+             },
+             {
+                "index": 10,
+                "duration": 5
+             },
+             {
+                "index": 0,
+                "duration": 5
+             },
+             {
+                "index": 0,
+                "duration": 5
+             },
+             {
+                "index": 0,
+                "duration": 5
+             }
+          ]
+       },
+       {
+          "name": "DEAD",
+          "repeat": true,
+          "frames": [
+             {
+                "index": 0,
+                "duration": 5
+             }
+          ]
+       }
+    ]
+ }
+ 
