@@ -190,6 +190,12 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         
     }
 
+    static reset(){
+        this.appliedBuffs = new Array();
+        this.buffPool = new Array();
+        this.enemiesKilled = 0;
+        
+    }
     initializePlatformer(): void {
         this.speed = 400;
 
@@ -241,8 +247,8 @@ export default class PlayerController extends StateMachineAI implements BattlerA
             this.lookDirection.x = (<Sprite>this.owner).invertX ? -1 : 1;
             // If there is an item in the current slot, use it
             if (item) {
-                item.use(this.owner, "player", this.lookDirection);
-                //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sword", loop: false, holdReference: false});
+                if((<Weapon>item).use(this.owner, "player", this.lookDirection))
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sword", loop: false, holdReference: false});
             }
         }
 

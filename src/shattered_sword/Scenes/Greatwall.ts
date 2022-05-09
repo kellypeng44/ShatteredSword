@@ -23,8 +23,13 @@ export default class Greatwall extends GameLevel {
         this.load.tilemapFromObject("map", this.map);
 
         //load enemies
-        this.load.spritesheet("Bull","shattered_sword_assets/spritesheets/Bull.json");
+
+        //can load enemy sprite here
+        //sprites obtained from cse380 sprite wesbite
         this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
+        this.load.spritesheet("Bull","shattered_sword_assets/spritesheets/Bull.json");
+
+        //load music here
     }
     protected goToNextLevel(): void {
         this.viewport.setZoomLevel(1);

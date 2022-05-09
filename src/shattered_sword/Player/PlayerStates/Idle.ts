@@ -15,7 +15,7 @@ export default class Idle extends OnGround {
 		
         //("idle anim");
 		if (!PlayerState.dashTimer.isStopped()) {
-			console.log("Playing dash");
+			//console.log("Playing dash");
 			this.owner.animation.playIfNotAlready("DASH");
 		}
 		else {

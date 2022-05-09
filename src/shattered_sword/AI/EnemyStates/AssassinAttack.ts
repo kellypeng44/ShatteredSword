@@ -15,14 +15,20 @@ export default class AssassinAttack extends Attack {
     onEnter(options: Record<string, any>): void {
         super.onEnter(options);
         this.runTimer = new Timer(500);
-        this.pauseTimer = new Timer(1000);
+        this.pauseTimer = new Timer(1500);
 
         
         this.owner.alpha = 1;  //unstealth to attack
         this.startPosition = this.owner.position;
-        
+        //look around
+        (<Sprite>this.owner).invertX != (<Sprite>this.owner).invertX;
+        (<Sprite>this.owner).invertX != (<Sprite>this.owner).invertX;
+        (<Sprite>this.owner).invertX != (<Sprite>this.owner).invertX;
+        (<Sprite>this.owner).invertX != (<Sprite>this.owner).invertX;
+
+
         if(this.parent.getPlayerPosition() !==null)
-            this.owner.position = this.parent.getPlayerPosition().clone().add(new Vec2( (<Sprite>this.parent.player).invertX ? 64 : -64 ,0));
+            this.owner.position = this.parent.getPlayerPosition().clone().add(new Vec2( (<Sprite>this.parent.player).invertX ? 32 : -32 ,0));
         
         this.pauseTimer.start();
         
@@ -55,8 +61,17 @@ export default class AssassinAttack extends Attack {
             }
             this.parent.velocity.x = this.parent.direction * 500;
             (<Sprite>this.owner).invertX = this.parent.direction === 1 ? true : false ;
-            super.update(deltaT);
-        }
+            //no gravity for assassin
+            if (!this.parent.damageTimer.isStopped() && !this.parent.isAttacking && !this.parent.isCharging) {
+                this.parent.velocity.x = 0;
+              }
+
+            // Do gravity
+            if (this.owner.onGround) {
+            this.parent.velocity.y = 0;
+            }
+            this.owner.move(this.parent.velocity.scaled(deltaT));
+    }
         
         
         
