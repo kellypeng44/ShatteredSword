@@ -3,9 +3,9 @@
    "spriteSheetImage": "FinalBoss.png",
    "spriteWidth": 80,
    "spriteHeight": 80,
-   "width": 800,
+   "width": 1260,
    "height": 80,
-   "columns": 10,
+   "columns": 16,
    "rows": 1,
    "durationType": "time",
    "animations": [
@@ -13,22 +13,22 @@
          "name": "IDLE",
          "repeat": true,
          "frames": [
-         {
-            "index": 0,
-            "duration": 10
-         },
-         {
-            "index": 1,
-            "duration": 10
-         },
-         {
-            "index": 2,
-            "duration": 10
-         },
-         {
-            "index": 3,
-            "duration": 10
-         }
+            {
+               "index": 0,
+               "duration": 10
+            },
+            {
+               "index": 1,
+               "duration": 10
+            },
+            {
+               "index": 2,
+               "duration": 10
+            },
+            {
+               "index": 3,
+               "duration": 10
+            }
          ]
       },
       {
@@ -36,8 +36,16 @@
          "repeat": false,
          "frames": [
             {
-               "index": 0,
-               "duration": 20
+               "index": 4,
+               "duration": 10
+            },
+            {
+               "index": 5,
+               "duration": 10
+            },
+            {
+               "index": 6,
+               "duration": 10
             }
          ]
       },
@@ -46,8 +54,28 @@
          "repeat": true,
          "frames": [
             {
-               "index": 0,
+               "index": 7,
                "duration": 10
+            },
+            {
+               "index": 8,
+               "duration": 10
+            },
+            {
+               "index": 9,
+               "duration": 8
+            },
+            {
+               "index": 10,
+               "duration": 8
+            },
+            {
+               "index": 11,
+               "duration": 8
+            },
+            {
+               "index": 12,
+               "duration": 8
             }
          ]
       },
@@ -56,37 +84,37 @@
          "repeat": false,
          "frames": [
             {
-               "index": 7,
+               "index": 13,
                "duration": 5
             },
             {
-               "index": 8,
+               "index": 14,
                "duration": 5
             },
             {
-               "index": 7,
+               "index": 13,
                "duration": 5
             },
             {
-               "index": 8,
+               "index": 14,
                "duration": 5
             },
             {
-               "index": 7,
+               "index": 13,
                "duration": 5
             },
             {
-               "index": 8,
+               "index": 14,
                "duration": 5
             },
             {
-               "index": 7,
+               "index": 13,
                "duration": 5
             },
             {
-               "index": 8,
+               "index": 14,
                "duration": 5
-            },
+            }
          ]
       },
       {
@@ -94,7 +122,7 @@
          "repeat": true,
          "frames": [
             {
-               "index": 9,
+               "index": 15,
                "duration": 20
             }
          ]
