@@ -19,7 +19,7 @@ export default class BossAttack extends Attack {
         super.onEnter(options);
         this.pauseTimer = new Timer(1000);
         this.pauseTimer.start();
-        this.atknum = Math.floor(Math.random() * 5);
+        this.atknum = Math.floor(Math.random() * 4);
         
         this.owner.alpha = 1;  //unstealth to attack
         switch( this.atknum){
@@ -31,7 +31,7 @@ export default class BossAttack extends Attack {
             case 1: //assassin atk
                 console.log("assassin atk");
                 this.runTimer = new Timer(500);
-                this.pauseTimer = new Timer(1500);
+                this.pauseTimer = new Timer(100);
                 this.startPosition = this.owner.position;
                 if(this.parent.getPlayerPosition() !==null)
                     this.owner.position = this.parent.getPlayerPosition().clone().add(new Vec2( (<Sprite>this.parent.player).invertX ? 64 : -64 ,-128));
