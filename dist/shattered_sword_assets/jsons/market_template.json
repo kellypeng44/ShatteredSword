@@ -11,7 +11,7 @@
     "name":"market_tileset",
     "image":"shattered_sword_assets/tilemaps/market_tileset.png",
     "background": 0,
-    "minroom": 6,
+    "minroom": 8,
     "entrance": {
         "width": 40,
         "height": 20,
@@ -41,8 +41,8 @@
              "x": 17,
              "y": 16
           }
-       ]
- 
+       ],
+       "startCheckPoint": [17, 16, 3, 3]
     },
     "exit": {
         "width": 42,
@@ -66,7 +66,8 @@
                 "width": 4,
                 "alt_tile": [758, 759]
             }
-        ]
+        ],
+        "endCheckPoint": [23, 10, 12, 10]
     },
     "rooms": [
         {
