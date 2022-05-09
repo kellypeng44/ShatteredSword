@@ -12,6 +12,7 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import EnemyAI from "../AI/EnemyAI";
 import BattlerAI from "../AI/BattlerAI";
 import InputWrapper from "../Tools/InputWrapper";
+import Snow from "./Snow";
 
 export default class Greatwall extends GameLevel {
     loadScene(): void {
@@ -42,7 +43,7 @@ export default class Greatwall extends GameLevel {
                 ]
             }
         }
-        this.sceneManager.changeToScene(Greatwall, {}, sceneOptions);
+        this.sceneManager.changeToScene(Snow, {}, sceneOptions);
     }
 
     protected playStartStory(): void {
