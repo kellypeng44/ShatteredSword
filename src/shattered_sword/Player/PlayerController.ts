@@ -129,7 +129,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     lifestealratio : number = 0; //percent of damage to steal
     hasOneShot: Boolean = false;
     extraDotDmg : number =0;
-    lives: number = 1;
+    lives: number = 2;
     cooldownMultiplier : number = 1;
     fullHpBonus: Boolean = false;
 
@@ -497,7 +497,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 case BuffCategory.EXTRA:
                     extraBuffs.sort(() => 0.5 - Math.random());
                     if(extraBuffs.length ==0 ){
-                        selected.push({type:BuffType.EXTRALIFE, value:1, category: BuffCategory.EXTRA, string: "\n\nGain an \nExtra Life"});
+                        selected.push({type:BuffType.EXTRALIFE, value:2, category: BuffCategory.EXTRA, string: "\n\nGain 2 \nExtra Lives"});
                     }
                     else{
                         selected.push(extraBuffs.pop());
@@ -612,7 +612,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.shieldDamage += buff.value ;
                 break;
             case BuffType.EXTRALIFE:
-                this.lives ++;
+                this.lives += buff.value;
                 PlayerController.appliedBuffs.pop(); //pop- dont want to give extra life in next lvl
                 break;
             case BuffType.LIFESTEAL:
