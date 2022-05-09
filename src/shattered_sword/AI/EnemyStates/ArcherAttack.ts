@@ -17,7 +17,7 @@ export default class ArcherAttack extends Attack {
     update(deltaT: number): void {
 
         if(this.pauseTimer.isStopped()){
-            this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : 0;
+            this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : -1;
             let dir = this.parent.getPlayerPosition().clone().sub(this.owner.position).normalize();
             
             (<ArcherAI>this.parent).weapon.use(this.owner, "enemy", dir.scale(1,0));

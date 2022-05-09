@@ -43,6 +43,7 @@ import GameOver from "./GameOver";
 import GameFinish from "./GameFinish";
 import MainMenu from "./MainMenu";
 import MapTemplate from "../Tools/DataTypes/MapTemplate";
+import BullAI from "../AI/BullAI";
 
 //  TODO
 /**
@@ -911,11 +912,14 @@ export default class GameLevel extends Scene {
                     })
                     break;
 
-                case "remus_werewolf":       
-                    this.addEnemy("remus_werewolf", enemy.position.scale(32), EnemyAI, {
+                case "Bull":
+                    this.addEnemy("Bull", enemy.position.scale(32), BullAI, {
                         player: this.player,
                         health: 200,
                         tilemap: "Main",
+                        scale: 1.5,
+                        size: new Vec2(30,18),
+                        offset : new Vec2(0, 27),
                         exp: 50,
                     })
                     break;

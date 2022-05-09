@@ -45,7 +45,7 @@ export default class AssassinAttack extends Attack {
                         this.runTimer.start();
                         (<AnimatedSprite>this.owner).animation.play("ATTACK", true);
                         if(this.parent.getPlayerPosition() !==null)
-                            this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : 0;
+                            this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : -1;
                         break;
                     case this.attacked:
                         this.parent.isAttacking = false;

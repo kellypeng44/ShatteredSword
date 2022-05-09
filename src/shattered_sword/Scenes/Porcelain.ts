@@ -22,14 +22,6 @@ export default class Porcelain extends GameLevel {
         console.log(this.map);
         this.load.tilemapFromObject("map", this.map);
         this.load.spritesheet("Tiger","shattered_sword_assets/spritesheets/Tiger.json");
-
-        // //load enemies
-        // this.load.spritesheet("Snake","shattered_sword_assets/spritesheets/Snake.json");
-        // this.load.spritesheet("Tiger","shattered_sword_assets/spritesheets/Tiger.json");
-
-        // //can load enemy sprite here
-        // //sprites obtained from cse380 sprite wesbite
-        // this.load.spritesheet("remus_werewolf","shattered_sword_assets/spritesheets/remus_werewolf.json");
         this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
 
         //load music here

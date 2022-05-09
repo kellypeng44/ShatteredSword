@@ -56,7 +56,7 @@ export default class BossAttack extends Attack {
         switch( this.atknum){
             case 0: //archer atk
                 if(this.pauseTimer.isStopped()){
-                    this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : 0;
+                    this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : -1;
                     let dir = this.parent.getPlayerPosition().clone().sub(this.owner.position).normalize();
                     
                     (<BossAI>this.parent).weapon.use(this.owner, "enemy", dir.scale(1,0));
@@ -79,7 +79,7 @@ export default class BossAttack extends Attack {
                                 this.runTimer.start();
                                 (<AnimatedSprite>this.owner).animation.play("ATTACK", true);
                                 if(this.parent.getPlayerPosition() !==null)
-                                    this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : 0;
+                                    this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : -1;
                                 break;
                             case this.attacked:
                                 this.parent.isAttacking = false;
@@ -105,7 +105,7 @@ export default class BossAttack extends Attack {
                             this.parent.isAttacking = true;
                             this.runTimer.start();
                             (<AnimatedSprite>this.owner).animation.play("ATTACK", true);
-                            this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : 0;
+                            this.parent.direction = this.parent.getPlayerPosition().x - this.owner.position.x >= 0 ? 1 : -1;
                             break;
                         case this.attacked:
                             this.parent.isAttacking = false;
@@ -129,7 +129,7 @@ export default class BossAttack extends Attack {
                             this.parent.isAttacking = true;
                             (<AnimatedSprite>this.owner).animation.play("ATTACK", true);
                             this.velocity = (this.parent.getPlayerPosition().x - this.owner.position.x)/1.5;
-                            this.parent.direction = this.velocity >= 0 ? 1 : 0;
+                            this.parent.direction = this.velocity >= 0 ? 1 : -1;
                             this.parent.velocity.y = -800;
                             break;
                         case this.attacked:

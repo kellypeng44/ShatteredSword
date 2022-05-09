@@ -14,13 +14,7 @@ export default class Forest extends GameLevel {
 
         //load enemies
         this.load.spritesheet("Snake","shattered_sword_assets/spritesheets/Snake.json");
-
-        //can load enemy sprite here
-        //sprites obtained from cse380 sprite wesbite
-        this.load.spritesheet("remus_werewolf","shattered_sword_assets/spritesheets/remus_werewolf.json");
         this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
-
-        //load music here
     }
 
     updateScene(deltaT: number): void {

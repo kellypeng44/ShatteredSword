@@ -5,6 +5,7 @@ import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 export default class Attack extends EnemyState {
     protected charged: string;
     protected attacked: string;
+    protected hasCharged: boolean;
 
     onEnter(options: Record<string, any>): void {
         this.parent.attackTimer.start();
@@ -12,6 +13,7 @@ export default class Attack extends EnemyState {
         this.parent.isCharging = true;
         this.charged = this.owner.id+"charged";
         this.attacked = this.owner.id+"attacked";
+        this.hasCharged = false;
 
         // TODO replace DYING with CHARGING
         (<AnimatedSprite>this.owner).animation.play("CHARGE", false, this.charged);
