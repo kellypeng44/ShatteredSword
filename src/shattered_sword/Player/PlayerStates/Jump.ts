@@ -8,16 +8,11 @@ import { PlayerStates } from "../PlayerController";
 import InAir from "./InAir";
 import PlayerState from "./PlayerState";
 import { GameState } from "../../sword_enums";
-import Timer from "../../../Wolfie2D/Timing/Timer";
 export default class Jump extends InAir {
 	owner: AnimatedSprite;
-	jumpTimer: Timer;
 
 	onEnter(options: Record<string, any>): void {
 		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "jump", loop: false, holdReference: false});
-		this.jumpTimer = new Timer(300);
-		this.jumpTimer.start();
-		this.parent.velocity.y = -400;
 	}
 
 	
@@ -42,18 +37,18 @@ export default class Jump extends InAir {
 			this.parent.velocity.y = 0;
 			this.finished(PlayerStates.FALL);
 		}
+
+		if( this.parent.airjumps>0 && InputWrapper.isJumpJustPressed()){
+			this.parent.airjumps --;
+			this.finished("jump");
+			this.parent.velocity.y = -600;	// basically jump height
+
+		} 
 		// If we're falling, go to the fall state
 		if(this.parent.velocity.y >= 0){
 			this.finished(PlayerStates.FALL);
 		}
 
-		if (!this.jumpTimer.isStopped() && !this.jumpTimer.isPaused() && InputWrapper.isJumpPressed()) {
-			this.parent.velocity.y = -400;
-		}
-		else {
-			this.jumpTimer.pause();
-		}
-		
 		super.update(deltaT);
 	}
 

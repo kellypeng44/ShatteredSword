@@ -31,6 +31,7 @@ export default class Fall extends InAir {
 		if( this.parent.airjumps>0 && InputWrapper.isJumpJustPressed()){
 			this.parent.airjumps --;
 			this.finished("jump");
+			this.parent.velocity.y = -600;	// basically jump height
 		} 
 		super.update(deltaT);
     }
