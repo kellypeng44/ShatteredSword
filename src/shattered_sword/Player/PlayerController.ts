@@ -98,7 +98,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     invincible : boolean = false;
     static level : number = 1;
 
-    godMode: boolean = false;
+    static godMode: boolean = false;
 
     tilemap: OrthogonalTilemap;
 
@@ -195,6 +195,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         PlayerController.buffPool = new Array();
         PlayerController.enemiesKilled = 0;
         PlayerController.level = 1;
+        PlayerController.godMode = false;
         
     }
     initializePlatformer(): void {
@@ -267,14 +268,14 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if(this.bleedTimer.isStopped() && this.bleedCounter >0){
             this.bleedCounter --;
             this.bleedTimer.start();
-            this.damage( 2 + Math.round(this.CURRENT_HP/50) );
+            this.damage( 2 + Math.round(this.MAX_HP/50) );
         }
 	}
 
     
     // TODO - figure out attacker 
     damage(damage: number, attacker?: GameNode): void {
-        if (this.godMode) {
+        if (PlayerController.godMode) {
             //console.log("godmode");
             return;
         }

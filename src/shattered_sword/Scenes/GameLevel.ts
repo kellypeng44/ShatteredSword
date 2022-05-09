@@ -1209,7 +1209,7 @@ export default class GameLevel extends Scene {
     // Cheat
     protected enableCheat() {
         if (this.pauseInput.text.toUpperCase() === "UUDDLRLRBABA") {
-            (<PlayerController>this.player._ai).godMode = true;
+            PlayerController.godMode = true;
         }
         else {
             let commands = this.pauseInput.text.split(' ');
@@ -1238,7 +1238,7 @@ export default class GameLevel extends Scene {
                     }
                 }
             }
-            (<PlayerController>this.player._ai).godMode = false;
+            PlayerController.godMode = false;
         }
         this.pauseInput.text = "";
     }
