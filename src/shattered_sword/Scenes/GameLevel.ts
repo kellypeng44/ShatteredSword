@@ -980,7 +980,7 @@ export default class GameLevel extends Scene {
                 console.log("spawning boss");
                     this.addEnemy("FinalBoss", enemy.position.scale(32), BossAI, {
                         player: this.player,
-                        health: 1000,
+                        health: 5000,
                         tilemap: "Main",
                         scale: 2,
                         size: new Vec2(60,50),
