@@ -296,6 +296,9 @@ export default class GameLevel extends Scene {
                         
                         let node = this.sceneGraph.getNode(event.data.get("owner"));//get enemy id 
                         //remove enemy from enemies
+                        //console.log(node);
+                        //console.log("enemy killed at",node.position);
+                        
                         this.enemies = this.enemies.filter(item => item !== event.data.get("ai"));
                         this.battleManager.removeEnemy(event.data.get("ai"));
                         //give the player the exp value of the enemy killed
@@ -861,14 +864,12 @@ export default class GameLevel extends Scene {
 
     //TODO - give each enemy unique weapon
     protected initializeEnemies( enemies: Enemy[]){
-
-        let pistol = this.createWeapon("pistol");
     
         for (let enemy of enemies) {
             switch (enemy.type) {
                 
                 /*
-                case "Snake":       
+                case "Archer":       
                     this.addEnemy("Archer", enemy.position.scale(32), ArcherAI, {
                         player: this.player,
                         health: 50,
@@ -876,14 +877,14 @@ export default class GameLevel extends Scene {
                         size: new Vec2(14,10),
                         offset : new Vec2(0, 22),
                         exp: 50,
-                        weapon: pistol
+                        weapon: this.createWeapon("pistol");
                     })
                     break;
                 */
                 case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
                     this.addEnemy("Snake", enemy.position.scale(32), SnakeAI, {
                         player: this.player,
-                        health: 50,
+                        health: 65,
                         tilemap: "Main",
                         size: new Vec2(14,10),
                         offset : new Vec2(0, 22),
@@ -914,7 +915,7 @@ export default class GameLevel extends Scene {
                 case "black_pudding":       
                     this.addEnemy("black_pudding", enemy.position.scale(32), SlimeAI, {
                         player: this.player,
-                        health: 200,
+                        health: 140 + (<PlayerController>this.player._ai).level*2,
                         tilemap: "Main",
                         //actions:actions,
                         scale: .25,

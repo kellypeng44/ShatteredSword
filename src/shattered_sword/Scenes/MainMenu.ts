@@ -120,16 +120,18 @@ export default class MainMenu extends Scene {
         lc.textColor = Color.WHITE;
         const rc = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y - 100), text: "W/S - Look Up/Down"});
         rc.textColor = Color.WHITE;
-        const wasd = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y - 50), text: "J/Z/Enter - Confirm Attack"});
+        const wasd = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y - 50), text: "J/Z/Enter - Attack"});
         wasd.textColor = Color.WHITE;
         
         const e = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y), text: "SPACE/X - Jump"});
         e.textColor = Color.WHITE;
         const q = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y + 50), text: "K/C - Dash"});
         q.textColor = Color.WHITE;
-        const oneTwo = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y + 100), text: "L/V - Use Skill"});
+        //const oneTwo = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y + 100), text: "L/V - Use Skill"});
+        const oneTwo = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y + 100), text: ""});
         oneTwo.textColor = Color.WHITE
-        const zx = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y + 150), text: "I/B - open Backpack"});
+        //const zx = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y + 150), text: "I/B - open Backpack"});
+        const zx = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y + 150), text: ""});
         zx.textColor = Color.WHITE;
         const tb = <Label>this.add.uiElement(UIElementType.LABEL, "control", {position: new Vec2(center.x, center.y + 200), text: "ESC - Pause"});
         tb.textColor = Color.WHITE;
