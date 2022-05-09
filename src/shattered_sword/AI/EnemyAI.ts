@@ -110,14 +110,14 @@ export default class EnemyAI extends StateMachineAI implements BattlerAI {
         if (this.CURRENT_HP <= 0) {
             return;
         }
-        console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
+        //console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
         this.CURRENT_HP -= damage;
         //TODO -
         if (!this.isAttacking && !this.isCharging) {
             this.owner.animation.play("HURT",false);
         }
         
-        console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
+        //console.log(damage +" damage taken, "+this.CURRENT_HP+" hp left");
 
         // If health goes below 0, disable AI and fire enemyDied event
         if (this.CURRENT_HP <= 0) {
