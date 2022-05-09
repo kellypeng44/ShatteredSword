@@ -40,7 +40,9 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 import { TiledTilemapData } from "../../Wolfie2D/DataTypes/Tilesets/TiledData";
 import GameOver from "./GameOver";
+import GameFinish from "./GameFinish";
 import MainMenu from "./MainMenu";
+import MapTemplate from "../Tools/DataTypes/MapTemplate";
 
 //  TODO
 /**
@@ -240,6 +242,24 @@ export default class GameLevel extends Scene {
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
     }
 
+    static gameTimeToString(): string {
+        let tmp = "";
+        let minutes = Math.floor(GameLevel.gameTimer / 60);
+        if (minutes >= 10) {
+            tmp = minutes.toString();
+        }
+        else {
+            tmp = "0" + minutes.toString();
+        }
+        let seconds = Math.floor(GameLevel.gameTimer % 60);
+        if (seconds >= 10) {
+            tmp += ":" + seconds.toString();
+        }
+        else {
+            tmp += ":0" + seconds.toString();
+        }
+        return tmp;
+    }
 
     updateScene(deltaT: number){
 
@@ -251,20 +271,7 @@ export default class GameLevel extends Scene {
             else {
                 this.timerLable.textColor = Color.RED;
             }
-            let minutes = Math.floor(GameLevel.gameTimer / 60);
-            if (minutes >= 10) {
-                this.timerLable.text = minutes.toString();
-            }
-            else {
-                this.timerLable.text = "0" + minutes.toString();
-            }
-            let seconds = Math.floor(GameLevel.gameTimer % 60);
-            if (seconds >= 10) {
-                this.timerLable.text += ":" + seconds.toString();
-            }
-            else {
-                this.timerLable.text += ":0" + seconds.toString();
-            }
+            this.timerLable.text = GameLevel.gameTimeToString();
         }
     
         // Handle events and update the UI if needed
@@ -1179,5 +1186,4 @@ export default class GameLevel extends Scene {
         this.pauseInput.text = "";
     }
 }
-    
 
