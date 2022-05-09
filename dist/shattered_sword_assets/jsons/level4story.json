@@ -49,11 +49,34 @@
         },
         {
             "speaker": "",
-            "content": "Good luck on your journey!",
+            "content": "Hint: it's more slippery than usual in the snow!",
             "actions": [
                 {
                     "type": "hideSprite",
                     "key": "enemies"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "slippery",
+                    "path": "shattered_sword_assets/images/snow_story2.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Good luck on your journey!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "slippery"
                 }
             ]
         }
