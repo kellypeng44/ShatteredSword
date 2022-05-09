@@ -31,7 +31,7 @@ export default class MainMenu extends Scene {
 
     loadScene(): void {
         // Load the menu song
-        this.load.image("backgroud", "shattered_sword_assets/images/mainmenu.png");
+        this.load.image("background", "shattered_sword_assets/images/mainmenu.png");
     }
 
     //TODO 
@@ -44,7 +44,9 @@ export default class MainMenu extends Scene {
 
         // The main menu
         this.mainMenu = this.addUILayer("mainMenu");
-        this.add.sprite("background", "mainMenu");
+        let background = this.add.sprite("background", "mainMenu");
+        background.position.set(this.viewport.getCenter().x,this.viewport.getCenter().y);
+        background.scale = new Vec2(1280/352,720/240);
 
         const seedHint = <Label>this.add.uiElement(UIElementType.LABEL, "mainMenu", {position: new Vec2(center.x, center.y - 300), text: "Enter seed or leave it blank to randomly generate one"});
         seedHint.textColor = Color.WHITE;
