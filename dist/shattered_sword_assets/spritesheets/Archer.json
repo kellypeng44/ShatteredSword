@@ -3,7 +3,7 @@
    "spriteSheetImage": "Archer.png",
    "spriteWidth": 64,
    "spriteHeight": 64,
-   "columns": 14,
+   "columns": 18,
    "rows": 1,
    "durationType": "time",
    "animations": [
@@ -114,6 +114,28 @@
             {
                "index": 13,
                "duration": 20
+            }
+         ]
+      },
+      {
+         "name": "WALK",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 14,
+               "duration": 10
+            },
+            {
+               "index": 15,
+               "duration": 10
+            },
+            {
+               "index": 16,
+               "duration": 10
+            },
+            {
+               "index": 17,
+               "duration": 10
             }
          ]
       }
