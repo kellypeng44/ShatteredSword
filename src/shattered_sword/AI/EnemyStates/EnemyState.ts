@@ -22,7 +22,7 @@ export default abstract class EnemyState extends State {
 
   canWalk() {
     let collision = <AABB>this.owner.collisionShape;
-    let colrow = this.parent.tilemap.getColRowAt(collision.center.clone().add(new Vec2(this.parent.direction * (collision.hw+2))));
+    let colrow = this.parent.tilemap.getColRowAt(collision.center.clone().add(new Vec2(this.parent.direction * (collision.hw+2), (collision.hh+2-32))));
     return !this.parent.tilemap.isTileCollidable(colrow.x, colrow.y) && this.parent.tilemap.isTileCollidable(colrow.x,colrow.y+1);
   }
 
