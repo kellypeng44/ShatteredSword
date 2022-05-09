@@ -24,7 +24,7 @@ export default class TigerAttack extends Attack {
                     this.parent.isCharging = false;
                     this.parent.isAttacking = true;
                     (<AnimatedSprite>this.owner).animation.play("ATTACK", true);
-                    this.velocity = (this.parent.getPlayerPosition().x - this.owner.position.x)/1.5;
+                    this.velocity = (this.parent.getPlayerPosition().x - this.owner.position.x);
                     this.parent.direction = this.velocity >= 0 ? 1 : -1;
                     this.parent.velocity.y = -800;
                     break;
