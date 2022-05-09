@@ -6,6 +6,7 @@ import OnGround from "./OnGround";
 import PlayerState from "./PlayerState";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import { GameState } from "../../sword_enums";
+import GameLevel from "../../Scenes/GameLevel";
 
 export default class Walk extends OnGround {
 	owner: AnimatedSprite;
@@ -37,8 +38,16 @@ export default class Walk extends OnGround {
 			this.finished(PlayerStates.IDLE);
 		} 
 		
-		this.parent.velocity.x = dir.x * (this.parent.speed );
-		
+		if (GameLevel.currentLevel === "snow") {
+			this.parent.velocity.x += dir.x * 5;
+			if (this.parent.velocity.x > this.parent.speed)
+				this.parent.velocity.x = this.parent.speed;
+			if (this.parent.velocity.x < -1 * this.parent.speed)
+				this.parent.velocity.x = -1 * this.parent.speed;
+		}
+		else {
+			this.parent.velocity.x = dir.x * (this.parent.speed );
+		}
 		super.update(deltaT);
 	}
 

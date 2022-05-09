@@ -142,6 +142,7 @@ export default class GameLevel extends Scene {
     protected gameStarted: boolean = false;
     protected timerLable: Label;
     protected levelEnded: boolean = false;
+    static currentLevel: string = "";
 
     startpos: Vec2; 
     loadScene(): void {
@@ -184,6 +185,7 @@ export default class GameLevel extends Scene {
         this.load.spritesheet("test_dummy","shattered_sword_assets/spritesheets/test_dummy.json")
         this.enemies = new Array();
         this.battleManager = new BattleManager();
+        GameLevel.currentLevel = "";
     }
 
     unloadScene(): void {

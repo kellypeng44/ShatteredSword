@@ -1,4 +1,5 @@
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import GameLevel from "../../Scenes/GameLevel";
 import { PlayerStates } from "../PlayerController";
 import OnGround from "./OnGround";
 import PlayerState from "./PlayerState";
@@ -28,7 +29,12 @@ export default class Idle extends OnGround {
 			this.finished(PlayerStates.WALK);
 		}
 		
-		this.parent.velocity.x = 0;
+		if (GameLevel.currentLevel === "snow") {
+			this.parent.velocity.x = Math.sign(this.parent.velocity.x)*(Math.abs(this.parent.velocity.x) - 5 < 0 ? 0 : Math.abs(this.parent.velocity.x) - 5);
+		}
+		else {
+			this.parent.velocity.x = 0;
+		}
 		super.update(deltaT);
 	}
 

@@ -21,6 +21,7 @@ export default class Snow extends GameLevel {
         this.map = this.rmg.getMap();
         console.log(this.map);
         this.load.tilemapFromObject("map", this.map);
+        GameLevel.currentLevel = "snow";
 
         //load enemies
 
