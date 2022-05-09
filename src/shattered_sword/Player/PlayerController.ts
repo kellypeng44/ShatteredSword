@@ -96,7 +96,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     CURRENT_SHIELD : number =0;
     MAX_SHIELD : number = 20;
     invincible : boolean = false;
-    level : number = 1;
+    static level : number = 1;
 
     godMode: boolean = false;
 
@@ -350,7 +350,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
         if(this.CURRENT_EXP >= this.MAX_EXP){
             this.CURRENT_EXP -= this.MAX_EXP;
             this.MAX_EXP += 50; //increase max exp needed for level up
-            this.level++ ;
+            PlayerController.level++ ;
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_up", loop: false, holdReference: false});
             this.emitter.fireEvent(Player_Events.GIVE_REGULAR_BUFF);
         }

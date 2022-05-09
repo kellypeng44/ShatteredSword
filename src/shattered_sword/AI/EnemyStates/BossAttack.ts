@@ -34,7 +34,7 @@ export default class BossAttack extends Attack {
                 this.pauseTimer = new Timer(1500);
                 this.startPosition = this.owner.position;
                 if(this.parent.getPlayerPosition() !==null)
-                    this.owner.position = this.parent.getPlayerPosition().clone().add(new Vec2( (<Sprite>this.parent.player).invertX ? 64 : -64 ,0));
+                    this.owner.position = this.parent.getPlayerPosition().clone().add(new Vec2( (<Sprite>this.parent.player).invertX ? 64 : -64 ,-128));
                 
                 this.pauseTimer.start();
                 break;
@@ -94,7 +94,7 @@ export default class BossAttack extends Attack {
                     }
                     this.parent.velocity.x = this.parent.direction * 500;
                     (<Sprite>this.owner).invertX = this.parent.direction === 1 ? true : false ;
-                    this.owner.alpha = .2;
+                    this.owner.alpha = .1;
                     super.update(deltaT);
                 }
                 break;

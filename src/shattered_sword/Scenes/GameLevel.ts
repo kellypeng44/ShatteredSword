@@ -503,7 +503,7 @@ export default class GameLevel extends Scene {
         // this.expLabel.sizeToText();
 
         //update level ui
-        this.playerLevelLabel.text = "Lv." + playerAI.level;
+        this.playerLevelLabel.text = "Lv." + PlayerController.level;
         //update lives ui
         this.livesCountLabel.text = "Lives: " + playerAI.lives;
 
@@ -625,7 +625,7 @@ export default class GameLevel extends Scene {
 
 
 
-        this.playerLevelLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(20, 95), text: "Lv. "+ (<PlayerController>this.player.ai).level });
+        this.playerLevelLabel = <Label> this.add.uiElement(UIElementType.LABEL, "UI",{position: new Vec2(20, 95), text: "Lv. "+ PlayerController.level });
         this.playerLevelLabel.size.set(0, 50);
         this.playerLevelLabel.setHAlign(HAlign.LEFT);
         this.playerLevelLabel.textColor = Color.BLUE;
@@ -931,7 +931,7 @@ export default class GameLevel extends Scene {
                 case "black_pudding":       
                     this.addEnemy("black_pudding", enemy.position.scale(32), SlimeAI, {
                         player: this.player,
-                        health: 140 + (<PlayerController>this.player._ai).level*2,
+                        health: 140 + PlayerController.level*3,
                         tilemap: "Main",
                         //actions:actions,
                         scale: .25,
@@ -944,7 +944,7 @@ export default class GameLevel extends Scene {
                 case "Bull":
                     this.addEnemy("Bull", enemy.position.scale(32), BullAI, {
                         player: this.player,
-                        health: 150,
+                        health: 300,
                         tilemap: "Main",
                         //actions:actions,
                         scale: 1.5,
@@ -976,7 +976,19 @@ export default class GameLevel extends Scene {
                         exp: 75,
                     })
                     break;
-
+                case "FinalBoss":       
+                console.log("spawning boss");
+                    this.addEnemy("FinalBoss", enemy.position.scale(32), BossAI, {
+                        player: this.player,
+                        health: 1000,
+                        tilemap: "Main",
+                        scale: 2,
+                        size: new Vec2(60,50),
+                        offset : new Vec2(0,30),
+                        exp: 75,
+                        weapon: this.createWeapon("laserGun")
+                    })
+                    break;
                 default:
                     break;
             }
