@@ -48,10 +48,10 @@ export default class MainMenu extends Scene {
         background.position.set(this.viewport.getCenter().x,this.viewport.getCenter().y);
         background.scale = new Vec2(1280/352,720/240);
 
-        const seedHint = <Label>this.add.uiElement(UIElementType.LABEL, "mainMenu", {position: new Vec2(center.x, center.y - 300), text: "Enter seed or leave it blank to randomly generate one"});
+        const seedHint = <Label>this.add.uiElement(UIElementType.LABEL, "mainMenu", {position: new Vec2(center.x, center.y - 220), text: "Enter seed or leave it blank to randomly generate one"});
         seedHint.textColor = Color.WHITE;
         
-        this.seedInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "mainMenu", {position: new Vec2(center.x, center.y - 250), text: ""})
+        this.seedInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "mainMenu", {position: new Vec2(center.x, center.y - 170), text: ""})
         this.seedInput.size.set(200, 50);
 
         // Add map button, and give it an event to emit on press
