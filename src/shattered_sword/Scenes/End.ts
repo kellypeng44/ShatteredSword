@@ -32,7 +32,7 @@ export default class End extends GameLevel {
     protected playStartStory(): void {
         if (!this.touchedStartCheckPoint) {
             this.touchedStartCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/level1story.json");
+            this.storyLoader("shattered_sword_assets/jsons/endstory.json");
             this.startTimer();
         }
     }
