@@ -90,7 +90,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     CURRENT_HP: number = 100;
     BASE_ATK: number = 100;
     CURRENT_ATK: number = 100;
-    damage_multiplier: number = 1;
+    damage_multiplier: number = .5; // percent of damage taken
     CURRENT_EXP : number = 0;
     MAX_EXP : number = 100;
     CURRENT_SHIELD : number =0;
