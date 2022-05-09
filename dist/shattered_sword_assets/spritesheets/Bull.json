@@ -3,9 +3,7 @@
    "spriteSheetImage": "Bull.png",
    "spriteWidth": 64,
    "spriteHeight": 64,
-   "width": 256,
-   "height": 64,
-   "columns": 13,
+   "columns": 17,
    "rows": 1,
    "durationType": "time",
    "animations": [
@@ -116,6 +114,28 @@
             {
                "index": 12,
                "duration": 20
+            }
+         ]
+      },
+      {
+         "name": "WALK",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 13,
+               "duration": 15
+            },
+            {
+               "index": 14,
+               "duration": 15
+            },
+            {
+               "index": 15,
+               "duration": 15
+            },
+            {
+               "index": 16,
+               "duration": 15
             }
          ]
       }
