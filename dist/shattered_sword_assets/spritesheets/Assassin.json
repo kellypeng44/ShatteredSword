@@ -1,122 +1,144 @@
 {
-    "name" : "Assassin",
-    "spriteSheetImage": "Assassin.png",
-    "spriteWidth": 64,
-    "spriteHeight": 64,
-    "columns": 13,
-    "rows": 1,
-    "durationType": "time",
-    "animations": [
-       {
-          "name": "IDLE",
-          "repeat": true,
-          "frames": [
-             {
-                "index": 0,
-                "duration": 10
-             },
-             {
-                "index": 1,
-                "duration": 10
-             },
-             {
-                "index": 2,
-                "duration": 10
-             },
-             {
-                "index": 1,
-                "duration": 10
-             }
-          ]
-       },
-       {
-          "name": "CHARGE",
-          "repeat": false,
-          "frames": [
-             {
-                "index": 3,
-                "duration": 10
-             },
-             {
-                "index": 4,
-                "duration": 10
-             },
-             {
-                "index": 5,
-                "duration": 10
-             }
-          ]
-       },
-       {
-          "name": "ATTACK",
-          "repeat": false,
-          "frames": [
-             {
-                "index": 6,
-                "duration": 10
-             },
-             {
-                "index": 7,
-                "duration": 10
-             },
-             {
-                "index": 8,
-                "duration": 10
-             },
-             {
-                "index": 9,
-                "duration": 10
-             }
-          ]
-       },
-       {
-          "name": "HURT",
-          "repeat": false,
-          "frames": [
-             {
-                "index": 10,
-                "duration": 5
-             },
-             {
-                "index": 11,
-                "duration": 5
-             },
-             {
-                "index": 10,
-                "duration": 5
-             },
-             {
-                "index": 11,
-                "duration": 5
-             },
-             {
-                "index": 10,
-                "duration": 5
-             },
-             {
-                "index": 11,
-                "duration": 5
-             },
-             {
-                "index": 10,
-                "duration": 5
-             },
-             {
-                "index": 11,
-                "duration": 5
-             }
-          ]
-       },
-       {
-          "name": "DEAD",
-          "repeat": true,
-          "frames": [
-             {
-                "index": 12,
-                "duration": 20
-             }
-          ]
-       }
+   "name" : "Assassin",
+   "spriteSheetImage": "Assassin.png",
+   "spriteWidth": 64,
+   "spriteHeight": 64,
+   "columns": 16,
+   "rows": 1,
+   "durationType": "time",
+   "animations": [
+      {
+         "name": "IDLE",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 0,
+               "duration": 10
+            },
+            {
+               "index": 1,
+               "duration": 10
+            },
+            {
+               "index": 2,
+               "duration": 10
+            },
+            {
+               "index": 1,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "CHARGE",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 3,
+               "duration": 10
+            },
+            {
+               "index": 4,
+               "duration": 10
+            },
+            {
+               "index": 5,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "ATTACK",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 6,
+               "duration": 10
+            },
+            {
+               "index": 7,
+               "duration": 10
+            },
+            {
+               "index": 8,
+               "duration": 10
+            },
+            {
+               "index": 9,
+               "duration": 10
+            }
+         ]
+      },
+      {
+         "name": "HURT",
+         "repeat": false,
+         "frames": [
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 11,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 11,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 11,
+               "duration": 5
+            },
+            {
+               "index": 10,
+               "duration": 5
+            },
+            {
+               "index": 11,
+               "duration": 5
+            }
+         ]
+      },
+      {
+         "name": "DEAD",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 12,
+               "duration": 20
+            }
+         ]
+      },
+      {
+         "name": "WALK",
+         "repeat": true,
+         "frames": [
+            {
+               "index": 13,
+               "duration": 15
+            },
+            {
+               "index": 14,
+               "duration": 15
+            },
+            {
+               "index": 13,
+               "duration": 15
+            },
+            {
+               "index": 15,
+               "duration": 15
+            }
+         ]
+      }
     ]
  }
  

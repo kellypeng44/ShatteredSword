@@ -21,7 +21,7 @@
         },
         {
             "speaker": "",
-            "content": "There're bulls and slimes in the great wall. Hint: the bull will dash when attack.",
+            "content": "There're bulls and slimes on the great wall. Hint: The bulls like to charge at you!.",
             "actions": [
                 {
                     "type": "hideSprite",

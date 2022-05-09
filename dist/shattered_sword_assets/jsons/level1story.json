@@ -44,7 +44,7 @@
         },
         {
             "speaker": "",
-            "content": "Press Z or space to jump, double-click to double-jump",
+            "content": "Press Z or space to jump, you can jump an extra time while in the air",
             "actions": [
                 {
                     "type": "hideSprite",
@@ -113,7 +113,7 @@
         },
         {
             "speaker": "",
-            "content": "Use the number key to select buff.",
+            "content": "Use the number keys to select buffs.",
             "actions": [
                 {
                     "type": "hideSprite",
@@ -170,6 +170,25 @@
         {
             "speaker": "",
             "content": "In this level, we're in a bamboo forest. Be careful with the snakes and slimes.",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "enemies",
+                    "path": "shattered_sword_assets/images/forest_story1.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Snakes can fall from the sky at any moment, and apply poison when they hit you.",
             "actions": [
                 {
                     "type": "loadSprite",

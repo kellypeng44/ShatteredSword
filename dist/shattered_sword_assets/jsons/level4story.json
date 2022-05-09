@@ -21,7 +21,7 @@
         },
         {
             "speaker": "",
-            "content": "We're now in a snow mountain. There're archers and slimes in the mountain.",
+            "content": "We're now in a snow mountain. There're archers and slimes on the mountain.",
             "actions": [
                 {
                     "type": "hideSprite",
