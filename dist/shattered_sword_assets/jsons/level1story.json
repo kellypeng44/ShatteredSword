@@ -113,11 +113,57 @@
         },
         {
             "speaker": "",
-            "content": "",
+            "content": "Use the number key to select buff.",
             "actions": [
                 {
                     "type": "hideSprite",
                     "key": "dash"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "buff",
+                    "path": "shattered_sword_assets/images/guide5.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Press 1 to select buff 1.",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "buff"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "buff2",
+                    "path": "shattered_sword_assets/images/guide6.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "buff2"
                 }
             ]
         },
