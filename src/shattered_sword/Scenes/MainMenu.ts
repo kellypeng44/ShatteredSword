@@ -13,6 +13,8 @@ import Levels from "./Levels";
 import RandomMapGenerator from "../Tools/RandomMapGenerator";
 import GameLevel from "./GameLevel";
 import InputWrapper from "../Tools/InputWrapper";
+import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
+import Forest from "./Forest";
 
 export default class MainMenu extends Scene {
     protected config: ConfigManager;
@@ -22,6 +24,7 @@ export default class MainMenu extends Scene {
     private mainMenu: Layer;
     private about: Layer;
     private control: Layer;
+    private seedInput: TextInput;
     // private rmg: RandomMapGenerator;
 
     loadScene(): void {
@@ -39,8 +42,14 @@ export default class MainMenu extends Scene {
         // The main menu
         this.mainMenu = this.addUILayer("mainMenu");
 
+        const seedHint = <Label>this.add.uiElement(UIElementType.LABEL, "mainMenu", {position: new Vec2(center.x, center.y - 200), text: "Enter seed or leave it blank to randomly generate one"});
+        seedHint.textColor = Color.WHITE;
+        
+        this.seedInput = <TextInput>this.add.uiElement(UIElementType.TEXT_INPUT, "mainMenu", {position: new Vec2(center.x, center.y - 150), text: ""})
+        this.seedInput.size.set(200, 50);
+
         // Add map button, and give it an event to emit on press
-        const map = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y - 100), text: "Map"});
+        const map = this.add.uiElement(UIElementType.BUTTON, "mainMenu", {position: new Vec2(center.x, center.y - 100), text: "Start Game"});
         map.size.set(200, 50);
         map.borderWidth = 2;
         map.borderColor = Color.WHITE;
@@ -157,8 +166,36 @@ export default class MainMenu extends Scene {
 
             console.log(event);
 
+            // if(event.type === "map"){
+            //     this.sceneManager.changeToScene(Levels, {});
+            // }
+
             if(event.type === "map"){
-                this.sceneManager.changeToScene(Levels, {});
+                if (this.seedInput.text) {
+                    InputWrapper.randomSeed = this.seedInput.text;
+                    this.seedInput.text = "";
+                }
+                else {
+                    InputWrapper.randomSeed = Math.floor(Math.random() * 10000000000).toString();
+                }
+                console.log(InputWrapper.randomSeed);
+                if (InputWrapper.randomSeed.toLowerCase() === "levels") {
+                    this.sceneManager.changeToScene(Levels, {});
+                }
+                else {
+                    let sceneOptions = {
+                        physics: {
+                            groupNames: ["ground", "player", "enemies"],
+                            collisions:
+                            [
+                                [0, 1, 1],
+                                [1, 0, 0],
+                                [1, 0, 0]
+                            ]
+                        }
+                    }
+                    this.sceneManager.changeToScene(Forest, {}, sceneOptions);
+                }
             }
 
             if(event.type === "about"){
