@@ -560,7 +560,7 @@ export default class PlayerController extends StateMachineAI implements BattlerA
                 this.CURRENT_ATK +=buff.value;
                 break;
             case BuffType.PERCENT_ATK:
-                this.CURRENT_ATK *=buff.value;
+                this.CURRENT_ATK *=(1+buff.value);
                 this.CURRENT_ATK = Math.round(this.CURRENT_ATK);
                 break;
             case BuffType.SPEED:
