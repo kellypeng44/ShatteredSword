@@ -4,7 +4,7 @@ import ResourceManager from "../../Wolfie2D/ResourceManager/ResourceManager";
 import WeaponType from "../GameSystems/items/WeaponTypes/WeaponType";
 import Slice from "../GameSystems/items/WeaponTypes/Slice";
 import SemiAutoGun from "../GameSystems/items/WeaponTypes/SemiAutoGun";
-import laserGun from "../GameSystems/items/WeaponTypes/laserGun";
+import laserGun from "../GameSystems/items/WeaponTypes/LaserGun";
 export default class WeaponTemplateRegistry extends Registry<WeaponConstructor> {
     
     public preload(): void {

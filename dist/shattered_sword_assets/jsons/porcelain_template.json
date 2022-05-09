@@ -30,30 +30,6 @@
             "type": "player",
             "x": 5,
             "y": 8
-         },
-         {
-            "type": "black_pudding",
-            "x": 3,
-            "y": 7,
-            "possibility": 1
-         },
-         {
-            "type": "Tiger",
-            "x": 2,
-            "y": 12,
-            "possibility": 1
-         },
-         {
-            "type": "black_pudding",
-            "x": 14,
-            "y": 3,
-            "possibility": 1
-         },
-         {
-            "type": "Tiger",
-            "x": 24,
-            "y": 7,
-            "possibility": 1
          }
       ],
       "startCheckPoint": [24, 13, 4, 4]
