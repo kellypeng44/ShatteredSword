@@ -17,7 +17,7 @@ export default class BossAI extends EnemyAI {
     }
 
     canAttack(position: Vec2): boolean {
-        return this.attackTimer.isStopped() && this.owner.position.distanceTo(position)<=128;
+        return this.attackTimer.isStopped() && this.owner.position.distanceTo(position)<=225;
     }
 
     damage(damage: number): void {

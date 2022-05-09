@@ -17,6 +17,6 @@ export default class ArcherAI extends EnemyAI {
     }
 
     canAttack(position: Vec2): boolean {
-        return this.attackTimer.isStopped() && this.owner.position.distanceTo(position)<=96;
+        return this.attackTimer.isStopped() && this.owner.position.distanceTo(position)<=128;
     }
 }

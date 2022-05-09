@@ -191,9 +191,10 @@ export default class PlayerController extends StateMachineAI implements BattlerA
     }
 
     static reset(){
-        this.appliedBuffs = new Array();
-        this.buffPool = new Array();
-        this.enemiesKilled = 0;
+        PlayerController.appliedBuffs = new Array();
+        PlayerController.buffPool = new Array();
+        PlayerController.enemiesKilled = 0;
+        PlayerController.level = 1;
         
     }
     initializePlatformer(): void {
