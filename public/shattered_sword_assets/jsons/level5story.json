@@ -1,0 +1,102 @@
+{
+    "texts": [
+        {
+            "speaker": "",
+            "content": "Press enter or space or J or X to continue",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "storymode",
+                    "path": "shattered_sword_assets/images/guide0.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Hiro is now in a multi-level store. There're monsters in the store.",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "storymode"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "enemies",
+                    "path": "shattered_sword_assets/images/market_story1.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Hint: The monsters camouflage into the walls and can teleport to you!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "enemies"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "camouflage",
+                    "path": "shattered_sword_assets/images/market_story2.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Hiro can only walk on the tiles. Be careful not to fall off the building.",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "camouflage"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "tiles",
+                    "path": "shattered_sword_assets/images/market_story3.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Good luck on your journey!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "tiles"
+                }
+            ]
+        }
+    ]
+}

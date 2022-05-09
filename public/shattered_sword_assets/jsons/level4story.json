@@ -1,0 +1,84 @@
+{
+    "texts": [
+        {
+            "speaker": "",
+            "content": "Press enter or space or J or X to continue",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "storymode",
+                    "path": "shattered_sword_assets/images/guide0.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "We're now in a snow mountain. There're archers and slimes on the mountain.",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "storymode"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "enemies",
+                    "path": "shattered_sword_assets/images/snow_story1.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Hint: jump when under attack!",
+            "actions": []
+        },
+        {
+            "speaker": "",
+            "content": "Hint: it's more slippery than usual in the snow!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "enemies"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "slippery",
+                    "path": "shattered_sword_assets/images/snow_story2.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Good luck on your journey!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "slippery"
+                }
+            ]
+        }
+    ]
+}

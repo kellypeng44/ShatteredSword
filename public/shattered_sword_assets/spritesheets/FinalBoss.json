@@ -1,9 +1,9 @@
 {
-   "name" : "Bull",
-   "spriteSheetImage": "Bull.png",
-   "spriteWidth": 64,
-   "spriteHeight": 64,
-   "columns": 17,
+   "name" : "FinalBoss",
+   "spriteSheetImage": "FinalBoss.png",
+   "spriteWidth": 80,
+   "spriteHeight": 80,
+   "columns": 19,
    "rows": 1,
    "durationType": "time",
    "animations": [
@@ -13,35 +13,25 @@
          "frames": [
             {
                "index": 0,
-               "duration": 20
+               "duration": 10
             },
             {
                "index": 1,
-               "duration": 20
+               "duration": 10
             },
             {
                "index": 2,
-               "duration": 20
+               "duration": 10
             },
             {
-               "index": 1,
-               "duration": 20
+               "index": 3,
+               "duration": 10
             }
          ]
       },
       {
          "name": "CHARGE",
          "repeat": false,
-         "frames": [
-            {
-               "index": 5,
-               "duration": 60
-            }
-         ]
-      },
-      {
-         "name": "ATTACK",
-         "repeat": true,
          "frames": [
             {
                "index": 4,
@@ -54,7 +44,13 @@
             {
                "index": 6,
                "duration": 10
-            },
+            }
+         ]
+      },
+      {
+         "name": "ATTACK",
+         "repeat": true,
+         "frames": [
             {
                "index": 7,
                "duration": 10
@@ -65,7 +61,19 @@
             },
             {
                "index": 9,
-               "duration": 10
+               "duration": 8
+            },
+            {
+               "index": 10,
+               "duration": 8
+            },
+            {
+               "index": 11,
+               "duration": 8
+            },
+            {
+               "index": 12,
+               "duration": 8
             }
          ]
       },
@@ -74,35 +82,35 @@
          "repeat": false,
          "frames": [
             {
-               "index": 10,
+               "index": 13,
                "duration": 5
             },
             {
-               "index": 11,
+               "index": 14,
                "duration": 5
             },
             {
-               "index": 10,
+               "index": 13,
                "duration": 5
             },
             {
-               "index": 11,
+               "index": 14,
                "duration": 5
             },
             {
-               "index": 10,
+               "index": 13,
                "duration": 5
             },
             {
-               "index": 11,
+               "index": 14,
                "duration": 5
             },
             {
-               "index": 10,
+               "index": 13,
                "duration": 5
             },
             {
-               "index": 11,
+               "index": 14,
                "duration": 5
             }
          ]
@@ -112,7 +120,7 @@
          "repeat": true,
          "frames": [
             {
-               "index": 12,
+               "index": 15,
                "duration": 20
             }
          ]
@@ -122,22 +130,19 @@
          "repeat": true,
          "frames": [
             {
-               "index": 13,
-               "duration": 15
-            },
-            {
-               "index": 14,
-               "duration": 15
-            },
-            {
-               "index": 15,
-               "duration": 15
-            },
-            {
                "index": 16,
+               "duration": 15
+            },
+            {
+               "index": 17,
+               "duration": 15
+            },
+            {
+               "index": 18,
                "duration": 15
             }
          ]
       }
-   ]
-}
+    ]
+ }
+ 

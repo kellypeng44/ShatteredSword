@@ -2,8 +2,133 @@
     "texts": [
         {
             "speaker": "",
+            "content": "Press enter or space or J or X to continue",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "storymode",
+                    "path": "shattered_sword_assets/images/guide0.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "There was the legendary royal greatsword that would grant great power to its wielder",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "storymode"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "sword",
+                    "path": "shattered_sword_assets/images/story1.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        4,
+                        4
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "But an evil monster shattered it into 6 pieces",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "sword"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "sword_shattered",
+                    "path": "shattered_sword_assets/images/story2.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        4,
+                        4
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Hiro is the only surviving prince from the kingdom destroyed by the monster",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "sword_shattered"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "hiro_appear",
+                    "path": "shattered_sword_assets/images/story3.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        4,
+                        4
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "Hiro",
+            "content": "To bring prosperity back to the kingdom...",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "hiro_appear"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "hiro_sword",
+                    "path": "shattered_sword_assets/images/story4.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        4,
+                        4
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "Hiro",
+            "content": "I must go on the journey to collect the pieces of the sword... and kill the monster!",
+            "actions": [
+                {
+                    "type": "showSprite",
+                    "key": "hiro_sword"
+                }
+            ]
+        },
+        {
+            "speaker": "",
             "content": "Press A/LEFT to go LEFT and D/RIGHT to go right",
             "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "hiro_sword"
+                },
                 {
                     "type": "loadSprite",
                     "key": "rightleft",
@@ -21,7 +146,7 @@
         },
         {
             "speaker": "",
-            "content": "Press Z or space to jump, double-click to double-jump",
+            "content": "Press Z or space to jump, you can jump an extra time while in the air",
             "actions": [
                 {
                     "type": "hideSprite",
@@ -90,11 +215,119 @@
         },
         {
             "speaker": "",
-            "content": "",
+            "content": "Use the number keys to select buffs.",
             "actions": [
                 {
                     "type": "hideSprite",
                     "key": "dash"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "buff",
+                    "path": "shattered_sword_assets/images/guide5.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Press 1 to select buff 1.",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "buff"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "buff2",
+                    "path": "shattered_sword_assets/images/guide6.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "buff2"
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "In this level, we're in a bamboo forest. Be careful with the snakes and slimes.",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "enemies",
+                    "path": "shattered_sword_assets/images/forest_story1.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Snakes can fall from the sky at any moment, and apply poison when they hit you.",
+            "actions": [
+                {
+                    "type": "showSprite",
+                    "key": "enemies"
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Besides the enemies, watch out for the gaps.",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "enemies"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "gap",
+                    "path": "shattered_sword_assets/images/forest_story2.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Good luck on your journey!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "gap"
                 }
             ]
         }

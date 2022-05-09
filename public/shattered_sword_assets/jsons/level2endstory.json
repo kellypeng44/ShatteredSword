@@ -1,0 +1,56 @@
+{
+    "texts": [
+        {
+            "speaker": "",
+            "content": "Hiro collected one more sword shard!",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "collect",
+                    "path": "shattered_sword_assets/images/collect2.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Congrats! You can choose a buff to gain from completing this level!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "collect"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "buff",
+                    "path": "shattered_sword_assets/images/buff.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Let's move on to the next level!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "buff"
+                }
+            ]
+        }
+    ]
+}
