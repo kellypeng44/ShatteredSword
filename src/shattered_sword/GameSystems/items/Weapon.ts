@@ -75,7 +75,7 @@ export default class Weapon extends Item {
         // Reset the cooldown timer
         this.cooldownTimer.start();
         //TODO - may have to move elsewhere
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sword", loop: false, holdReference: false});
+        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "sword", loop: false, holdReference: false});
         
         return true;
     }

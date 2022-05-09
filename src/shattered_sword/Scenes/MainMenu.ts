@@ -16,6 +16,7 @@ import InputWrapper from "../Tools/InputWrapper";
 import TextInput from "../../Wolfie2D/Nodes/UIElements/TextInput";
 import Forest from "./Forest";
 import Start from "./Start";
+import PlayerController from "../Player/PlayerController";
 
 export default class MainMenu extends Scene {
     protected config: ConfigManager;
@@ -39,6 +40,7 @@ export default class MainMenu extends Scene {
         GameLevel.gameTimer = 0;
         InputWrapper.randomSeed = undefined;
         const center = this.viewport.getCenter();
+        PlayerController.reset();
 
         // The main menu
         this.mainMenu = this.addUILayer("mainMenu");

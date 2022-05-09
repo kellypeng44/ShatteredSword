@@ -1,0 +1,56 @@
+{
+    "texts": [
+        {
+            "speaker": "",
+            "content": "Press enter or space or J or X to continue",
+            "actions": [
+                {
+                    "type": "loadSprite",
+                    "key": "storymode",
+                    "path": "shattered_sword_assets/images/guide0.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "There're bulls and slimes in the great wall. Hint: the bull will dash when attack.",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "storymode"
+                },
+                {
+                    "type": "loadSprite",
+                    "key": "enemies",
+                    "path": "shattered_sword_assets/images/wall_story1.png",
+                    "positon": [
+                        300,
+                        150
+                    ],
+                    "scale": [
+                        3,
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "speaker": "",
+            "content": "Good luck on your journey!",
+            "actions": [
+                {
+                    "type": "hideSprite",
+                    "key": "enemies"
+                }
+            ]
+        }
+    ]
+}

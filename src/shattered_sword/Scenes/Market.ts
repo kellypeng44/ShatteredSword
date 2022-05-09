@@ -27,7 +27,7 @@ export default class Market extends GameLevel {
         //can load enemy sprite here
         //sprites obtained from cse380 sprite wesbite
         // this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
-
+        this.load.spritesheet("Assassin","shattered_sword_assets/spritesheets/Assassin.json");
         //load music here
     }
     protected goToNextLevel(): void {

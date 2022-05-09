@@ -27,8 +27,8 @@ export default class Snow extends GameLevel {
 
         //can load enemy sprite here
         //sprites obtained from cse380 sprite wesbite
-        // this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
-
+        this.load.spritesheet("black_pudding","shattered_sword_assets/spritesheets/black_pudding.json");
+        this.load.spritesheet("Archer","shattered_sword_assets/spritesheets/Archer.json");
         //load music here
     }
 
@@ -51,7 +51,7 @@ export default class Snow extends GameLevel {
     protected playStartStory(): void {
         if (!this.touchedStartCheckPoint) {
             this.touchedStartCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/level1story.json");
+            this.storyLoader("shattered_sword_assets/jsons/level4story.json");
             this.startTimer();
         }
     }

@@ -24,12 +24,14 @@ export default class BossAttack extends Attack {
         this.owner.alpha = 1;  //unstealth to attack
         switch( this.atknum){
             case 0: //archer atk
+            console.log("archer atk");
                 this.pauseTimer = new Timer(1000);
                 this.pauseTimer.start();
                 break;
             case 1: //assassin atk
+                console.log("assassin atk");
                 this.runTimer = new Timer(500);
-                this.pauseTimer = new Timer(1000);
+                this.pauseTimer = new Timer(1500);
                 this.startPosition = this.owner.position;
                 if(this.parent.getPlayerPosition() !==null)
                     this.owner.position = this.parent.getPlayerPosition().clone().add(new Vec2( (<Sprite>this.parent.player).invertX ? 64 : -64 ,0));
@@ -37,12 +39,15 @@ export default class BossAttack extends Attack {
                 this.pauseTimer.start();
                 break;
             case 2: //bull atk
+                console.log("bull atk");
                 this.runTimer = new Timer(2000);
                 break;
             case 3: //tiger atk
+                console.log("tiger atk");
                 this.velocity = 0;
                 break;
             case 4: //snake atk
+                console.log("snake atk");  
                 break;
             default:
                 break;

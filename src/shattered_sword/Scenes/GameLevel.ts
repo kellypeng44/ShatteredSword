@@ -23,6 +23,7 @@ import EnemyAI from "../AI/EnemyAI";
 import SnakeAI from "../AI/SnakeAI";
 import SlimeAI from "../AI/SlimeAI";
 import TigerAI from "../AI/TigerAI";
+import BullAI from "../AI/BullAI";
 import ArcherAI from "../AI/ArcherAI";
 import AssassinAI from "../AI/AssassinAI";
 import BattlerAI from "../AI/BattlerAI";
@@ -43,7 +44,7 @@ import GameOver from "./GameOver";
 import GameFinish from "./GameFinish";
 import MainMenu from "./MainMenu";
 import MapTemplate from "../Tools/DataTypes/MapTemplate";
-import BullAI from "../AI/BullAI";
+import BossAI from "../AI/BossAI";
 
 //  TODO
 /**
@@ -880,18 +881,19 @@ export default class GameLevel extends Scene {
             switch (enemy.type) {
                 
                 /*
-                case "Archer":       
-                    this.addEnemy("Archer", enemy.position.scale(32), ArcherAI, {
+                case "Snake":       
+                    this.addEnemy("Snake", enemy.position.scale(32), BossAI, {
                         player: this.player,
                         health: 50,
                         tilemap: "Main",
                         size: new Vec2(14,10),
                         offset : new Vec2(0, 22),
                         exp: 50,
-                        weapon: this.createWeapon("pistol");
+                        weapon: this.createWeapon("laserGun")
                     })
                     break;
                 */
+               
                 case "Snake":       //Snake enemies drop from sky("trees")? or could just be very abundant
                     this.addEnemy("Snake", enemy.position.scale(32), SnakeAI, {
                         player: this.player,
@@ -902,7 +904,7 @@ export default class GameLevel extends Scene {
                         exp: 50,
                     })
                     break;
-                 
+                
                 case "Tiger":       //Tiger can be miniboss for now? 
                     this.addEnemy("Tiger", enemy.position.scale(32), TigerAI, {
                         player: this.player,
@@ -939,6 +941,42 @@ export default class GameLevel extends Scene {
                         weapon : this.createWeapon("knife"),
                     })
                     break;
+                case "Bull":
+                    this.addEnemy("Bull", enemy.position.scale(32), BullAI, {
+                        player: this.player,
+                        health: 150,
+                        tilemap: "Main",
+                        //actions:actions,
+                        scale: 1.5,
+                        size: new Vec2(48,24),
+                        offset : new Vec2(0,24),
+                        exp: 75,
+                    })
+                    break;
+                case "Archer":       
+                    this.addEnemy("Archer", enemy.position.scale(32), ArcherAI, {
+                        player: this.player,
+                        health: 100,
+                        tilemap: "Main",
+                        scale: 1,
+                        size: new Vec2(20,16),
+                        offset : new Vec2(0,16),
+                        exp: 75,
+                        weapon: this.createWeapon("pistol")
+                    })
+                    break;
+                case "Assassin":       
+                    this.addEnemy("Assassin", enemy.position.scale(32), AssassinAI, {
+                        player: this.player,
+                        health: 100,
+                        tilemap: "Main",
+                        scale: 1,
+                        size: new Vec2(20,16),
+                        offset : new Vec2(0,16),
+                        exp: 75,
+                    })
+                    break;
+
                 default:
                     break;
             }
