@@ -58,7 +58,7 @@ export default class Greatwall extends GameLevel {
     protected playEndStory() {
         if (!this.touchedEndCheckPoint) {
             this.touchedEndCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/story.json");
+            this.storyLoader("shattered_sword_assets/jsons/level3endstory.json");
             this.endTimer();
             this.levelEnded = true;
         }

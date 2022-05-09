@@ -61,7 +61,7 @@ export default class Forest extends GameLevel {
     protected playEndStory() {
         if (!this.touchedEndCheckPoint) {
             this.touchedEndCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/story.json");
+            this.storyLoader("shattered_sword_assets/jsons/level1endstory.json");
             this.endTimer();
             this.levelEnded = true;
         }

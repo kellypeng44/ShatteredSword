@@ -57,7 +57,7 @@ export default class Market extends GameLevel {
     protected playEndStory() {
         if (!this.touchedEndCheckPoint) {
             this.touchedEndCheckPoint = true;
-            this.storyLoader("shattered_sword_assets/jsons/story.json");
+            this.storyLoader("shattered_sword_assets/jsons/level5endstory.json");
             this.endTimer();
             this.levelEnded = true;
         }

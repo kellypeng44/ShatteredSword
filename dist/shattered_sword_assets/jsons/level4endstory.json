@@ -7,7 +7,7 @@
                 {
                     "type": "loadSprite",
                     "key": "collect",
-                    "path": "shattered_sword_assets/images/collect1.png",
+                    "path": "shattered_sword_assets/images/collect4.png",
                     "positon": [
                         300,
                         150
