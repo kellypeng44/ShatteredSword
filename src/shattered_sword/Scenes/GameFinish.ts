@@ -17,7 +17,7 @@ export default class GameFinish extends Scene {
 
         this.addUILayer("primary");
 
-        const congra = <Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(center.x, center.y), text: "CONGRATULATION!"});
+        const congra = <Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(center.x, center.y), text: "CONGRATULATIONS!"});
         congra.textColor = Color.GREEN;
         congra.fontSize = 100;
 
